@@ -1,0 +1,27 @@
+<f:layout name="base" />
+
+<f:section name="content">
+	<f:for each="{packages}" as="models" key="package">
+		<table>
+			<f:for each="{models}" as="model">
+				<tr>
+					<td>
+						<f:link.action action="view" controller="Model" arguments="{model : model.class, package : package}">
+						{model.name}
+						</f:link.action>
+					</td>
+					<td>
+						<f:link.action action="edit" controller="Model" arguments="{model : model.class, package : package}">
+							Edit
+						</f:link.action>
+					</td>
+					<td>
+						<f:link.action action="new" controller="Model" arguments="{model : model.class, package : package}">
+						 	Create
+						</f:link.action>
+					</td>
+				</tr>
+			</f:for>
+		</table>
+	</f:for>
+</f:section>

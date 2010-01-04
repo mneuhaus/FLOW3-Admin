@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Komodo Project File - DO NOT EDIT -->
+<project id="3ba1d1f5-9272-1f41-8e69-d9948c7f60bb" kpf_version="4" name="FLOW3 Applications.kpf">
+<preference-set idref="3ba1d1f5-9272-1f41-8e69-d9948c7f60bb">
+  <boolean id="import_live">1</boolean>
+</preference-set>
+<preference-set idref="3ba1d1f5-9272-1f41-8e69-d9948c7f60bb/Classes/Controller/ModelController.php">
+<preference-set id="Invocations">
+<preference-set id="default">
+  <string id="cookieparams"></string>
+  <string id="cwd"></string>
+  <boolean id="disableOutputBuffering">1</boolean>
+  <string id="documentRoot"></string>
+  <boolean id="enableImplicitFlush">1</boolean>
+  <string id="executable-params"></string>
+  <string relative="path" id="filename">Classes/Controller/ModelController.php</string>
+  <string id="getparams"></string>
+  <string id="language">PHP</string>
+  <string id="mpostparams"></string>
+  <string id="params"></string>
+  <string id="phpInterpreterType">php-cli</string>
+  <string id="postparams"></string>
+  <string id="posttype">application/x-www-form-urlencoded</string>
+  <string id="request-method">GET</string>
+  <boolean id="show-dialog">1</boolean>
+  <boolean id="sim-cgi">0</boolean>
+  <boolean id="use-console">0</boolean>
+  <string id="userCGIEnvironment"></string>
+  <string id="userEnvironment"></string>
+</preference-set>
+</preference-set>
+  <string id="lastInvocation">default</string>
+</preference-set>
+</project>

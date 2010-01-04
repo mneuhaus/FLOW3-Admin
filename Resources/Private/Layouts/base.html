@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+<title>Base</title>
+<link rel="stylesheet" type="text/css" href="{f:uri.resource(path: 'css/base.css', package: 'Admin')}" />
+<link rel="stylesheet" type="text/css" href="{f:uri.resource(path: 'css/redmond/jquery-ui-1.7.2.custom.css', package: 'Admin')}" />
+<f:base />
+</head>
+<body>
+<div id="container">
+    <div id="header">
+		<ul id="main-nav">
+			<f:if condition="{overview}">
+				<f:then><li class="active"></f:then>
+				<f:else><li></f:else>
+			</f:if>
+				<f:link.action action="index" controller="Standard">
+					Overview
+				</f:link.action>
+			</li>
+			<f:for each="{packages}" as="models" key="package">
+				<f:if condition="{current} == {package}">
+					<f:then><li class="active"></f:then>
+					<f:else><li></f:else>
+				</f:if>
+					<f:link.action action="index" controller="Standard" arguments="{package : package}">
+						{package}
+					</f:link.action>
+				</li>
+			</f:for>
+		</ul>
+    </div>
+	<div class="messages">
+		<f:flashMessages />
+	</div>
+    <div id="content-wrap">
+        <f:render section='content' />
+    </div>
+</div>
+</body>
+</html>
