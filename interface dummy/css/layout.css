@@ -1,0 +1,342 @@
+a{
+	text-decoration:none;
+}
+.container{
+	width:100%;
+	.header{
+		float:left;
+		width:100%;
+		#logo{float:left;margin:5px 0 0 2%;}
+	
+		.functions{
+			+horizontal-list;
+			float:right;
+			margin:5px 10px;
+			li{
+				margin:0 5px 0 0;
+			}
+		}
+	
+		.navigation{
+			+horizontal-list;
+			float:left;
+			clear:both;
+			width:96%;
+			padding:5px 2%;
+			border:none;
+			li{
+				margin:0 2% 0 0;
+			}
+		}
+	}
+	
+	.content{
+		float:left;
+		width:96%;
+		margin:2%;
+	}
+}
+
+table{
+	width:30%;
+	margin-bottom:1%;
+	tr{
+		td,th{
+			padding:0.1em 2%;
+			vertical-align:bottom;
+		}
+	}
+	&.list{
+		width:83%;
+		float:left;
+		tr{
+			th{
+				padding:0 0.7%;
+			}
+			td{
+				padding:0.5% 0.7%;
+			}
+		}
+
+		thead{
+			tr.actions{
+				.action{
+					float:left;
+					margin-right:15px;
+				}
+			}
+		}
+	}
+	tr.odd{
+		background:!light-grey2;
+	}
+	tr.even{
+		background:!light-grey1;
+	}
+}
+
+.filters{
+	width:16%;
+	float:left;
+	margin-left:1%;
+	div{
+		padding:0.7%;
+	}
+	ul{
+		+no-bullets;
+		margin-bottom:10px;
+		margin-left:0px;
+		li{
+			margin-left:10px;
+			font-weight:bold;
+			li{
+				margin-left:0px;
+				a{
+					font-weight:normal;
+					font-size:90%;
+					&.active,
+					&:hover{
+						color:!red;
+					}
+					&.active{						
+						padding-left:5px;
+						margin-left:-10px;
+						border-left:5px solid !dark-grey1;
+					}
+				}
+			}
+		}
+	}
+}
+
+.fg-button { 
+   	outline: 0; 
+   	margin:0 4px 0 0; 
+   	padding: .2em 0.5em; 
+   	text-decoration:none !important; 
+   	cursor:pointer; 
+   	position: relative; 
+   	text-align: center; 
+	float:left;
+   	zoom: 1; 
+	a{
+		float:right;
+		margin-left:2px;
+		margin-right:-1px;
+	}
+}
+
+.toolbar{
+	float:right;
+}
+
+.toolbar .ui-icon{
+	margin-top:2px;
+	margin-right:2px;
+	float:left;
+}
+
+.f-multiselect {
+	width: 460px;
+	height: 200px;
+}
+
+.container form{
+	width:100%;
+	
+	legend{
+		float:left;
+		display:block;
+		width:100%;
+	}
+	
+	fieldset{
+		float:left;
+		clear:both;
+		width:100%;
+		background:none;
+		border-top:none;
+		margin-bottom:10px;
+		
+		div.ui-widget-header{
+			border-right:none;
+			border-left:none;
+			padding-left:5px;
+		}
+		
+		div.f-row{
+			float:left;
+			+clearfix;
+			clear:both;
+			width:100%;
+			background:none;
+			border-bottom:none;
+			border-right:none;
+			border-left:none;
+			padding:10px 0px;
+			
+			label{
+				width:24%;
+				float:left;
+				text-align:right;
+				margin-right:1%;
+				&.f-inline{
+					width:auto;
+					text-align:left;
+					float:left;
+					display:inline;
+				}
+			}
+			
+			div.f-inline{
+				float:left;
+				margin-left:5px;
+				margin-top:2px;
+			}
+			
+			input{
+				padding:3px 3px 0;
+			}
+			
+			.f-group{
+				width:auto;
+				float:left;
+				width:80px;
+				label{
+					margin-top:2px;
+					margin-left:2px;
+				}
+				input{
+					margin-left:0;
+				}
+			}
+			
+			input,
+			.as-selections,
+			select,
+			.ui-multiselect,
+			.f-slider-value{
+				float:left;
+			}
+		}
+	}
+	
+	span.ui-state-error{
+		height:19px;
+		float:left;
+		padding:2px 5px 0;
+		margin-left:10px;
+	}
+
+	.f-slider{
+		float:left;
+		width:300px;
+		margin-left:10px;
+		margin-top:5px;
+	}
+	
+	.f-slider-value{
+		margin-left:10px;
+		margin-top:2px;
+	}
+	
+	.f-float{
+		float:left;
+		width:75%;
+		position:relative;
+	}
+	
+	.f-footer{
+		width:100%;
+		float:left;
+		clear:both;
+	}
+	
+	.f-info{
+		font-weight:normal;
+		float:left;
+		clear:both;
+		margin-top:5px;
+	}
+}
+
+.ui-spinner-button{
+	position:absolute;
+	height:10px;
+}
+
+.ui-spinner-down{
+	top:12px;
+}
+
+.ui-spinner-up{
+	top:-1px;
+}
+
+.ui-spinner{
+	position:relative;
+	float:left;
+}
+
+fieldset .markItUpEditor{
+	height:80px;
+}
+
+.MultiFile-list{
+	float:left;
+	clear:both;
+}
+
+.MultiFile-remove{
+	float:left;
+	margin-right:5px;
+	margin-top:1px;
+}
+
+.MultiFile-list{
+	margin-top:5px;
+}
+
+.MultiFile-label{
+	float:left;
+	clear:both;
+	margin-bottom:3px;
+}
+
+
+.content span.cke_skin_kama{
+	border:none;
+	padding-left:0px;
+}
+
+.combo{
+	float:left;
+	width:auto;
+	input{
+		float:left;
+		position:relative;
+	}
+	div.icon{
+		position:relative;
+		float:left;
+		height:21px;
+		left:-18px;
+		.ui-icon{
+			margin-top:2px;
+		}
+	}
+	.list-wrapper{
+		margin-top:23px;
+		width:100%;
+	}
+	li.ui-state-default,
+	li.ui-state-hover{
+		width:100%;
+		border:none;
+		background-image:none;
+		span{
+			margin:0px 3px;
+		}
+	}
+	
+}

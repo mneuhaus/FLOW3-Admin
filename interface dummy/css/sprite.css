@@ -1,0 +1,4010 @@
+=ss_sprite{
+	display:inline;
+	overflow:hidden;
+	height:18px;
+	padding-left:18px;
+	padding-bottom:5px;
+	background-repeat:no-repeat;
+	background-image:url(../img/sprites.png);
+	;
+}
+.ss_accept{
+	+ss_sprite
+	background-position:0px 0px;
+}
+.ss_add{
+	+ss_sprite
+	background-position:0px -19px;
+}
+.ss_anchor{
+	+ss_sprite
+	background-position:0px -37px;
+}
+.ss_application{
+	+ss_sprite
+	background-position:0px -55px;
+}
+.ss_application_add{
+	+ss_sprite
+	background-position:0px -73px;
+}
+.ss_application_cascade{
+	+ss_sprite
+	background-position:0px -91px;
+}
+.ss_application_delete{
+	+ss_sprite
+	background-position:0px -109px;
+}
+.ss_application_double{
+	+ss_sprite
+	background-position:0px -127px;
+}
+.ss_application_edit{
+	+ss_sprite
+	background-position:0px -145px;
+}
+.ss_application_error{
+	+ss_sprite
+	background-position:0px -163px;
+}
+.ss_application_form{
+	+ss_sprite
+	background-position:0px -181px;
+}
+.ss_application_form_add{
+	+ss_sprite
+	background-position:0px -199px;
+}
+.ss_application_form_delete{
+	+ss_sprite
+	background-position:0px -217px;
+}
+.ss_application_form_edit{
+	+ss_sprite
+	background-position:0px -235px;
+}
+.ss_application_form_magnify{
+	+ss_sprite
+	background-position:0px -253px;
+}
+.ss_application_get{
+	+ss_sprite
+	background-position:0px -271px;
+}
+.ss_application_go{
+	+ss_sprite
+	background-position:0px -289px;
+}
+.ss_application_home{
+	+ss_sprite
+	background-position:0px -307px;
+}
+.ss_application_key{
+	+ss_sprite
+	background-position:0px -325px;
+}
+.ss_application_lightning{
+	+ss_sprite
+	background-position:0px -343px;
+}
+.ss_application_link{
+	+ss_sprite
+	background-position:0px -361px;
+}
+.ss_application_osx{
+	+ss_sprite
+	background-position:0px -379px;
+}
+.ss_application_osx_terminal{
+	+ss_sprite
+	background-position:0px -397px;
+}
+.ss_application_put{
+	+ss_sprite
+	background-position:0px -415px;
+}
+.ss_application_side_boxes{
+	+ss_sprite
+	background-position:0px -433px;
+}
+.ss_application_side_contract{
+	+ss_sprite
+	background-position:0px -451px;
+}
+.ss_application_side_expand{
+	+ss_sprite
+	background-position:0px -469px;
+}
+.ss_application_side_list{
+	+ss_sprite
+	background-position:0px -487px;
+}
+.ss_application_side_tree{
+	+ss_sprite
+	background-position:0px -505px;
+}
+.ss_application_split{
+	+ss_sprite
+	background-position:0px -523px;
+}
+.ss_application_tile_horizontal{
+	+ss_sprite
+	background-position:0px -541px;
+}
+.ss_application_tile_vertical{
+	+ss_sprite
+	background-position:0px -559px;
+}
+.ss_application_view_columns{
+	+ss_sprite
+	background-position:0px -577px;
+}
+.ss_application_view_detail{
+	+ss_sprite
+	background-position:0px -595px;
+}
+.ss_application_view_gallery{
+	+ss_sprite
+	background-position:0px -613px;
+}
+.ss_application_view_icons{
+	+ss_sprite
+	background-position:0px -631px;
+}
+.ss_application_view_list{
+	+ss_sprite
+	background-position:0px -649px;
+}
+.ss_application_view_tile{
+	+ss_sprite
+	background-position:0px -667px;
+}
+.ss_application_xp{
+	+ss_sprite
+	background-position:0px -685px;
+}
+.ss_application_xp_terminal{
+	+ss_sprite
+	background-position:0px -703px;
+}
+.ss_arrow_branch{
+	+ss_sprite
+	background-position:0px -721px;
+}
+.ss_arrow_divide{
+	+ss_sprite
+	background-position:0px -739px;
+}
+.ss_arrow_down{
+	+ss_sprite
+	background-position:0px -757px;
+}
+.ss_arrow_in{
+	+ss_sprite
+	background-position:0px -775px;
+}
+.ss_arrow_inout{
+	+ss_sprite
+	background-position:0px -793px;
+}
+.ss_arrow_join{
+	+ss_sprite
+	background-position:0px -811px;
+}
+.ss_arrow_left{
+	+ss_sprite
+	background-position:0px -829px;
+}
+.ss_arrow_merge{
+	+ss_sprite
+	background-position:0px -847px;
+}
+.ss_arrow_out{
+	+ss_sprite
+	background-position:0px -865px;
+}
+.ss_arrow_redo{
+	+ss_sprite
+	background-position:0px -883px;
+}
+.ss_arrow_refresh{
+	+ss_sprite
+	background-position:0px -901px;
+}
+.ss_arrow_refresh_small{
+	+ss_sprite
+	background-position:0px -919px;
+}
+.ss_arrow_right{
+	+ss_sprite
+	background-position:0px -937px;
+}
+.ss_arrow_rotate_anticlockwise{
+	+ss_sprite
+	background-position:0px -955px;
+}
+.ss_arrow_rotate_clockwise{
+	+ss_sprite
+	background-position:0px -973px;
+}
+.ss_arrow_switch{
+	+ss_sprite
+	background-position:0px -991px;
+}
+.ss_arrow_turn_left{
+	+ss_sprite
+	background-position:0px -1009px;
+}
+.ss_arrow_turn_right{
+	+ss_sprite
+	background-position:0px -1027px;
+}
+.ss_arrow_undo{
+	+ss_sprite
+	background-position:0px -1045px;
+}
+.ss_arrow_up{
+	+ss_sprite
+	background-position:0px -1063px;
+}
+.ss_asterisk_orange{
+	+ss_sprite
+	background-position:0px -1081px;
+}
+.ss_asterisk_yellow{
+	+ss_sprite
+	background-position:0px -1099px;
+}
+.ss_attach{
+	+ss_sprite
+	background-position:0px -1117px;
+}
+.ss_award_star_add{
+	+ss_sprite
+	background-position:0px -1135px;
+}
+.ss_award_star_bronze_1{
+	+ss_sprite
+	background-position:0px -1153px;
+}
+.ss_award_star_bronze_2{
+	+ss_sprite
+	background-position:0px -1171px;
+}
+.ss_award_star_bronze_3{
+	+ss_sprite
+	background-position:0px -1189px;
+}
+.ss_award_star_delete{
+	+ss_sprite
+	background-position:0px -1207px;
+}
+.ss_award_star_gold_1{
+	+ss_sprite
+	background-position:0px -1225px;
+}
+.ss_award_star_gold_2{
+	+ss_sprite
+	background-position:0px -1243px;
+}
+.ss_award_star_gold_3{
+	+ss_sprite
+	background-position:0px -1261px;
+}
+.ss_award_star_silver_1{
+	+ss_sprite
+	background-position:0px -1279px;
+}
+.ss_award_star_silver_2{
+	+ss_sprite
+	background-position:0px -1297px;
+}
+.ss_award_star_silver_3{
+	+ss_sprite
+	background-position:0px -1315px;
+}
+.ss_basket{
+	+ss_sprite
+	background-position:0px -1333px;
+}
+.ss_basket_add{
+	+ss_sprite
+	background-position:0px -1351px;
+}
+.ss_basket_delete{
+	+ss_sprite
+	background-position:0px -1369px;
+}
+.ss_basket_edit{
+	+ss_sprite
+	background-position:0px -1387px;
+}
+.ss_basket_error{
+	+ss_sprite
+	background-position:0px -1405px;
+}
+.ss_basket_go{
+	+ss_sprite
+	background-position:0px -1423px;
+}
+.ss_basket_put{
+	+ss_sprite
+	background-position:0px -1441px;
+}
+.ss_basket_remove{
+	+ss_sprite
+	background-position:0px -1459px;
+}
+.ss_bell{
+	+ss_sprite
+	background-position:0px -1477px;
+}
+.ss_bell_add{
+	+ss_sprite
+	background-position:0px -1495px;
+}
+.ss_bell_delete{
+	+ss_sprite
+	background-position:0px -1513px;
+}
+.ss_bell_error{
+	+ss_sprite
+	background-position:0px -1531px;
+}
+.ss_bell_go{
+	+ss_sprite
+	background-position:0px -1549px;
+}
+.ss_bell_link{
+	+ss_sprite
+	background-position:0px -1567px;
+}
+.ss_bin{
+	+ss_sprite
+	background-position:0px -1585px;
+}
+.ss_bin_closed{
+	+ss_sprite
+	background-position:0px -1603px;
+}
+.ss_bin_empty{
+	+ss_sprite
+	background-position:0px -1621px;
+}
+.ss_bomb{
+	+ss_sprite
+	background-position:0px -1639px;
+}
+.ss_book{
+	+ss_sprite
+	background-position:0px -1657px;
+}
+.ss_book_add{
+	+ss_sprite
+	background-position:0px -1675px;
+}
+.ss_book_addresses{
+	+ss_sprite
+	background-position:0px -1693px;
+}
+.ss_book_delete{
+	+ss_sprite
+	background-position:0px -1711px;
+}
+.ss_book_edit{
+	+ss_sprite
+	background-position:0px -1729px;
+}
+.ss_book_error{
+	+ss_sprite
+	background-position:0px -1747px;
+}
+.ss_book_go{
+	+ss_sprite
+	background-position:0px -1765px;
+}
+.ss_book_key{
+	+ss_sprite
+	background-position:0px -1783px;
+}
+.ss_book_link{
+	+ss_sprite
+	background-position:0px -1801px;
+}
+.ss_book_next{
+	+ss_sprite
+	background-position:0px -1819px;
+}
+.ss_book_open{
+	+ss_sprite
+	background-position:0px -1837px;
+}
+.ss_book_previous{
+	+ss_sprite
+	background-position:0px -1855px;
+}
+.ss_box{
+	+ss_sprite
+	background-position:0px -1873px;
+}
+.ss_brick{
+	+ss_sprite
+	background-position:0px -1891px;
+}
+.ss_brick_add{
+	+ss_sprite
+	background-position:0px -1909px;
+}
+.ss_brick_delete{
+	+ss_sprite
+	background-position:0px -1927px;
+}
+.ss_brick_edit{
+	+ss_sprite
+	background-position:0px -1945px;
+}
+.ss_brick_error{
+	+ss_sprite
+	background-position:0px -1963px;
+}
+.ss_brick_go{
+	+ss_sprite
+	background-position:0px -1981px;
+}
+.ss_brick_link{
+	+ss_sprite
+	background-position:0px -1999px;
+}
+.ss_bricks{
+	+ss_sprite
+	background-position:0px -2017px;
+}
+.ss_briefcase{
+	+ss_sprite
+	background-position:0px -2035px;
+}
+.ss_bug{
+	+ss_sprite
+	background-position:0px -2053px;
+}
+.ss_bug_add{
+	+ss_sprite
+	background-position:0px -2071px;
+}
+.ss_bug_delete{
+	+ss_sprite
+	background-position:0px -2089px;
+}
+.ss_bug_edit{
+	+ss_sprite
+	background-position:0px -2107px;
+}
+.ss_bug_error{
+	+ss_sprite
+	background-position:0px -2125px;
+}
+.ss_bug_go{
+	+ss_sprite
+	background-position:0px -2143px;
+}
+.ss_bug_link{
+	+ss_sprite
+	background-position:0px -2161px;
+}
+.ss_building{
+	+ss_sprite
+	background-position:0px -2179px;
+}
+.ss_building_add{
+	+ss_sprite
+	background-position:0px -2197px;
+}
+.ss_building_delete{
+	+ss_sprite
+	background-position:0px -2215px;
+}
+.ss_building_edit{
+	+ss_sprite
+	background-position:0px -2233px;
+}
+.ss_building_error{
+	+ss_sprite
+	background-position:0px -2251px;
+}
+.ss_building_go{
+	+ss_sprite
+	background-position:0px -2269px;
+}
+.ss_building_key{
+	+ss_sprite
+	background-position:0px -2287px;
+}
+.ss_building_link{
+	+ss_sprite
+	background-position:0px -2305px;
+}
+.ss_bullet_add{
+	+ss_sprite
+	background-position:0px -2323px;
+}
+.ss_bullet_arrow_bottom{
+	+ss_sprite
+	background-position:0px -2341px;
+}
+.ss_bullet_arrow_down{
+	+ss_sprite
+	background-position:0px -2359px;
+}
+.ss_bullet_arrow_top{
+	+ss_sprite
+	background-position:0px -2377px;
+}
+.ss_bullet_arrow_up{
+	+ss_sprite
+	background-position:0px -2395px;
+}
+.ss_bullet_black{
+	+ss_sprite
+	background-position:0px -2413px;
+}
+.ss_bullet_blue{
+	+ss_sprite
+	background-position:0px -2431px;
+}
+.ss_bullet_delete{
+	+ss_sprite
+	background-position:0px -2449px;
+}
+.ss_bullet_disk{
+	+ss_sprite
+	background-position:0px -2467px;
+}
+.ss_bullet_error{
+	+ss_sprite
+	background-position:0px -2485px;
+}
+.ss_bullet_feed{
+	+ss_sprite
+	background-position:0px -2503px;
+}
+.ss_bullet_go{
+	+ss_sprite
+	background-position:0px -2521px;
+}
+.ss_bullet_green{
+	+ss_sprite
+	background-position:0px -2539px;
+}
+.ss_bullet_key{
+	+ss_sprite
+	background-position:0px -2557px;
+}
+.ss_bullet_orange{
+	+ss_sprite
+	background-position:0px -2575px;
+}
+.ss_bullet_picture{
+	+ss_sprite
+	background-position:0px -2593px;
+}
+.ss_bullet_pink{
+	+ss_sprite
+	background-position:0px -2611px;
+}
+.ss_bullet_purple{
+	+ss_sprite
+	background-position:0px -2629px;
+}
+.ss_bullet_red{
+	+ss_sprite
+	background-position:0px -2647px;
+}
+.ss_bullet_star{
+	+ss_sprite
+	background-position:0px -2665px;
+}
+.ss_bullet_toggle_minus{
+	+ss_sprite
+	background-position:0px -2683px;
+}
+.ss_bullet_toggle_plus{
+	+ss_sprite
+	background-position:0px -2701px;
+}
+.ss_bullet_white{
+	+ss_sprite
+	background-position:0px -2719px;
+}
+.ss_bullet_wrench{
+	+ss_sprite
+	background-position:0px -2737px;
+}
+.ss_bullet_yellow{
+	+ss_sprite
+	background-position:0px -2755px;
+}
+.ss_cake{
+	+ss_sprite
+	background-position:0px -2773px;
+}
+.ss_calculator{
+	+ss_sprite
+	background-position:0px -2791px;
+}
+.ss_calculator_add{
+	+ss_sprite
+	background-position:0px -2809px;
+}
+.ss_calculator_delete{
+	+ss_sprite
+	background-position:0px -2827px;
+}
+.ss_calculator_edit{
+	+ss_sprite
+	background-position:0px -2845px;
+}
+.ss_calculator_error{
+	+ss_sprite
+	background-position:0px -2863px;
+}
+.ss_calculator_link{
+	+ss_sprite
+	background-position:0px -2881px;
+}
+.ss_calendar{
+	+ss_sprite
+	background-position:0px -2899px;
+}
+.ss_calendar_add{
+	+ss_sprite
+	background-position:0px -2917px;
+}
+.ss_calendar_delete{
+	+ss_sprite
+	background-position:0px -2935px;
+}
+.ss_calendar_edit{
+	+ss_sprite
+	background-position:0px -2953px;
+}
+.ss_calendar_link{
+	+ss_sprite
+	background-position:0px -2971px;
+}
+.ss_calendar_view_day{
+	+ss_sprite
+	background-position:0px -2989px;
+}
+.ss_calendar_view_month{
+	+ss_sprite
+	background-position:0px -3007px;
+}
+.ss_calendar_view_week{
+	+ss_sprite
+	background-position:0px -3025px;
+}
+.ss_camera{
+	+ss_sprite
+	background-position:0px -3043px;
+}
+.ss_camera_add{
+	+ss_sprite
+	background-position:0px -3061px;
+}
+.ss_camera_delete{
+	+ss_sprite
+	background-position:0px -3079px;
+}
+.ss_camera_edit{
+	+ss_sprite
+	background-position:0px -3097px;
+}
+.ss_camera_error{
+	+ss_sprite
+	background-position:0px -3115px;
+}
+.ss_camera_go{
+	+ss_sprite
+	background-position:0px -3133px;
+}
+.ss_camera_link{
+	+ss_sprite
+	background-position:0px -3151px;
+}
+.ss_camera_small{
+	+ss_sprite
+	background-position:0px -3169px;
+}
+.ss_cancel{
+	+ss_sprite
+	background-position:0px -3187px;
+}
+.ss_car{
+	+ss_sprite
+	background-position:0px -3205px;
+}
+.ss_car_add{
+	+ss_sprite
+	background-position:0px -3223px;
+}
+.ss_car_delete{
+	+ss_sprite
+	background-position:0px -3241px;
+}
+.ss_cart{
+	+ss_sprite
+	background-position:0px -3259px;
+}
+.ss_cart_add{
+	+ss_sprite
+	background-position:0px -3277px;
+}
+.ss_cart_delete{
+	+ss_sprite
+	background-position:0px -3295px;
+}
+.ss_cart_edit{
+	+ss_sprite
+	background-position:0px -3313px;
+}
+.ss_cart_error{
+	+ss_sprite
+	background-position:0px -3331px;
+}
+.ss_cart_go{
+	+ss_sprite
+	background-position:0px -3349px;
+}
+.ss_cart_put{
+	+ss_sprite
+	background-position:0px -3367px;
+}
+.ss_cart_remove{
+	+ss_sprite
+	background-position:0px -3385px;
+}
+.ss_cd{
+	+ss_sprite
+	background-position:0px -3403px;
+}
+.ss_cd_add{
+	+ss_sprite
+	background-position:0px -3421px;
+}
+.ss_cd_burn{
+	+ss_sprite
+	background-position:0px -3439px;
+}
+.ss_cd_delete{
+	+ss_sprite
+	background-position:0px -3457px;
+}
+.ss_cd_edit{
+	+ss_sprite
+	background-position:0px -3475px;
+}
+.ss_cd_eject{
+	+ss_sprite
+	background-position:0px -3493px;
+}
+.ss_cd_go{
+	+ss_sprite
+	background-position:0px -3511px;
+}
+.ss_chart_bar{
+	+ss_sprite
+	background-position:0px -3529px;
+}
+.ss_chart_bar_add{
+	+ss_sprite
+	background-position:0px -3547px;
+}
+.ss_chart_bar_delete{
+	+ss_sprite
+	background-position:0px -3565px;
+}
+.ss_chart_bar_edit{
+	+ss_sprite
+	background-position:0px -3583px;
+}
+.ss_chart_bar_error{
+	+ss_sprite
+	background-position:0px -3601px;
+}
+.ss_chart_bar_link{
+	+ss_sprite
+	background-position:0px -3619px;
+}
+.ss_chart_curve{
+	+ss_sprite
+	background-position:0px -3637px;
+}
+.ss_chart_curve_add{
+	+ss_sprite
+	background-position:0px -3655px;
+}
+.ss_chart_curve_delete{
+	+ss_sprite
+	background-position:0px -3673px;
+}
+.ss_chart_curve_edit{
+	+ss_sprite
+	background-position:0px -3691px;
+}
+.ss_chart_curve_error{
+	+ss_sprite
+	background-position:0px -3709px;
+}
+.ss_chart_curve_go{
+	+ss_sprite
+	background-position:0px -3727px;
+}
+.ss_chart_curve_link{
+	+ss_sprite
+	background-position:0px -3745px;
+}
+.ss_chart_line{
+	+ss_sprite
+	background-position:0px -3763px;
+}
+.ss_chart_line_add{
+	+ss_sprite
+	background-position:0px -3781px;
+}
+.ss_chart_line_delete{
+	+ss_sprite
+	background-position:0px -3799px;
+}
+.ss_chart_line_edit{
+	+ss_sprite
+	background-position:0px -3817px;
+}
+.ss_chart_line_error{
+	+ss_sprite
+	background-position:0px -3835px;
+}
+.ss_chart_line_link{
+	+ss_sprite
+	background-position:0px -3853px;
+}
+.ss_chart_organisation{
+	+ss_sprite
+	background-position:0px -3871px;
+}
+.ss_chart_organisation_add{
+	+ss_sprite
+	background-position:0px -3889px;
+}
+.ss_chart_organisation_delete{
+	+ss_sprite
+	background-position:0px -3907px;
+}
+.ss_chart_pie{
+	+ss_sprite
+	background-position:0px -3925px;
+}
+.ss_chart_pie_add{
+	+ss_sprite
+	background-position:0px -3943px;
+}
+.ss_chart_pie_delete{
+	+ss_sprite
+	background-position:0px -3961px;
+}
+.ss_chart_pie_edit{
+	+ss_sprite
+	background-position:0px -3979px;
+}
+.ss_chart_pie_error{
+	+ss_sprite
+	background-position:0px -3997px;
+}
+.ss_chart_pie_link{
+	+ss_sprite
+	background-position:0px -4015px;
+}
+.ss_clock{
+	+ss_sprite
+	background-position:0px -4033px;
+}
+.ss_clock_add{
+	+ss_sprite
+	background-position:0px -4051px;
+}
+.ss_clock_delete{
+	+ss_sprite
+	background-position:0px -4069px;
+}
+.ss_clock_edit{
+	+ss_sprite
+	background-position:0px -4087px;
+}
+.ss_clock_error{
+	+ss_sprite
+	background-position:0px -4105px;
+}
+.ss_clock_go{
+	+ss_sprite
+	background-position:0px -4123px;
+}
+.ss_clock_link{
+	+ss_sprite
+	background-position:0px -4141px;
+}
+.ss_clock_pause{
+	+ss_sprite
+	background-position:0px -4159px;
+}
+.ss_clock_play{
+	+ss_sprite
+	background-position:0px -4177px;
+}
+.ss_clock_red{
+	+ss_sprite
+	background-position:0px -4195px;
+}
+.ss_clock_stop{
+	+ss_sprite
+	background-position:0px -4213px;
+}
+.ss_cog{
+	+ss_sprite
+	background-position:0px -4231px;
+}
+.ss_cog_add{
+	+ss_sprite
+	background-position:0px -4249px;
+}
+.ss_cog_delete{
+	+ss_sprite
+	background-position:0px -4267px;
+}
+.ss_cog_edit{
+	+ss_sprite
+	background-position:0px -4285px;
+}
+.ss_cog_error{
+	+ss_sprite
+	background-position:0px -4303px;
+}
+.ss_cog_go{
+	+ss_sprite
+	background-position:0px -4321px;
+}
+.ss_coins{
+	+ss_sprite
+	background-position:0px -4339px;
+}
+.ss_coins_add{
+	+ss_sprite
+	background-position:0px -4357px;
+}
+.ss_coins_delete{
+	+ss_sprite
+	background-position:0px -4375px;
+}
+.ss_color_swatch{
+	+ss_sprite
+	background-position:0px -4393px;
+}
+.ss_color_wheel{
+	+ss_sprite
+	background-position:0px -4411px;
+}
+.ss_comment{
+	+ss_sprite
+	background-position:0px -4429px;
+}
+.ss_comment_add{
+	+ss_sprite
+	background-position:0px -4447px;
+}
+.ss_comment_delete{
+	+ss_sprite
+	background-position:0px -4465px;
+}
+.ss_comment_edit{
+	+ss_sprite
+	background-position:0px -4483px;
+}
+.ss_comments{
+	+ss_sprite
+	background-position:0px -4501px;
+}
+.ss_comments_add{
+	+ss_sprite
+	background-position:0px -4519px;
+}
+.ss_comments_delete{
+	+ss_sprite
+	background-position:0px -4537px;
+}
+.ss_compress{
+	+ss_sprite
+	background-position:0px -4555px;
+}
+.ss_computer{
+	+ss_sprite
+	background-position:0px -4573px;
+}
+.ss_computer_add{
+	+ss_sprite
+	background-position:0px -4591px;
+}
+.ss_computer_delete{
+	+ss_sprite
+	background-position:0px -4609px;
+}
+.ss_computer_edit{
+	+ss_sprite
+	background-position:0px -4627px;
+}
+.ss_computer_error{
+	+ss_sprite
+	background-position:0px -4645px;
+}
+.ss_computer_go{
+	+ss_sprite
+	background-position:0px -4663px;
+}
+.ss_computer_key{
+	+ss_sprite
+	background-position:0px -4681px;
+}
+.ss_computer_link{
+	+ss_sprite
+	background-position:0px -4699px;
+}
+.ss_connect{
+	+ss_sprite
+	background-position:0px -4717px;
+}
+.ss_contrast{
+	+ss_sprite
+	background-position:0px -4735px;
+}
+.ss_contrast_decrease{
+	+ss_sprite
+	background-position:0px -4753px;
+}
+.ss_contrast_high{
+	+ss_sprite
+	background-position:0px -4771px;
+}
+.ss_contrast_increase{
+	+ss_sprite
+	background-position:0px -4789px;
+}
+.ss_contrast_low{
+	+ss_sprite
+	background-position:0px -4807px;
+}
+.ss_control_eject{
+	+ss_sprite
+	background-position:0px -4825px;
+}
+.ss_control_eject_blue{
+	+ss_sprite
+	background-position:0px -4843px;
+}
+.ss_control_end{
+	+ss_sprite
+	background-position:0px -4861px;
+}
+.ss_control_end_blue{
+	+ss_sprite
+	background-position:0px -4879px;
+}
+.ss_control_equalizer{
+	+ss_sprite
+	background-position:0px -4897px;
+}
+.ss_control_equalizer_blue{
+	+ss_sprite
+	background-position:0px -4915px;
+}
+.ss_control_fastforward{
+	+ss_sprite
+	background-position:0px -4933px;
+}
+.ss_control_fastforward_blue{
+	+ss_sprite
+	background-position:0px -4951px;
+}
+.ss_control_pause{
+	+ss_sprite
+	background-position:0px -4969px;
+}
+.ss_control_pause_blue{
+	+ss_sprite
+	background-position:0px -4987px;
+}
+.ss_control_play{
+	+ss_sprite
+	background-position:0px -5005px;
+}
+.ss_control_play_blue{
+	+ss_sprite
+	background-position:0px -5023px;
+}
+.ss_control_repeat{
+	+ss_sprite
+	background-position:0px -5041px;
+}
+.ss_control_repeat_blue{
+	+ss_sprite
+	background-position:0px -5059px;
+}
+.ss_control_rewind{
+	+ss_sprite
+	background-position:0px -5077px;
+}
+.ss_control_rewind_blue{
+	+ss_sprite
+	background-position:0px -5095px;
+}
+.ss_control_start{
+	+ss_sprite
+	background-position:0px -5113px;
+}
+.ss_control_start_blue{
+	+ss_sprite
+	background-position:0px -5131px;
+}
+.ss_control_stop{
+	+ss_sprite
+	background-position:0px -5149px;
+}
+.ss_control_stop_blue{
+	+ss_sprite
+	background-position:0px -5167px;
+}
+.ss_controller{
+	+ss_sprite
+	background-position:0px -5185px;
+}
+.ss_controller_add{
+	+ss_sprite
+	background-position:0px -5203px;
+}
+.ss_controller_delete{
+	+ss_sprite
+	background-position:0px -5221px;
+}
+.ss_controller_error{
+	+ss_sprite
+	background-position:0px -5239px;
+}
+.ss_creditcards{
+	+ss_sprite
+	background-position:0px -5257px;
+}
+.ss_cross{
+	+ss_sprite
+	background-position:0px -5275px;
+}
+.ss_css{
+	+ss_sprite
+	background-position:0px -5293px;
+}
+.ss_css_add{
+	+ss_sprite
+	background-position:0px -5311px;
+}
+.ss_css_delete{
+	+ss_sprite
+	background-position:0px -5329px;
+}
+.ss_css_go{
+	+ss_sprite
+	background-position:0px -5347px;
+}
+.ss_css_valid{
+	+ss_sprite
+	background-position:0px -5365px;
+}
+.ss_cup{
+	+ss_sprite
+	background-position:0px -5383px;
+}
+.ss_cup_add{
+	+ss_sprite
+	background-position:0px -5401px;
+}
+.ss_cup_delete{
+	+ss_sprite
+	background-position:0px -5419px;
+}
+.ss_cup_edit{
+	+ss_sprite
+	background-position:0px -5437px;
+}
+.ss_cup_error{
+	+ss_sprite
+	background-position:0px -5455px;
+}
+.ss_cup_go{
+	+ss_sprite
+	background-position:0px -5473px;
+}
+.ss_cup_key{
+	+ss_sprite
+	background-position:0px -5491px;
+}
+.ss_cup_link{
+	+ss_sprite
+	background-position:0px -5509px;
+}
+.ss_cursor{
+	+ss_sprite
+	background-position:0px -5527px;
+}
+.ss_cut{
+	+ss_sprite
+	background-position:0px -5545px;
+}
+.ss_cut_red{
+	+ss_sprite
+	background-position:0px -5563px;
+}
+.ss_database{
+	+ss_sprite
+	background-position:0px -5581px;
+}
+.ss_database_add{
+	+ss_sprite
+	background-position:0px -5599px;
+}
+.ss_database_connect{
+	+ss_sprite
+	background-position:0px -5617px;
+}
+.ss_database_delete{
+	+ss_sprite
+	background-position:0px -5635px;
+}
+.ss_database_edit{
+	+ss_sprite
+	background-position:0px -5653px;
+}
+.ss_database_error{
+	+ss_sprite
+	background-position:0px -5671px;
+}
+.ss_database_gear{
+	+ss_sprite
+	background-position:0px -5689px;
+}
+.ss_database_go{
+	+ss_sprite
+	background-position:0px -5707px;
+}
+.ss_database_key{
+	+ss_sprite
+	background-position:0px -5725px;
+}
+.ss_database_lightning{
+	+ss_sprite
+	background-position:0px -5743px;
+}
+.ss_database_link{
+	+ss_sprite
+	background-position:0px -5761px;
+}
+.ss_database_refresh{
+	+ss_sprite
+	background-position:0px -5779px;
+}
+.ss_database_save{
+	+ss_sprite
+	background-position:0px -5797px;
+}
+.ss_database_table{
+	+ss_sprite
+	background-position:0px -5815px;
+}
+.ss_date{
+	+ss_sprite
+	background-position:0px -5833px;
+}
+.ss_date_add{
+	+ss_sprite
+	background-position:0px -5851px;
+}
+.ss_date_delete{
+	+ss_sprite
+	background-position:0px -5869px;
+}
+.ss_date_edit{
+	+ss_sprite
+	background-position:0px -5887px;
+}
+.ss_date_error{
+	+ss_sprite
+	background-position:0px -5905px;
+}
+.ss_date_go{
+	+ss_sprite
+	background-position:0px -5923px;
+}
+.ss_date_link{
+	+ss_sprite
+	background-position:0px -5941px;
+}
+.ss_date_magnify{
+	+ss_sprite
+	background-position:0px -5959px;
+}
+.ss_date_next{
+	+ss_sprite
+	background-position:0px -5977px;
+}
+.ss_date_previous{
+	+ss_sprite
+	background-position:0px -5995px;
+}
+.ss_delete{
+	+ss_sprite
+	background-position:0px -6013px;
+}
+.ss_disconnect{
+	+ss_sprite
+	background-position:0px -6031px;
+}
+.ss_disk{
+	+ss_sprite
+	background-position:0px -6049px;
+}
+.ss_disk_multiple{
+	+ss_sprite
+	background-position:0px -6067px;
+}
+.ss_door{
+	+ss_sprite
+	background-position:0px -6085px;
+}
+.ss_door_in{
+	+ss_sprite
+	background-position:0px -6103px;
+}
+.ss_door_open{
+	+ss_sprite
+	background-position:0px -6121px;
+}
+.ss_door_out{
+	+ss_sprite
+	background-position:0px -6139px;
+}
+.ss_drink{
+	+ss_sprite
+	background-position:0px -6157px;
+}
+.ss_drink_empty{
+	+ss_sprite
+	background-position:0px -6175px;
+}
+.ss_drive{
+	+ss_sprite
+	background-position:0px -6193px;
+}
+.ss_drive_add{
+	+ss_sprite
+	background-position:0px -6211px;
+}
+.ss_drive_burn{
+	+ss_sprite
+	background-position:0px -6229px;
+}
+.ss_drive_cd{
+	+ss_sprite
+	background-position:0px -6247px;
+}
+.ss_drive_cd_empty{
+	+ss_sprite
+	background-position:0px -6265px;
+}
+.ss_drive_delete{
+	+ss_sprite
+	background-position:0px -6283px;
+}
+.ss_drive_disk{
+	+ss_sprite
+	background-position:0px -6301px;
+}
+.ss_drive_edit{
+	+ss_sprite
+	background-position:0px -6319px;
+}
+.ss_drive_error{
+	+ss_sprite
+	background-position:0px -6337px;
+}
+.ss_drive_go{
+	+ss_sprite
+	background-position:0px -6355px;
+}
+.ss_drive_key{
+	+ss_sprite
+	background-position:0px -6373px;
+}
+.ss_drive_link{
+	+ss_sprite
+	background-position:0px -6391px;
+}
+.ss_drive_magnify{
+	+ss_sprite
+	background-position:0px -6409px;
+}
+.ss_drive_network{
+	+ss_sprite
+	background-position:0px -6427px;
+}
+.ss_drive_rename{
+	+ss_sprite
+	background-position:0px -6445px;
+}
+.ss_drive_user{
+	+ss_sprite
+	background-position:0px -6463px;
+}
+.ss_drive_web{
+	+ss_sprite
+	background-position:0px -6481px;
+}
+.ss_dvd{
+	+ss_sprite
+	background-position:0px -6499px;
+}
+.ss_dvd_add{
+	+ss_sprite
+	background-position:0px -6517px;
+}
+.ss_dvd_delete{
+	+ss_sprite
+	background-position:0px -6535px;
+}
+.ss_dvd_edit{
+	+ss_sprite
+	background-position:0px -6553px;
+}
+.ss_dvd_error{
+	+ss_sprite
+	background-position:0px -6571px;
+}
+.ss_dvd_go{
+	+ss_sprite
+	background-position:0px -6589px;
+}
+.ss_dvd_key{
+	+ss_sprite
+	background-position:0px -6607px;
+}
+.ss_dvd_link{
+	+ss_sprite
+	background-position:0px -6625px;
+}
+.ss_email{
+	+ss_sprite
+	background-position:0px -6643px;
+}
+.ss_email_add{
+	+ss_sprite
+	background-position:0px -6661px;
+}
+.ss_email_attach{
+	+ss_sprite
+	background-position:0px -6679px;
+}
+.ss_email_delete{
+	+ss_sprite
+	background-position:0px -6697px;
+}
+.ss_email_edit{
+	+ss_sprite
+	background-position:0px -6715px;
+}
+.ss_email_error{
+	+ss_sprite
+	background-position:0px -6733px;
+}
+.ss_email_go{
+	+ss_sprite
+	background-position:0px -6751px;
+}
+.ss_email_link{
+	+ss_sprite
+	background-position:0px -6769px;
+}
+.ss_email_open{
+	+ss_sprite
+	background-position:0px -6787px;
+}
+.ss_email_open_image{
+	+ss_sprite
+	background-position:0px -6805px;
+}
+.ss_emoticon_evilgrin{
+	+ss_sprite
+	background-position:0px -6823px;
+}
+.ss_emoticon_grin{
+	+ss_sprite
+	background-position:0px -6841px;
+}
+.ss_emoticon_happy{
+	+ss_sprite
+	background-position:0px -6859px;
+}
+.ss_emoticon_smile{
+	+ss_sprite
+	background-position:0px -6877px;
+}
+.ss_emoticon_surprised{
+	+ss_sprite
+	background-position:0px -6895px;
+}
+.ss_emoticon_tongue{
+	+ss_sprite
+	background-position:0px -6913px;
+}
+.ss_emoticon_unhappy{
+	+ss_sprite
+	background-position:0px -6931px;
+}
+.ss_emoticon_waii{
+	+ss_sprite
+	background-position:0px -6949px;
+}
+.ss_emoticon_wink{
+	+ss_sprite
+	background-position:0px -6967px;
+}
+.ss_error{
+	+ss_sprite
+	background-position:0px -6985px;
+}
+.ss_error_add{
+	+ss_sprite
+	background-position:0px -7003px;
+}
+.ss_error_delete{
+	+ss_sprite
+	background-position:0px -7021px;
+}
+.ss_error_go{
+	+ss_sprite
+	background-position:0px -7039px;
+}
+.ss_exclamation{
+	+ss_sprite
+	background-position:0px -7057px;
+}
+.ss_eye{
+	+ss_sprite
+	background-position:0px -7075px;
+}
+.ss_feed{
+	+ss_sprite
+	background-position:0px -7093px;
+}
+.ss_feed_add{
+	+ss_sprite
+	background-position:0px -7111px;
+}
+.ss_feed_delete{
+	+ss_sprite
+	background-position:0px -7129px;
+}
+.ss_feed_disk{
+	+ss_sprite
+	background-position:0px -7147px;
+}
+.ss_feed_edit{
+	+ss_sprite
+	background-position:0px -7165px;
+}
+.ss_feed_error{
+	+ss_sprite
+	background-position:0px -7183px;
+}
+.ss_feed_go{
+	+ss_sprite
+	background-position:0px -7201px;
+}
+.ss_feed_key{
+	+ss_sprite
+	background-position:0px -7219px;
+}
+.ss_feed_link{
+	+ss_sprite
+	background-position:0px -7237px;
+}
+.ss_feed_magnify{
+	+ss_sprite
+	background-position:0px -7255px;
+}
+.ss_female{
+	+ss_sprite
+	background-position:0px -7273px;
+}
+.ss_film{
+	+ss_sprite
+	background-position:0px -7291px;
+}
+.ss_film_add{
+	+ss_sprite
+	background-position:0px -7309px;
+}
+.ss_film_delete{
+	+ss_sprite
+	background-position:0px -7327px;
+}
+.ss_film_edit{
+	+ss_sprite
+	background-position:0px -7345px;
+}
+.ss_film_error{
+	+ss_sprite
+	background-position:0px -7363px;
+}
+.ss_film_go{
+	+ss_sprite
+	background-position:0px -7381px;
+}
+.ss_film_key{
+	+ss_sprite
+	background-position:0px -7399px;
+}
+.ss_film_link{
+	+ss_sprite
+	background-position:0px -7417px;
+}
+.ss_film_save{
+	+ss_sprite
+	background-position:0px -7435px;
+}
+.ss_find{
+	+ss_sprite
+	background-position:0px -7453px;
+}
+.ss_flag_blue{
+	+ss_sprite
+	background-position:0px -7471px;
+}
+.ss_flag_green{
+	+ss_sprite
+	background-position:0px -7489px;
+}
+.ss_flag_orange{
+	+ss_sprite
+	background-position:0px -7507px;
+}
+.ss_flag_pink{
+	+ss_sprite
+	background-position:0px -7525px;
+}
+.ss_flag_purple{
+	+ss_sprite
+	background-position:0px -7543px;
+}
+.ss_flag_red{
+	+ss_sprite
+	background-position:0px -7561px;
+}
+.ss_flag_yellow{
+	+ss_sprite
+	background-position:0px -7579px;
+}
+.ss_folder{
+	+ss_sprite
+	background-position:0px -7597px;
+}
+.ss_folder_add{
+	+ss_sprite
+	background-position:0px -7615px;
+}
+.ss_folder_bell{
+	+ss_sprite
+	background-position:0px -7633px;
+}
+.ss_folder_brick{
+	+ss_sprite
+	background-position:0px -7651px;
+}
+.ss_folder_bug{
+	+ss_sprite
+	background-position:0px -7669px;
+}
+.ss_folder_camera{
+	+ss_sprite
+	background-position:0px -7687px;
+}
+.ss_folder_database{
+	+ss_sprite
+	background-position:0px -7705px;
+}
+.ss_folder_delete{
+	+ss_sprite
+	background-position:0px -7723px;
+}
+.ss_folder_edit{
+	+ss_sprite
+	background-position:0px -7741px;
+}
+.ss_folder_error{
+	+ss_sprite
+	background-position:0px -7759px;
+}
+.ss_folder_explore{
+	+ss_sprite
+	background-position:0px -7777px;
+}
+.ss_folder_feed{
+	+ss_sprite
+	background-position:0px -7795px;
+}
+.ss_folder_find{
+	+ss_sprite
+	background-position:0px -7813px;
+}
+.ss_folder_go{
+	+ss_sprite
+	background-position:0px -7831px;
+}
+.ss_folder_heart{
+	+ss_sprite
+	background-position:0px -7849px;
+}
+.ss_folder_image{
+	+ss_sprite
+	background-position:0px -7867px;
+}
+.ss_folder_key{
+	+ss_sprite
+	background-position:0px -7885px;
+}
+.ss_folder_lightbulb{
+	+ss_sprite
+	background-position:0px -7903px;
+}
+.ss_folder_link{
+	+ss_sprite
+	background-position:0px -7921px;
+}
+.ss_folder_magnify{
+	+ss_sprite
+	background-position:0px -7939px;
+}
+.ss_folder_page{
+	+ss_sprite
+	background-position:0px -7957px;
+}
+.ss_folder_page_white{
+	+ss_sprite
+	background-position:0px -7975px;
+}
+.ss_folder_palette{
+	+ss_sprite
+	background-position:0px -7993px;
+}
+.ss_folder_picture{
+	+ss_sprite
+	background-position:0px -8011px;
+}
+.ss_folder_star{
+	+ss_sprite
+	background-position:0px -8029px;
+}
+.ss_folder_table{
+	+ss_sprite
+	background-position:0px -8047px;
+}
+.ss_folder_user{
+	+ss_sprite
+	background-position:0px -8065px;
+}
+.ss_folder_wrench{
+	+ss_sprite
+	background-position:0px -8083px;
+}
+.ss_font{
+	+ss_sprite
+	background-position:0px -8101px;
+}
+.ss_font_add{
+	+ss_sprite
+	background-position:0px -8119px;
+}
+.ss_font_delete{
+	+ss_sprite
+	background-position:0px -8137px;
+}
+.ss_font_go{
+	+ss_sprite
+	background-position:0px -8155px;
+}
+.ss_group{
+	+ss_sprite
+	background-position:0px -8173px;
+}
+.ss_group_add{
+	+ss_sprite
+	background-position:0px -8191px;
+}
+.ss_group_delete{
+	+ss_sprite
+	background-position:0px -8209px;
+}
+.ss_group_edit{
+	+ss_sprite
+	background-position:0px -8227px;
+}
+.ss_group_error{
+	+ss_sprite
+	background-position:0px -8245px;
+}
+.ss_group_gear{
+	+ss_sprite
+	background-position:0px -8263px;
+}
+.ss_group_go{
+	+ss_sprite
+	background-position:0px -8281px;
+}
+.ss_group_key{
+	+ss_sprite
+	background-position:0px -8299px;
+}
+.ss_group_link{
+	+ss_sprite
+	background-position:0px -8317px;
+}
+.ss_heart{
+	+ss_sprite
+	background-position:0px -8335px;
+}
+.ss_heart_add{
+	+ss_sprite
+	background-position:0px -8353px;
+}
+.ss_heart_delete{
+	+ss_sprite
+	background-position:0px -8371px;
+}
+.ss_help{
+	+ss_sprite
+	background-position:0px -8389px;
+}
+.ss_hourglass{
+	+ss_sprite
+	background-position:0px -8407px;
+}
+.ss_hourglass_add{
+	+ss_sprite
+	background-position:0px -8425px;
+}
+.ss_hourglass_delete{
+	+ss_sprite
+	background-position:0px -8443px;
+}
+.ss_hourglass_go{
+	+ss_sprite
+	background-position:0px -8461px;
+}
+.ss_hourglass_link{
+	+ss_sprite
+	background-position:0px -8479px;
+}
+.ss_house{
+	+ss_sprite
+	background-position:0px -8497px;
+}
+.ss_house_go{
+	+ss_sprite
+	background-position:0px -8515px;
+}
+.ss_house_link{
+	+ss_sprite
+	background-position:0px -8533px;
+}
+.ss_html{
+	+ss_sprite
+	background-position:0px -8551px;
+}
+.ss_html_add{
+	+ss_sprite
+	background-position:0px -8569px;
+}
+.ss_html_delete{
+	+ss_sprite
+	background-position:0px -8587px;
+}
+.ss_html_go{
+	+ss_sprite
+	background-position:0px -8605px;
+}
+.ss_html_valid{
+	+ss_sprite
+	background-position:0px -8623px;
+}
+.ss_image{
+	+ss_sprite
+	background-position:0px -8641px;
+}
+.ss_image_add{
+	+ss_sprite
+	background-position:0px -8659px;
+}
+.ss_image_delete{
+	+ss_sprite
+	background-position:0px -8677px;
+}
+.ss_image_edit{
+	+ss_sprite
+	background-position:0px -8695px;
+}
+.ss_image_link{
+	+ss_sprite
+	background-position:0px -8713px;
+}
+.ss_images{
+	+ss_sprite
+	background-position:0px -8731px;
+}
+.ss_information{
+	+ss_sprite
+	background-position:0px -8749px;
+}
+.ss_ipod{
+	+ss_sprite
+	background-position:0px -8767px;
+}
+.ss_ipod_cast{
+	+ss_sprite
+	background-position:0px -8785px;
+}
+.ss_ipod_cast_add{
+	+ss_sprite
+	background-position:0px -8803px;
+}
+.ss_ipod_cast_delete{
+	+ss_sprite
+	background-position:0px -8821px;
+}
+.ss_ipod_sound{
+	+ss_sprite
+	background-position:0px -8839px;
+}
+.ss_joystick{
+	+ss_sprite
+	background-position:0px -8857px;
+}
+.ss_joystick_add{
+	+ss_sprite
+	background-position:0px -8875px;
+}
+.ss_joystick_delete{
+	+ss_sprite
+	background-position:0px -8893px;
+}
+.ss_joystick_error{
+	+ss_sprite
+	background-position:0px -8911px;
+}
+.ss_key{
+	+ss_sprite
+	background-position:0px -8929px;
+}
+.ss_key_add{
+	+ss_sprite
+	background-position:0px -8947px;
+}
+.ss_key_delete{
+	+ss_sprite
+	background-position:0px -8965px;
+}
+.ss_key_go{
+	+ss_sprite
+	background-position:0px -8983px;
+}
+.ss_keyboard{
+	+ss_sprite
+	background-position:0px -9001px;
+}
+.ss_keyboard_add{
+	+ss_sprite
+	background-position:0px -9019px;
+}
+.ss_keyboard_delete{
+	+ss_sprite
+	background-position:0px -9037px;
+}
+.ss_keyboard_magnify{
+	+ss_sprite
+	background-position:0px -9055px;
+}
+.ss_layers{
+	+ss_sprite
+	background-position:0px -9073px;
+}
+.ss_layout{
+	+ss_sprite
+	background-position:0px -9091px;
+}
+.ss_layout_add{
+	+ss_sprite
+	background-position:0px -9109px;
+}
+.ss_layout_content{
+	+ss_sprite
+	background-position:0px -9127px;
+}
+.ss_layout_delete{
+	+ss_sprite
+	background-position:0px -9145px;
+}
+.ss_layout_edit{
+	+ss_sprite
+	background-position:0px -9163px;
+}
+.ss_layout_error{
+	+ss_sprite
+	background-position:0px -9181px;
+}
+.ss_layout_header{
+	+ss_sprite
+	background-position:0px -9199px;
+}
+.ss_layout_link{
+	+ss_sprite
+	background-position:0px -9217px;
+}
+.ss_layout_sidebar{
+	+ss_sprite
+	background-position:0px -9235px;
+}
+.ss_lightbulb{
+	+ss_sprite
+	background-position:0px -9253px;
+}
+.ss_lightbulb_add{
+	+ss_sprite
+	background-position:0px -9271px;
+}
+.ss_lightbulb_delete{
+	+ss_sprite
+	background-position:0px -9289px;
+}
+.ss_lightbulb_off{
+	+ss_sprite
+	background-position:0px -9307px;
+}
+.ss_lightning{
+	+ss_sprite
+	background-position:0px -9325px;
+}
+.ss_lightning_add{
+	+ss_sprite
+	background-position:0px -9343px;
+}
+.ss_lightning_delete{
+	+ss_sprite
+	background-position:0px -9361px;
+}
+.ss_lightning_go{
+	+ss_sprite
+	background-position:0px -9379px;
+}
+.ss_link{
+	+ss_sprite
+	background-position:0px -9397px;
+}
+.ss_link_add{
+	+ss_sprite
+	background-position:0px -9415px;
+}
+.ss_link_break{
+	+ss_sprite
+	background-position:0px -9433px;
+}
+.ss_link_delete{
+	+ss_sprite
+	background-position:0px -9451px;
+}
+.ss_link_edit{
+	+ss_sprite
+	background-position:0px -9469px;
+}
+.ss_link_error{
+	+ss_sprite
+	background-position:0px -9487px;
+}
+.ss_link_go{
+	+ss_sprite
+	background-position:0px -9505px;
+}
+.ss_lock{
+	+ss_sprite
+	background-position:0px -9523px;
+}
+.ss_lock_add{
+	+ss_sprite
+	background-position:0px -9541px;
+}
+.ss_lock_break{
+	+ss_sprite
+	background-position:0px -9559px;
+}
+.ss_lock_delete{
+	+ss_sprite
+	background-position:0px -9577px;
+}
+.ss_lock_edit{
+	+ss_sprite
+	background-position:0px -9595px;
+}
+.ss_lock_go{
+	+ss_sprite
+	background-position:0px -9613px;
+}
+.ss_lock_open{
+	+ss_sprite
+	background-position:0px -9631px;
+}
+.ss_lorry{
+	+ss_sprite
+	background-position:0px -9649px;
+}
+.ss_lorry_add{
+	+ss_sprite
+	background-position:0px -9667px;
+}
+.ss_lorry_delete{
+	+ss_sprite
+	background-position:0px -9685px;
+}
+.ss_lorry_error{
+	+ss_sprite
+	background-position:0px -9703px;
+}
+.ss_lorry_flatbed{
+	+ss_sprite
+	background-position:0px -9721px;
+}
+.ss_lorry_go{
+	+ss_sprite
+	background-position:0px -9739px;
+}
+.ss_lorry_link{
+	+ss_sprite
+	background-position:0px -9757px;
+}
+.ss_magifier_zoom_out{
+	+ss_sprite
+	background-position:0px -9775px;
+}
+.ss_magnifier{
+	+ss_sprite
+	background-position:0px -9793px;
+}
+.ss_magnifier_zoom_in{
+	+ss_sprite
+	background-position:0px -9811px;
+}
+.ss_male{
+	+ss_sprite
+	background-position:0px -9829px;
+}
+.ss_map{
+	+ss_sprite
+	background-position:0px -9847px;
+}
+.ss_map_add{
+	+ss_sprite
+	background-position:0px -9865px;
+}
+.ss_map_delete{
+	+ss_sprite
+	background-position:0px -9883px;
+}
+.ss_map_edit{
+	+ss_sprite
+	background-position:0px -9901px;
+}
+.ss_map_go{
+	+ss_sprite
+	background-position:0px -9919px;
+}
+.ss_map_magnify{
+	+ss_sprite
+	background-position:0px -9937px;
+}
+.ss_medal_bronze_1{
+	+ss_sprite
+	background-position:0px -9955px;
+}
+.ss_medal_bronze_2{
+	+ss_sprite
+	background-position:0px -9973px;
+}
+.ss_medal_bronze_3{
+	+ss_sprite
+	background-position:0px -9991px;
+}
+.ss_medal_bronze_add{
+	+ss_sprite
+	background-position:0px -10009px;
+}
+.ss_medal_bronze_delete{
+	+ss_sprite
+	background-position:0px -10027px;
+}
+.ss_medal_gold_1{
+	+ss_sprite
+	background-position:0px -10045px;
+}
+.ss_medal_gold_2{
+	+ss_sprite
+	background-position:0px -10063px;
+}
+.ss_medal_gold_3{
+	+ss_sprite
+	background-position:0px -10081px;
+}
+.ss_medal_gold_add{
+	+ss_sprite
+	background-position:0px -10099px;
+}
+.ss_medal_gold_delete{
+	+ss_sprite
+	background-position:0px -10117px;
+}
+.ss_medal_silver_1{
+	+ss_sprite
+	background-position:0px -10135px;
+}
+.ss_medal_silver_2{
+	+ss_sprite
+	background-position:0px -10153px;
+}
+.ss_medal_silver_3{
+	+ss_sprite
+	background-position:0px -10171px;
+}
+.ss_medal_silver_add{
+	+ss_sprite
+	background-position:0px -10189px;
+}
+.ss_medal_silver_delete{
+	+ss_sprite
+	background-position:0px -10207px;
+}
+.ss_money{
+	+ss_sprite
+	background-position:0px -10225px;
+}
+.ss_money_add{
+	+ss_sprite
+	background-position:0px -10243px;
+}
+.ss_money_delete{
+	+ss_sprite
+	background-position:0px -10261px;
+}
+.ss_money_dollar{
+	+ss_sprite
+	background-position:0px -10279px;
+}
+.ss_money_euro{
+	+ss_sprite
+	background-position:0px -10297px;
+}
+.ss_money_pound{
+	+ss_sprite
+	background-position:0px -10315px;
+}
+.ss_money_yen{
+	+ss_sprite
+	background-position:0px -10333px;
+}
+.ss_monitor{
+	+ss_sprite
+	background-position:0px -10351px;
+}
+.ss_monitor_add{
+	+ss_sprite
+	background-position:0px -10369px;
+}
+.ss_monitor_delete{
+	+ss_sprite
+	background-position:0px -10387px;
+}
+.ss_monitor_edit{
+	+ss_sprite
+	background-position:0px -10405px;
+}
+.ss_monitor_error{
+	+ss_sprite
+	background-position:0px -10423px;
+}
+.ss_monitor_go{
+	+ss_sprite
+	background-position:0px -10441px;
+}
+.ss_monitor_lightning{
+	+ss_sprite
+	background-position:0px -10459px;
+}
+.ss_monitor_link{
+	+ss_sprite
+	background-position:0px -10477px;
+}
+.ss_mouse{
+	+ss_sprite
+	background-position:0px -10495px;
+}
+.ss_mouse_add{
+	+ss_sprite
+	background-position:0px -10513px;
+}
+.ss_mouse_delete{
+	+ss_sprite
+	background-position:0px -10531px;
+}
+.ss_mouse_error{
+	+ss_sprite
+	background-position:0px -10549px;
+}
+.ss_music{
+	+ss_sprite
+	background-position:0px -10567px;
+}
+.ss_new{
+	+ss_sprite
+	background-position:0px -10585px;
+}
+.ss_newspaper{
+	+ss_sprite
+	background-position:0px -10603px;
+}
+.ss_newspaper_add{
+	+ss_sprite
+	background-position:0px -10621px;
+}
+.ss_newspaper_delete{
+	+ss_sprite
+	background-position:0px -10639px;
+}
+.ss_newspaper_go{
+	+ss_sprite
+	background-position:0px -10657px;
+}
+.ss_newspaper_link{
+	+ss_sprite
+	background-position:0px -10675px;
+}
+.ss_note{
+	+ss_sprite
+	background-position:0px -10693px;
+}
+.ss_note_add{
+	+ss_sprite
+	background-position:0px -10711px;
+}
+.ss_note_delete{
+	+ss_sprite
+	background-position:0px -10729px;
+}
+.ss_note_edit{
+	+ss_sprite
+	background-position:0px -10747px;
+}
+.ss_note_error{
+	+ss_sprite
+	background-position:0px -10765px;
+}
+.ss_note_go{
+	+ss_sprite
+	background-position:0px -10783px;
+}
+.ss_overlays{
+	+ss_sprite
+	background-position:0px -10801px;
+}
+.ss_package{
+	+ss_sprite
+	background-position:0px -10819px;
+}
+.ss_package_add{
+	+ss_sprite
+	background-position:0px -10837px;
+}
+.ss_package_delete{
+	+ss_sprite
+	background-position:0px -10855px;
+}
+.ss_package_go{
+	+ss_sprite
+	background-position:0px -10873px;
+}
+.ss_package_green{
+	+ss_sprite
+	background-position:0px -10891px;
+}
+.ss_package_link{
+	+ss_sprite
+	background-position:0px -10909px;
+}
+.ss_page{
+	+ss_sprite
+	background-position:0px -10927px;
+}
+.ss_page_add{
+	+ss_sprite
+	background-position:0px -10945px;
+}
+.ss_page_attach{
+	+ss_sprite
+	background-position:0px -10963px;
+}
+.ss_page_code{
+	+ss_sprite
+	background-position:0px -10981px;
+}
+.ss_page_copy{
+	+ss_sprite
+	background-position:0px -10999px;
+}
+.ss_page_delete{
+	+ss_sprite
+	background-position:0px -11017px;
+}
+.ss_page_edit{
+	+ss_sprite
+	background-position:0px -11035px;
+}
+.ss_page_error{
+	+ss_sprite
+	background-position:0px -11053px;
+}
+.ss_page_excel{
+	+ss_sprite
+	background-position:0px -11071px;
+}
+.ss_page_find{
+	+ss_sprite
+	background-position:0px -11089px;
+}
+.ss_page_gear{
+	+ss_sprite
+	background-position:0px -11107px;
+}
+.ss_page_go{
+	+ss_sprite
+	background-position:0px -11125px;
+}
+.ss_page_green{
+	+ss_sprite
+	background-position:0px -11143px;
+}
+.ss_page_key{
+	+ss_sprite
+	background-position:0px -11161px;
+}
+.ss_page_lightning{
+	+ss_sprite
+	background-position:0px -11179px;
+}
+.ss_page_link{
+	+ss_sprite
+	background-position:0px -11197px;
+}
+.ss_page_paintbrush{
+	+ss_sprite
+	background-position:0px -11215px;
+}
+.ss_page_paste{
+	+ss_sprite
+	background-position:0px -11233px;
+}
+.ss_page_red{
+	+ss_sprite
+	background-position:0px -11251px;
+}
+.ss_page_refresh{
+	+ss_sprite
+	background-position:0px -11269px;
+}
+.ss_page_save{
+	+ss_sprite
+	background-position:0px -11287px;
+}
+.ss_page_white{
+	+ss_sprite
+	background-position:0px -11305px;
+}
+.ss_page_white_acrobat{
+	+ss_sprite
+	background-position:0px -11323px;
+}
+.ss_page_white_actionscript{
+	+ss_sprite
+	background-position:0px -11341px;
+}
+.ss_page_white_add{
+	+ss_sprite
+	background-position:0px -11359px;
+}
+.ss_page_white_c{
+	+ss_sprite
+	background-position:0px -11377px;
+}
+.ss_page_white_camera{
+	+ss_sprite
+	background-position:0px -11395px;
+}
+.ss_page_white_cd{
+	+ss_sprite
+	background-position:0px -11413px;
+}
+.ss_page_white_code{
+	+ss_sprite
+	background-position:0px -11431px;
+}
+.ss_page_white_code_red{
+	+ss_sprite
+	background-position:0px -11449px;
+}
+.ss_page_white_coldfusion{
+	+ss_sprite
+	background-position:0px -11467px;
+}
+.ss_page_white_compressed{
+	+ss_sprite
+	background-position:0px -11485px;
+}
+.ss_page_white_copy{
+	+ss_sprite
+	background-position:0px -11503px;
+}
+.ss_page_white_cplusplus{
+	+ss_sprite
+	background-position:0px -11521px;
+}
+.ss_page_white_csharp{
+	+ss_sprite
+	background-position:0px -11539px;
+}
+.ss_page_white_cup{
+	+ss_sprite
+	background-position:0px -11557px;
+}
+.ss_page_white_database{
+	+ss_sprite
+	background-position:0px -11575px;
+}
+.ss_page_white_delete{
+	+ss_sprite
+	background-position:0px -11593px;
+}
+.ss_page_white_dvd{
+	+ss_sprite
+	background-position:0px -11611px;
+}
+.ss_page_white_edit{
+	+ss_sprite
+	background-position:0px -11629px;
+}
+.ss_page_white_error{
+	+ss_sprite
+	background-position:0px -11647px;
+}
+.ss_page_white_excel{
+	+ss_sprite
+	background-position:0px -11665px;
+}
+.ss_page_white_find{
+	+ss_sprite
+	background-position:0px -11683px;
+}
+.ss_page_white_flash{
+	+ss_sprite
+	background-position:0px -11701px;
+}
+.ss_page_white_freehand{
+	+ss_sprite
+	background-position:0px -11719px;
+}
+.ss_page_white_gear{
+	+ss_sprite
+	background-position:0px -11737px;
+}
+.ss_page_white_get{
+	+ss_sprite
+	background-position:0px -11755px;
+}
+.ss_page_white_go{
+	+ss_sprite
+	background-position:0px -11773px;
+}
+.ss_page_white_h{
+	+ss_sprite
+	background-position:0px -11791px;
+}
+.ss_page_white_horizontal{
+	+ss_sprite
+	background-position:0px -11809px;
+}
+.ss_page_white_key{
+	+ss_sprite
+	background-position:0px -11827px;
+}
+.ss_page_white_lightning{
+	+ss_sprite
+	background-position:0px -11845px;
+}
+.ss_page_white_link{
+	+ss_sprite
+	background-position:0px -11863px;
+}
+.ss_page_white_magnify{
+	+ss_sprite
+	background-position:0px -11881px;
+}
+.ss_page_white_medal{
+	+ss_sprite
+	background-position:0px -11899px;
+}
+.ss_page_white_office{
+	+ss_sprite
+	background-position:0px -11917px;
+}
+.ss_page_white_paint{
+	+ss_sprite
+	background-position:0px -11935px;
+}
+.ss_page_white_paintbrush{
+	+ss_sprite
+	background-position:0px -11953px;
+}
+.ss_page_white_paste{
+	+ss_sprite
+	background-position:0px -11971px;
+}
+.ss_page_white_php{
+	+ss_sprite
+	background-position:0px -11989px;
+}
+.ss_page_white_picture{
+	+ss_sprite
+	background-position:0px -12007px;
+}
+.ss_page_white_powerpoint{
+	+ss_sprite
+	background-position:0px -12025px;
+}
+.ss_page_white_put{
+	+ss_sprite
+	background-position:0px -12043px;
+}
+.ss_page_white_ruby{
+	+ss_sprite
+	background-position:0px -12061px;
+}
+.ss_page_white_stack{
+	+ss_sprite
+	background-position:0px -12079px;
+}
+.ss_page_white_star{
+	+ss_sprite
+	background-position:0px -12097px;
+}
+.ss_page_white_swoosh{
+	+ss_sprite
+	background-position:0px -12115px;
+}
+.ss_page_white_text{
+	+ss_sprite
+	background-position:0px -12133px;
+}
+.ss_page_white_text_width{
+	+ss_sprite
+	background-position:0px -12151px;
+}
+.ss_page_white_tux{
+	+ss_sprite
+	background-position:0px -12169px;
+}
+.ss_page_white_vector{
+	+ss_sprite
+	background-position:0px -12187px;
+}
+.ss_page_white_visualstudio{
+	+ss_sprite
+	background-position:0px -12205px;
+}
+.ss_page_white_width{
+	+ss_sprite
+	background-position:0px -12223px;
+}
+.ss_page_white_word{
+	+ss_sprite
+	background-position:0px -12241px;
+}
+.ss_page_white_world{
+	+ss_sprite
+	background-position:0px -12259px;
+}
+.ss_page_white_wrench{
+	+ss_sprite
+	background-position:0px -12277px;
+}
+.ss_page_white_zip{
+	+ss_sprite
+	background-position:0px -12295px;
+}
+.ss_page_word{
+	+ss_sprite
+	background-position:0px -12313px;
+}
+.ss_page_world{
+	+ss_sprite
+	background-position:0px -12331px;
+}
+.ss_paintbrush{
+	+ss_sprite
+	background-position:0px -12349px;
+}
+.ss_paintcan{
+	+ss_sprite
+	background-position:0px -12367px;
+}
+.ss_palette{
+	+ss_sprite
+	background-position:0px -12385px;
+}
+.ss_paste_plain{
+	+ss_sprite
+	background-position:0px -12403px;
+}
+.ss_paste_word{
+	+ss_sprite
+	background-position:0px -12421px;
+}
+.ss_pencil{
+	+ss_sprite
+	background-position:0px -12439px;
+}
+.ss_pencil_add{
+	+ss_sprite
+	background-position:0px -12457px;
+}
+.ss_pencil_delete{
+	+ss_sprite
+	background-position:0px -12475px;
+}
+.ss_pencil_go{
+	+ss_sprite
+	background-position:0px -12493px;
+}
+.ss_phone{
+	+ss_sprite
+	background-position:0px -12511px;
+}
+.ss_phone_add{
+	+ss_sprite
+	background-position:0px -12529px;
+}
+.ss_phone_delete{
+	+ss_sprite
+	background-position:0px -12547px;
+}
+.ss_phone_sound{
+	+ss_sprite
+	background-position:0px -12565px;
+}
+.ss_photo{
+	+ss_sprite
+	background-position:0px -12583px;
+}
+.ss_photo_add{
+	+ss_sprite
+	background-position:0px -12601px;
+}
+.ss_photo_delete{
+	+ss_sprite
+	background-position:0px -12619px;
+}
+.ss_photo_link{
+	+ss_sprite
+	background-position:0px -12637px;
+}
+.ss_photos{
+	+ss_sprite
+	background-position:0px -12655px;
+}
+.ss_picture{
+	+ss_sprite
+	background-position:0px -12673px;
+}
+.ss_picture_add{
+	+ss_sprite
+	background-position:0px -12691px;
+}
+.ss_picture_delete{
+	+ss_sprite
+	background-position:0px -12709px;
+}
+.ss_picture_edit{
+	+ss_sprite
+	background-position:0px -12727px;
+}
+.ss_picture_empty{
+	+ss_sprite
+	background-position:0px -12745px;
+}
+.ss_picture_error{
+	+ss_sprite
+	background-position:0px -12763px;
+}
+.ss_picture_go{
+	+ss_sprite
+	background-position:0px -12781px;
+}
+.ss_picture_key{
+	+ss_sprite
+	background-position:0px -12799px;
+}
+.ss_picture_link{
+	+ss_sprite
+	background-position:0px -12817px;
+}
+.ss_picture_save{
+	+ss_sprite
+	background-position:0px -12835px;
+}
+.ss_pictures{
+	+ss_sprite
+	background-position:0px -12853px;
+}
+.ss_pilcrow{
+	+ss_sprite
+	background-position:0px -12871px;
+}
+.ss_pill{
+	+ss_sprite
+	background-position:0px -12889px;
+}
+.ss_pill_add{
+	+ss_sprite
+	background-position:0px -12907px;
+}
+.ss_pill_delete{
+	+ss_sprite
+	background-position:0px -12925px;
+}
+.ss_pill_go{
+	+ss_sprite
+	background-position:0px -12943px;
+}
+.ss_plugin{
+	+ss_sprite
+	background-position:0px -12961px;
+}
+.ss_plugin_add{
+	+ss_sprite
+	background-position:0px -12979px;
+}
+.ss_plugin_delete{
+	+ss_sprite
+	background-position:0px -12997px;
+}
+.ss_plugin_disabled{
+	+ss_sprite
+	background-position:0px -13015px;
+}
+.ss_plugin_edit{
+	+ss_sprite
+	background-position:0px -13033px;
+}
+.ss_plugin_error{
+	+ss_sprite
+	background-position:0px -13051px;
+}
+.ss_plugin_go{
+	+ss_sprite
+	background-position:0px -13069px;
+}
+.ss_plugin_link{
+	+ss_sprite
+	background-position:0px -13087px;
+}
+.ss_printer{
+	+ss_sprite
+	background-position:0px -13105px;
+}
+.ss_printer_add{
+	+ss_sprite
+	background-position:0px -13123px;
+}
+.ss_printer_delete{
+	+ss_sprite
+	background-position:0px -13141px;
+}
+.ss_printer_empty{
+	+ss_sprite
+	background-position:0px -13159px;
+}
+.ss_printer_error{
+	+ss_sprite
+	background-position:0px -13177px;
+}
+.ss_rainbow{
+	+ss_sprite
+	background-position:0px -13195px;
+}
+.ss_report{
+	+ss_sprite
+	background-position:0px -13213px;
+}
+.ss_report_add{
+	+ss_sprite
+	background-position:0px -13231px;
+}
+.ss_report_delete{
+	+ss_sprite
+	background-position:0px -13249px;
+}
+.ss_report_disk{
+	+ss_sprite
+	background-position:0px -13267px;
+}
+.ss_report_edit{
+	+ss_sprite
+	background-position:0px -13285px;
+}
+.ss_report_go{
+	+ss_sprite
+	background-position:0px -13303px;
+}
+.ss_report_key{
+	+ss_sprite
+	background-position:0px -13321px;
+}
+.ss_report_link{
+	+ss_sprite
+	background-position:0px -13339px;
+}
+.ss_report_magnify{
+	+ss_sprite
+	background-position:0px -13357px;
+}
+.ss_report_picture{
+	+ss_sprite
+	background-position:0px -13375px;
+}
+.ss_report_user{
+	+ss_sprite
+	background-position:0px -13393px;
+}
+.ss_report_word{
+	+ss_sprite
+	background-position:0px -13411px;
+}
+.ss_resultset_first{
+	+ss_sprite
+	background-position:0px -13429px;
+}
+.ss_resultset_last{
+	+ss_sprite
+	background-position:0px -13447px;
+}
+.ss_resultset_next{
+	+ss_sprite
+	background-position:0px -13465px;
+}
+.ss_resultset_previous{
+	+ss_sprite
+	background-position:0px -13483px;
+}
+.ss_rosette{
+	+ss_sprite
+	background-position:0px -13501px;
+}
+.ss_rss{
+	+ss_sprite
+	background-position:0px -13519px;
+}
+.ss_rss_add{
+	+ss_sprite
+	background-position:0px -13537px;
+}
+.ss_rss_delete{
+	+ss_sprite
+	background-position:0px -13555px;
+}
+.ss_rss_go{
+	+ss_sprite
+	background-position:0px -13573px;
+}
+.ss_rss_valid{
+	+ss_sprite
+	background-position:0px -13591px;
+}
+.ss_ruby{
+	+ss_sprite
+	background-position:0px -13609px;
+}
+.ss_ruby_add{
+	+ss_sprite
+	background-position:0px -13627px;
+}
+.ss_ruby_delete{
+	+ss_sprite
+	background-position:0px -13645px;
+}
+.ss_ruby_gear{
+	+ss_sprite
+	background-position:0px -13663px;
+}
+.ss_ruby_get{
+	+ss_sprite
+	background-position:0px -13681px;
+}
+.ss_ruby_go{
+	+ss_sprite
+	background-position:0px -13699px;
+}
+.ss_ruby_key{
+	+ss_sprite
+	background-position:0px -13717px;
+}
+.ss_ruby_link{
+	+ss_sprite
+	background-position:0px -13735px;
+}
+.ss_ruby_put{
+	+ss_sprite
+	background-position:0px -13753px;
+}
+.ss_script{
+	+ss_sprite
+	background-position:0px -13771px;
+}
+.ss_script_add{
+	+ss_sprite
+	background-position:0px -13789px;
+}
+.ss_script_code{
+	+ss_sprite
+	background-position:0px -13807px;
+}
+.ss_script_code_red{
+	+ss_sprite
+	background-position:0px -13825px;
+}
+.ss_script_delete{
+	+ss_sprite
+	background-position:0px -13843px;
+}
+.ss_script_edit{
+	+ss_sprite
+	background-position:0px -13861px;
+}
+.ss_script_error{
+	+ss_sprite
+	background-position:0px -13879px;
+}
+.ss_script_gear{
+	+ss_sprite
+	background-position:0px -13897px;
+}
+.ss_script_go{
+	+ss_sprite
+	background-position:0px -13915px;
+}
+.ss_script_key{
+	+ss_sprite
+	background-position:0px -13933px;
+}
+.ss_script_lightning{
+	+ss_sprite
+	background-position:0px -13951px;
+}
+.ss_script_link{
+	+ss_sprite
+	background-position:0px -13969px;
+}
+.ss_script_palette{
+	+ss_sprite
+	background-position:0px -13987px;
+}
+.ss_script_save{
+	+ss_sprite
+	background-position:0px -14005px;
+}
+.ss_server{
+	+ss_sprite
+	background-position:0px -14023px;
+}
+.ss_server_add{
+	+ss_sprite
+	background-position:0px -14041px;
+}
+.ss_server_chart{
+	+ss_sprite
+	background-position:0px -14059px;
+}
+.ss_server_compressed{
+	+ss_sprite
+	background-position:0px -14077px;
+}
+.ss_server_connect{
+	+ss_sprite
+	background-position:0px -14095px;
+}
+.ss_server_database{
+	+ss_sprite
+	background-position:0px -14113px;
+}
+.ss_server_delete{
+	+ss_sprite
+	background-position:0px -14131px;
+}
+.ss_server_edit{
+	+ss_sprite
+	background-position:0px -14149px;
+}
+.ss_server_error{
+	+ss_sprite
+	background-position:0px -14167px;
+}
+.ss_server_go{
+	+ss_sprite
+	background-position:0px -14185px;
+}
+.ss_server_key{
+	+ss_sprite
+	background-position:0px -14203px;
+}
+.ss_server_lightning{
+	+ss_sprite
+	background-position:0px -14221px;
+}
+.ss_server_link{
+	+ss_sprite
+	background-position:0px -14239px;
+}
+.ss_server_uncompressed{
+	+ss_sprite
+	background-position:0px -14257px;
+}
+.ss_shading{
+	+ss_sprite
+	background-position:0px -14275px;
+}
+.ss_shape_align_bottom{
+	+ss_sprite
+	background-position:0px -14293px;
+}
+.ss_shape_align_center{
+	+ss_sprite
+	background-position:0px -14311px;
+}
+.ss_shape_align_left{
+	+ss_sprite
+	background-position:0px -14329px;
+}
+.ss_shape_align_middle{
+	+ss_sprite
+	background-position:0px -14347px;
+}
+.ss_shape_align_right{
+	+ss_sprite
+	background-position:0px -14365px;
+}
+.ss_shape_align_top{
+	+ss_sprite
+	background-position:0px -14383px;
+}
+.ss_shape_flip_horizontal{
+	+ss_sprite
+	background-position:0px -14401px;
+}
+.ss_shape_flip_vertical{
+	+ss_sprite
+	background-position:0px -14419px;
+}
+.ss_shape_group{
+	+ss_sprite
+	background-position:0px -14437px;
+}
+.ss_shape_handles{
+	+ss_sprite
+	background-position:0px -14455px;
+}
+.ss_shape_move_back{
+	+ss_sprite
+	background-position:0px -14473px;
+}
+.ss_shape_move_backwards{
+	+ss_sprite
+	background-position:0px -14491px;
+}
+.ss_shape_move_forwards{
+	+ss_sprite
+	background-position:0px -14509px;
+}
+.ss_shape_move_front{
+	+ss_sprite
+	background-position:0px -14527px;
+}
+.ss_shape_rotate_anticlockwise{
+	+ss_sprite
+	background-position:0px -14545px;
+}
+.ss_shape_rotate_clockwise{
+	+ss_sprite
+	background-position:0px -14563px;
+}
+.ss_shape_square{
+	+ss_sprite
+	background-position:0px -14581px;
+}
+.ss_shape_square_add{
+	+ss_sprite
+	background-position:0px -14599px;
+}
+.ss_shape_square_delete{
+	+ss_sprite
+	background-position:0px -14617px;
+}
+.ss_shape_square_edit{
+	+ss_sprite
+	background-position:0px -14635px;
+}
+.ss_shape_square_error{
+	+ss_sprite
+	background-position:0px -14653px;
+}
+.ss_shape_square_go{
+	+ss_sprite
+	background-position:0px -14671px;
+}
+.ss_shape_square_key{
+	+ss_sprite
+	background-position:0px -14689px;
+}
+.ss_shape_square_link{
+	+ss_sprite
+	background-position:0px -14707px;
+}
+.ss_shape_ungroup{
+	+ss_sprite
+	background-position:0px -14725px;
+}
+.ss_shield{
+	+ss_sprite
+	background-position:0px -14743px;
+}
+.ss_shield_add{
+	+ss_sprite
+	background-position:0px -14761px;
+}
+.ss_shield_delete{
+	+ss_sprite
+	background-position:0px -14779px;
+}
+.ss_shield_go{
+	+ss_sprite
+	background-position:0px -14797px;
+}
+.ss_sitemap{
+	+ss_sprite
+	background-position:0px -14815px;
+}
+.ss_sitemap_color{
+	+ss_sprite
+	background-position:0px -14833px;
+}
+.ss_sound{
+	+ss_sprite
+	background-position:0px -14851px;
+}
+.ss_sound_add{
+	+ss_sprite
+	background-position:0px -14869px;
+}
+.ss_sound_delete{
+	+ss_sprite
+	background-position:0px -14887px;
+}
+.ss_sound_low{
+	+ss_sprite
+	background-position:0px -14905px;
+}
+.ss_sound_mute{
+	+ss_sprite
+	background-position:0px -14923px;
+}
+.ss_sound_none{
+	+ss_sprite
+	background-position:0px -14941px;
+}
+.ss_spellcheck{
+	+ss_sprite
+	background-position:0px -14959px;
+}
+.ss_sport_8ball{
+	+ss_sprite
+	background-position:0px -14977px;
+}
+.ss_sport_basketball{
+	+ss_sprite
+	background-position:0px -14995px;
+}
+.ss_sport_football{
+	+ss_sprite
+	background-position:0px -15013px;
+}
+.ss_sport_golf{
+	+ss_sprite
+	background-position:0px -15031px;
+}
+.ss_sport_raquet{
+	+ss_sprite
+	background-position:0px -15049px;
+}
+.ss_sport_shuttlecock{
+	+ss_sprite
+	background-position:0px -15067px;
+}
+.ss_sport_soccer{
+	+ss_sprite
+	background-position:0px -15085px;
+}
+.ss_sport_tennis{
+	+ss_sprite
+	background-position:0px -15103px;
+}
+.ss_star{
+	+ss_sprite
+	background-position:0px -15121px;
+}
+.ss_status_away{
+	+ss_sprite
+	background-position:0px -15139px;
+}
+.ss_status_busy{
+	+ss_sprite
+	background-position:0px -15157px;
+}
+.ss_status_offline{
+	+ss_sprite
+	background-position:0px -15175px;
+}
+.ss_status_online{
+	+ss_sprite
+	background-position:0px -15193px;
+}
+.ss_stop{
+	+ss_sprite
+	background-position:0px -15211px;
+}
+.ss_style{
+	+ss_sprite
+	background-position:0px -15229px;
+}
+.ss_style_add{
+	+ss_sprite
+	background-position:0px -15247px;
+}
+.ss_style_delete{
+	+ss_sprite
+	background-position:0px -15265px;
+}
+.ss_style_edit{
+	+ss_sprite
+	background-position:0px -15283px;
+}
+.ss_style_go{
+	+ss_sprite
+	background-position:0px -15301px;
+}
+.ss_sum{
+	+ss_sprite
+	background-position:0px -15319px;
+}
+.ss_tab{
+	+ss_sprite
+	background-position:0px -15337px;
+}
+.ss_tab_add{
+	+ss_sprite
+	background-position:0px -15355px;
+}
+.ss_tab_delete{
+	+ss_sprite
+	background-position:0px -15373px;
+}
+.ss_tab_edit{
+	+ss_sprite
+	background-position:0px -15391px;
+}
+.ss_tab_go{
+	+ss_sprite
+	background-position:0px -15409px;
+}
+.ss_table{
+	+ss_sprite
+	background-position:0px -15427px;
+}
+.ss_table_add{
+	+ss_sprite
+	background-position:0px -15445px;
+}
+.ss_table_delete{
+	+ss_sprite
+	background-position:0px -15463px;
+}
+.ss_table_edit{
+	+ss_sprite
+	background-position:0px -15481px;
+}
+.ss_table_error{
+	+ss_sprite
+	background-position:0px -15499px;
+}
+.ss_table_gear{
+	+ss_sprite
+	background-position:0px -15517px;
+}
+.ss_table_go{
+	+ss_sprite
+	background-position:0px -15535px;
+}
+.ss_table_key{
+	+ss_sprite
+	background-position:0px -15553px;
+}
+.ss_table_lightning{
+	+ss_sprite
+	background-position:0px -15571px;
+}
+.ss_table_link{
+	+ss_sprite
+	background-position:0px -15589px;
+}
+.ss_table_multiple{
+	+ss_sprite
+	background-position:0px -15607px;
+}
+.ss_table_refresh{
+	+ss_sprite
+	background-position:0px -15625px;
+}
+.ss_table_relationship{
+	+ss_sprite
+	background-position:0px -15643px;
+}
+.ss_table_row_delete{
+	+ss_sprite
+	background-position:0px -15661px;
+}
+.ss_table_row_insert{
+	+ss_sprite
+	background-position:0px -15679px;
+}
+.ss_table_save{
+	+ss_sprite
+	background-position:0px -15697px;
+}
+.ss_table_sort{
+	+ss_sprite
+	background-position:0px -15715px;
+}
+.ss_tag{
+	+ss_sprite
+	background-position:0px -15733px;
+}
+.ss_tag_blue{
+	+ss_sprite
+	background-position:0px -15751px;
+}
+.ss_tag_blue_add{
+	+ss_sprite
+	background-position:0px -15769px;
+}
+.ss_tag_blue_delete{
+	+ss_sprite
+	background-position:0px -15787px;
+}
+.ss_tag_blue_edit{
+	+ss_sprite
+	background-position:0px -15805px;
+}
+.ss_tag_green{
+	+ss_sprite
+	background-position:0px -15823px;
+}
+.ss_tag_orange{
+	+ss_sprite
+	background-position:0px -15841px;
+}
+.ss_tag_pink{
+	+ss_sprite
+	background-position:0px -15859px;
+}
+.ss_tag_purple{
+	+ss_sprite
+	background-position:0px -15877px;
+}
+.ss_tag_red{
+	+ss_sprite
+	background-position:0px -15895px;
+}
+.ss_tag_yellow{
+	+ss_sprite
+	background-position:0px -15913px;
+}
+.ss_telephone{
+	+ss_sprite
+	background-position:0px -15931px;
+}
+.ss_telephone_add{
+	+ss_sprite
+	background-position:0px -15949px;
+}
+.ss_telephone_delete{
+	+ss_sprite
+	background-position:0px -15967px;
+}
+.ss_telephone_edit{
+	+ss_sprite
+	background-position:0px -15985px;
+}
+.ss_telephone_error{
+	+ss_sprite
+	background-position:0px -16003px;
+}
+.ss_telephone_go{
+	+ss_sprite
+	background-position:0px -16021px;
+}
+.ss_telephone_key{
+	+ss_sprite
+	background-position:0px -16039px;
+}
+.ss_telephone_link{
+	+ss_sprite
+	background-position:0px -16057px;
+}
+.ss_television{
+	+ss_sprite
+	background-position:0px -16075px;
+}
+.ss_television_add{
+	+ss_sprite
+	background-position:0px -16093px;
+}
+.ss_television_delete{
+	+ss_sprite
+	background-position:0px -16111px;
+}
+.ss_text_align_center{
+	+ss_sprite
+	background-position:0px -16129px;
+}
+.ss_text_align_justify{
+	+ss_sprite
+	background-position:0px -16147px;
+}
+.ss_text_align_left{
+	+ss_sprite
+	background-position:0px -16165px;
+}
+.ss_text_align_right{
+	+ss_sprite
+	background-position:0px -16183px;
+}
+.ss_text_allcaps{
+	+ss_sprite
+	background-position:0px -16201px;
+}
+.ss_text_bold{
+	+ss_sprite
+	background-position:0px -16219px;
+}
+.ss_text_columns{
+	+ss_sprite
+	background-position:0px -16237px;
+}
+.ss_text_dropcaps{
+	+ss_sprite
+	background-position:0px -16255px;
+}
+.ss_text_heading_1{
+	+ss_sprite
+	background-position:0px -16273px;
+}
+.ss_text_heading_2{
+	+ss_sprite
+	background-position:0px -16291px;
+}
+.ss_text_heading_3{
+	+ss_sprite
+	background-position:0px -16309px;
+}
+.ss_text_heading_4{
+	+ss_sprite
+	background-position:0px -16327px;
+}
+.ss_text_heading_5{
+	+ss_sprite
+	background-position:0px -16345px;
+}
+.ss_text_heading_6{
+	+ss_sprite
+	background-position:0px -16363px;
+}
+.ss_text_horizontalrule{
+	+ss_sprite
+	background-position:0px -16381px;
+}
+.ss_text_indent{
+	+ss_sprite
+	background-position:0px -16399px;
+}
+.ss_text_indent_remove{
+	+ss_sprite
+	background-position:0px -16417px;
+}
+.ss_text_italic{
+	+ss_sprite
+	background-position:0px -16435px;
+}
+.ss_text_kerning{
+	+ss_sprite
+	background-position:0px -16453px;
+}
+.ss_text_letter_omega{
+	+ss_sprite
+	background-position:0px -16471px;
+}
+.ss_text_letterspacing{
+	+ss_sprite
+	background-position:0px -16489px;
+}
+.ss_text_linespacing{
+	+ss_sprite
+	background-position:0px -16507px;
+}
+.ss_text_list_bullets{
+	+ss_sprite
+	background-position:0px -16525px;
+}
+.ss_text_list_numbers{
+	+ss_sprite
+	background-position:0px -16543px;
+}
+.ss_text_lowercase{
+	+ss_sprite
+	background-position:0px -16561px;
+}
+.ss_text_padding_bottom{
+	+ss_sprite
+	background-position:0px -16579px;
+}
+.ss_text_padding_left{
+	+ss_sprite
+	background-position:0px -16597px;
+}
+.ss_text_padding_right{
+	+ss_sprite
+	background-position:0px -16615px;
+}
+.ss_text_padding_top{
+	+ss_sprite
+	background-position:0px -16633px;
+}
+.ss_text_replace{
+	+ss_sprite
+	background-position:0px -16651px;
+}
+.ss_text_signature{
+	+ss_sprite
+	background-position:0px -16669px;
+}
+.ss_text_smallcaps{
+	+ss_sprite
+	background-position:0px -16687px;
+}
+.ss_text_strikethrough{
+	+ss_sprite
+	background-position:0px -16705px;
+}
+.ss_text_subscript{
+	+ss_sprite
+	background-position:0px -16723px;
+}
+.ss_text_superscript{
+	+ss_sprite
+	background-position:0px -16741px;
+}
+.ss_text_underline{
+	+ss_sprite
+	background-position:0px -16759px;
+}
+.ss_text_uppercase{
+	+ss_sprite
+	background-position:0px -16777px;
+}
+.ss_textfield{
+	+ss_sprite
+	background-position:0px -16795px;
+}
+.ss_textfield_add{
+	+ss_sprite
+	background-position:0px -16813px;
+}
+.ss_textfield_delete{
+	+ss_sprite
+	background-position:0px -16831px;
+}
+.ss_textfield_key{
+	+ss_sprite
+	background-position:0px -16849px;
+}
+.ss_textfield_rename{
+	+ss_sprite
+	background-position:0px -16867px;
+}
+.ss_thumb_down{
+	+ss_sprite
+	background-position:0px -16885px;
+}
+.ss_thumb_up{
+	+ss_sprite
+	background-position:0px -16903px;
+}
+.ss_tick{
+	+ss_sprite
+	background-position:0px -16921px;
+}
+.ss_time{
+	+ss_sprite
+	background-position:0px -16939px;
+}
+.ss_time_add{
+	+ss_sprite
+	background-position:0px -16957px;
+}
+.ss_time_delete{
+	+ss_sprite
+	background-position:0px -16975px;
+}
+.ss_time_go{
+	+ss_sprite
+	background-position:0px -16993px;
+}
+.ss_timeline_marker{
+	+ss_sprite
+	background-position:0px -17011px;
+}
+.ss_transmit{
+	+ss_sprite
+	background-position:0px -17029px;
+}
+.ss_transmit_add{
+	+ss_sprite
+	background-position:0px -17047px;
+}
+.ss_transmit_blue{
+	+ss_sprite
+	background-position:0px -17065px;
+}
+.ss_transmit_delete{
+	+ss_sprite
+	background-position:0px -17083px;
+}
+.ss_transmit_edit{
+	+ss_sprite
+	background-position:0px -17101px;
+}
+.ss_transmit_error{
+	+ss_sprite
+	background-position:0px -17119px;
+}
+.ss_transmit_go{
+	+ss_sprite
+	background-position:0px -17137px;
+}
+.ss_tux{
+	+ss_sprite
+	background-position:0px -17155px;
+}
+.ss_user{
+	+ss_sprite
+	background-position:0px -17173px;
+}
+.ss_user_add{
+	+ss_sprite
+	background-position:0px -17191px;
+}
+.ss_user_comment{
+	+ss_sprite
+	background-position:0px -17209px;
+}
+.ss_user_delete{
+	+ss_sprite
+	background-position:0px -17227px;
+}
+.ss_user_edit{
+	+ss_sprite
+	background-position:0px -17245px;
+}
+.ss_user_female{
+	+ss_sprite
+	background-position:0px -17263px;
+}
+.ss_user_go{
+	+ss_sprite
+	background-position:0px -17281px;
+}
+.ss_user_gray{
+	+ss_sprite
+	background-position:0px -17299px;
+}
+.ss_user_green{
+	+ss_sprite
+	background-position:0px -17317px;
+}
+.ss_user_orange{
+	+ss_sprite
+	background-position:0px -17335px;
+}
+.ss_user_red{
+	+ss_sprite
+	background-position:0px -17353px;
+}
+.ss_user_suit{
+	+ss_sprite
+	background-position:0px -17371px;
+}
+.ss_vcard{
+	+ss_sprite
+	background-position:0px -17389px;
+}
+.ss_vcard_add{
+	+ss_sprite
+	background-position:0px -17407px;
+}
+.ss_vcard_delete{
+	+ss_sprite
+	background-position:0px -17425px;
+}
+.ss_vcard_edit{
+	+ss_sprite
+	background-position:0px -17443px;
+}
+.ss_vector{
+	+ss_sprite
+	background-position:0px -17461px;
+}
+.ss_vector_add{
+	+ss_sprite
+	background-position:0px -17479px;
+}
+.ss_vector_delete{
+	+ss_sprite
+	background-position:0px -17497px;
+}
+.ss_wand{
+	+ss_sprite
+	background-position:0px -17515px;
+}
+.ss_weather_clouds{
+	+ss_sprite
+	background-position:0px -17533px;
+}
+.ss_weather_cloudy{
+	+ss_sprite
+	background-position:0px -17551px;
+}
+.ss_weather_lightning{
+	+ss_sprite
+	background-position:0px -17569px;
+}
+.ss_weather_rain{
+	+ss_sprite
+	background-position:0px -17587px;
+}
+.ss_weather_snow{
+	+ss_sprite
+	background-position:0px -17605px;
+}
+.ss_weather_sun{
+	+ss_sprite
+	background-position:0px -17623px;
+}
+.ss_webcam{
+	+ss_sprite
+	background-position:0px -17641px;
+}
+.ss_webcam_add{
+	+ss_sprite
+	background-position:0px -17659px;
+}
+.ss_webcam_delete{
+	+ss_sprite
+	background-position:0px -17677px;
+}
+.ss_webcam_error{
+	+ss_sprite
+	background-position:0px -17695px;
+}
+.ss_world{
+	+ss_sprite
+	background-position:0px -17713px;
+}
+.ss_world_add{
+	+ss_sprite
+	background-position:0px -17731px;
+}
+.ss_world_delete{
+	+ss_sprite
+	background-position:0px -17749px;
+}
+.ss_world_edit{
+	+ss_sprite
+	background-position:0px -17767px;
+}
+.ss_world_go{
+	+ss_sprite
+	background-position:0px -17785px;
+}
+.ss_world_link{
+	+ss_sprite
+	background-position:0px -17803px;
+}
+.ss_wrench{
+	+ss_sprite
+	background-position:0px -17821px;
+}
+.ss_wrench_orange{
+	+ss_sprite
+	background-position:0px -17839px;
+}
+.ss_xhtml{
+	+ss_sprite
+	background-position:0px -17857px;
+}
+.ss_xhtml_add{
+	+ss_sprite
+	background-position:0px -17875px;
+}
+.ss_xhtml_delete{
+	+ss_sprite
+	background-position:0px -17893px;
+}
+.ss_xhtml_go{
+	+ss_sprite
+	background-position:0px -17911px;
+}
+.ss_xhtml_valid{
+	+ss_sprite
+	background-position:0px -17929px;
+}
+.ss_zoom{
+	+ss_sprite
+	background-position:0px -17947px;
+}
+.ss_zoom_in{
+	+ss_sprite
+	background-position:0px -17965px;
+}
+.ss_zoom_out{
+	+ss_sprite
+	background-position:0px -17983px;
+}

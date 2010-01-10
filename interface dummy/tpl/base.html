@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<title>title</title>
+	<script src="js/jquery-1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/jquery-ui-1.7.2.custom.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/daterangepicker.jQuery.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/jquery-ui.spinner.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/jquery.scrollTo-min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/jquery.localisation-min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/ui.multiselect.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/ui-multiselect-en.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/jquery.autoSuggest.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/jquery.MultiFile.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/jquery.elastic.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/jquery.datejs.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/ckeditor/ckeditor.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/ckeditor/adapters/jquery.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/markitup/jquery.markitup.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/jquery.sexy-combo.js" type="text/javascript" charset="utf-8"></script>
+	
+	<script src="js/markitup/sets/wiki/set.js" type="text/javascript" charset="utf-8"></script>
+	<link rel="stylesheet" href="js/markitup/sets/wiki/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<script src="js/markitup/sets/texy/set.js" type="text/javascript" charset="utf-8"></script>
+	<link rel="stylesheet" href="js/markitup/sets/texy/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<script src="js/markitup/sets/textile/set.js" type="text/javascript" charset="utf-8"></script>
+	<link rel="stylesheet" href="js/markitup/sets/textile/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<script src="js/markitup/sets/markdown/set.js" type="text/javascript" charset="utf-8"></script>
+	<link rel="stylesheet" href="js/markitup/sets/markdown/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<script src="js/markitup/sets/dotclear/set.js" type="text/javascript" charset="utf-8"></script>
+	<link rel="stylesheet" href="js/markitup/sets/dotclear/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<script src="js/markitup/sets/bbcode/set.js" type="text/javascript" charset="utf-8"></script>
+	<link rel="stylesheet" href="js/markitup/sets/bbcode/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	
+	<script src="js/main.js" type="text/javascript" charset="utf-8"></script>
+
+	<link type="text/css" rel="stylesheet" href="http://jqueryui.com/themes/base/ui.all.css" />
+	<link rel="stylesheet" href="js/markitup/skins/simple/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<!--
+	-->	
+	<link rel="stylesheet" href="css/ui-lightgrey/jquery-ui-1.7.2.custom.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<link rel="stylesheet" href="css/screen.css" type="text/css" media="screen, projection">
+</head>
+<body>
+	<div class="container">
+		<div class="header ui-widget">
+			<a href="index.php">
+				<img src="img/f3_logo.gif" width="109" height="40" alt="FLOW3" id="logo">
+			</a>
+			<ul class="functions">
+				<li>Welcome, Marc.</li>
+				<li>Help</li>
+				<li>Settings</li>
+				<li>Logout</li>
+			</ul>
+			<ul class="navigation ui-widget-header">
+			{% for pkg,models in packages %}
+				<li><a href="index.php?p={{pkg}}">{{pkg}}</a></li>
+			{% endfor %}
+			</ul>
+		</div>
+		<div class="content">
+			{% block content %}
+			{% endblock %}
+		</div>
+	</div>
+</body>
+</html>

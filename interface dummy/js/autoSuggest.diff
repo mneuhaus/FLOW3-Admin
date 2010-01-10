@@ -1,0 +1,174 @@
+22c22
+< (function($){
+---
+> (function($){		
+43c43
+< 		var d_count = 0;
+---
+> 		var d_counts = [];
+46a47,48
+> 		}else if(typeof data == "undefined") {
+> 			var data = {};
+48,49d49
+< 			var org_data = data;
+< 			for (k in data) if (data.hasOwnProperty(k)) d_count++;
+51c51,54
+< 		if((d_type == "object" && d_count > 0) || d_type == "string"){
+---
+> 		var original_data = data;
+> 		var initialValues = [];
+> 		
+> 		if(d_type == "object" || d_type == "string" || d_type == "none"){
+55c58,111
+< 				var input = $(this);
+---
+> 				var input;
+> 				initialValues[x] = false;
+> 				if(this.nodeName == "SELECT"){
+> 					var select = $(this);
+> 					var options = select.find("option");
+> 					var selectedOptions = select.find("option:selected");
+> 					var optionList = "";
+> 					data = [];
+> 					d_counts[x] = 0;
+> 					options.each(function(i,v){
+> 						var item = jQuery(v).text();
+> 						data.push({value:item});
+> 						optionList = optionList+item+",";
+> 						d_counts[x]++;
+> 					});
+> 					if(selectedOptions.length > 0){
+> 						initialValues[x] = "";
+> 						selectedOptions.each(function(i,v){
+> 							var str;
+> 							if(jQuery(v).val().length > 0){
+> 								str = jQuery(v).val();
+> 							}else{
+> 								str = jQuery(v).text();
+> 							}
+> 							initialValues[x] = initialValues[x]+str+",";
+> 						});
+> 					}
+> 					var org_data = data;
+> 					input = jQuery("<input />");
+> 					jQuery(this).after(input);
+> 				}else{
+> 					input = $(this);
+> 					data = original_data;
+> 					var org_data = data;
+> 					var list = "";
+> 					d_counts[x] = 0;
+> 					for (k in data) {
+> 						if (data.hasOwnProperty(k)) d_counts[x]++;
+> 						list = list + data[k][opts.selectedItem] + ",";
+> 					}
+> 					if(d_counts[x] < 1) return;
+> 					
+> 					if(typeof(input.val()) != "undefined" && input.val() != ""){
+> 						initialValues[x] = "";
+> 						var values = input.val().split(",");
+> 						for(k in values){
+> 							if(list.search(values[k]) != -1){
+> 								initialValues[x] = initialValues[x]+getValue(data[k])+",";
+> 							}
+> 						}
+> 					}
+> 				}
+> 				
+> 				
+65c121
+< 				var values_input = $('<input type="hidden" class="as-values" name="as_values_'+x+'" />');
+---
+> 				var values_input = $('<input type="hidden" class="as-values" name="as_values_'+x+'"/>');
+118a175,177
+> 									if(typeof(select) != "undefined"){
+> 										deSelectItem(last);
+> 									}
+148a208,209
+> 				processData(data,"");
+> 				
+163c224
+< 								d_count = 0;
+---
+> 								d_counts[x] = 0;
+165c226
+< 								for (k in new_data) if (new_data.hasOwnProperty(k)) d_count++;
+---
+> 								for (k in new_data) if (new_data.hasOwnProperty(k)) d_counts[x]++;
+181c242,243
+< 					for(var i=0;i<d_count;i++){				
+---
+> 					var formattedElements = [];
+> 					for(var i=0;i<d_counts[x];i++){
+184,193c246,248
+< 						if(opts.searchObj == "value") {
+< 							var str = data[num].value;
+< 						} else {	
+< 							var str = "";
+< 							var names = opts.searchObj.split(",");
+< 							for(var y=0;y<names.length;y++){
+< 								var name = $.trim(names[y]);
+< 								str = str+data[num][name]+" ";
+< 							}
+< 						}
+---
+> 						
+> 						var str = getValue(data[num]);
+> 						
+208a264,267
+> 										if(typeof(select) != "undefined"){
+> 											selectItem(data.value);
+> 										}
+> 										
+215a275,277
+> 												if(typeof(select) != "undefined"){
+> 													deSelectItem(data.value);
+> 												}
+223a286
+> 							
+237a301
+> 							formattedElements[num] = formatted;
+247c311,312
+< 					results_holder.show();
+---
+> 					if(query != "")
+> 						results_holder.show();
+248a314,349
+> 					
+> 					if(initialValues[x] != false){
+> 						for(var i=0;i<d_counts[x];i++){
+> 							var num = i;
+> 							if(initialValues[x].search(getValue(data[num])+",") != -1){
+> 								formattedElements[i].click();
+> 							}
+> 						}
+> 						initialValues[x] = "";
+> 					}
+> 				}
+> 				
+> 				function selectItem(item){
+> 					var index = jQuery.inArray(item, optionList.split(","));
+> 					if(index != -1)
+> 						jQuery(options[index]).attr("selected","selected");
+> 				}
+> 				
+> 				function deSelectItem(item){
+> 					var index = jQuery.inArray(item, optionList.split(","));
+> 					if(index != -1)
+> 						jQuery(options[index]).removeAttr("selected");
+> 				}
+> 				
+> 				function getValue(data){
+> 					if(opts.searchObj == "value") {
+> 						var str = data.value;
+> 					} else {	
+> 						var str = "";
+> 						var names = opts.searchObj.split(",");
+> 						for(var y=0;y<names.length;y++){
+> 							var name = $.trim(names[y]);
+> 							str = str+data[name]+" ";
+> 						}
+> 					}
+> 					return str;
+271d371
+< 									

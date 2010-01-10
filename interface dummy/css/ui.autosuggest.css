@@ -1,0 +1,134 @@
+/* AutoSuggest CSS - Version 1.1 */
+
+div.as-container{
+	position:relative;
+	float:left;
+}
+
+.as-results{
+	position:absolute;
+	top:25px;
+}
+
+ul.as-selections {
+	list-style-type: none;
+	border-top: 1px solid #888;
+	border-bottom: 1px solid #b6b6b6;
+	border-left: 1px solid #aaa;
+	border-right: 1px solid #aaa;
+	padding: 1px 0 2px 4px;
+	margin: 0;
+	overflow: hidden;
+	background-color: #fff;
+}
+
+ul.as-selections.loading {
+	background-color: #eee;
+}
+
+ul.as-selections li {
+	float: left;
+	margin: 3px 4px 0px 0;
+}
+
+ul.as-selections li.as-selection-item {
+	color: #2b3840;
+	font-size: 11px;
+	font-family: "Lucdia Grande", arial, sans-serif;
+	text-shadow: 0 1px 1px #fff;
+	padding: 3px 3px 0px 3px;
+	line-height:17px;
+}
+
+ul.as-selections li.as-selection-item:last-child {
+	margin-left: 30px;
+}
+
+ul.as-selections li.as-selection-item a.as-close {
+	float: right;
+	margin: 1px 3px 0 1px;
+	padding: 0 2px;
+	cursor: pointer;
+}
+
+ul.as-selections li.as-selection-item.blur a.as-close {
+	color: #999;
+}
+
+ul.as-selections li:hover.as-selection-item a.as-close {
+	color: #4d70b0;
+}
+
+ul.as-selections li.as-selection-item.selected {
+	border-color: #1f30e4;
+}
+
+ul.as-selections li.as-selection-item a:hover.as-close {
+	color: #1b3c65;
+}
+
+ul.as-selections li.as-selection-item a:active.as-close {
+	color: #4d70b0;
+}
+
+ul.as-selections li.as-original {
+	margin-left: 0;
+}
+
+ul.as-selections li.as-original input {
+	border: none;
+	outline: none;
+	font-size: 13px;
+	width: 120px;
+	height: 18px;
+	padding-top: 1px;
+}
+
+ul.as-list {
+	position: absolute;
+	list-style-type: none;
+	margin: 2px 0 0 0;
+	padding: 0;
+	font-size: 14px;
+	color: #000;
+	font-family: "Lucdia Grande", arial, sans-serif;
+	background-color: #fff;
+	z-index: 2;
+}
+
+li.as-result-item, li.as-message {
+	margin: 0 0 0 0;
+	padding: 5px 12px;
+	background-color: transparent;
+	border: 1px solid #fff;
+	border-bottom: 1px solid #ddd;
+	cursor: pointer;
+}
+
+li:first-child.as-result-item {
+	margin: 0;
+}
+
+li.as-message {
+	margin: 0;
+	cursor: default;
+}
+
+li.as-result-item.active {
+	background-color: #3668d9;
+	border-color: #3342e8;
+	color: #fff;
+	text-shadow: 0 1px 2px #122042;
+}
+
+li.as-result-item em { 
+	font-style: normal; 
+	background: #444;  
+	padding: 0 2px;
+	color: #fff;
+}
+
+li.as-result-item.active em { 
+	background: #253f7a;  
+	color: #fff;
+}
