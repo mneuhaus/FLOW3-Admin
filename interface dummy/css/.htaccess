@@ -29,9 +29,9 @@
 	
 	# Anything after .css is used as the output= 
 	RewriteCond 	%{REQUEST_URI}			\.css
-	RewriteRule 	^(.+)/([^/]+)/?$ 		../lib/scaffold/index.php?request=%{REQUEST_URI}&output=$2&%{QUERY_STRING}
+	RewriteRule 	^(.+)/([^/]+)/?$ 		scaffold/index.php?request=%{REQUEST_URI}&output=$2&%{QUERY_STRING}
 	
 	RewriteCond		%{REQUEST_FILENAME}		-f
 	RewriteCond 	%{REQUEST_URI}			\.css$
-	RewriteRule 	^(.+)$ 					../lib/scaffold/index.php?request=%{REQUEST_URI}&%{QUERY_STRING}
+	RewriteRule 	^(.+)$ 					scaffold/index.php?request=%{REQUEST_URI}&%{QUERY_STRING}
 </IfModule>
