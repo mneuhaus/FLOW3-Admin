@@ -1,5 +1,5 @@
 <?php
-declare(ENCODING = 'utf-8');
+ 
 namespace F3\Admin\ViewHelpers;
 
 /*                                                                        *
@@ -118,23 +118,31 @@ class ModelFormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	 *
 	 * @param string $model
 	 * @param object $object
+	 * @param object $errors
 	 * @return string "Form"-Tag.
-	 * @api
 	 */
-	public function render($model, $object){
+	public function render($model, $object, $errors){
         $output = "<input type='hidden' name='model' value='".$model."' />";
         $properties = $this->reflection->getClassPropertyNames($model);
         foreach($properties as $property){
 			$tags = $this->reflection->getPropertyTagsValues($model,$property);
-
+			
 			if(!in_array("var",array_keys($tags))) continue;
-			$type = $this->utilities->getType($tags["var"][0]);
-			$widgetClass = $this->utilities->getWidgetClass($tags["var"][0]);
-
+			if(!in_array("widget",array_keys($tags))){
+				$type = $this->utilities->getType($tags["var"][0]);
+			}else{
+				$type = $tags["widget"][0];
+			}
+			$widgetClass = $this->utilities->getWidgetClass($type);
+			$propertyErrors = array();
+			foreach ($this->utilities->getErrorsForProperty($property,$errors) as $error) {
+				$propertyErrors[] = $error->getMessage();
+			}
+			
             $context = array(
                 "widget"    => "Widget not found: "."\\".$widgetClass,
                 "label"     => ucfirst($property),
-                "error"     => ""
+                "property_errors"     => implode("<br />",$propertyErrors)
             );
 
             if(class_exists($widgetClass)){

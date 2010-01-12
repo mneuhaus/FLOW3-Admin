@@ -1,5 +1,5 @@
 <?php
-declare(ENCODING = 'utf-8');
+ 
 namespace F3\Admin\Widgets;
 
 /*                                                                        *
@@ -79,7 +79,10 @@ class EntityWidget extends \F3\Admin\Widgets\AbstractWidget{
 
             return array("widget" => $this->view->render());
         }else{
-            return array("error" => "couldn't find Repository","widget" =>"");
+            return array(
+				"property_errors" => "Couldn't find a appropriate Repository for the Model ".$modelClass,
+				"widget" =>""
+			);
         }
 	}
 

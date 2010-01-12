@@ -2,17 +2,25 @@
 
 <f:section name="content">
 	<f:for each="{packages}" as="models" key="package">
-		<h3>{package}</h3>
-		<table>
+		<table class="ui-widget">
+			<thead>
+			<tr class="ui-widget-header">
+				<th>{package}</th>
+			</tr>
+			</thead>
+			<tbody>
 			<f:for each="{models}" as="model">
-				<tr>
+				<f:cycle values="{0: 'odd', 1: 'even'}" as="zebraClass">
+					<tr class="ui-widget-content {zebraClass}">
+				</f:cycle>
 					<td>
-						<f:link.action action="view" controller="Model" arguments="{model : model.class, package : package}">
+						<f:link.action action="list" controller="Model" arguments="{model : model.class, package : package}">
 							{model.name}
 						</f:link.action>
 					</td>
 				</tr>
 			</f:for>
+			</tbody>
 		</table>
 	</f:for>
 </f:section>

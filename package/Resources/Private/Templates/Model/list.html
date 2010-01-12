@@ -1,0 +1,59 @@
+<f:layout name="base" />
+{namespace a=F3\Admin\ViewHelpers}
+
+<f:section name="content">
+	<div class="toolbar">
+		<f:link.action action="create" controller="Model" arguments="{model:model}"  class="fg-button ui-state-default ui-priority-primary ">
+			<span class="ui-icon ui-icon-circle-plus"></span>
+			Add <a:modelName model="{model}" />
+		</f:link.action>
+	</div>
+	
+	<f:form method="post" action="bulk" name="bulk">
+	<f:form.hidden name="model" value="{model}" />
+	<h1><a:modelName model="{model}" /></h1>
+	<table class="list ui-widget-content">
+		<thead>
+			<!--
+			<tr class="ui-widget-header">
+				<th colspan="{propertyCount}">
+					<f:form.select name="action" options="{bulkActions}"/>
+					<input type="submit" name="bulk" value="Go" />
+				</th>
+			</tr>
+			-->
+			<tr class="ui-widget-header">
+				<!-- <th></th> -->
+			<f:for each="{properties}" as="configuration" key="property">
+				<th>{property}</th>
+			</f:for>
+			</tr>
+		</thead>
+		<tbody>
+		<f:for each="{objects}" as="object">
+			<f:cycle values="{0: 'odd', 1: 'even'}" as="zebraClass">
+			  <tr class="{zebraClass}">
+			</f:cycle>
+				<!-- <td>
+					<a:identifierInput object="{object}" type="checkbox" name="bulk" value="1"/>
+				</td> -->
+				<f:for each="{properties}" as="configuration" key="property">
+					<td>
+						<f:if condition="{configuration.identity}">
+							<f:then>
+								<f:link.action action="update" controller="Model" arguments="{item:object,model:model}">
+									<a:modelProperty model="{object}" property="{property}" />
+								</f:link.action>
+							</f:then>
+							<f:else>
+								<a:modelProperty model="{object}" property="{property}" />
+							</f:else>
+						</f:if>
+					</td>
+				</f:for>
+			</tr>
+		</f:for>
+		</tbody>
+	</table>
+	</f:form>
+</f:section>

@@ -1,5 +1,5 @@
 <?php
-declare(ENCODING = 'utf-8');
+ 
 namespace F3\Admin;
 
 /*                                                                        *
@@ -30,13 +30,14 @@ class Utilities{
 	/**
 	 * Reflection service
 	 * @var F3\FLOW3\Reflection\Service
+	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
 	private $reflection;
 
 	/**
 	 * Inject a Reflection service
 	 * @param \F3\FLOW3\Reflection\Service $reflectionService Reflection service
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
 	public function injectReflection(\F3\FLOW3\Reflection\Service $reflectionService) {
 		$this->reflection = $reflectionService;
@@ -44,6 +45,7 @@ class Utilities{
 
 	/**
 	 * @var \F3\FLOW3\Package\ManagerInterface
+	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
 	protected $packageManager;
 
@@ -59,8 +61,17 @@ class Utilities{
 	}
 
 	/**
+	 *
+	 * @var \F3\FLOW3\Validation\ValidatorResolver
+	 * @inject
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 **/
+	protected $ValidatorResolver;
+	
+	/**
 	 * Match validator names and options
 	 * @var string
+	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
 	const PATTERN_MATCH_VALIDATORS = '/
 			(?:^|,\s*)
@@ -78,6 +89,7 @@ class Utilities{
 	/**
 	 * Match validator options (to parse actual options)
 	 * @var string
+	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
 	const PATTERN_MATCH_VALIDATOROPTIONS = '/
 			\s*
@@ -160,6 +172,13 @@ class Utilities{
 		$quotedValue = str_replace('\\\\', '\\', $quotedValue);
 	}
 
+	/**
+	 * Returns the Repository for a Model based on the Class name
+	 *
+	 * @param $model String Name of the Model
+	 * @return $repository String Repository Name
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 **/
     public function getModelRepository($model){
 		$repository = str_replace("Domain\Model","Domain\Repository",$model) . "Repository";
 		if(substr($repository,0,1) == "\\"){
@@ -168,12 +187,27 @@ class Utilities{
 		return $repository;
 	}
 
+	/**
+	 * Returns the Name of the Model without Namespace
+	 *
+	 * @param $model String Name of the Model with Namespace
+	 * @return $name String Model Name
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 **/
 	public function getObjectNameByClassName($model){
 		$parts = explode("\\",$model);
 		return end($parts);
 	}
 
-
+	/**
+	 * Returns the Main Type of the Model Property
+	 * 
+	 * For example: SplObjectStorage<DateTime> -> SplObjectStorage
+	 *
+	 * @param $raw String raw Type
+	 * @return $name String Type
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 **/
     public function getType($raw){
         $parts = explode("<",$raw);
         $name = current($parts);
@@ -181,8 +215,15 @@ class Utilities{
         return $name;
     }
 
+	/**
+	 * Checks if the Class is a manageble Entity
+	 *
+	 * @param $checkClass String Name of the Class
+	 * @return $isEntity Boolean
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 **/
     public function isEntity($checkClass){
-		if(!isset($packages)){
+		if(!isset($this->cached["entities"])){
 			$activePackages = $this->packageManager->getActivePackages();
 			$this->cached["entities"] = array();
 			foreach ($activePackages as $packageName => $package) {
@@ -201,6 +242,13 @@ class Utilities{
 		return isset($this->cached["entities"][$checkClass]) ? $this->cached["entities"][$checkClass] : false;
 	}
 
+	/**
+	 * Returns the Class of the Widget for a property Type
+	 *
+	 * @param $type String Type of the Property
+	 * @return $widgetClass String Class of the Widget
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 **/
     public function getWidgetClass($type){
         $widgetType = $type = $this->getType($type);
 
@@ -212,6 +260,90 @@ class Utilities{
 
         return str_replace("@type",ucfirst($widgetType),"F3\Admin\Widgets\@typeWidget");
     }
+
+	/**
+	 * Returns all Models wich are enabled through the @autoadmin tag
+	 *
+	 * @return $packages Array of the Models grouped by Packages
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 **/
+	public function getEnabledModels()
+	{
+		if(!isset($this->cached["packages"])){
+			$activePackages = $this->packageManager->getActivePackages();
+			$this->cached["packages"] = array();
+			foreach ($activePackages as $packageName => $package) {
+				foreach ($package->getClassFiles() as $class => $file) {
+					if(strpos($class,"\Model\\")>0){
+						$tags = $this->reflection->getClassTagsValues($class);
+						$parts = explode('\\',$class);
+						$name = end($parts);
+						$repository = $this->getModelRepository($class);
+						if(in_array("autoadmin",array_keys($tags)) && class_exists($repository)){
+							$this->cached["packages"][$packageName][] = array(
+								"class" => $class,
+								"name"	=> $name
+							);
+						}
+					}
+				}
+			}
+		}
+		return $this->cached["packages"];
+	}
+	
+	/**
+	 * Returns a Validator for the given Modem
+	 *
+	 * @param $model String Class of the Model
+	 * @return $validator GenericObjectValidator
+	 * @author Marc Neuhaus
+	 **/
+	public function getModelValidator($model){
+		$objectValidator = $this->ValidatorResolver->createValidator('F3\FLOW3\Validation\Validator\GenericObjectValidator');
+		if (class_exists($model)) {
+			$validatorCount = 0;
+
+			foreach ($this->reflection->getClassPropertyNames($model) as $classPropertyName) {
+				$classPropertyTagsValues = $this->reflection->getPropertyTagsValues($model, $classPropertyName);
+				if (!isset($classPropertyTagsValues['validate'])) continue;
+
+				foreach ($classPropertyTagsValues['validate'] as $validateValue) {
+					$parsedAnnotation = $this->parseValidatorAnnotation($validateValue);
+					foreach ($parsedAnnotation['validators'] as $validatorConfiguration) {
+						$newValidator = $this->ValidatorResolver->createValidator($validatorConfiguration['validatorName'], $validatorConfiguration['validatorOptions']);
+						if ($newValidator === NULL) {
+							throw new \F3\FLOW3\Validation\Exception\NoSuchValidator('Invalid validate annotation in ' . $model . '::' . $classPropertyName . ': Could not resolve class name for  validator "' . $validatorConfiguration['validatorName'] . '".', 1241098027);
+						}
+						$objectValidator->addPropertyValidator($classPropertyName, $newValidator);
+						$validatorCount ++;
+					}
+				}
+			}
+		}
+		return $objectValidator;
+	}
+	
+	/**
+	 * Find errors for a specific property in the given errors array
+	 *
+	 * @param string $propertyName The property name to look up
+	 * @param array $errors An array of F3\FLOW3\Error\Error objects
+	 * @return array An array of errors for $propertyName
+	 * @author Christopher Hlubek <hlubek@networkteam.com>
+	 */
+	public function getErrorsForProperty($propertyName, $errors) {
+		if(is_array($errors)){
+			foreach ($errors as $error) {
+				if ($error instanceof \F3\FLOW3\Validation\PropertyError) {
+					if ($error->getPropertyName() === $propertyName) {
+						return $error->getErrors();
+					}
+				}
+			}
+		}
+		return array();
+	}
 }
 
 ?>

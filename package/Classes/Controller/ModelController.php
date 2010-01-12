@@ -1,5 +1,5 @@
 <?php
-declare(ENCODING = 'utf-8');
+ 
 namespace F3\Admin\Controller;
 
 /*                                                                        *
@@ -31,12 +31,14 @@ namespace F3\Admin\Controller;
 class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 	/**
 	 * @var \F3\Admin\Utilities
+	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
 	protected $utilities;
 
 	/**
 	 *
 	 * @param \F3\Admin\Utilities $utilities
+	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
 	public function injectUtilities(\F3\Admin\Utilities $utilities) {
 		$this->utilities = $utilities;
@@ -44,15 +46,16 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 
 	/**
 	 * @var \F3\FLOW3\Property\Mapper
+	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
 	protected $mapper;
-
+	
 	/**
 	 * Injects the property mapper
 	 *
 	 * @param \F3\FLOW3\Property\Mapper $mapper The property mapper
 	 * @return void
-	 * @author Robert Lemke <robert@typo3.org>
+	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
 	public function injectMapper(\F3\FLOW3\Property\Mapper $mapper) {
 		$this->mapper = $mapper;
@@ -61,6 +64,7 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 	/**
 	 * @var \F3\FLOW3\Object\ManagerInterface
 	 * @api
+	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
 	protected $objectManager;
 
@@ -69,7 +73,7 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 	 *
 	 * @param \F3\FLOW3\Object\ManagerInterface $manager
 	 * @return void
-	 * @author Robert Lemke <robert@typo3.org>
+	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
 	public function injectManager(\F3\FLOW3\Object\ManagerInterface $manager) {
 		$this->objectManager = $manager;
@@ -77,6 +81,7 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 
 	/**
 	 * @var \F3\FLOW3\Reflection\Service
+	 * @author Marc Neuhaus
 	 */
 	protected $reflectionService;
 
@@ -93,11 +98,13 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 
 	/**
 	 * @var \F3\FLOW3\Configuration\Manager
+	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
 	protected $configurationManager;
 
 	/**
 	 * @var \F3\FLOW3\Package\ManagerInterface
+	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
 	protected $packageManager;
 
@@ -114,6 +121,7 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 
 	/**
 	 * @var \F3\FLOW3\Persistence\ManagerInterface
+	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
 	protected $persistenceManager;
 
@@ -122,7 +130,7 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 	 *
 	 * @param \F3\FLOW3\Persistence\ManagerInterface $persistenceManager
 	 * @return void
-	 * @author Robert Lemke <robert@typo3.org>
+	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
 	public function injectPersistenceManager(\F3\FLOW3\Persistence\ManagerInterface $persistenceManager) {
 		$this->persistenceManager = $persistenceManager;
@@ -132,27 +140,20 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 	 * Index action
 	 *
 	 * @return void
+	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
 	public function indexAction() {
-		$activePackages = $this->packageManager->getActivePackages();
-		$packages = array();
-		foreach ($activePackages as $packageName => $package) {
-			foreach ($package->getClassFiles() as $class => $file) {
-				if(strpos($class,"\Model\\")>0){
-					$tags = $this->reflectionService->getClassTagsValues($class);
-					$parts = explode('\\',$class);
-					$name = end($parts);
-					$repository = $this->utilities->getModelRepository($class);
-					if(in_array("autoadmin",array_keys($tags)) && class_exists($repository)){
-						$packages[$packageName][] = array(
-							"class" => $class,
-							"name"	=> $name
-						);
-					}
-				}
-			}
+		if($this->request->hasArgument("package")){
+			$package = $this->request->getArgument("package");
+			$allPackages = $this->utilities->getEnabledModels();
+			$packages = array(
+				$package => $allPackages[$package]
+			);
+			$this->view->assign('packages', $packages);
+		}else{			
+			$packages = $this->utilities->getEnabledModels();
+			$this->view->assign('packages', $packages);
 		}
-		$this->view->assign('packages', $packages);
 
 		$current = $this->request->hasArgument("package") ? $this->request->getArgument("package") : "Overview";
 		$this->view->assign('current', $current);
@@ -164,8 +165,9 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 	 * View action
 	 *
 	 * @return void
+	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
-	public function viewAction() {
+	public function listAction() {
 		$model = $this->request->getArgument("model");
 		$this->view->assign("model",$model);
 
@@ -189,12 +191,13 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 	}
 
 	/**
-	 * edit action
+	 * update action
 	 *
 	 * @return void
+	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
-	public function editAction() {
-		$tmp = $this->request->getArgument("object");
+	public function updateAction() {
+		$tmp = $this->request->getArgument("item");
 		$modelClass = $this->request->getArgument("model");
 		$model = $this->objectFactory->create($modelClass);
 
@@ -204,23 +207,35 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 		$this->view->assign('properties',$properties);
 
 		$object = $this->persistenceManager->getBackend()->getObjectByIdentifier($tmp["__identity"]);
-		$this->view->assign('object',$object);
-	}
 
-	/**
-	 * Creates a new blog
-	 *
-	 * @return void
-	 */
-	public function updateAction() {
-		$this->createUpdateObject("update");
-		$this->redirect('view',NULL,NULL,array("model"=>$this->request->getArgument("model")));
+		if($this->request->hasArgument("update")){
+			$errors = $this->createUpdateObject("create",$object);
+			if($errors === false){
+				$arguments = array("model"=>$this->request->getArgument("model"));
+				$this->redirect('list',NULL,NULL,$arguments);
+			}else{
+				$this->view->assign("errors",$errors);
+			}
+		}
+		
+		if($this->request->hasArgument("delete")){
+			$repository = str_replace("Domain\Model","Domain\Repository",$modelClass) . "Repository";
+			$repositoryObject = $this->objectManager->getObject($repository);
+			$repositoryObject->remove($object);
+			$this->persistenceManager->persistAll();
+			
+			$arguments = array("model"=>$this->request->getArgument("model"));
+			$this->redirect('list',NULL,NULL,$arguments);
+		}
+		
+		$this->view->assign('object',$object);
 	}
 
 	/**
 	 * bulk action
 	 *
 	 * @return void
+	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
 	public function bulkAction() {
 		$tmp = $this->request->getArgument("bulk");
@@ -233,15 +248,16 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 		$actionObject = $this->objectManager->getObject($action);
 		$actionObject->action($identifiers);
 
-		$this->redirect('view',NULL,NULL,array("model"=>$this->request->getArgument("model")));
+		$this->redirect('list',NULL,NULL,array("model"=>$this->request->getArgument("model")));
 	}
 
 	/**
-	 * new action
+	 * Creates a new blog
 	 *
 	 * @return void
+	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
-	public function newAction() {
+	public function createAction() {
 		$modelClass = $this->request->getArgument("model");
 		$model = $this->objectFactory->create($modelClass);
 
@@ -251,19 +267,29 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 		$this->view->assign('properties',$properties);
 
 		$object = $this->objectFactory->create($modelClass);
+
+		if($this->request->hasArgument("item")){
+			$errors = $this->createUpdateObject("create",$object);
+			if($errors === false){
+				$arguments = array("model"=>$this->request->getArgument("model"));
+				$this->redirect('list',NULL,NULL,$arguments);
+			}else{
+				$this->view->assign("errors",$errors);
+			}
+		}
+		
 		$this->view->assign('object',$object);
 	}
-
+	
 	/**
-	 * Creates a new blog
+	 * Checks if the Widget provides a Function to convert the incoming Form 
+	 * Data into ContentRepository Data.
+	 * 
+	 * Note: This might become obsolete because of the enhancement of the Propertymapper
 	 *
 	 * @return void
-	 */
-	public function createAction() {
-		$this->createUpdateObject("create");
-		$this->redirect('view',NULL,NULL,array("model"=>$this->request->getArgument("model")));
-	}
-
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 **/
 	public function convertArray($array,$class){
 		$properties = $this->reflectionService->getClassPropertyNames($class);
 		foreach ($properties as $property) {
@@ -277,7 +303,14 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 		}
 		return $array;
 	}
-
+	
+	/**
+	 * Returns all Properties of a Specified Models
+	 *
+	 * œparam $model String Name of the Model
+	 * @return $properties Array of Model Properties
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 **/
 	public function getModelProperties($model){
 		$tmpProperties = $this->reflectionService->getClassPropertyNames($model);
 		foreach ($tmpProperties as $property) {
@@ -289,37 +322,38 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 		return $properties;
 	}
 
-	public function createUpdateObject($mode){
+	/**
+	 * This Method handles the Creation or Update of the Posted Model
+	 * 
+	 * TODO: The Validation isn't working
+	 *
+	 * @param $mode String Mode Create/Update
+	 * @param $targetObject Object
+	 * @return $success Boolean
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 **/
+	public function createUpdateObject($mode,&$targetObject){
 		$model = $this->request->getArgument("model");
 		$modelName = $this->utilities->getObjectNameByClassName($model);
 		$repository = str_replace("Domain\Model","Domain\Repository",$model) . "Repository";
-		$this->arguments->addNewArgument("item", $model);
-		$this->initializeActionMethodValidators();
-
-		$optionalArgumentNames = array();
-		$allArgumentNames = $this->arguments->getArgumentNames();
-		foreach ($allArgumentNames as $argumentName) {
-			if ($this->arguments[$argumentName]->isRequired() === FALSE) $optionalArgumentNames[] = $argumentName;
-		}
-
-		$args = $this->request->getArguments();
-		$args["item"] = $this->convertArray($args["item"],$model);
-
-		$properties = $this->getModelProperties($model);
-
-		$validator = $this->objectManager->getObject('F3\FLOW3\MVC\Controller\ArgumentsValidator');
-		$this->propertyMapper->mapAndValidate($allArgumentNames, $args, $this->arguments, $optionalArgumentNames, $validator);
-		$results = $this->propertyMapper->getMappingResults();
-		print_r($results);
-		exit;
+		$modelValidator = $this->utilities->getModelValidator($model);
+		
+		$item = $this->convertArray($this->request->getArgument("item"),$model);
+		$this->propertyMapper->mapAndValidate(array_keys($item), $item, $targetObject,array(),$modelValidator);
+		
 		$repositoryObject = $this->objectManager->getObject($repository);
-
-		$object = $this->arguments["item"]->getValue();
-
-		if($mode=="create")
-			$repositoryObject->add($object);
-		if($mode=="update")
-			$repositoryObject->update($object);
+		
+		$errors = $modelValidator->getErrors();
+		
+		if(count($errors)>0){
+			return $errors;
+		}else{
+			if($mode=="create")
+				$repositoryObject->add($targetObject);
+			if($mode=="update")
+				$repositoryObject->update($targetObject);
+			return false;
+		}
 	}
 }
 

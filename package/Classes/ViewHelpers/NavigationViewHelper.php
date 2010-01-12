@@ -1,5 +1,5 @@
 <?php
-declare(ENCODING = 'utf-8');
+ 
 namespace F3\Admin\ViewHelpers;
 
 /*                                                                        *
@@ -30,29 +30,50 @@ namespace F3\Admin\ViewHelpers;
  */
 class NavigationViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	/**
+	 * @var \F3\Admin\Utilities
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 * @inject
+	 */
+	protected $utilities;
+	
+	/**
 	 * Iterates through elements of $each and renders child nodes
 	 *
-	 * @param string $title
-	 * @param string $controller
-	 * @param string $active
 	 * @return string Rendered string
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @author Robert Lemke <robert@typo3.org>
+	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 * @api
 	 */
-	public function render($title, $controller, $active="active") {
+	public function render() {
 		$output = '';
-		/*
-        foreach ($each as $keyValue => $singleElement) {
-			$this->templateVariableContainer->add($as, $singleElement);
+		$items = array(
+			array(
+				"name"=>"Overview",
+				"controller"=>"model",
+				"action"=>"index",
+				"active" => true
+			)
+		);
+		$packages = $this->utilities->getEnabledModels();
+		foreach ($packages as $packageName => $models) {
+			$items[] = array(
+				"name"=>$packageName,
+				"controller"=>"model",
+				"action"=>"index",
+				"package"=>$packageName,
+				"active" => false
+			);
+		}
+		
+        foreach ($items as $item) {
+			foreach ($item as $key => $value) {
+				$this->templateVariableContainer->add($key, $value);
+			}
 			$output .= $this->renderChildren();
-			$this->templateVariableContainer->remove($as);
-			if ($key !== '') {
-				$this->templateVariableContainer->remove($key);
+			foreach ($item as $key => $value) {
+				$this->templateVariableContainer->remove($key, $value);
 			}
 		}
-        */
+		
 		return $output;
 	}
 }

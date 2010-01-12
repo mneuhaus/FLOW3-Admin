@@ -1,0 +1,23 @@
+<f:layout name="base" />
+{namespace a=F3\Admin\ViewHelpers}
+<f:section name="content">
+	<f:form method="post" action="create" name="item" object="{object}">
+		<fieldset class="ui-widget-header">
+		<div class="ui-widget-header"><a:modelName model="{model}" /></div>
+		<a:modelForm model="{model}" object="{object}" errors="{errors}">
+			<div class="f-row ui-widget-content ui-widget-content">
+				<label for="text-input">{label}</label>
+				<div class="f-float">
+					{widget}
+					<f:if condition="{property_errors}">
+						<span class="ui-state-error">
+							{property_errors}
+						</span>
+					</f:if>
+				</div>
+			</div>
+		</a:modelForm>
+		</fieldset>	
+		<input type="submit" name="submit" value="Create" class="submit"/>
+	</f:form>
+</f:section>
