@@ -1,0 +1,14 @@
+<p class="metadata">
+	Published on <f:format.date format='d.m.Y'>{post.date}</f:format.date> by {post.author}
+	<f:link.action action="show" controller="Post" arguments="{post: post}" section="comments"><img src="{f:uri.resource(path: 'Icons/FamFamFam/comments.png')}" title="Comments"/>
+		<f:if condition="{post.numberOfComments} > 0">
+			<f:then>
+				<f:if condition="{post.numberOfComments} == 1">
+					<f:then>{post.numberOfComments} comment</f:then>
+					<f:else>{post.numberOfComments} comments</f:else>
+				</f:if>
+			</f:then>
+			<f:else>No comments</f:else>
+		</f:if>
+	</f:link.action>
+</p>

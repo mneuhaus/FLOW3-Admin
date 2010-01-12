@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<f:base />
+		<title>{blog.title} {stuff}</title>
+		<link rel="stylesheet" href="{f:uri.resource(path: 'Blog.css')}" type="text/css" media="all" />
+		<meta name="generator" content="FLOW3" />
+	</head>
+	<body>
+		<div id="header">
+			<h1 class="title">{title}</h1>
+		</div>
+		<div id="maincontainer">
+			<div id="mainbox"><f:render section="mainbox" /></div>
+			<div id="sidebox">
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div id="footer"><a href="http://flow3.typo3.org">Powered by FLOW3 <img src="{f:uri.resource(path: 'FLOW3-Logo-11px.png')}" width="11" height="11" /></a></div>
+	</body>
+</html>

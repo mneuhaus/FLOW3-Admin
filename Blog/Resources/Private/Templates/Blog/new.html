@@ -1,0 +1,24 @@
+<f:layout name="master" />
+
+<f:section name="mainbox">
+	<h2 class="flow3-firstHeader">Create a new blog</h2>
+	<f:flashMessages class="flashmessages"/>
+	<f:form.errors for="newBlog">
+		<div class="error">
+			<strong>{error.propertyName}</strong>: <f:for each="{error.errors}" as="errorDetail">{errorDetail.message}</f:for>
+		</div>
+	</f:form.errors>
+	<p>Enter information about your new blog below:</p>
+	<f:form method="post" action="create" object="{newBlog}" name="newBlog">
+		<label for="identifier">Identifier <span class="required">(required)</span></label><br />
+		<f:form.textbox property="identifier" id="identifier" />
+		<br />
+		<label for="name">Title <span class="required">(required)</span></label><br />
+		<f:form.textbox property="title" id="title" />
+		<br />
+		<label for="description">Description</label><br />
+		<f:form.textarea property="description" rows="2" cols="40" id="description" />
+		<br />
+		<f:form.submit value="Create blog" />
+	</f:form>
+</f:section>

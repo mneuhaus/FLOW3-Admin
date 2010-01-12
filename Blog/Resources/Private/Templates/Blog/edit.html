@@ -1,0 +1,20 @@
+<f:layout name="master" />
+
+<f:section name="mainbox">
+	<div class="flow3-header flow3-header-n1"><h1 class="flow3-firstHeader">Edit blog "{blog.identifier}"</h1></div>
+	<f:form.errors for="blog">
+		<div class="error">
+			<strong>{error.propertyName}</strong>: <f:for each="{error.errors}" as="errorDetail">{errorDetail.message}</f:for>
+		</div>
+	</f:form.errors>
+	<p class="bodytext">Update the information below:</p>
+	<f:form method="post" action="update" name="blog" object="{blog}">
+		<label for="name">Title <span class="required">(required)</span></label><br />
+		<f:form.textbox property="title" id="title" />
+		<br />
+		<label for="description">Description</label><br />
+		<f:form.textarea property="description" rows="2" cols="40" id="description" />
+		<br />
+		<f:form.submit value="Update" />
+	</f:form>
+</f:section>

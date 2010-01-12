@@ -1,0 +1,24 @@
+<f:layout name="master" />
+<f:section name="mainbox">
+	<div class="flow3-header flow3-header-n1"><h1 class="flow3-firstHeader">Posts tagged with &quot;{tag}&quot;:</h1></div>
+	<div class="news-list-container">
+		<f:for each="{posts}" as="post">
+			<div class="news-list-item">
+				<h3>
+					<span class="news-list-date"><f:format.date target="{post.date}" format='l j. \o\f F Y' /></span>
+					<f:link.action action="show" arguments="{postUUID : post.identifier}">{post.title}</f:link.action>
+				</h3>
+				<p class="bodytext"><f:text.crop maxCharacters="100">{post.content}</f:text.crop></p>
+				<div class="news-list-category">
+					Tags:
+					<f:for each="{post.tags}" as="singleTag">
+						<f:link.action action="postsByTag" arguments="{tag:singleTag}">{singleTag}</f:link.action>&nbsp;
+					</f:for>
+				</div>
+				<div class="news-list-morelink"><f:link.action action="show" arguments="{postUUID : post.identifier}">[read more >> ]</f:link.action></div>
+				<hr class="clearer" />
+			</div>
+		</f:for>
+	</div>
+	<div class="news-single-backlink"><f:link.action action="index">&lt;- Back to latest posts</f:link.action></div>
+</f:section>

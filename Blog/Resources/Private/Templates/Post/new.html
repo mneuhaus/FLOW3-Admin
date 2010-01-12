@@ -1,0 +1,31 @@
+<f:layout name="master" />
+
+<f:section name="mainbox">
+	<h2 class="flow3-firstHeader">Create a new post</h2>
+	<f:flashMessages class="flashmessages"/>
+	<f:form.errors for="newPost">
+		<div class="error">
+			<strong>{error.propertyName}</strong>: <f:for each="{error.errors}" as="errorDetail">{errorDetail.message}</f:for>
+		</div>
+	</f:form.errors>
+	<f:form method="post" action="create" object="{newPost}" name="newPost" enctype="multipart/form-data">
+		<f:form.hidden name="blog" value="{blog}" />
+		<label for="author">Author</label><br />
+		<f:form.textbox property="author" id="author" /><br />
+		<label for="title">Title</label><br />
+		<f:form.textbox property="title" id="title" /><br />
+		<label for="content">Content</label><br />
+		<f:form.textarea property="content" rows="5" cols="40" id="content" /><br />
+		<label for="image">Image resource</label><br />
+		<f:form.textbox property="image.title" value="My image title" />
+		<f:form.upload property="image.originalResource" />
+<!--		<input type="file" name="newPost[image][originalResource]" /><br /> -->
+				
+		<f:if condition="{existingPosts}">
+			<label for="relatedPosts">Related Posts</label><br />
+			<f:form.select property="relatedPosts" options="{existingPosts}" optionLabelField="title" multiple="1" size="4" id="relatedPosts" /><br />
+			<br />
+		</f:if>
+		<f:form.submit value="Submit post"/>
+	</f:form>
+</f:section>

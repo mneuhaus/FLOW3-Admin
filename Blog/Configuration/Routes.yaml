@@ -1,0 +1,113 @@
+#                                                                        #
+# Default subroutes configuration for the Blog package                   #
+#                                                                        #
+
+# $Id: Routes.yaml 3498 2009-11-24 11:06:56Z robert $
+
+
+--
+  name: 'Comment actions 1'
+  uriPattern:    'posts/{post}/comments/{@action}'
+  defaults:
+    @package:    Blog
+    @controller: Comment
+    @format:     html
+
+--
+  name: 'Post'
+  uriPattern:    'posts/{post}.{@format}'
+  defaults:
+    @package:    Blog
+    @controller: Post
+    @action:     show
+    @format:     html
+  routeParts:
+    post:
+      handler: F3\Blog\RoutePartHandlers\PostRoutePartHandler
+
+--
+  name: 'Post actions 2'
+  uriPattern:    'posts/{post}'
+  defaults:
+    @package:    Blog
+    @controller: Post
+    @format:     html
+  routeParts:
+    post:
+      handler: F3\Blog\RoutePartHandlers\PostRoutePartHandler
+
+--
+  name: 'Post actions 1'
+  uriPattern:    'posts/{@action}'
+  defaults:
+    @package:    Blog
+    @controller: Post
+    @format:     html
+
+--
+  name: 'Post index'
+  uriPattern:    'posts.{@format}'
+  defaults:
+    @package:    Blog
+    @controller: Post
+    @format:     html
+    @action:     index
+
+--
+  name: 'Posts Feed'
+  uriPattern:    'feeds/posts.{@format}'
+  defaults:
+    @package:    Blog
+    @controller: Post
+    @action:     index
+
+--
+  name: 'Posts with empty URI'
+  uriPattern:    ''
+  defaults:
+    @package:    Blog
+    @controller: Post
+    @action:     index
+    @format:     html
+
+--
+  name: 'Blog actions 2'
+  uriPattern: 'admin/blogs/{blog}/{@action}'
+  defaults:
+    @package:    Blog
+    @controller: Blog
+    @format:     html
+
+--
+  name: 'Blog actions 1'
+  uriPattern: 'admin/blogs/{@action}'
+  defaults:
+    @package:    Blog
+    @controller: Blog
+    @format:     html
+
+--
+  name: 'Admin'
+  uriPattern: 'admin'
+  defaults:
+    @package:    Blog
+    @controller: Administration
+    @format:     html
+
+--
+  name: 'Setup'
+  uriPattern: 'admin/setup(/{@action})'
+  defaults:
+    @package:    Blog
+    @controller: Setup
+    @format:     html
+    @action:     index
+
+--
+  name: 'Authentication'
+  uriPattern: 'admin/authentication(/{@action})'
+  defaults:
+    @package:    Blog
+    @controller: Login
+    @format:     html
+    @action:     index

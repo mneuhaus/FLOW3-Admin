@@ -1,0 +1,69 @@
+{namespace blog=F3\Blog\ViewHelpers}
+<f:layout name="master" />
+
+<f:section name="mainbox">
+	<div id="navigation">
+		<f:if condition="{previousPost}">
+			<span class="previous">&laquo; <f:link.action action="show" arguments="{post: previousPost, blog: previousPost.blog}">{previousPost.title}</f:link.action></span>
+		</f:if>
+		<f:if condition="{nextPost}">
+			<span class="next"><f:link.action action="show" arguments="{post: nextPost, blog: nextPost.blog}">{nextPost.title}</f:link.action> &raquo;</span>
+		</f:if>
+		<div class="clear"></div>
+	</div>
+
+	<f:flashMessages class="flashmessages" />
+
+	<h2>{post.title}</h2>
+	<f:render partial="/postMetaData" arguments="{post: post}"/>
+	<p class="content"><f:format.nl2br>{post.content}</f:format.nl2br></p>
+	<f:if condition="{post.image.originalResource}">
+		<img src="{f:uri.resource(resource: post.image.originalResource, title: post.image.title)}" style="max-width: 100%" alt="{post.image.title}" />
+	</f:if>
+	<f:if condition="{post.relatedPosts}">
+		<a name="relatedposts"></a>
+		<div class="relatedposts">
+			<h3>Related Posts</h3>
+			<ul class="relatedpostslist">
+				<f:for each="{post.relatedPosts}" as="relatedPost">
+					<li><f:link.action action="show" arguments="{post: relatedPost, blog: relatedPost.blog}">{relatedPost.title}</f:link.action></li>
+				</f:for>
+			</ul>
+		</div>
+		<div class="clear"></div>
+	</f:if>
+	<a name="comments"></a>
+	<div class="comments">
+		<f:if condition="{post.numberOfComments}">
+			<h3>Comments</h3>
+			<ol class="commentlist">
+				<f:for each="{post.comments}" as="comment" reverse="TRUE">
+					<li class="comment">
+						<p class="metadata"><img src="{f:uri.resource(path: 'Icons/FamFamFam/user_comment.png')}" title="Comment"/> {comment.author} | <f:format.date format='d.m.Y'>{comment.date}</f:format.date></p>
+						<blog:gravatar email="{comment.emailAddress}" default="{f:uri.resource(path: 'gravatar_default.gif')}" class="gravatar" />
+						<p class="content"><f:format.nl2br>{comment.content}</f:format.nl2br></p>
+					</li>
+				</f:for>
+			</ol>
+			<div class="clear"></div>
+		</f:if>
+		<h3>Leave a reply</h3>
+		<f:form.errors for="newComment">
+			<div class="error">
+				<strong>{error.propertyName}</strong>: <f:for each="{error.errors}" as="errorDetail">{errorDetail.message}</f:for>
+			</div>
+		</f:form.errors>
+		<f:form method="post" action="create" controller="Comment" object="{newComment}" name="newComment" class="form newcomment">
+			<f:form.hidden name="blog" value="{post.blog}" />
+			<f:form.hidden name="post" value="{post}" />
+			<ul>
+				<li><f:form.textbox id="comment.author" property="author" /></li>
+				<li><label for="comment.author">Name <span class="required">*</span></label></li>
+				<li><f:form.textbox id="comment.emailaddress" property="emailAddress" /></li>
+				<li><label for="comment.emailaddress">Email <span class="required">*</span> (won't be displayed)</label></li>
+				<li><f:form.textarea id="comment.content" property="content" rows="10" cols="50"/></li>
+				<li><f:form.submit class="submit" value="Submit"/></li>
+			</ul>
+		</f:form>
+	</div>
+</f:section>
