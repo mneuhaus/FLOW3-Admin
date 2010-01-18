@@ -47,9 +47,9 @@ class EntityWidget extends \F3\Admin\Widgets\AbstractWidget{
         $widgetTemplate = str_replace('@package', $this->package, $this->widgetTemplatePattern);
 		$widgetTemplate = str_replace('@widget', "Entity", $widgetTemplate);
         $this->view->setTemplatePathAndFilename($widgetTemplate);
-
+		
         $getter = "get".ucfirst($name);
-		if(!method_exists($object,$getter)) return array("widget"=>"method not found");
+		if(!is_callable(array($object,$getter))) return array("widget"=>"method not found");
         $value = call_user_func(array($object,$getter));
         $modelClass = $tags["var"][0];
         $repositoryClass = $this->getModelRepository($modelClass);
@@ -66,7 +66,7 @@ class EntityWidget extends \F3\Admin\Widgets\AbstractWidget{
 
             $options = array();
             foreach($objects as $option){
-                $title = $this->getTitle($option);
+                $title = $option->__toString();
                 $uuid = $this->persistenceManager->getBackend()->getIdentifierByObject($option);
                 $options[] = array(
                     "value"=> $uuid,
@@ -74,7 +74,6 @@ class EntityWidget extends \F3\Admin\Widgets\AbstractWidget{
                     "selected" => ($selectedUuid == $uuid)
                 );
             }
-
             $this->view->assign("options",$options);
 
             return array("widget" => $this->view->render());
@@ -89,9 +88,11 @@ class EntityWidget extends \F3\Admin\Widgets\AbstractWidget{
 	public function getSelectedUuid($property, $mainObject){
 		$method = "get".ucfirst($property);
 		$uuids = array();
-		if(method_exists($mainObject,$method)){
+		if(is_callable(array($mainObject,$method))){
             $object = call_user_func(array($mainObject,$method));
-            $uuid = $this->persistenceManager->getBackend()->getIdentifierByObject($object);
+			if(!is_object($object))
+				return false;
+           	$uuid = $this->persistenceManager->getBackend()->getIdentifierByObject($object);
             return $uuid;
 		}
 	}

@@ -44,7 +44,6 @@ class StringWidget extends \F3\Admin\Widgets\AbstractWidget{
         $this->view->assign("objectname",$objectName);
         $this->view->assign("value",$value);
 
-#		return array("widget" => '<f:form.textbox property="{name}"/>');
         return array("widget" => $this->view->render());
 	}
 }

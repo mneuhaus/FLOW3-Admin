@@ -1,0 +1,21 @@
+<f:layout name="base" />
+{namespace a=F3\Admin\ViewHelpers}
+<f:section name="content">
+	<f:form method="post" action="delete" name="item">
+		<input type='hidden' name='model' value='{model}' />
+		<input type='hidden' name='item[__identity]' value='{identity}' />
+		<h3>Do you really want to Delete these: </h3>
+		<a:recursive object="{object}" objects="objects" subs="subs">
+			<ul>
+				<f:for each="{objects}" as="name">
+					<li>
+						{name}
+						{subs}
+					</li>
+				</f:for>
+			</ul>
+		</a:recursive>
+		<input type="submit" name="confirm" value="Confirm" class="fg-button ui-state-error ui-priority-secondary ui-corner-all" />
+		<!-- <input type="submit" name="cancel" value="Cancel" class="fg-button ui-state-default ui-corner-all"/> -->
+	</f:form>
+</f:section>

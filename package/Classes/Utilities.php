@@ -216,6 +216,22 @@ class Utilities{
     }
 
 	/**
+	 * Returns the Sub Type of the Model Property
+	 * 
+	 * For example: SplObjectStorage<DateTime> -> DateTime
+	 *
+	 * @param $raw String raw Type
+	 * @return $name String Type
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 **/
+    public function getSubType($raw){
+		preg_match("/<(.*?)>/",$raw,$match);
+		if(count($match)>0)
+        	return $match[1];
+		return false;
+    }
+
+	/**
 	 * Checks if the Class is a manageble Entity
 	 *
 	 * @param $checkClass String Name of the Class
@@ -223,6 +239,7 @@ class Utilities{
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 **/
     public function isEntity($checkClass){
+		if(substr($checkClass,0,1) == "\\") $checkClass = substr($checkClass,1);
 		if(!isset($this->cached["entities"])){
 			$activePackages = $this->packageManager->getActivePackages();
 			$this->cached["entities"] = array();
@@ -293,7 +310,7 @@ class Utilities{
 	}
 	
 	/**
-	 * Returns a Validator for the given Modem
+	 * Returns a Validator for the given Model
 	 *
 	 * @param $model String Class of the Model
 	 * @return $validator GenericObjectValidator
@@ -343,6 +360,24 @@ class Utilities{
 			}
 		}
 		return array();
+	}
+	
+	/**
+	 * Returns all Properties of a Specified Models
+	 *
+	 * Ïparam $model String Name of the Model
+	 * @return $properties Array of Model Properties
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 **/
+	public function getModelProperties($model){
+		$tmpProperties = $this->reflection->getClassPropertyNames($model);
+		foreach ($tmpProperties as $property) {
+			$properties[$property] = $this->reflection->getPropertyTagsValues($model,$property);
+			if(!in_array("var",array_keys($properties[$property]))) continue;
+			$properties[$property]["identity"] = in_array("identity",array_keys($properties[$property])) ? "true" : "false";
+		}
+		unset($tmpProperties);
+		return $properties;
 	}
 }
 

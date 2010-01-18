@@ -41,14 +41,13 @@ class DateTimeWidget extends \F3\Admin\Widgets\AbstractWidget{
         $this->view->assign("name",$name);
         $this->view->assign("object",$object);
         $this->view->assign("objectname",$objectName);
-        $this->view->assign("value",$value->getTimestamp());
+        $this->view->assign("value",date("l, F d, Y h:m:s A",$value->getTimestamp()));
 
         return array("widget" => $this->view->render());
 	}
 
     public function convert($value){
-        $object = new \DateTime();
-        $object->setTimestamp($value);
+        $object = \DateTime::createFromFormat("l, F d, Y h:m:s A",$value);
 		return $object;
 	}
 }

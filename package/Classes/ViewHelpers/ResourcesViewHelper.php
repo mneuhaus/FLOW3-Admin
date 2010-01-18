@@ -59,7 +59,7 @@ class ResourcesViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 		$jsfiles = array(
 			"js/jquery-1.3.2.min.js",
 			"js/jquery-ui-1.7.2.custom.min.js",
-#			"js/daterangepicker.jQuery.js",
+			"js/daterangepicker.jQuery.js",
 			"js/jquery-ui.spinner.js",
 			"js/jquery.scrollTo-min.js",
 			"js/jquery.localisation-min.js",

@@ -40,7 +40,7 @@ class ModelPropertyViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelp
 	public function render($model, $property) {
 		$propertyFunction = "get".ucfirst($property);
 		#echo $propertyFunction."<br>";
-		if(method_exists($model,$propertyFunction)){
+		if(is_callable(array($model,$propertyFunction))){
 			$result = call_user_func(array($model, $propertyFunction));
 			if(is_array($result)){
 				return count($result);
@@ -49,7 +49,7 @@ class ModelPropertyViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelp
 			}elseif(is_object($result) && method_exists($result,"getLabel")){
 				return $result->getLabel();
 			}elseif(is_object($result)){
-				return "no Preview";
+				return $result->__toString();
 			}else{
 				return $result;
 			}

@@ -37,6 +37,7 @@ class SplObjectStorageWidget extends \F3\Admin\Widgets\AbstractWidget{
 	 */
     public function render($name,$object,$objectName,$tags) {
 		$value = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$name);
+
         preg_match("/<(.+)>/",$tags["var"][0],$matches);
         $modelClass = $matches[1];
         $repositoryClass = $this->utilities->getModelRepository($modelClass);
@@ -53,7 +54,7 @@ class SplObjectStorageWidget extends \F3\Admin\Widgets\AbstractWidget{
 
             $options = array();
             foreach($objects as $option){
-                $title = $this->getTitle($option);
+                $title = $option->__toString();
                 $uuid = $this->persistenceManager->getBackend()->getIdentifierByObject($option);
                 $options[] = array(
                     "value"=> $uuid,

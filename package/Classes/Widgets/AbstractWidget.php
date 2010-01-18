@@ -105,19 +105,6 @@ class AbstractWidget{
 		}
 		return $repository;
 	}
-
-    public function getTitle($object){
-        $class = get_class($object);
-
-        $properties = $this->reflection->getClassPropertyNames($class);
-        foreach($properties as $property){
-			$tags = $this->reflection->getPropertyTagsValues($class,$property);
-            if(in_array("title",array_keys($tags))){
-                $method = "get".ucfirst($property);
-                return call_user_func(array($object,$method));
-            }
-        }
-    }
 }
 
 ?>
