@@ -1,59 +1,92 @@
 <f:layout name="base" />
 {namespace a=F3\Admin\ViewHelpers}
-
 <f:section name="content">
-	<div class="toolbar">
-		<f:link.action action="create" controller="Model" arguments="{model:model}"  class="fg-button ui-state-default ui-priority-primary ">
-			<span class="ui-icon ui-icon-circle-plus"></span>
-			Add <a:modelName model="{model}" />
-		</f:link.action>
-	</div>
-	
-	<f:form method="post" action="bulk" name="bulk">
-	<f:form.hidden name="model" value="{model}" />
-	<h1><a:modelName model="{model}" /></h1>
-	<table class="list ui-widget-content">
-		<thead>
-			<!--
-			<tr class="ui-widget-header">
-				<th colspan="{propertyCount}">
-					<f:form.select name="action" options="{bulkActions}"/>
-					<input type="submit" name="bulk" value="Go" />
-				</th>
-			</tr>
-			-->
-			<tr class="ui-widget-header">
-				<!-- <th></th> -->
-			<f:for each="{properties}" as="configuration" key="property">
-				<th>{property}</th>
-			</f:for>
-			</tr>
-		</thead>
-		<tbody>
-		<f:for each="{objects}" as="object">
-			<f:cycle values="{0: 'odd', 1: 'even'}" as="zebraClass">
-			  <tr class="{zebraClass}">
-			</f:cycle>
-				<!-- <td>
-					<a:identifierInput object="{object}" type="checkbox" name="bulk" value="1"/>
-				</td> -->
-				<f:for each="{properties}" as="configuration" key="property">
-					<td>
-						<f:if condition="{configuration.identity}">
-							<f:then>
-								<f:link.action action="update" controller="Model" arguments="{item:object,model:model}">
-									<a:modelProperty model="{object}" property="{property}" />
-								</f:link.action>
-							</f:then>
-							<f:else>
-								<a:modelProperty model="{object}" property="{property}" />
-							</f:else>
-						</f:if>
-					</td>
+	<div class="fluid ui-container">
+		<f:form method="post" action="list" name="list">
+		<f:form.hidden name="model" value="{model}" />
+		<h1 class="ui-header mb"><a:modelName model="{model}" /></h1>
+		
+		<div class="fluid mr ml mbs">
+		<!--
+			<div class="dl mr">
+				<select name="some_name" id="some_name">
+					<option value="option1">Bulk Actions</option>
+					<option value="option2">Delete</option>
+				</select>
+				<input type="submit" name="some_name" value="Apply" id="some_name" class="ui-button ui-secondary">
+			</div>
+		-->
+			<div class="dr ml mb1">
+				<f:link.action action="create" controller="Model" arguments="{model:model}" class="ui-button">
+					Add <a:modelName model="{model}" />
+				</f:link.action>
+			</div>
+			<div class="fluid mb1">
+				<f:for each="{filters}" as="options" key="filter">
+				<select name="filters[{filter}]" id="filter-{filter}">
+					<option value="all">All {a:f.cuf(value: filter, funcs: "m,ucfirst")}</option>
+					<f:for each="{options}" as="count" key="option">
+						<option value="{option}">{option}</option>
+					</f:for>
+				</select>
 				</f:for>
-			</tr>
-		</f:for>
-		</tbody>
-	</table>
-	</f:form>
+				<input type="submit" name="filter" value="Apply" id="filter" class="ui-button ui-secondary">
+			</div>
+		</div>
+		<div class="mr ml">
+			<table class="ui-box fluid hp">
+				<thead class="ui-subsection">
+					<tr class="">
+					<th class="ui-small"></th>
+					<f:for each="{properties}" as="configuration" key="property">
+						<th>{a:f.cuf(value: property, funcs: "ucfirst")}</th>
+					</f:for>
+					</tr>
+				</thead>
+				<tbody>
+				<f:for each="{objects}" as="object">
+					<f:cycle values="{0: 'odd', 1: 'even'}" as="zebraClass">
+						<tr class="ui-{zebraClass} ui-row">
+					</f:cycle>
+						<td class="ui-small">
+							<a:identifierInput object="{object}" type="checkbox" name="bulk" value="1"/>
+						</td>
+						<f:for each="{properties}" as="configuration" key="property">
+							<td>
+								<f:if condition="{configuration.identity}">
+									<f:then>
+										<f:link.action action="update" controller="Model" arguments="{item:object,model:model}">
+											<a:modelProperty model="{object}" property="{property}" />
+										</f:link.action>
+									</f:then>
+									<f:else>
+										<a:modelProperty model="{object}" property="{property}" />
+									</f:else>
+								</f:if>
+							</td>
+						</f:for>
+					</tr>
+				</f:for>
+				</tbody>
+			</table>
+			<div class="dl mb mts">
+				<a href="#" class="ui-button mrs">20</a>
+				<a href="#" class="ui-button mrs ui-secondary">50</a>
+				<a href="#" class="ui-button mrs ui-secondary">100</a>
+				<a href="#" class="ui-button mrs ui-secondary">All (3354)</a>
+			</div>
+			<div class="dr mb mts">
+				<a href="#" class="ui-button mls">1</a>
+				<a href="#" class="ui-button mls ui-secondary">2</a>
+				<a href="#" class="ui-button mls ui-secondary">3</a>
+				<a href="#" class="ui-button mls ui-secondary">4</a>
+				<a href="#" class="ui-button mls ui-secondary">5</a>
+				<a href="#" class="ui-button mls ui-secondary">6</a>
+				<a href="#" class="ui-button mls ui-secondary">7</a>
+				<a href="#" class="ui-button mls ui-secondary">8</a>
+			</div>
+			<div class="clear mt">&nbsp;</div>
+		</div>
+		</f:form>
+	</div>
 </f:section>

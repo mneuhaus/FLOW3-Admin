@@ -379,6 +379,20 @@ class Utilities{
 		unset($tmpProperties);
 		return $properties;
 	}
+	
+	public function getFilters($properties,$objects){
+		$filters = array();
+		foreach ($properties as $property => $tags) {
+			if(isset($tags["adminfilter"])){
+				$filters[$property] = array();
+				foreach ($objects as $object) {
+					$value = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
+					$filters[$property][$value] = isset($filters[$property][$value]) ? $filters[$property][$value] +1 : 0;
+				}
+			}
+		}
+		return $filters;
+	}
 }
 
 ?>

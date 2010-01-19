@@ -246,17 +246,35 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 
 		$repository = str_replace("Domain\Model","Domain\Repository",$model) . "Repository";
 		$repositoryObject = $this->objectManager->getObject($repository);
-
-		$objects = $repositoryObject->findAll();
+		
+		if($this->request->hasArgument("filters")){
+			$filters = $this->request->getArgument("filters");
+			echo "<pre>";
+			print_r($filters);
+			echo "</pre>";
+			$query = $repositoryObject->createQuery();
+			foreach ($filters as $filter => $value) {
+				if($value != "all")
+					$query->like($filter, $value);
+			}
+#			$query->setOrderings(array('date' => \F3\FLOW3\Persistence\QueryInterface::ORDER_DESCENDING));
+#			$query->setLimit($limit);
+			$objects = $query->execute();
+		}
+#		$objects = $repositoryObject->findAll();
+		
 		if(count($objects) < 1){
 			$arguments = array("model"=>$model);
 			$this->redirect("create",NULL,NULL,	$arguments);
 		}
 		
 		$this->view->assign("objects",$objects);
-
+		
 		$properties = $this->utilities->getModelProperties($model);
 		$this->view->assign("properties",$properties);
+		
+		$filters = $this->utilities->getFilters($properties,$objects);
+		$this->view->assign("filters",$filters);
 
 		$propertyCount = count($properties) + 1;
 		$this->view->assign("propertyCount",$propertyCount);

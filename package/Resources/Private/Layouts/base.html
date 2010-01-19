@@ -3,27 +3,22 @@
 <head>
 {namespace a=F3\Admin\ViewHelpers}
 <title>Base</title>
-<link rel="stylesheet" type="text/css" href="/{f:uri.resource(path: 'css/screen.css', package: 'Admin')}" />
+<link rel="stylesheet" type="text/css" href="/{f:uri.resource(path: 'css/scaffold/index.php?request=Resources/Packages/Admin/css/screen.css', package: 'Admin')}" />
 <link type="text/css" rel="stylesheet" href="http://jqueryui.com/themes/base/ui.all.css" />
 <link rel="stylesheet" href="/{f:uri.resource(path: 'js/markitup/skins/simple/style.css', package: 'Admin')}" type="text/css" media="screen" title="no title" charset="utf-8">
-<link rel="stylesheet" href="/{f:uri.resource(path: 'css/themes/redmond/jquery-ui.css', package: 'Admin')}" type="text/css" media="screen" title="no title" charset="utf-8">
 
 <a:resources />
 <f:base />
 </head>
 <body>
 	<div class="container">
-		<div class="header ui-widget">
-			<a href="index.php">
-				<img src="/{f:uri.resource(path: 'img/f3_logo.gif', package: 'Admin')}" width="109" height="40" alt="FLOW3" id="logo">
-			</a>
-			<ul class="functions">
-				<li>Welcome, Marc.</li>
-				<li>Help</li>
-				<li>Settings</li>
-				<li>Logout</li>
-			</ul>
-			<ul class="navigation ui-widget-header">
+		<div class="header fluid">
+			<div class="dl">
+				<a href="index.php" id="logo">
+					<img src="/{f:uri.resource(path: 'img/flow3.png', package: 'Admin')}" height="20" alt="FLOW3">
+				</a>
+			</div>
+			<ul class="hm fluid" id="navigation">
 				<a:navigation>
 					<f:if condition="{active}">
 						<f:then><li class="active"></f:then>
@@ -36,8 +31,8 @@
 				</a:navigation>
 			</ul>
 		</div>
-		<div class="content">
-			<div class="messages">
+		<div class="fluid mt mr ml">
+			<div class="fluid">
 				<f:flashMessages />
 			</div>
 	        <f:render section='content' />
