@@ -28,17 +28,16 @@ namespace F3\Admin\ViewHelpers;
  */
 class ResourcesViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	/**
-	 * @var \F3\FLOW3\Resource\Publisher
+	 * @var \F3\FLOW3\Resource\Publishing\ResourcePublisher
 	 */
 	protected $resourcePublisher;
-	
+
 	/**
 	 * Inject the FLOW3 resource publisher.
 	 *
-	 * @param \F3\FLOW3\Resource\Publisher $resourcePublisher
-	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 * @param \F3\FLOW3\Resource\Publishing\ResourcePublisher $resourcePublisher
 	 */
-	public function injectResourcePublisher(\F3\FLOW3\Resource\Publisher $resourcePublisher) {
+	public function injectResourcePublisher(\F3\FLOW3\Resource\Publishing\ResourcePublisher $resourcePublisher) {
 		$this->resourcePublisher = $resourcePublisher;
 	}
 	
@@ -49,8 +48,8 @@ class ResourcesViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 */
 	public function render() {
 		$package = $this->controllerContext->getRequest()->getControllerPackageKey();
-		$mirrorPath = $this->resourcePublisher->getRelativeMirrorDirectory();
-		$uri = $mirrorPath . 'Packages/' . $package . '/';
+		$mirrorPath = str_replace("/http://dev.flow3.local/_","",$this->resourcePublisher->getStaticResourcesWebBaseUri());
+		$uri = $mirrorPath . '/Packages/' . $package . '/';
 		// if ($absolute) {
 		// 	$uri = $this->controllerContext->getRequest()->getBaseURI() . $uri;
 		// }
@@ -82,7 +81,7 @@ class ResourcesViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 			"js/main.js"
 		);
 		foreach($jsfiles as $jsfile){
-			$output .= '<script src="/'.$uri.$jsfile.'" type="text/javascript" charset="utf-8"></script>'."\n";
+			$output .= '<script src="'.$uri.$jsfile.'" type="text/javascript" charset="utf-8"></script>'."\n";
 		}
 		$cssfiles = array(
 			"js/markitup/sets/wiki/style.css",
@@ -93,7 +92,7 @@ class ResourcesViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 			"js/markitup/sets/bbcode/style.css"
 		);
 		foreach($cssfiles as $cssfile){
-			$output .= '<link rel="stylesheet" href="/'.$uri.$cssfile.'" type="text/css" media="screen" title="no title" charset="utf-8">'."\n";
+			$output .= '<link rel="stylesheet" href="'.$uri.$cssfile.'" type="text/css" media="screen" title="no title" charset="utf-8">'."\n";
 		}
 		return $output;
 	}

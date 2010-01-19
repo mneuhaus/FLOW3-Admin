@@ -30,12 +30,12 @@ class AbstractWidget{
     var $view;
 
 	/**
-	 * @var \F3\FLOW3\Object\FactoryInterface A reference to the Object Factory
+	 * @var \F3\FLOW3\Object\ObjectFactoryInterface A reference to the Object Factory
 	 */
 	protected $objectFactory;
 
 	/**
-	 * @var \F3\FLOW3\Package\ManagerInterface
+	 * @var \F3\FLOW3\Package\PackageManagerInterface
 	 */
 	protected $packageManager;
 
@@ -45,7 +45,7 @@ class AbstractWidget{
 	protected $resourceManager;
 
 	/**
-	 * @var \F3\FLOW3\Object\ManagerInterface
+	 * @var \F3\FLOW3\Object\ObjectManagerInterface
 	 */
 	protected $objectManager;
 
@@ -56,12 +56,12 @@ class AbstractWidget{
 
 	/**
 	 * Reflection service
-	 * @var F3\FLOW3\Reflection\Service
+	 * @var F3\FLOW3\Reflection\ReflectionService
 	 */
 	private $reflection;
 
     /**
-	 * @var \F3\FLOW3\Persistence\ManagerInterface
+	 * @var \F3\FLOW3\Persistence\PersistenceManagerInterface
 	 */
 	protected $persistenceManager;
 
@@ -78,7 +78,7 @@ class AbstractWidget{
 	 */
 	protected $widgetTemplatePattern = 'package://@package/Private/Templates/Widgets/@widget.html';
 
-    public function __construct(\F3\FLOW3\Object\FactoryInterface $objectFactory, \F3\FLOW3\Package\ManagerInterface $packageManager, \F3\FLOW3\Object\ManagerInterface $objectManager, \F3\FLOW3\Reflection\Service $reflectionService, \F3\FLOW3\Persistence\ManagerInterface $persistenceManager, \F3\Admin\Utilities $utilities){
+    public function __construct(\F3\FLOW3\Object\ObjectFactoryInterface $objectFactory, \F3\FLOW3\Package\PackageManagerInterface $packageManager, \F3\FLOW3\Object\ObjectManagerInterface $objectManager, \F3\FLOW3\Reflection\ReflectionService $reflectionService, \F3\FLOW3\Persistence\PersistenceManagerInterface $persistenceManager, \F3\Admin\Utilities $utilities){
         $this->objectFactory = $objectFactory;
 		$this->objectManager = $objectManager;
 		$this->packageManager = $packageManager;

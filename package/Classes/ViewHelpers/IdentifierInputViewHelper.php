@@ -29,18 +29,18 @@ namespace F3\Admin\ViewHelpers;
 class IdentifierInputViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 
 	/**
-	 * @var \F3\FLOW3\Persistence\ManagerInterface
+	 * @var \F3\FLOW3\Persistence\PersistenceManagerInterface
 	 */
 	protected $persistenceManager;
 
 	/**
 	 * Injects the FLOW3 Persistence Manager
 	 *
-	 * @param \F3\FLOW3\Persistence\ManagerInterface $persistenceManager
+	 * @param \F3\FLOW3\Persistence\PersistenceManagerInterface $persistenceManager
 	 * @return void
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
-	public function injectPersistenceManager(\F3\FLOW3\Persistence\ManagerInterface $persistenceManager) {
+	public function injectPersistenceManager(\F3\FLOW3\Persistence\PersistenceManagerInterface $persistenceManager) {
 		$this->persistenceManager = $persistenceManager;
 	}
 
@@ -84,7 +84,7 @@ class IdentifierInputViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHe
 			){
 			return '';
 		}
-		$identifier = $this->persistenceManager->getBackend()->getIdentifierByObject($object);
+		$identifier = $this->persistenceManager->getIdentifierByObject($object);
 		if ($identifier === NULL) {
 			return chr(10) . '<!-- Object of type ' . get_class($object) . ' is without identity -->' . chr(10);
 		}

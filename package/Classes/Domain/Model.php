@@ -176,7 +176,7 @@ class Model {
 	}
 	
 	public function __toString(){
-		$reflectionService = $this->objectManager->getObject("F3\FLOW3\Reflection\Service");
+		$reflectionService = $this->objectManager->getObject("F3\FLOW3\Reflection\ReflectionService");
 		$class = get_class($this);
 		$properties = $reflectionService->getClassPropertyNames($class);
 		$identity = array();

@@ -39,21 +39,21 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\FormViewHelper {
 
 	/**
 	 * Reflection service
-	 * @var F3\FLOW3\Reflection\Service
+	 * @var F3\FLOW3\Reflection\ReflectionService
 	 */
 	private $reflection;
 
 	/**
 	 * Inject a Reflection service
-	 * @param \F3\FLOW3\Reflection\Service $reflectionService Reflection service
+	 * @param \F3\FLOW3\Reflection\ReflectionService $reflectionService Reflection service
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function injectReflection(\F3\FLOW3\Reflection\Service $reflectionService) {
+	public function injectReflection(\F3\FLOW3\Reflection\ReflectionService $reflectionService) {
 		$this->reflection = $reflectionService;
 	}
 
 	/**
-	 * @var \F3\FLOW3\Object\ManagerInterface
+	 * @var \F3\FLOW3\Object\ObjectManagerInterface
 	 * @api
 	 */
 	protected $objectManager;
@@ -61,27 +61,27 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\FormViewHelper {
 	/**
 	 * Injects the object manager
 	 *
-	 * @param \F3\FLOW3\Object\ManagerInterface $manager
+	 * @param \F3\FLOW3\Object\ObjectManagerInterface $manager
 	 * @return void
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
-	public function injectManager(\F3\FLOW3\Object\ManagerInterface $manager) {
+	public function injectManager(\F3\FLOW3\Object\ObjectManagerInterface $manager) {
 		$this->objectManager = $manager;
 	}
 
     /**
-	 * @var \F3\FLOW3\Object\FactoryInterface
+	 * @var \F3\FLOW3\Object\ObjectFactoryInterface
 	 */
 	protected $objectFactory;
 
     /**
 	 * Injects the object factory
 	 *
-	 * @param \F3\FLOW3\Object\FactoryInterface $objectFactory
+	 * @param \F3\FLOW3\Object\ObjectFactoryInterface $objectFactory
 	 * @return void
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
-	public function injectObjectFactory(\F3\FLOW3\Object\FactoryInterface $objectFactory) {
+	public function injectObjectFactory(\F3\FLOW3\Object\ObjectFactoryInterface $objectFactory) {
 		$this->objectFactory = $objectFactory;
 	}
 

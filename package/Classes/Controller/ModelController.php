@@ -62,7 +62,7 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 	}
 
 	/**
-	 * @var \F3\FLOW3\Object\ManagerInterface
+	 * @var \F3\FLOW3\Object\ObjectManagerInterface
 	 * @api
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
@@ -71,16 +71,16 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 	/**
 	 * Injects the object manager
 	 *
-	 * @param \F3\FLOW3\Object\ManagerInterface $manager
+	 * @param \F3\FLOW3\Object\ObjectManagerInterface $manager
 	 * @return void
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
-	public function injectManager(\F3\FLOW3\Object\ManagerInterface $manager) {
+	public function injectManager(\F3\FLOW3\Object\ObjectManagerInterface $manager) {
 		$this->objectManager = $manager;
 	}
 
 	/**
-	 * @var \F3\FLOW3\Reflection\Service
+	 * @var \F3\FLOW3\Reflection\ReflectionService
 	 * @author Marc Neuhaus
 	 */
 	protected $reflectionService;
@@ -88,22 +88,22 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 	/**
 	 * Injects the reflection service
 	 *
-	 * @param \F3\FLOW3\Reflection\Service $reflectionService
+	 * @param \F3\FLOW3\Reflection\ReflectionService $reflectionService
 	 * @return void
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
-	public function injectReflectionService(\F3\FLOW3\Reflection\Service $reflectionService) {
+	public function injectReflectionService(\F3\FLOW3\Reflection\ReflectionService $reflectionService) {
 		$this->reflectionService = $reflectionService;
 	}
 
 	/**
-	 * @var \F3\FLOW3\Configuration\Manager
+	 * @var \F3\FLOW3\Configuration\ConfigurationManager
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
 	protected $configurationManager;
 
 	/**
-	 * @var \F3\FLOW3\Package\ManagerInterface
+	 * @var \F3\FLOW3\Package\PackageManagerInterface
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
 	protected $packageManager;
@@ -111,16 +111,16 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 	/**
 	 * Injects the packageManager
 	 *
-	 * @param \F3\FLOW3\Package\ManagerInterface $packageManager
+	 * @param \F3\FLOW3\Package\PackageManagerInterface $packageManager
 	 * @return void
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
-	public function inject(\F3\FLOW3\Package\ManagerInterface $packageManager) {
+	public function inject(\F3\FLOW3\Package\PackageManagerInterface $packageManager) {
 		$this->packageManager = $packageManager;
 	}
 
 	/**
-	 * @var \F3\FLOW3\Persistence\ManagerInterface
+	 * @var \F3\FLOW3\Persistence\PersistenceManagerInterface
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
 	protected $persistenceManager;
@@ -128,11 +128,11 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 	/**
 	 * Injects the FLOW3 Persistence Manager
 	 *
-	 * @param \F3\FLOW3\Persistence\ManagerInterface $persistenceManager
+	 * @param \F3\FLOW3\Persistence\PersistenceManagerInterface $persistenceManager
 	 * @return void
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
-	public function injectPersistenceManager(\F3\FLOW3\Persistence\ManagerInterface $persistenceManager) {
+	public function injectPersistenceManager(\F3\FLOW3\Persistence\PersistenceManagerInterface $persistenceManager) {
 		$this->persistenceManager = $persistenceManager;
 	}
 	
@@ -247,21 +247,70 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 		$repository = str_replace("Domain\Model","Domain\Repository",$model) . "Repository";
 		$repositoryObject = $this->objectManager->getObject($repository);
 		
+		$properties = $this->utilities->getModelProperties($model);
+		$this->view->assign("properties",$properties);
+		
+		$query = $repositoryObject->createQuery();
+		
+		// Applying Filters
+		$filters = array();
 		if($this->request->hasArgument("filters")){
 			$filters = $this->request->getArgument("filters");
-			echo "<pre>";
-			print_r($filters);
-			echo "</pre>";
-			$query = $repositoryObject->createQuery();
 			foreach ($filters as $filter => $value) {
 				if($value != "all")
-					$query->like($filter, $value);
+					$query->matching($query->equals($filter, $value));
 			}
-#			$query->setOrderings(array('date' => \F3\FLOW3\Persistence\QueryInterface::ORDER_DESCENDING));
-#			$query->setLimit($limit);
-			$objects = $query->execute();
 		}
-#		$objects = $repositoryObject->findAll();
+		$filters = $this->utilities->getFilters($properties,$query->execute(),$filters);
+		$this->view->assign("filters",$filters);
+		
+		// Get total amount of Objects before limitations
+		$count = $query->count();
+		
+		
+		// Set Limits
+		$limits = array(
+			10 => false,
+			20 => false,
+			50 => false,
+			100 => false,
+			"All" => false
+		);
+		
+#		$query->setOrderings(array("zip" => \F3\FLOW3\Persistence\QueryInterface::ORDER_DESCENDING));
+
+		if($this->request->hasArgument("limit")){
+			$limit = $this->request->getArgument("limit");
+#			echo $limit;
+			if( intval($limit) > 0 ){
+				$query->setLimit(intval($limit));
+			}
+			$limits[$limit] = true;
+		}else{
+			$limit = key($limits);
+			$query->setLimit($limit);
+			$limits[$limit] = true;
+		}
+		$this->view->assign("limits",$limits);
+		
+		
+		if( intval($limit) > 0 ){
+			// Pagination
+			if($count > 1)
+				$pages = range(1, ( $count / $limit ) + 1 );
+			else
+				$pages = array(1);
+			$this->view->assign("pages",$pages);
+		}
+		if($this->request->hasArgument("page")){
+			$page = $this->request->getArgument("page");
+			$query->setOffset((intval($limit) * $page) - 1);
+		}else{
+			$page = 1;
+		}
+		$this->view->assign("currentpage",$page);
+		
+		$objects = $query->execute();
 		
 		if(count($objects) < 1){
 			$arguments = array("model"=>$model);
@@ -269,12 +318,7 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 		}
 		
 		$this->view->assign("objects",$objects);
-		
-		$properties = $this->utilities->getModelProperties($model);
-		$this->view->assign("properties",$properties);
-		
-		$filters = $this->utilities->getFilters($properties,$objects);
-		$this->view->assign("filters",$filters);
+		$this->view->assign("total",$count);
 
 		$propertyCount = count($properties) + 1;
 		$this->view->assign("propertyCount",$propertyCount);

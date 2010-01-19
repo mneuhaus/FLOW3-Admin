@@ -55,7 +55,7 @@ class SplObjectStorageWidget extends \F3\Admin\Widgets\AbstractWidget{
             $options = array();
             foreach($objects as $option){
                 $title = $option->__toString();
-                $uuid = $this->persistenceManager->getBackend()->getIdentifierByObject($option);
+                $uuid = $this->persistenceManager->getIdentifierByObject($option);
                 $options[] = array(
                     "value"=> $uuid,
                     "name" => $title,
@@ -78,7 +78,7 @@ class SplObjectStorageWidget extends \F3\Admin\Widgets\AbstractWidget{
 		$uuids = array();
 		if($objects = \F3\FLOW3\Reflection\ObjectAccess::getProperty($mainObject, $property)){
 			foreach($objects as $object){
-				$uuids[] = $this->persistenceManager->getBackend()->getIdentifierByObject($object);
+				$uuids[] = $this->persistenceManager->getIdentifierByObject($object);
 			}
 		}
 		return $uuids;

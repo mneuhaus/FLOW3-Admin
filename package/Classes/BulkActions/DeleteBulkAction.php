@@ -28,23 +28,23 @@ namespace F3\Admin\BulkActions;
  */
 class DeleteBulkAction extends \F3\FLOW3\MVC\Controller\ActionController{
 	/**
-	 * @var \F3\FLOW3\Persistence\ManagerInterface
+	 * @var \F3\FLOW3\Persistence\PersistenceManagerInterface
 	 */
 	protected $persistenceManager;
 
 	/**
 	 * Injects the FLOW3 Persistence Manager
 	 *
-	 * @param \F3\FLOW3\Persistence\ManagerInterface $persistenceManager
+	 * @param \F3\FLOW3\Persistence\PersistenceManagerInterface $persistenceManager
 	 * @return void
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
-	public function injectPersistenceManager(\F3\FLOW3\Persistence\ManagerInterface $persistenceManager) {
+	public function injectPersistenceManager(\F3\FLOW3\Persistence\PersistenceManagerInterface $persistenceManager) {
 		$this->persistenceManager = $persistenceManager;
 	}
 
 	/**
-	 * @var \F3\FLOW3\Object\ManagerInterface
+	 * @var \F3\FLOW3\Object\ObjectManagerInterface
 	 * @api
 	 */
 	protected $objectManager;
@@ -52,11 +52,11 @@ class DeleteBulkAction extends \F3\FLOW3\MVC\Controller\ActionController{
 	/**
 	 * Injects the object manager
 	 *
-	 * @param \F3\FLOW3\Object\ManagerInterface $manager
+	 * @param \F3\FLOW3\Object\ObjectManagerInterface $manager
 	 * @return void
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
-	public function injectManager(\F3\FLOW3\Object\ManagerInterface $manager) {
+	public function injectManager(\F3\FLOW3\Object\ObjectManagerInterface $manager) {
 		$this->objectManager = $manager;
 	}
 

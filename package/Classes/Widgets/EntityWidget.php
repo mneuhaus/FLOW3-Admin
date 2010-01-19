@@ -67,7 +67,7 @@ class EntityWidget extends \F3\Admin\Widgets\AbstractWidget{
             $options = array();
             foreach($objects as $option){
                 $title = $option->__toString();
-                $uuid = $this->persistenceManager->getBackend()->getIdentifierByObject($option);
+                $uuid = $this->persistenceManager->getIdentifierByObject($option);
                 $options[] = array(
                     "value"=> $uuid,
                     "name" => $title,
@@ -92,7 +92,7 @@ class EntityWidget extends \F3\Admin\Widgets\AbstractWidget{
             $object = call_user_func(array($mainObject,$method));
 			if(!is_object($object))
 				return false;
-           	$uuid = $this->persistenceManager->getBackend()->getIdentifierByObject($object);
+           	$uuid = $this->persistenceManager->getIdentifierByObject($object);
             return $uuid;
 		}
 	}

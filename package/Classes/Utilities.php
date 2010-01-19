@@ -29,22 +29,22 @@ namespace F3\Admin;
 class Utilities{
 	/**
 	 * Reflection service
-	 * @var F3\FLOW3\Reflection\Service
+	 * @var F3\FLOW3\Reflection\ReflectionService
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
 	private $reflection;
 
 	/**
 	 * Inject a Reflection service
-	 * @param \F3\FLOW3\Reflection\Service $reflectionService Reflection service
+	 * @param \F3\FLOW3\Reflection\ReflectionService $reflectionService Reflection service
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
-	public function injectReflection(\F3\FLOW3\Reflection\Service $reflectionService) {
+	public function injectReflection(\F3\FLOW3\Reflection\ReflectionService $reflectionService) {
 		$this->reflection = $reflectionService;
 	}
 
 	/**
-	 * @var \F3\FLOW3\Package\ManagerInterface
+	 * @var \F3\FLOW3\Package\PackageManagerInterface
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
 	protected $packageManager;
@@ -52,11 +52,11 @@ class Utilities{
 	/**
 	 * Injects the packageManager
 	 *
-	 * @param \F3\FLOW3\Package\ManagerInterface $packageManager
+	 * @param \F3\FLOW3\Package\PackageManagerInterface $packageManager
 	 * @return void
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
-	public function inject(\F3\FLOW3\Package\ManagerInterface $packageManager) {
+	public function inject(\F3\FLOW3\Package\PackageManagerInterface $packageManager) {
 		$this->packageManager = $packageManager;
 	}
 
@@ -330,7 +330,7 @@ class Utilities{
 					foreach ($parsedAnnotation['validators'] as $validatorConfiguration) {
 						$newValidator = $this->ValidatorResolver->createValidator($validatorConfiguration['validatorName'], $validatorConfiguration['validatorOptions']);
 						if ($newValidator === NULL) {
-							throw new \F3\FLOW3\Validation\Exception\NoSuchValidator('Invalid validate annotation in ' . $model . '::' . $classPropertyName . ': Could not resolve class name for  validator "' . $validatorConfiguration['validatorName'] . '".', 1241098027);
+							throw new \F3\FLOW3\Validation\Exception\NoSuchValidatorException('Invalid validate annotation in ' . $model . '::' . $classPropertyName . ': Could not resolve class name for  validator "' . $validatorConfiguration['validatorName'] . '".', 1241098027);
 						}
 						$objectValidator->addPropertyValidator($classPropertyName, $newValidator);
 						$validatorCount ++;
@@ -380,14 +380,15 @@ class Utilities{
 		return $properties;
 	}
 	
-	public function getFilters($properties,$objects){
+	public function getFilters($properties,$objects,$active){
 		$filters = array();
 		foreach ($properties as $property => $tags) {
 			if(isset($tags["adminfilter"])){
 				$filters[$property] = array();
 				foreach ($objects as $object) {
 					$value = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
-					$filters[$property][$value] = isset($filters[$property][$value]) ? $filters[$property][$value] +1 : 0;
+					
+					$filters[$property][$value] = isset($active[$property]) && $active[$property]==$value ? true : false;
 				}
 			}
 		}
