@@ -67,6 +67,8 @@ class ResourcesViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 			"js/jquery.autoSuggest.js",
 			"js/jquery.MultiFile.js",
 			"js/jquery.elastic.js",
+			"js/jquery.hotkeys.js",
+			"js/jquery.keynav.js",
 			"js/jquery.datejs.js",
 			"js/ckeditor/ckeditor.js",
 			"js/ckeditor/adapters/jquery.js",

@@ -75,6 +75,8 @@ class EntityWidget extends \F3\Admin\Widgets\AbstractWidget{
                 );
             }
             $this->view->assign("options",$options);
+			
+			$this->view->assign("model",$modelClass);
 
             return array("widget" => $this->view->render());
         }else{

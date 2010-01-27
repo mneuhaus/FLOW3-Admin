@@ -29,6 +29,17 @@ namespace F3\Admin\Controller;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
+	
+	protected $fallbackPatterns = array(
+#		"package://@specified",
+		"package://@package/Private/Templates/@model/@action/@variant.html",
+		"package://@package/Private/Templates/Admin/@action/@variant.html",
+		"package://@package/Private/Templates/@model/@action.html",
+		"package://@package/Private/Templates/Admin/@action.html",
+		"package://Admin/Private/Templates/Model/@action/@variant.html",
+		"package://Admin/Private/Templates/Model//@action.html"
+	);
+	
 	/**
 	 * @var \F3\Admin\Utilities
 	 * @author Marc Neuhaus <apocalip@gmail.com>
@@ -180,7 +191,7 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 		$properties = $this->utilities->getModelProperties($model);
 		$this->view->assign('properties',$properties);
 
-		$object = $this->persistenceManager->getBackend()->getObjectByIdentifier($tmp["__identity"]);
+		$object = $this->persistenceManager->getObjectByIdentifier($tmp["__identity"]);
 		$this->view->assign('object',$object);
 		$this->view->assign('identity',$tmp["__identity"]);
 	}
@@ -196,7 +207,7 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 		$model = $this->request->getArgument("model");
 		$this->view->assign("model",$model);
 		
-		$object = $this->persistenceManager->getBackend()->getObjectByIdentifier($tmp["__identity"]);
+		$object = $this->persistenceManager->getObjectByIdentifier($tmp["__identity"]);
 		
 		if($this->request->hasArgument("confirm")){
 			$repository = str_replace("Domain\Model","Domain\Repository",$model) . "Repository";
@@ -220,11 +231,17 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 			$package = $this->request->getArgument("package");
 			$allPackages = $this->utilities->getEnabledModels();
 			$packages = array(
-				$package => $allPackages[$package]
+				"models" => array(
+					$package => $allPackages[$package]
+				),
+				//"actions" => $this->utilities->getEnabledActions()
 			);
 			$this->view->assign('packages', $packages);
-		}else{			
-			$packages = $this->utilities->getEnabledModels();
+		}else{
+			$packages = array(
+				"models" => $this->utilities->getEnabledModels(),
+				"actions" => $this->utilities->getEnabledActions()
+			);
 			$this->view->assign('packages', $packages);
 		}
 
@@ -296,11 +313,10 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 		
 		if( intval($limit) > 0 ){
 			// Pagination
-			if($count > 1)
-				$pages = range(1, ( $count / $limit ) + 1 );
-			else
-				$pages = array(1);
-			$this->view->assign("pages",$pages);
+			if($count > $limit){
+				$pages = range(1, ( $count / $limit ) );
+				$this->view->assign("pages",$pages);
+			}
 		}
 		if($this->request->hasArgument("page")){
 			$page = $this->request->getArgument("page");
@@ -311,6 +327,7 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 		$this->view->assign("currentpage",$page);
 		
 		$objects = $query->execute();
+		#print_r($objects[0]);
 		
 		if(count($objects) < 1){
 			$arguments = array("model"=>$model);
@@ -328,6 +345,16 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 			"F3\Admin\BulkActions\DeleteBulkAction"=>'Delete selected Items'
 		);
 		$this->view->assign("bulkActions",$bulkActions);
+		
+		
+		$tags = $this->reflectionService->getClassTagsValues($model);
+		if(in_array("quickadd",array_keys($tags))){
+			$object = $this->objectFactory->create($model);
+			$this->view->assign('quickobject',$object);
+			$this->view->assign('quickproperties',$tags["quickadd"][0]);
+		}
+		
+		$this->setTemplate($model,"list");
 	}
 	
 	/**
@@ -346,10 +373,10 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 		$this->view->assign('model', $modelClass);
 		$this->view->assign('properties',$properties);
 
-		$object = $this->persistenceManager->getBackend()->getObjectByIdentifier($tmp["__identity"]);
+		$object = $this->persistenceManager->getObjectByIdentifier($tmp["__identity"]);
 
 		if($this->request->hasArgument("update")){
-			$errors = $this->createUpdateObject("create",$object);
+			$errors = $this->createUpdateObject("update",$object);
 			if($errors === false){
 				$arguments = array("model"=>$this->request->getArgument("model"));
 				$this->redirect('list',NULL,NULL,$arguments);
@@ -374,8 +401,30 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 		}
 		
 		$this->view->assign('object',$object);
+		
+		$this->setTemplate($modelClass,"update");
 	}
 
+	/**
+	 * view action
+	 *
+	 * @return void
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 */
+	public function viewAction() {
+		$tmp = $this->request->getArgument("item");
+		$object = $this->persistenceManager->getObjectByIdentifier($tmp["__identity"]);
+		$this->view->assign('object',$object);
+		
+		$model = $this->request->getArgument("model");
+		$this->view->assign('model',$model);
+
+		$properties = $this->utilities->getModelProperties($model);
+		$this->view->assign('properties',$properties);
+		
+		$this->setTemplate($model,"view");
+	}
+	
 	/**
 	 * bulk action
 	 *
@@ -429,20 +478,25 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 	 * @return $success Boolean
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 **/
-	public function createUpdateObject($mode,&$targetObject){
+	public function createUpdateObject($mode,$targetObject){
 		$model = $this->request->getArgument("model");
 		$modelName = $this->utilities->getObjectNameByClassName($model);
 		$repository = str_replace("Domain\Model","Domain\Repository",$model) . "Repository";
 		$modelValidator = $this->utilities->getModelValidator($model);
 		
 		$item = $this->convertArray($this->request->getArgument("item"),$model);
-		unset($item["__identity"]);
-		$this->propertyMapper->mapAndValidate(array_keys($item), $item, $targetObject,array(),$modelValidator);
+		//unset($item["__identity"]);
+		
+		$properties = array_keys($item);
+		if($mode == "update")
+			unset($properties[array_search("__identity",$properties)]);
+		
+		$this->propertyMapper->mapAndValidate($properties, $item, $targetObject,array(),$modelValidator);
 		
 		$repositoryObject = $this->objectManager->getObject($repository);
 		
 		$errors = $modelValidator->getErrors();
-		
+		//print_r($targetObject);
 		if(count($errors)>0){
 			return $errors;
 		}else{
@@ -452,6 +506,24 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 				$repositoryObject->update($targetObject);
 			return false;
 		}
+	}
+	
+	public function setTemplate($model,$action){
+		$tags = $this->reflectionService->getClassTagsValues($model);
+		if(in_array($action."view",array_keys($tags))){
+			$variant = $tags[$action."view"][0];
+		}else{
+			$variant = "default";
+		}
+		
+		$template = $this->utilities->getTemplateByPatternFallbacks($this->fallbackPatterns,array(
+			"@action" => $action,
+			"@package" => $this->utilities->getPackageByClassName($model),
+			"@model" => $this->utilities->getObjectNameByClassName($model),
+			"@variant" => $variant
+		));
+		
+		$this->view->setTemplatePathAndFilename($template);
 	}
 }
 

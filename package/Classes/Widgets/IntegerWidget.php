@@ -1,6 +1,6 @@
 <?php
  
-namespace F3\Admin\ViewHelpers;
+namespace F3\Admin\Widgets;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -26,36 +26,29 @@ namespace F3\Admin\ViewHelpers;
  * @api
  * @scope prototype
  */
-class ModelPropertyViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
-
-	/**
-	 * Render the "Form"
+class IntegerWidget extends \F3\Admin\Widgets\AbstractWidget{
+    /**
 	 *
-	 *
-	 * @param object $model
-	 * @param string $property
+	 * @param string $name
+	 * @param object $object
+	 * @param object $tags
 	 * @return string "Form"-Tag.
 	 * @api
 	 */
-	public function render($model, $property) {
-		$propertyFunction = "get".ucfirst($property);
-		#echo $propertyFunction."<br>";
-		if(is_callable(array($model,$propertyFunction))){
-			$result = call_user_func(array($model, $propertyFunction));
-			if(is_array($result)){
-				return count($result);
-			}elseif(is_object($result) && get_class($result) == "SplObjectStorage"){
-				return $result->count();
-			}elseif(is_object($result) && get_class($result) == "DateTime"){
-				return date("l, F d, Y h:m:s A",$result->getTimestamp());
-			}elseif(is_object($result) && method_exists($result,"getLabel")){
-				return $result->getLabel();
-			}elseif(is_object($result)){
-				return $result->__toString();
-			}else{
-				return $result;
-			}
-		}
+	public function render($name,$object,$objectName,$tags) {
+        $getter = "get".ucfirst($name);
+        $value = call_user_func(array($object,$getter));
+
+        $this->view->assign("name",$name);
+        $this->view->assign("object",$object);
+        $this->view->assign("objectname",$objectName);
+        $this->view->assign("value",$value);
+
+        return array("widget" => $this->view->render());
+	}
+    
+    public function convert($value){
+        return intval($value);
 	}
 }
 

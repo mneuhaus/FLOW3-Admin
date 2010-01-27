@@ -1,8 +1,8 @@
 <f:layout name="base" />
 
 <f:section name="content">
-	<f:for each="{packages}" as="models" key="package">
-		<table class="ui-widget">
+	<table class="ui-widget subnav">
+		<f:for each="{packages.models}" as="models" key="package">
 			<thead>
 			<tr class="ui-widget-header">
 				<th>{package}</th>
@@ -20,7 +20,29 @@
 					</td>
 				</tr>
 			</f:for>
-			</tbody>
-		</table>
-	</f:for>
+			</tbody>	
+		</f:for>
+	</table>
+	<!--<f:for each="{packages.actions}" as="models" key="package">-->
+	<!--	<table class="ui-widget subnav">-->
+	<!--		<thead>-->
+	<!--		<tr class="ui-widget-header">-->
+	<!--			<th>{package}</th>-->
+	<!--		</tr>-->
+	<!--		</thead>-->
+	<!--		<tbody>-->
+	<!--		<f:for each="{models}" as="model">-->
+	<!--			<f:cycle values="{0: 'odd', 1: 'even'}" as="zebraClass">-->
+	<!--				<tr class="ui-widget-content {zebraClass}">-->
+	<!--			</f:cycle>-->
+	<!--				<td>-->
+	<!--					<f:link.action action="list" controller="Model" arguments="{model : model.class, package : package}">-->
+	<!--						{model.name}-->
+	<!--					</f:link.action>-->
+	<!--				</td>-->
+	<!--			</tr>-->
+	<!--		</f:for>-->
+	<!--		</tbody>-->
+	<!--	</table>-->
+	<!--</f:for>-->
 </f:section>

@@ -1,51 +1,35 @@
 <f:layout name="base" />
 {namespace a=F3\Admin\ViewHelpers}
-
 <f:section name="content">
-	<f:form method="post" action="bulk" name="bulk">
-	<f:form.hidden name="model" value="{model}" />
-
-	<f:link.action action="new" controller="Model" arguments="{model:model}" class="button">
-		Add <a:modelName model="{model}" />
-	</f:link.action>
-
-	<h3><a:modelName model="{model}" /></h3>
-	<table>
-		<tr>
-			<th colspan="{propertyCount}">
-				<f:form.select name="action" options="{bulkActions}"/>
-				<input type="submit" name="bulk" value="Go" />
-			</th>
-		</tr>
-		<tr>
-			<th></th>
-		<f:for each="{properties}" as="configuration" key="property">
-			<th>{property}</th>
-		</f:for>
-		</tr>
-		<f:for each="{objects}" as="object">
-			<f:cycle values="{0: 'odd', 1: 'even'}" as="zebraClass">
-			  <tr class="{zebraClass}">
-			</f:cycle>
-				<td class="narrow">
-					<a:identifierInput object="{object}" type="checkbox" name="bulk" value="1"/>
-				</td>
-				<f:for each="{properties}" as="configuration" key="property">
-					<td>
-						<f:if condition="{configuration.identity}">
-							<f:then>
-								<f:link.action action="edit" controller="Model" arguments="{object:object,model:model}">
-									<a:modelProperty model="{object}" property="{property}" />
-								</f:link.action>
-							</f:then>
-							<f:else>
-								<a:modelProperty model="{object}" property="{property}" />
-							</f:else>
-						</f:if>
-					</td>
-				</f:for>
-			</tr>
-		</f:for>
-	</table>
-	</f:form>
+	<div class="fluid ui-container">
+		<h3 class="ui-header mb"><a:modelName model="{model}" /></h3>
+		
+		<div class="fluid mr ml mbs">
+			<div class="dr ml mb1">
+				<f:link.action action="update" controller="Model" arguments="{model:model}" class="ui-button">
+					Edit
+				</f:link.action>
+			</div>
+		</div>
+		<div class="mr ml">
+			<f:for each="{properties}" as="configuration" key="property">
+				<div class="fluid">
+					<b class="dl10">
+						{a:f.cuf(value: property, funcs: "ucfirst")}: 
+					</b>
+				<f:if condition="{configuration.identity}">
+					<f:then>
+						<f:link.action action="view" controller="Model" arguments="{item:object,model:model}">
+							<a:modelProperty model="{object}" property="{property}" />
+						</f:link.action>
+					</f:then>
+					<f:else>
+						<a:modelProperty model="{object}" property="{property}" />
+					</f:else>
+				</f:if>
+				</div>
+			</f:for>
+			<div class="clear mt">&nbsp;</div>
+		</div>
+	</div>
 </f:section>

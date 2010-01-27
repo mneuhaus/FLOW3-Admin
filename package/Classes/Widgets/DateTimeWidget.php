@@ -37,11 +37,15 @@ class DateTimeWidget extends \F3\Admin\Widgets\AbstractWidget{
 	 */
 	public function render($name,$object,$objectName,$tags) {
         $value = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$name);
-
+		
         $this->view->assign("name",$name);
         $this->view->assign("object",$object);
         $this->view->assign("objectname",$objectName);
-        $this->view->assign("value",date("l, F d, Y h:m:s A",$value->getTimestamp()));
+		if(is_object($value)){
+	        $this->view->assign("value",date("l, F d, Y h:m:s A",$value->getTimestamp()));
+		}else{
+			$this->view->assign("value",date("l, F d, Y h:m:s A"));
+		}
 
         return array("widget" => $this->view->render());
 	}

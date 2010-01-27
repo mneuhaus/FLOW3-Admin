@@ -37,7 +37,7 @@ class SplObjectStorageWidget extends \F3\Admin\Widgets\AbstractWidget{
 	 */
     public function render($name,$object,$objectName,$tags) {
 		$value = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$name);
-
+		
         preg_match("/<(.+)>/",$tags["var"][0],$matches);
         $modelClass = $matches[1];
         $repositoryClass = $this->utilities->getModelRepository($modelClass);
@@ -64,6 +64,15 @@ class SplObjectStorageWidget extends \F3\Admin\Widgets\AbstractWidget{
             }
 
             $this->view->assign("options",$options);
+			
+			if(isset($tags["inline"])){
+				$widget = array(
+					"model" => $modelClass,
+					"object" => $this->objectFactory->create(substr($modelClass,1)),
+					"errors" => array()
+				);
+				$this->view->assign("widget",$widget);
+			}
 
             return array("widget" => $this->view->render());
         }else{

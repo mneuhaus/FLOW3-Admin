@@ -198,6 +198,18 @@ class Utilities{
 		$parts = explode("\\",$model);
 		return end($parts);
 	}
+	
+	/**
+	 *
+	 * @param $model String Name of the Model with Namespace
+	 * @return $name String Model Name
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 **/
+	public function getPackageByClassName($model){
+		preg_match("/F3\\\\([^\\\\]+)/",$model,$match);
+		if(count($match)>0)
+        	return $match[1];
+	}
 
 	/**
 	 * Returns the Main Type of the Model Property
@@ -286,9 +298,9 @@ class Utilities{
 	 **/
 	public function getEnabledModels()
 	{
-		if(!isset($this->cached["packages"])){
+		if(!isset($this->cached["models"])){
 			$activePackages = $this->packageManager->getActivePackages();
-			$this->cached["packages"] = array();
+			$this->cached["models"] = array();
 			foreach ($activePackages as $packageName => $package) {
 				foreach ($package->getClassFiles() as $class => $file) {
 					if(strpos($class,"\Model\\")>0){
@@ -297,7 +309,7 @@ class Utilities{
 						$name = end($parts);
 						$repository = $this->getModelRepository($class);
 						if(in_array("autoadmin",array_keys($tags)) && class_exists($repository)){
-							$this->cached["packages"][$packageName][] = array(
+							$this->cached["models"][$packageName][] = array(
 								"class" => $class,
 								"name"	=> $name
 							);
@@ -306,7 +318,38 @@ class Utilities{
 				}
 			}
 		}
-		return $this->cached["packages"];
+		return $this->cached["models"];
+	}
+	
+	/**
+	 * Returns all Models wich are enabled through the @autoadmin tag
+	 *
+	 * @return $packages Array of the Models grouped by Packages
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 **/
+	public function getEnabledActions()
+	{
+		if(!isset($this->cached["actions"])){
+			$activePackages = $this->packageManager->getActivePackages();
+			$this->cached["actions"] = array();
+			foreach ($activePackages as $packageName => $package) {
+				foreach ($package->getClassFiles() as $class => $file) {
+					if(strpos($class,"\Controller\\")>0){
+						$methods= $this->reflection->getClassMethodNames($class);
+						foreach($methods as $method){
+							$tags = $this->reflection->getMethodTagsValues($class,$method);
+							if(in_array("autoadmin",array_keys($tags))){
+								$this->cached["actions"][$packageName][] = array(
+									"class" => $class,
+									"name"	=> $method
+								);
+							}
+						}
+					}
+				}
+			}
+		}
+		return $this->cached["actions"];
 	}
 	
 	/**
@@ -393,6 +436,16 @@ class Utilities{
 			}
 		}
 		return $filters;
+	}
+	
+	public function getTemplateByPatternFallbacks($patterns, $replacements){
+		foreach($patterns as $pattern){
+			$pattern = str_replace(array_keys($replacements),array_values($replacements),$pattern);
+			//echo $pattern."<br />";
+			if(file_exists($pattern)){
+				return $pattern;
+			}
+		}
 	}
 }
 

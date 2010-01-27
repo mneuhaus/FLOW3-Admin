@@ -119,11 +119,19 @@ class ModelFormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	 * @param string $model
 	 * @param object $object
 	 * @param object $errors
+	 * @param string $properties
+	 * @param string $labelvar
+	 * @param string $widgetvar
+	 * @param string $errorsvar
 	 * @return string "Form"-Tag.
 	 */
-	public function render($model, $object, $errors){
+	public function render($model, $object, $errors, $properties = "", $labelvar="label", $widgetvar="widget", $errorsvar="property_errors"){
         $output = "<input type='hidden' name='model' value='".$model."' />";
-        $properties = $this->reflection->getClassPropertyNames($model);
+		
+		$properties = explode(",",$properties);
+		if(count($properties) < 1 || empty($properties[0]))
+        	$properties = $this->reflection->getClassPropertyNames($model);
+		
         foreach($properties as $property){
 			$tags = $this->reflection->getPropertyTagsValues($model,$property);
 			
@@ -140,9 +148,9 @@ class ModelFormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 			}
 			
             $context = array(
-                "widget"    => "Widget not found: "."\\".$widgetClass,
-                "label"     => ucfirst($property),
-                "property_errors"     => implode("<br />",$propertyErrors)
+                $widgetvar    => "Widget not found: "."\\".$widgetClass,
+                $labelvar     => ucfirst($property),
+                $errorsvar => implode("<br />",$propertyErrors)
             );
 
             if(class_exists($widgetClass)){

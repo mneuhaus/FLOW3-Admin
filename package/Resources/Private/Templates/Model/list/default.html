@@ -1,0 +1,133 @@
+<f:layout name="base" />
+{namespace a=F3\Admin\ViewHelpers}
+<f:section name="content">
+	<div class="fluid ui-container">
+		<h3 class="ui-header mb"><a:modelName model="{model}" /></h3>
+		
+		<f:if condition="{quickproperties}">
+		<div class="mr ml">
+			<f:form method="post" action="create" name="item" object="{quickobject}">
+				<a:modelForm model="{model}" object="{quickobject}" errors="{errors}" properties="{quickproperties}">
+					<div class="dl">
+						<label class="dl mrs">{label}: </label>
+						<div class="dl mr">
+							{widget}
+						</div>
+					</div>
+				</a:modelForm>
+				<input type="submit" name="submit" value="Create" class="submit ui-button dl"/>
+				<div class="clear">&nbsp;</div>
+			</f:form>
+		</div>
+		</f:if>
+		
+		<f:form method="post" action="list" name="list">
+		<f:form.hidden name="model" value="{model}" />
+		
+		<div class="fluid mr ml mbs">
+		<!--
+			<div class="dl mr">
+				<select name="some_name" id="some_name">
+					<option value="option1">Bulk Actions</option>
+					<option value="option2">Delete</option>
+				</select>
+				<input type="submit" name="some_name" value="Apply" id="some_name" class="ui-button ui-secondary">
+			</div>
+		-->
+			<div class="dr ml mb1">
+				<f:link.action action="create" controller="Model" arguments="{model:model}" class="ui-button">
+					Add <a:modelName model="{model}" />
+				</f:link.action>
+			</div>
+			<f:if condition="{filters}">
+				<div class="fluid mb1">
+					<f:for each="{filters}" as="options" key="filter">
+					<select name="filters[{filter}]" id="filter-{filter}">
+						<option value="all">All {a:f.cuf(value: filter, funcs: "m,ucfirst")}</option>
+						<f:for each="{options}" as="selected" key="option">
+							<f:if condition="{selected}" >
+								<f:then>
+									<option value="{option}" selected>{option}</option>
+								</f:then>
+								<f:else>
+									<option value="{option}">{option}</option>
+								</f:else>
+							</f:if>
+						</f:for>
+					</select>
+					</f:for>
+					<input type="submit" name="filter" value="Apply" id="filter" class="ui-button ui-secondary">
+				</div>
+			</f:if>
+		</div>
+		<div class="mr ml">
+			<table class="ui-box fluid hp">
+				<thead class="ui-subsection">
+					<tr class="">
+					<!-- <th class="ui-small"></th> -->
+					<f:for each="{properties}" as="configuration" key="property">
+						<th>{a:f.cuf(value: property, funcs: "ucfirst")}</th>
+					</f:for>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+				<f:for each="{objects}" as="object">
+					<f:cycle values="{0: 'odd', 1: 'even'}" as="zebraClass">
+						<tr class="ui-{zebraClass} ui-row">
+					</f:cycle>
+						<!-- <td class="ui-small">
+							<a:identifierInput object="{object}" type="checkbox" name="bulk" value="1"/>
+						</td> -->
+						<f:for each="{properties}" as="configuration" key="property">
+							<td>
+								<f:if condition="{configuration.identity}">
+									<f:then>
+										<f:link.action action="view" controller="Model" arguments="{item:object,model:model}">
+											<a:modelProperty model="{object}" property="{property}" />
+										</f:link.action>
+									</f:then>
+									<f:else>
+										<a:modelProperty model="{object}" property="{property}" />
+									</f:else>
+								</f:if>
+							</td>
+						</f:for>
+						<td>
+							<f:link.action action="update" controller="Model" arguments="{item:object,model:model}">
+								edit
+							</f:link.action>
+						</td>
+					</tr>
+				</f:for>
+				</tbody>
+			</table>
+			<div class="dl mb mts">
+				<f:for each="{limits}" as="active" key="value">
+					<f:if condition="{active}" >
+						<f:then>
+							<button type="submit" name="limit" value="{value}" class="ui-button">{value}</button>
+						</f:then>
+						<f:else>
+							<button type="submit" name="limit" value="{value}" class="ui-button ui-secondary">{value}</button>
+						</f:else>
+					</f:if>
+				</f:for>
+			</div>
+			<div class="dr mb mts">
+				<f:for each="{pages}" as="page">
+					<f:if condition="{currentpage} == {page}" >
+						<f:then>
+							<button type="submit" name="page" value="{page}" class="ui-button">{page}</button>
+						</f:then>
+						<f:else>
+							<button type="submit" name="page" value="{page}" class="ui-button ui-secondary">{page}</button>
+						</f:else>
+					</f:if>
+				</f:for>
+			</div>
+			<div class="clear mt">&nbsp;</div>
+		</div>
+		</f:form>
+	</div>
+</f:section>
