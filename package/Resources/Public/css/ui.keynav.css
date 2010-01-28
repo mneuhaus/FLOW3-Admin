@@ -1,0 +1,20 @@
+.keynav-enabled{
+    position:relative;
+}
+
+.keynav-accesskey{
+    position:absolute;
+    right:0;
+    top:0;
+    font-size:12px;
+    font-size:normal;
+    height:9px;
+    line-height:6px;
+    vertical-align:middle;
+    padding:2px;
+	background:!container;
+	border:1px solid !border;
+    color:!blue !important;
+    display:none;
+    +border-radius(2px);
+}
