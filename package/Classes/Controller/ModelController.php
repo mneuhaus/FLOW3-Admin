@@ -487,11 +487,16 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 		$item = $this->convertArray($this->request->getArgument("item"),$model);
 		//unset($item["__identity"]);
 		
+		$arg = $this->objectFactory->create("F3\FLOW3\MVC\Controller\Argument","item",$model);
+		$arg->setValue($item);
+		
 		$properties = array_keys($item);
 		if($mode == "update")
 			unset($properties[array_search("__identity",$properties)]);
 		
 		$this->propertyMapper->mapAndValidate($properties, $item, $targetObject,array(),$modelValidator);
+		
+		$targetObject = $arg->getValue();
 		
 		$repositoryObject = $this->objectManager->getObject($repository);
 		
