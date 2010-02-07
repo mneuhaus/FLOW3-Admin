@@ -11,10 +11,10 @@
 					<div class="fluid mbs pl pt">
 						<label class="dl10 pl">{label}</label>
 						<div class="fluid ml10 psl">
-							{widget}
+							<a:render value="{widget}" /> 
 							<f:if condition="{property_errors}">
 								<div class="ui-error-text">
-									{property_errors}
+									<a:render value="{property_errors}" />
 								</div>
 							</f:if>
 						</div>
