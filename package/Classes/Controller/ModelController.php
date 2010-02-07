@@ -294,19 +294,26 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 			"All" => false
 		);
 		
-#		$query->setOrderings(array("zip" => \F3\FLOW3\Persistence\QueryInterface::ORDER_DESCENDING));
-
-		if($this->request->hasArgument("limit")){
-			$limit = $this->request->getArgument("limit");
-#			echo $limit;
-			if( intval($limit) > 0 ){
-				$query->setLimit(intval($limit));
-			}
-			$limits[$limit] = true;
+		foreach ($limits as $key => $value) {
+			if(intval($key) > $count)
+				unset($limits[$key]);
+		}
+		if(count($limits) == 1){
+			$limits = array();
+			$limit = 0;
 		}else{
-			$limit = key($limits);
-			$query->setLimit($limit);
-			$limits[$limit] = true;
+			if($this->request->hasArgument("limit")){
+				$limit = $this->request->getArgument("limit");
+	#			echo $limit;
+				if( intval($limit) > 0 ){
+					$query->setLimit(intval($limit));
+				}
+				$limits[$limit] = true;
+			}else{
+				$limit = key($limits);
+				$query->setLimit($limit);
+				$limits[$limit] = true;
+			}
 		}
 		$this->view->assign("limits",$limits);
 		
