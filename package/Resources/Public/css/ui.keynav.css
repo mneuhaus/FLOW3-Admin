@@ -1,8 +1,8 @@
-.keynav-enabled{
+.hotnav-enabled{
     position:relative;
 }
 
-.keynav-accesskey{
+.hotnav-accesskey{
     position:absolute;
     right:0;
     top:0;
