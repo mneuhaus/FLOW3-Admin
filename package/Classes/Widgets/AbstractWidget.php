@@ -93,9 +93,7 @@ class AbstractWidget{
 		$this->view = $this->objectFactory->create('F3\Fluid\View\TemplateView');
 		$this->view->setControllerContext($context);
 
-		$widgetTemplate = str_replace('@package', $package, $this->widgetTemplatePattern);
-		$widgetTemplate = str_replace('@widget', $type, $widgetTemplate);
-        $this->view->setTemplatePathAndFilename($widgetTemplate);
+		$this->setTemplate($type);
 	}
 
 	public function getModelRepository($model){
@@ -104,6 +102,45 @@ class AbstractWidget{
 			$repository = substr($repository,1);
 		}
 		return $repository;
+	}
+	
+	/**
+	 *
+	 * @param string $name
+	 * @param object $object
+	 * @param object $tags
+	 * @param string $class
+	 * @return string "Form"-Tag.
+	 * @api
+	 */
+	public function render($name,$object,$objectName,$tags) {
+		$getter = "get".ucfirst($name);
+		$value = call_user_func(array($object,$getter));
+		
+		$this->view->assign("name",$name);
+		$this->view->assign("object",$object);
+		$this->view->assign("objectname",$objectName);
+		$this->view->assign("value",$value);
+		$this->view->assign("class",isset($tags["class"]) ? $tags["class"][0] : "");
+		
+		return array("widget" => $this->view->render());
+	}
+	
+	
+	protected $fallbackPatterns = array(
+		"package://@package/Private/Templates/@model/Widgets/@widget.html",
+		"package://@package/Private/Templates/Widgets/@widget.html",
+		"package://Admin/Private/Templates/@widget.html"
+	);
+	
+	public function setTemplate($type){
+		$template = $this->utilities->getTemplateByPatternFallbacks($this->fallbackPatterns,array(
+			"@widget" => $type,
+			"@package" => $this->package,
+			"@model" => "//TODO"
+		));
+		
+		$this->view->setTemplatePathAndFilename($template);
 	}
 }
 
