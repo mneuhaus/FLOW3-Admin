@@ -35,6 +35,18 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	 * @return void
 	 */
 	public function indexAction() {
+		$repository = $this->objectManager->getObject("F3\Admin\Domain\Repository\TagRepository");
+		$tags = $repository->findAll();
+		$added = $repository->getAddedObjects();
+		if(count($tags) < 1 && count($added) < 1){
+			$tags = array("typo3","flow3","php","aop","oop","ddd","mvc","reflection");
+			foreach ($tags as $tag) {
+				$object = $this->objectFactory->create("F3\Admin\Domain\Model\Tag");
+				$object->setName($tag);
+				$repository->add($object);
+			}
+		}
+		
 		$this->redirect('index',"model");
 	}
 

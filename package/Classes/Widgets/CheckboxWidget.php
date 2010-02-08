@@ -26,35 +26,7 @@ namespace F3\Admin\Widgets;
  * @api
  * @scope prototype
  */
-class DateTimeWidget extends \F3\Admin\Widgets\AbstractWidget{
-    /**
-	 *
-	 * @param string $name
-	 * @param object $object
-	 * @param object $tags
-	 * @return string "Form"-Tag.
-	 * @api
-	 */
-	public function render($name,$object,$objectName,$tags) {
-        $value = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$name);
-		
-        $this->view->assign("name",$name);
-        $this->view->assign("object",$object);
-        $this->view->assign("objectname",$objectName);
-		$this->view->assign("class",isset($tags["class"]) ? $tags["class"][0] : "");
-		if(is_object($value)){
-	        $this->view->assign("value",date("l, F d, Y h:m:s A",$value->getTimestamp()));
-		}else{
-			$this->view->assign("value",date("l, F d, Y h:m:s A"));
-		}
-
-        return array("widget" => $this->view->render());
-	}
-
-    public function convert($value){
-        $object = \DateTime::createFromFormat("l, F d, Y h:m:s A",$value);
-		return $object;
-	}
+class CheckboxWidget extends \F3\Admin\Widgets\AbstractWidget{
 }
 
 ?>

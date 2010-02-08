@@ -32,19 +32,21 @@ class TextareaWidget extends \F3\Admin\Widgets\AbstractWidget{
 	 * @param string $name
 	 * @param object $object
 	 * @param object $tags
+	 * @param string $class
 	 * @return string "Form"-Tag.
 	 * @api
 	 */
 	public function render($name,$object,$objectName,$tags) {
-        $getter = "get".ucfirst($name);
-        $value = call_user_func(array($object,$getter));
-
-        $this->view->assign("name",$name);
-        $this->view->assign("object",$object);
-        $this->view->assign("objectname",$objectName);
-        $this->view->assign("value",$value);
-
-        return array("widget" => $this->view->render());
+		$getter = "get".ucfirst($name);
+		$value = call_user_func(array($object,$getter));
+		
+		$this->view->assign("name",$name);
+		$this->view->assign("object",$object);
+		$this->view->assign("objectname",$objectName);
+		$this->view->assign("value",$value);
+		$this->view->assign("class",isset($tags["class"]) ? $tags["class"][0] : "");
+		
+		return array("widget" => $this->view->render());
 	}
 }
 

@@ -39,38 +39,28 @@ class RecursiveViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	/**
 	 * Iterates through elements of $each and renders child nodes
 	 *
-	 * @param object $object
+	 * @param object $root
 	 * @param string $objects
 	 * @param string $subs
+	 * @param string $current
 	 * @return string Rendered string
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 * @api
 	 */
-	public function render($object,$objects,$subs) {
+	public function render($root,$objects,$subs,$current) {
 		$output = "";
 		$subContent = "";
-		$properties = $this->utilities->getModelProperties(get_class($object));
-		foreach ($properties as $property => $tags) {
-			if(in_array("var",array_keys($tags)) && count($tags["var"]>0)){
-				$type = current($tags["var"]);
-				if($this->utilities->isEntity($type)){
-					$child = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
-					if(is_object($child))
-						$subContent.= $this->render($child,$objects,$subs);
-				}
-				if($this->utilities->isEntity($this->utilities->getSubType($type))){
-#					$singular = \F3\Admin\Service\Inflect::singularize($property);
-#					$child = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
-#					echo "type subtype:".$type." - ".$singular."<br />";
-				}
-			}
-		}
 		
-		$this->templateVariableContainer->add($objects, array($object));
-		$this->templateVariableContainer->add($subs, $subContent);
-		$output .= $this->renderChildren();
-		$this->templateVariableContainer->remove($objects);
-		$this->templateVariableContainer->remove($subs);
+		foreach ($root as $node) {
+			if(isset($node[$subs])){
+				$subContent .= $this->render($node[$subs],$objects,$subs,$current);
+			}
+			$this->templateVariableContainer->add($current, $node);
+			$this->templateVariableContainer->add($subs, $subContent);
+			$output .= $this->renderChildren();
+			$this->templateVariableContainer->remove($subs);
+			$this->templateVariableContainer->remove($current);
+		}
 		return $output;
 	}
 }

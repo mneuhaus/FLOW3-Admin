@@ -1,0 +1,15 @@
+#                                                                        #
+# Settings Configuration for the Admin package                           #
+#                                                                        #
+
+Admin:
+  Widgets:
+    Mapping:
+      string:   Textfield
+      integer:  Spinner
+      float:    Textfield
+      boolean:  Checkbox
+      \F3\FLOW3\Resource\Resource: Upload
+      \DateTime: DateTime
+      ^\\F3\\[A-Za-z]+\\Domain\\Model\\[A-Za-z]+$: SingleRelation
+      ^\\\SplObjectStorage\<\\F3\\[A-Za-z]+\\Domain\\Model\\[A-za-z]+>$: MultipleRelation

@@ -17,19 +17,10 @@
 					<b class="dl10">
 						{a:f.cuf(value: property, funcs: "ucfirst")}: 
 					</b>
-				<f:if condition="{configuration.identity}">
-					<f:then>
-						<f:link.action action="view" controller="Model" arguments="{item:object,model:model}">
-							<a:modelProperty model="{object}" property="{property}" />
-						</f:link.action>
-					</f:then>
-					<f:else>
-						<a:modelProperty model="{object}" property="{property}" />
-					</f:else>
-				</f:if>
+					<a:modelProperty model="{object}" property="{property}" />&nbsp;
 				</div>
 			</f:for>
-			<div class="clear mt">&nbsp;</div>
+			<div class="clear mb">&nbsp;</div>
 		</div>
 	</div>
 </f:section>

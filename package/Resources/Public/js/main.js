@@ -15,17 +15,16 @@ jQuery(document).ready(function(){
 		}
 	});
 	
-	//jQuery(".f-multiselect").css("width","400px").css("height","200px").multiselect();
-	//jQuery(".available connected-list").css("height","177px");
+	jQuery(".f-multiselect").css("width","400px").css("height","200px").multiselect();
+	jQuery(".available connected-list").css("height","177px");
 	
 	jQuery("select.f-autosuggest").autoSuggest();
 	jQuery(".f-filtercombo").sexyCombo();
 	jQuery('.f-multifile').MultiFile();
 	jQuery('.f-autoexpand').elastic();
-	//jQuery('.f-datejs').datejs();
+	jQuery('.f-datejs').datejs();
 	
-	//jQuery('.f-fullrte').ckeditor();
-
+	jQuery('.f-fullrte').ckeditor();
 	jQuery('.f-markdown').markItUp(markdownSettings);
 	jQuery('.f-textile').markItUp(textileSettings);
 	jQuery('.f-wiki').markItUp(wikiSettings);	
@@ -37,7 +36,7 @@ jQuery(document).ready(function(){
 	
 	jQuery("input[type='text']:first").focus();
 	
-	$(document).bind('keydown', {combi:'esc'}, function(){
+	jQuery(document).bind('keydown', {combi:'esc'}, function(){
 		jQuery("input").blur();
     });
 });

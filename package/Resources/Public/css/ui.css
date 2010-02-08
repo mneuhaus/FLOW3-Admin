@@ -74,10 +74,10 @@ tr.active{ background:!alternate-hover; }
 }
 a.ui-button{
 	height:16px;
-	display:block;
+/*	display:block;*/
 	line-height:16px;
 	font-size:79%;
-	float:left;
+/*	float:left;*/
 	padding:1px 6px;
 }
 
@@ -93,6 +93,11 @@ a.ui-button{
 
 .ui-secondary:hover{
 	border:1px solid !border-hover;
+}
+
+.ui-dangerous{
+	background:!danger-background;
+	color:!danger-color;
 }
 
 .ui-small{

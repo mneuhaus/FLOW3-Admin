@@ -158,7 +158,27 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 		$model = $this->objectFactory->create($modelClass);
 
 		$properties = $this->utilities->getModelProperties($modelClass);
-
+		
+		$tags = $this->reflectionService->getClassTagsValues($modelClass);
+		$sets = array();
+		if(isset($tags["set"])){
+			foreach ($tags["set"] as $set) {
+				preg_match("/(.*)\(([a-z,]+)\)/",$set,$matches);
+				$sets[] = array(
+					"name" => isset($matches[1]) ? $matches[1] : "General",
+					"properties" => isset($matches[2]) ? $matches[2] : ""
+				);
+			}
+		}else{
+			$sets[] = array(
+				"name" => "General",
+				"properties" => ""
+			);
+		}
+		
+		
+		$this->view->assign('sets', $sets);
+		
 		$this->view->assign('model', $modelClass);
 		$this->view->assign('properties',$properties);
 
@@ -175,6 +195,8 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 		}
 		
 		$this->view->assign('object',$object);
+		
+		$this->setTemplate($modelClass,"create");
 	}
 	
 	/**
@@ -192,8 +214,39 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 		$this->view->assign('properties',$properties);
 
 		$object = $this->persistenceManager->getObjectByIdentifier($tmp["__identity"]);
-		$this->view->assign('object',$object);
+		
+		$objects = array( $this->stub($object) );
+		
+		$this->view->assign('root',$objects);
 		$this->view->assign('identity',$tmp["__identity"]);
+		
+		$this->setTemplate($model,"confirm");
+	}
+	
+	public function stub($object){
+		$class = get_class($object);
+		$properties = $this->utilities->getModelProperties($class);
+		$return = array(
+			"type"=>$this->utilities->getObjectNameByClassName($class),
+			"name"=> $object->__toString()
+		);
+		foreach ($properties as $property => $tags) {
+			if(in_array("var",array_keys($tags)) && count($tags["var"]>0)){
+				$type = current($tags["var"]);
+				if($this->utilities->isEntity($type)){
+					$childs = array(\F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property));
+				}
+				if($this->utilities->isEntity($this->utilities->getSubType($type))){
+					$childs = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
+				}
+				if(isset($childs)){
+					foreach ($childs as $child) {
+						$return["childs"][] = $this->stub($child);
+					}
+				}
+			}
+		}
+		return $return;
 	}
 	
 	/**
@@ -217,6 +270,8 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 			
 			$arguments = array("model"=>$model);
 			$this->redirect('list',NULL,NULL,$arguments);
+		}else{
+			$this->redirect('confirm',NULL,NULL,$this->request->getArguments());
 		}
 	}
 	
@@ -249,6 +304,8 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 		$this->view->assign('current', $current);
 		$overview = $this->request->hasArgument("package") ? false : true;
 		$this->view->assign('overview', $overview);
+		
+#		$this->setTemplate($model,"index");
 	}
 
 	/**
@@ -281,8 +338,11 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 		$filters = $this->utilities->getFilters($properties,$query->execute(),$filters);
 		$this->view->assign("filters",$filters);
 		
+		
+		
 		// Get total amount of Objects before limitations
 		$count = $query->count();
+		
 		
 		
 		// Set Limits
@@ -294,10 +354,13 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 			"All" => false
 		);
 		
+		// Contextualize the Limt Choices
 		foreach ($limits as $key => $value) {
 			if(intval($key) > $count)
 				unset($limits[$key]);
 		}
+		
+		// Show Limt Choices if there is more than One Choice
 		if(count($limits) == 1){
 			$limits = array();
 			$limit = 0;
@@ -311,13 +374,17 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 				$limits[$limit] = true;
 			}else{
 				$limit = key($limits);
-				$query->setLimit($limit);
+				if( intval($limit) > 0 ){
+					$query->setLimit(intval($limit));
+				}
 				$limits[$limit] = true;
 			}
 		}
 		$this->view->assign("limits",$limits);
 		
 		
+		
+		// Pagination if required
 		if( intval($limit) > 0 ){
 			// Pagination
 			if($count > $limit){
@@ -333,9 +400,12 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 		}
 		$this->view->assign("currentpage",$page);
 		
-		$objects = $query->execute();
-		#print_r($objects[0]);
 		
+		
+		$objects = $query->execute();
+		
+		
+		// Redirect to creating a new Object if there aren't any (Clean Slate)
 		if(count($objects) < 1){
 			$arguments = array("model"=>$model);
 			$this->redirect("create",NULL,NULL,	$arguments);
@@ -492,7 +562,7 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 		$modelValidator = $this->utilities->getModelValidator($model);
 		
 		$item = $this->convertArray($this->request->getArgument("item"),$model);
-		//unset($item["__identity"]);
+#		$item = $this->request->getArgument("item");
 		
 		$arg = $this->objectFactory->create("F3\FLOW3\MVC\Controller\Argument","item",$model);
 		$arg->setValue($item);

@@ -104,6 +104,22 @@ class AbstractWidget{
 		return $repository;
 	}
 	
+	protected $fallbackPatterns = array(
+		"package://@package/Private/Templates/@model/Widgets/@widget.html",
+		"package://@package/Private/Templates/Widgets/@widget.html",
+		"package://Admin/Private/Templates/@widget.html"
+	);
+	
+	public function setTemplate($type){
+		$template = $this->utilities->getTemplateByPatternFallbacks($this->fallbackPatterns,array(
+			"@widget" => $type,
+			"@package" => $this->package,
+			"@model" => "//TODO"
+		));
+		
+		$this->view->setTemplatePathAndFilename($template);
+	}
+
 	/**
 	 *
 	 * @param string $name
@@ -124,23 +140,6 @@ class AbstractWidget{
 		$this->view->assign("class",isset($tags["class"]) ? $tags["class"][0] : "");
 		
 		return array("widget" => $this->view->render());
-	}
-	
-	
-	protected $fallbackPatterns = array(
-		"package://@package/Private/Templates/@model/Widgets/@widget.html",
-		"package://@package/Private/Templates/Widgets/@widget.html",
-		"package://Admin/Private/Templates/@widget.html"
-	);
-	
-	public function setTemplate($type){
-		$template = $this->utilities->getTemplateByPatternFallbacks($this->fallbackPatterns,array(
-			"@widget" => $type,
-			"@package" => $this->package,
-			"@model" => "//TODO"
-		));
-		
-		$this->view->setTemplatePathAndFilename($template);
 	}
 }
 

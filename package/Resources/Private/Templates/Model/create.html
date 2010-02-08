@@ -5,22 +5,24 @@
 		<h3 class="ui-header">New <a:modelName model="{model}" /></h3>
 		<div class="mr ml">
 			<f:form method="post" action="create" name="item" object="{object}">
-				<fieldset class="pl">
-				<legend>General</legend>
-				<a:modelForm model="{model}" object="{object}" errors="{errors}">
-					<div class="fluid mbs pl pt">
-						<label class="dl10 pl">{label}</label>
-						<div class="fluid ml10 psl">
-							<a:render value="{widget}" /> 
-							<f:if condition="{property_errors}">
-								<div class="ui-error-text">
-									<a:render value="{property_errors}" />
-								</div>
-							</f:if>
+				<f:for each="{sets}" as="set">
+					<fieldset class="pl">
+					<legend>{set.name}</legend>
+					<a:modelForm model="{model}" object="{object}" errors="{errors}" properties="{set.properties}">
+						<div class="fluid mbs pl pt">
+							<label class="dl10 pl">{label}</label>
+							<div class="fluid ml10 psl">
+								<a:render value="{widget}" /> 
+								<f:if condition="{property_errors}">
+									<div class="ui-error-text">
+										<a:render value="{property_errors}" />
+									</div>
+								</f:if>
+							</div>
 						</div>
-					</div>
-				</a:modelForm>
-				</fieldset>
+					</a:modelForm>
+					</fieldset>
+				</f:for>
 				<div class="fluid mb mls">	
 					<input type="submit" name="submit" value="Create" class="submit ui-button"/>
 				</div>

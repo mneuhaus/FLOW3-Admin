@@ -61,6 +61,21 @@ class Utilities{
 	}
 
 	/**
+	 * @var \F3\FLOW3\Configuration\ConfigurationManager
+	 */
+	protected $configurationManager;
+
+	/**
+	 * Inject the Configuration Manager
+	 *
+	 * @param \F3\FLOW3\Configuration\ConfigurationManager $configurationManager
+	 * @return void
+	 */
+	public function injectConfigurationManager(\F3\FLOW3\Configuration\ConfigurationManager $configurationManager) {
+		$this->configurationManager = $configurationManager;
+	}
+
+	/**
 	 *
 	 * @var \F3\FLOW3\Validation\ValidatorResolver
 	 * @inject
@@ -196,7 +211,7 @@ class Utilities{
 	 **/
 	public function getObjectNameByClassName($model){
 		$parts = explode("\\",$model);
-		return end($parts);
+		return str_replace("_AOPProxy_Development","",end($parts));
 	}
 	
 	/**
@@ -221,10 +236,20 @@ class Utilities{
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 **/
     public function getType($raw){
-        $parts = explode("<",$raw);
-        $name = current($parts);
-        if(substr($name,0,1) == "\\") $name = substr($name,1);
-        return $name;
+		$settings = $this->getSettings();
+		$mappings = $settings["Widgets"]["Mapping"];
+		
+		if(isset($mappings[$raw])){
+			return $mappings[$raw];
+		}
+		
+		foreach ($mappings as $pattern => $widget) {
+			if(preg_match("/".$pattern."/",$raw) > 0){
+				return $widget;
+			}
+		}
+		
+		return $raw;
     }
 
 	/**
@@ -406,7 +431,7 @@ class Utilities{
 	}
 	
 	/**
-	 * Returns all Properties of a Specified Models
+	 * Returns all Properties of a Specified Model
 	 *
 	 * Ïparam $model String Name of the Model
 	 * @return $properties Array of Model Properties
@@ -446,6 +471,13 @@ class Utilities{
 				return $pattern;
 			}
 		}
+	}
+	
+	public function getSettings(){
+		if(!isset($this->cache["settings"])){
+			$this->cache["settings"] = $this->configurationManager->getConfiguration(\F3\FLOW3\Configuration\ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, 'Admin');
+		}
+		return $this->cache["settings"];
 	}
 }
 
