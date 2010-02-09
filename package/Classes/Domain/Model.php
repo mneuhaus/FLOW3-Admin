@@ -181,19 +181,29 @@ class Model {
 		$properties = $reflectionService->getClassPropertyNames($class);
 		$identity = array();
 		$title = array();
+		$goodGuess = null;
+		$usualSuspects = array("title","name");
 		foreach($properties as $property){
 			$tags = $reflectionService->getPropertyTagsValues($class,$property);
 			if(in_array("title",array_keys($tags))){
 				$title[] = \F3\FLOW3\Reflection\ObjectAccess::getProperty($this,$property);
 			}
+			
 			if(in_array("identity",array_keys($tags))){
 				$identity[] = \F3\FLOW3\Reflection\ObjectAccess::getProperty($this,$property);
 			}
+		
+			if(in_array($property,$usualSuspects) && $goodGuess === null){
+					$goodGuess = \F3\FLOW3\Reflection\ObjectAccess::getProperty($this,$property);
+			}
 		}
+		
 		if(count($title)>0)
 			return implode(", ",$title);
 		if(count($identity)>0)
 			return implode(", ",$identity);
+		if($goodGuess !== null)
+			return $goodGuess;
 	}
 }
 

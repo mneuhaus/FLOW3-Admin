@@ -326,6 +326,7 @@ class Utilities{
 		if(!isset($this->cached["models"])){
 			$activePackages = $this->packageManager->getActivePackages();
 			$this->cached["models"] = array();
+			$settings = $this->getSettings();
 			foreach ($activePackages as $packageName => $package) {
 				foreach ($package->getClassFiles() as $class => $file) {
 					if(strpos($class,"\Model\\")>0){
@@ -333,7 +334,8 @@ class Utilities{
 						$parts = explode('\\',$class);
 						$name = end($parts);
 						$repository = $this->getModelRepository($class);
-						if(in_array("autoadmin",array_keys($tags)) && class_exists($repository)){
+						if( ( in_array("autoadmin",array_keys($tags)) || in_array("\\".$class,$settings["Models"]) )
+							&& class_exists($repository)){
 							$this->cached["models"][$packageName][] = array(
 								"class" => $class,
 								"name"	=> $name
@@ -478,6 +480,42 @@ class Utilities{
 			$this->cache["settings"] = $this->configurationManager->getConfiguration(\F3\FLOW3\Configuration\ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, 'Admin');
 		}
 		return $this->cache["settings"];
+	}
+	
+	public function toString($object){
+		if(is_callable(array($object,"__toString"))){
+			return $object->__toString();
+		}
+		
+		$class = get_class($object);
+		$properties = $this->reflection->getClassPropertyNames($class);
+		$identity = array();
+		$title = array();
+		$goodGuess = null;
+		$usualSuspects = array("title","name");
+		foreach($properties as $property){
+			$tags = $this->reflection->getPropertyTagsValues($class,$property);
+			
+			if(in_array("title",array_keys($tags))){
+				$title[] = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
+			}
+			if(in_array("identity",array_keys($tags))){
+				$identity[] = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
+			}
+			
+			if(in_array($property,$usualSuspects) && $goodGuess === null){
+				$goodGuess = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
+			}
+		}
+		
+		if(count($title)>0)
+			return implode(", ",$title);
+		if(count($identity)>0)
+			return implode(", ",$identity);
+		if($goodGuess !== null)
+			return $goodGuess;
+			
+		return "Can't provide useful String representation";
 	}
 }
 
