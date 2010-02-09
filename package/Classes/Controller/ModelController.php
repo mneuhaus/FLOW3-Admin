@@ -215,38 +215,12 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 
 		$object = $this->persistenceManager->getObjectByIdentifier($tmp["__identity"]);
 		
-		$objects = array( $this->stub($object) );
+		$objects = array( $this->objectRelations($object) );
 		
 		$this->view->assign('root',$objects);
 		$this->view->assign('identity',$tmp["__identity"]);
 		
 		$this->setTemplate($model,"confirm");
-	}
-	
-	public function stub($object){
-		$class = get_class($object);
-		$properties = $this->utilities->getModelProperties($class);
-		$return = array(
-			"type"=>$this->utilities->getObjectNameByClassName($class),
-			"name"=> $object->__toString()
-		);
-		foreach ($properties as $property => $tags) {
-			if(in_array("var",array_keys($tags)) && count($tags["var"]>0)){
-				$type = current($tags["var"]);
-				if($this->utilities->isEntity($type)){
-					$childs = array(\F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property));
-				}
-				if($this->utilities->isEntity($this->utilities->getSubType($type))){
-					$childs = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
-				}
-				if(isset($childs)){
-					foreach ($childs as $child) {
-						$return["childs"][] = $this->stub($child);
-					}
-				}
-			}
-		}
-		return $return;
 	}
 	
 	/**
@@ -606,6 +580,36 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 		));
 		
 		$this->view->setTemplatePathAndFilename($template);
+	}
+	
+	public function objectRelations($object){
+		$class = get_class($object);
+		$properties = $this->utilities->getModelProperties($class);
+		$name = $object->__toString();
+		$return = array(
+			"type"=>$this->utilities->getObjectNameByClassName($class),
+			"name"=> !empty($name) ? $name : "no name"
+		);
+		foreach ($properties as $property => $tags) {
+			if(in_array("var",array_keys($tags)) && count($tags["var"]>0)){
+				$type = current($tags["var"]);
+				if($this->utilities->isEntity($type) 
+					&& !class_exists($this->utilities->getModelRepository($type))){
+#					$childs = array(\F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property));
+				}
+				if($this->utilities->isEntity($this->utilities->getSubType($type))
+					&& !class_exists($this->utilities->getModelRepository($this->utilities->getSubType($type)))){
+#					$childs = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
+				}
+				if(isset($childs)){
+					foreach ($childs as $child) {
+						$return["childs"][] = $this->objectRelations($child);
+					}
+				}
+			}
+		}
+
+		return $return;
 	}
 }
 

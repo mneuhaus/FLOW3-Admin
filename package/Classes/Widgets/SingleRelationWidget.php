@@ -54,7 +54,7 @@ class SingleRelationWidget extends \F3\Admin\Widgets\AbstractWidget{
 
             $options = array();
             foreach($objects as $option){
-                $title = $option->__toString();
+                $title = $this->utilities->toString($option);
                 $uuid = $this->persistenceManager->getIdentifierByObject($option);
                 $options[] = array(
                     "value"=> $uuid,

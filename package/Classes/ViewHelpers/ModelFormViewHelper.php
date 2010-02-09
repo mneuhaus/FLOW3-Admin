@@ -149,24 +149,26 @@ class ModelFormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 				$propertyErrors[] = $error->getMessage();
 			}
 
-			$context = array(
-				$widgetvar    => "Widget not found: "."\\".$widgetClass,
-				$labelvar     => ucfirst($property),
-				$errorsvar => implode("<br />",$propertyErrors)
-				);
+			if(\F3\FLOW3\Reflection\ObjectAccess::isPropertyGettable($object,$property)){
+				$context = array(
+					$widgetvar    => "Widget not found: "."\\".$widgetClass,
+					$labelvar     => ucfirst($property),
+					$errorsvar => implode("<br />",$propertyErrors)
+					);
 
-			if(class_exists($widgetClass)){
-				$widget = $this->objectFactory->create($widgetClass);
-				$widget->setContext("Admin", $type, $this->controllerContext);
-				$widgetClass = $this->utilities->getWidgetClass($tags["var"][0]);
-				$context = array_merge($context,$widget->render($property,$object,"item",$tags));
+				if(class_exists($widgetClass)){
+					$widget = $this->objectFactory->create($widgetClass);
+					$widget->setContext("Admin", $type, $this->controllerContext);
+					$widgetClass = $this->utilities->getWidgetClass($tags["var"][0]);
+					$context = array_merge($context,$widget->render($property,$object,"item",$tags));
+				}
+				
+				foreach($context as $key => $value)
+					$this->templateVariableContainer->add($key, $value);
+				$output .= $this->renderChildren();
+				foreach($context as $key => $value)
+					$this->templateVariableContainer->remove($key);	
 			}
-
-			foreach($context as $key => $value)
-				$this->templateVariableContainer->add($key, $value);
-			$output .= $this->renderChildren();
-			foreach($context as $key => $value)
-				$this->templateVariableContainer->remove($key);
 		}
 		return $output;
 	}

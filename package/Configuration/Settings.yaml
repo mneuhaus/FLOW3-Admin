@@ -13,3 +13,8 @@ Admin:
       \DateTime: DateTime
       ^\\F3\\[A-Za-z]+\\Domain\\Model\\[A-Za-z]+$: SingleRelation
       ^\\\SplObjectStorage\<\\F3\\[A-Za-z]+\\Domain\\Model\\[A-za-z]+>$: MultipleRelation
+  Models:
+    - \F3\Blog\Domain\Model\Blog
+    - \F3\Blog\Domain\Model\Post
+    - \F3\Blog\Domain\Model\Category
+    
