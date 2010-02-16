@@ -7,7 +7,7 @@
 		<f:if condition="{quickproperties}">
 		<div class="mr ml">
 			<f:form method="post" action="create" name="item" object="{quickobject}">
-				<a:modelForm model="{model}" object="{quickobject}" errors="{errors}" properties="{quickproperties}">
+				<a:modelForm model="{model}" object="{quickobject}" errors="{errors}" properties="{quickproperties}" namespace="item">
 					<div class="dl">
 						<label class="dl mrs">{label}: </label>
 						<div class="dl mr">

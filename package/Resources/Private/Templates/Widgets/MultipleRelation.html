@@ -11,19 +11,3 @@
         </f:if>
     </f:for>
 </select>
-
-<f:if condition="{widget}">
-    <a:modelForm model="{widget.model}" object="{widget.object}" errors="{widget.errors}" labelvar="wLabel" widgetvar="wWidget" errorsvar="wErrors">
-        <div class="fluid mbs pl pt">
-            <label class="dl10 pl">{wLabel}</label>
-            <div class="fluid ml10 psl">
-                {wWidget}
-                <f:if condition="{wErrors}">
-                    <div class="ui-error-text">
-                        {wErrors}
-                    </div>
-                </f:if>
-            </div>
-        </div>
-    </a:modelForm>
-</f:if>

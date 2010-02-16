@@ -115,30 +115,50 @@ class ModelFormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	}
 
 	/**
+	 * @var \F3\FLOW3\Persistence\PersistenceManagerInterface
+	 */
+	protected $persistenceManager;
+	
+	/**
+	 * Injects the persistence manager
+	 *
+	 * @param \F3\FLOW3\Persistence\PersistenceManagerInterface $persistenceManager
+	 * @return void
+	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 */
+	public function injectPersistenceManager(\F3\FLOW3\Persistence\PersistenceManagerInterface $persistenceManager) {
+		$this->persistenceManager = $persistenceManager;
+	}
+
+	/**
 	*
 	* @param string $model
 	* @param object $object
 	* @param object $errors
+	* @param boolean $root
+	* @param string $namespace
+	* @param string $var
 	* @param string $properties
-	* @param string $labelvar
-	* @param string $widgetvar
-	* @param string $errorsvar
 	* @return string "Form"-Tag.
 */
-	public function render($model, $object, $errors, $properties = "", $labelvar="label", $widgetvar="widget", $errorsvar="property_errors"){
-		$output = "<input type='hidden' name='model' value='".$model."' />";
-
+	public function render($model, $object, $errors, $root=true, $namespace="item", $var="props", $properties = ""){
+		$output = "";
+		if($root)
+			$output.= "<input type='hidden' name='model' value='".$model."' />";
+		
+		$settings = $this->utilities->getSettings();
+		
 		$properties = explode(",",$properties);
 		if(count($properties) < 1 || empty($properties[0]))
 			$properties = $this->reflection->getClassPropertyNames($model);
-		
+		$props = array();
 		foreach($properties as $property){
 			$property = trim($property);
 			$tags = $this->reflection->getPropertyTagsValues($model,$property);
-
-			if(!in_array("var",array_keys($tags))) continue;
-			if(!in_array("widget",array_keys($tags))){
-				$type = $this->utilities->getType($tags["var"][0]);
+			
+			if(!array_key_exists("var",$tags)) continue;
+			if(!array_key_exists("widget",$tags)){
+				$type = $this->utilities->getWidgetType($tags["var"][0]);
 			}else{
 				$type = $tags["widget"][0];
 			}
@@ -150,27 +170,79 @@ class ModelFormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 			}
 
 			if(\F3\FLOW3\Reflection\ObjectAccess::isPropertyGettable($object,$property)){
+				$propertyValue = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
+				$propertyClass = substr($tags["var"][0],1);
 				$context = array(
-					$widgetvar    => "Widget not found: "."\\".$widgetClass,
-					$labelvar     => ucfirst($property),
-					$errorsvar => implode("<br />",$propertyErrors)
-					);
-
+					"widget"    => "Widget not found: "."\\".$widgetClass,
+					"label"     => ucfirst($property),
+					"error" => implode("<br />",$propertyErrors),
+					"name" => $property,
+					"inlines" => array(),
+					"sortable" => false
+				);
+				
 				if(class_exists($widgetClass)){
 					$widget = $this->objectFactory->create($widgetClass);
 					$widget->setContext("Admin", $type, $this->controllerContext);
 					$widgetClass = $this->utilities->getWidgetClass($tags["var"][0]);
-					$context = array_merge($context,$widget->render($property,$object,"item",$tags));
+					$context = array_merge($context,$widget->render($property,$object,$namespace,$tags));
 				}
 				
-				foreach($context as $key => $value)
-					$this->templateVariableContainer->add($key, $value);
-				$output .= $this->renderChildren();
-				foreach($context as $key => $value)
-					$this->templateVariableContainer->remove($key);	
+				if(array_key_exists("inline",$tags) && $root){
+					$mode = "update";
+					if($type == "SingleRelation"){
+						if(!is_object($propertyValue)){
+							$propertyValue = $this->objectFactory->create($propertyClass);
+							$mode = "create";
+						}
+						$children = array($propertyValue);
+						$propertyNamespace = $namespace."[".$property."]";
+					}else{
+						$propertyClass=\F3\FLOW3\Utility\TypeHandling::parseType($propertyClass);
+						$propertyClass = $propertyClass['elementType'];
+						if(substr($propertyClass,0,1) == "\\") $propertyClass = substr($propertyClass,1);
+						
+						if(	is_object($propertyValue)  && is_callable(array($propertyValue,"count")) && $propertyValue->count() < 1){
+							$newInlines = (isset($tags["inline"][0]) && intval($tags["inline"][0]) > 0) ? 
+											$tags["inline"][0] 
+											: $settings["Defaults"]["newinlines"];
+							$x=0;
+							while($x < $newInlines){
+								$x++;
+								$propertyValue->attach($this->objectFactory->create($propertyClass));
+							}
+							$mode = "create";
+						}
+						$children = $propertyValue;
+						$propertyNamespace = $namespace."[".$property."][]";
+						
+						$context["sortable"] = true;
+					}
+					
+					if($mode == "create"){
+						$inlineProperties = isset($tags["properties"]) ? $tags["properties"][0] : "";
+						foreach ($children as $key => $child) {
+							$tmpNamespace = str_replace("@counter",$key,$propertyNamespace);
+							$identity = $this->persistenceManager->getIdentifierByObject($child);
+							if($mode == "update"){
+								$output.= "<input type='hidden' name='".$tmpNamespace."[__identity]' value='".$identity."' />";
+							}
+							$context["inlines"][] = $this->render($propertyClass,$child,array(),false,$tmpNamespace,$var,$inlineProperties);
+						}
+						$context["widget"] = "";
+					}
+				}
+				$props[] = $context;
 			}
 		}
-		return $output;
+		if($root){
+			$this->templateVariableContainer->add($var, $props);
+			$output .= $this->renderChildren();
+			$this->templateVariableContainer->remove($var);
+			return $output;
+		}else{
+			return $props;
+		}
 	}
 }
 

@@ -183,8 +183,8 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 		$this->view->assign('properties',$properties);
 
 		$object = $this->objectFactory->create($modelClass);
-
-		if($this->request->hasArgument("item")){
+		
+		if($this->request->hasArgument("create")){
 			$errors = $this->createUpdateObject("create",$object);
 			if($errors === false){
 				$arguments = array("model"=>$this->request->getArgument("model"));
@@ -510,6 +510,10 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 		foreach ($properties as $property) {
 			$tags = $this->reflectionService->getPropertyTagsValues($class,$property);
 			if(in_array($property,array_keys($array))){
+				if(is_array($array[$property])){
+					$array[$property] = $this->utilities->groupArrayByKeys($array[$property]);
+				}
+				
 				$widgetClass = $this->utilities->getWidgetClass($tags["var"][0]);
                 $widget = $this->objectFactory->create($widgetClass);
 				if(is_callable(array($widget,"convert")))
@@ -534,10 +538,10 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 		$modelName = $this->utilities->getObjectNameByClassName($model);
 		$repository = str_replace("Domain\Model","Domain\Repository",$model) . "Repository";
 		$modelValidator = $this->utilities->getModelValidator($model);
-		
+
 		$item = $this->convertArray($this->request->getArgument("item"),$model);
-#		$item = $this->request->getArgument("item");
-		
+		$item = $this->cleanUpItem($item);
+
 		$arg = $this->objectFactory->create("F3\FLOW3\MVC\Controller\Argument","item",$model);
 		$arg->setValue($item);
 		
@@ -552,16 +556,30 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 		$repositoryObject = $this->objectManager->getObject($repository);
 		
 		$errors = $modelValidator->getErrors();
-		//print_r($targetObject);
+
+
 		if(count($errors)>0){
 			return $errors;
 		}else{
-			if($mode=="create")
+			if($mode=="create"){
 				$repositoryObject->add($targetObject);
+			}
 			if($mode=="update")
 				$repositoryObject->update($targetObject);
 			return false;
 		}
+	}
+	
+	public function cleanUpItem($item){
+		foreach ($item as $key => $value) {
+			if(is_array($value)){
+				$item[$key] = $this->cleanUpItem($value);
+			}
+			if(empty($item[$key])){
+				unset($item[$key]);
+			}
+		}
+		return $item;
 	}
 	
 	public function setTemplate($model,$action){
@@ -597,8 +615,10 @@ class ModelController extends \F3\FLOW3\MVC\Controller\ActionController {
 					&& !class_exists($this->utilities->getModelRepository($type))){
 #					$childs = array(\F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property));
 				}
-				if($this->utilities->isEntity($this->utilities->getSubType($type))
-					&& !class_exists($this->utilities->getModelRepository($this->utilities->getSubType($type)))){
+				
+				$typeInformation = \F3\FLOW3\Utility\TypeHandling::parseType($type);
+				if($this->utilities->isEntity($typeInformation["elementType"])
+					&& !class_exists($this->utilities->getModelRepository($typeInformation["elementType"]))){
 #					$childs = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
 				}
 				if(isset($childs)){

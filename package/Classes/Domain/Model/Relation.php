@@ -41,6 +41,10 @@ class Relation extends \F3\Admin\Domain\Model{
 	 * @var \SplObjectStorage<\F3\Admin\Domain\Model\Tag>
 	 */
 	protected $tags;
+	
+	public function __construct() {
+		$this->tags = new \SplObjectStorage();
+	}
 }
 
 ?>

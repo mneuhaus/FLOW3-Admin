@@ -39,4 +39,20 @@ jQuery(document).ready(function(){
 	jQuery(document).bind('keydown', {combi:'esc'}, function(){
 		jQuery("input").blur();
     });
+	
+	// jQuery(".sortable").after(jQuery("<a href='#' class='ui-button'>Add one more</a>").click(function(){
+	//     jQuery(".sortable").append(jQuery(".sortable > div:first").clone());
+	//     return false;
+	// }));
+	
+	jQuery(".sortable").sortable();
+	jQuery(".sortable").each(function(){
+		var container = jQuery(this);
+		container.data("item",container.children("*:last").clone());
+		var button = jQuery("<a href='#' class='ui-button'>Add one more</a>").click(function(){
+		    jQuery(".sortable").append(container.data("item").clone());
+		    return false;
+		})
+		container.after(button);
+	});
 });

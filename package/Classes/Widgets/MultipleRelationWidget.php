@@ -63,19 +63,10 @@ class MultipleRelationWidget extends \F3\Admin\Widgets\AbstractWidget{
                     "selected" => in_array($uuid,$uuids)
                 );
             }
-
             $this->view->assign("options",$options);
+			$output = $this->view->render();
 			
-			if(isset($tags["inline"])){
-				$widget = array(
-					"model" => $modelClass,
-					"object" => $this->objectFactory->create(substr($modelClass,1)),
-					"errors" => array()
-				);
-				$this->view->assign("widget",$widget);
-			}
-
-            return array("widget" => $this->view->render());
+            return array("widget" => $output);
         }else{
             return array(
 				"property_errors" => "Couldn't find a appropriate Repository for the Model ".$modelClass,

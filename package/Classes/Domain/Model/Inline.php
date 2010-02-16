@@ -30,87 +30,23 @@ namespace F3\Admin\Domain\Model;
  * @scope prototype
  * @entity
  * @autoadmin
- * @set Default Types(string,integer,float,boolean,datetime,resource,tag,tags)
- * @set Textinput(textarea,autoexpand,fullrte,markdown)
- * @set Inline(widget)
  */
-class Widgets extends \F3\Admin\Domain\Model{
-	/**
-	 * @var string
-	 * @identity
-	 */
-	protected $string;
-	
-	/**
-	 * @var integer
-	 */
-	protected $integer;
-	
-	/**
-	 * @var float
-	 */
-	protected $float;
-	
-	/**
-	 * @var boolean
-	 */
-	protected $boolean;
-	
-	/**
-	 * @var \DateTime
-	 */
-	protected $datetime;
-	
-	/**
-	 * @var \F3\FLOW3\Resource\Resource
-	 * validate NotEmpty
-	 */
-#	protected $resource;
-	
+class Inline extends \F3\Admin\Domain\Model{
 	/**
 	 * @var \F3\Admin\Domain\Model\Tag
-	 */
-	protected $tag;
-	
-	/**
-	 * @var \SplObjectStorage<\F3\Admin\Domain\Model\Tag>
-	 */
-	protected $tags;
-	
-	
-	
-	/**
-	 * @var string
-	 * @widget textarea
-	 */
-	protected $textarea;
-	
-	/**
-	 * @var string
-	 * @widget textarea
-	 * @class f-autoexpand
-	 */
-	protected $autoexpand;
-	
-	/**
-	 * @var string
-	 * @widget textarea
-	 * @class f-fullrte
-	 */
-	protected $fullrte;
-	
-	/**
-	 * @var string
-	 * @widget textarea
-	 * @class f-markdown
-	 */
-	protected $markdown;
-	
-	/**
-	 * @var \F3\Admin\Domain\Model\Widgets
 	 * @inline
 	 */
-	protected $widget;
+	protected $inlinetag;
+	
+	/**
+	 * @var \SplObjectStorage<F3\Admin\Domain\Model\Tag>
+	 * @inline
+	 */
+	protected $inlinetags;
+	
+	public function __construct() {
+		$this->inlinetags = new \SplObjectStorage();
+	}
 }
 
 ?>

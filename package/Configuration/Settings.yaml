@@ -2,6 +2,29 @@
 # Settings Configuration for the Admin package                           #
 #                                                                        #
 
+# FLOW3: 
+#   security: 
+#     enable: yes
+#     authentication:
+#       providers:
+#         DefaultProvider:
+#           providerClass: PersistedUsernamePasswordProvider
+#     roles:
+#       Administrator: []
+#       User: []
+#     resources:
+#       create: "method(F3\Admin\Controller\ModelController->createAction())"
+#       update: "method(F3\Admin\Controller\ModelController->updateAction())"
+#       delete: "method(F3\Admin\Controller\ModelController->deleteAction())"
+#       list: "method(F3\Admin\Controller\ModelController->listAction())"
+#       view: "method(F3\Admin\Controller\ModelController->viewAction())"
+#       bulk: "method(F3\Admin\Controller\ModelController->bulkAction())"
+#       index: "method(F3\Admin\Controller\ModelController->indexAction())"
+#       all: "create || update || delete || list || view || bulk || index"
+#     Administrator:
+#       all: ACCESS_GRANT
+
+
 Admin:
   Widgets:
     Mapping:
@@ -12,9 +35,11 @@ Admin:
       \F3\FLOW3\Resource\Resource: Upload
       \DateTime: DateTime
       ^\\F3\\[A-Za-z]+\\Domain\\Model\\[A-Za-z]+$: SingleRelation
-      ^\\\SplObjectStorage\<\\F3\\[A-Za-z]+\\Domain\\Model\\[A-za-z]+>$: MultipleRelation
+      ^\\\SplObjectStorage\<\\*F3\\[A-Za-z]+\\Domain\\Model\\[A-za-z]+>$: MultipleRelation
   Models:
     - \F3\Blog\Domain\Model\Blog
     - \F3\Blog\Domain\Model\Post
     - \F3\Blog\Domain\Model\Category
-    
+  Defaults:
+    newinlines: 3
+      

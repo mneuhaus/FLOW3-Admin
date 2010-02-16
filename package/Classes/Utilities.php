@@ -235,7 +235,7 @@ class Utilities{
 	 * @return $name String Type
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 **/
-    public function getType($raw){
+    public function getWidgetType($raw){
 		$settings = $this->getSettings();
 		$mappings = $settings["Widgets"]["Mapping"];
 		
@@ -261,7 +261,7 @@ class Utilities{
 	 * @return $name String Type
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 **/
-    public function getSubType($raw){
+    public function getElementType($raw){
 		preg_match("/<(.*?)>/",$raw,$match);
 		if(count($match)>0)
         	return $match[1];
@@ -304,17 +304,10 @@ class Utilities{
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 **/
     public function getWidgetClass($type){
-        $widgetType = $type = $this->getType($type);
-
-        if(class_exists($type)){
-            if($this->isEntity($type) !== FALSE){
-                $widgetType = "entity";
-            }
-        }
-
-        return str_replace("@type",ucfirst($widgetType),"F3\Admin\Widgets\@typeWidget");
+        $widgetWidgetType = $type = $this->getWidgetType($type);
+        return str_replace("@type",$widgetWidgetType,"F3\Admin\Widgets\@typeWidget");
     }
-
+	
 	/**
 	 * Returns all Models wich are enabled through the @autoadmin tag
 	 *
@@ -516,6 +509,49 @@ class Utilities{
 			return $goodGuess;
 			
 		return "Can't provide useful String representation";
+	}
+	
+	public function arrayToObject($array){
+		$object = new \StdClass;
+		foreach ($array as $key => $value) {
+			$object->$key = $value;
+		}
+		return $object;
+	}
+	
+	public function groupArrayByKeys($array)
+	{
+		$keys = array();
+		foreach ($array as $sub) {
+			if(is_array($sub)){
+				foreach ($sub as $key => $value) {
+					if(!array_key_exists($key,$keys)){
+						$keys[$key] = 1;
+					}else{
+						$keys[$key]++;
+					}
+				}
+			}
+		}
+		if(!empty($keys) && max($keys) == min($keys)){
+			$newArray = array();
+			$tmp = array();
+			foreach ($array as $sub) {
+				if(is_array($sub)){
+					foreach ($sub as $key => $value) {
+						if(array_key_exists($key,$tmp)){
+							$newArray[] = $tmp;
+							$tmp = array();
+						}
+						$tmp[$key] = $value;
+					}
+				}
+			}	
+			$newArray[] = $tmp;
+			return $newArray;
+		}else{
+			return $array;
+		}
 	}
 }
 
