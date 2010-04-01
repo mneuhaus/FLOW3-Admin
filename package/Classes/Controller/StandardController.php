@@ -30,26 +30,102 @@ namespace F3\Admin\Controller;
  */
 class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	/**
+	 * @var \F3\Admin\Helper
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 * @inject
+	 */
+	protected $helper;
+	
+	/**
+	 * @var \F3\FLOW3\Object\ObjectManagerInterface
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 * @inject
+	 */
+	protected $objectManager;
+	
+	protected $model = "";
+	
+	/**
+	 * Create action
+	 *
+	 * @return void
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 */
+	public function createAction() {
+		$this->prepare("create");
+		$sets = $this->getAdapter()->getSets();
+		$this->view->assign("sets",$sets);
+	}
+	
+	/**
 	 * Index action
 	 *
 	 * @return void
 	 */
 	public function indexAction() {
-		$repository = $this->objectManager->getObject("F3\Admin\Domain\Repository\TagRepository");
-		$tags = $repository->findAll();
-		$added = $repository->getAddedObjects();
-		if(count($tags) < 1 && count($added) < 1){
-			$tags = array("typo3","flow3","php","aop","oop","ddd","mvc","reflection");
-			foreach ($tags as $tag) {
-				$object = $this->objectFactory->create("F3\Admin\Domain\Model\Tag");
-				$object->setName($tag);
-				$repository->add($object);
-			}
+		$this->prepare("index");
+		
+		$groups = $this->helper->getGroups();
+		if($this->request->hasArgument("group")){
+			$group = $this->request->getArgument("group");
+			$groups = array($group => $groups[$group]);
 		}
 		
-		$this->redirect('index',"model");
+		$this->view->assign('groups',$groups);
+	}
+	
+	/**
+	 * List action
+	 *
+	 * @return void
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 */
+	public function listAction() {
+		$this->prepare("list");
+		
+		// Redirect to creating a new Object if there aren't any (Clean Slate)
+		#if(count($objects) < 1){
+			$arguments = array("being"=>$this->being,"adapter" => $this->adapter);
+			$this->redirect("create",NULL,NULL,	$arguments);
+		#}
 	}
 
+	private function prepare($action){
+		$this->adapters = $this->helper->getAdapters();
+		$this->settings = $this->helper->getSettings();
+		if($this->request->hasArgument("being")){
+			$GLOBALS["Admin"]["being"] = $this->being = $this->request->getArgument("being");
+			$GLOBALS["Admin"]["group"] = $this->group = $this->helper->getGroupByBeing($this->being);
+		}
+		if($this->request->hasArgument("adapter"))
+			$GLOBALS["Admin"]["adapter"] = $this->adapter = $this->request->getArgument("adapter");
+			
+		$this->setTemplate($action);
+	}
+	
+	public function setTemplate($action){
+		$variant = "default";
+		$replacements = array(
+			"@action" => $action,
+			"@variant" => $variant,
+			"@package" => "Admin",
+		);
+		if(class_exists($this->model)){
+			$tags = $this->reflectionService->getClassTagsValues($this->model);
+			if(in_array($action."view",array_keys($tags))){
+				$variant = $tags[$action."view"][0];
+			}
+			$replacements["@package"] =$this->helper->getPackageByClassName($this->model);
+			$replacements["@model"] =$this->helper->getObjectNameByClassName($this->model);
+		}
+		
+		$template = $this->helper->getPathByPatternFallbacks("Views",$replacements);
+		$this->view->setTemplatePathAndFilename($template);
+	}
+	
+	private function getAdapter(){
+		return $this->objectManager->getObject($this->adapter);
+	}
 }
 
 ?>

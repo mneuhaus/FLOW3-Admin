@@ -5,88 +5,22 @@
 		<h3 class="ui-header">New <a:modelName model="{model}" /></h3>
 		<div class="mr ml">
 			<f:form method="post" action="create" name="item" object="{object}">
-				<f:for each="{sets}" as="set">
+				<f:for each="{sets}" as="properties" key="set">
 					<fieldset class="pl">
-					<legend>{set.name}</legend>
-					<a:modelForm model="{model}" object="{object}" errors="{errors}" properties="{set.properties}">
-						<a:for each="{props}" as="property">
-							<div class="fluid mbs pl pt">
-								<label class="dl10 pl">{property.label}</label>
-								<div class="fluid ml10 psl">
-									<a:render value="{property.widget}" /> 
-									<f:if condition="{property.error}">
-										<div class="ui-error-text">
-											<a:render value="{property.error}" />
-										</div>
-									</f:if>
-									<f:if condition="{property.inlines}">
-										<f:if condition="false">
-											<f:then>
-												<div class="sortable">
-												<a:for each="{property.inlines}" as="row" loop="loop">
-													<div class="fluid mb pl pt">
-													<a:for each="{row}" as="inline">
-													<div class="fluid mbs pl pt">
-														<label class="dl10 pl">{inline.label}</label>
-														<div class="fluid ml10 psl">
-															<a:render value="{inline.widget}" /> 
-															<f:if condition="{inline.error}">
-																<div class="ui-error-text">
-																	<a:render value="{inline.error}" />
-																</div>
-															</f:if>
-														</div>
-													</div>
-													</a:for>
-													</div>
-												</a:for>
-												</div>
-												</f:then>
-											<f:else>
-												<table>
-													<thead>
-														<a:for each="{property.inlines}" as="row" loop="loop">
-														<f:if condition="{loop.first}">
-														<tr>
-															<a:for each="{row}" as="inline">
-															<th>{inline.label}</th>
-															</a:for>
-														</tr>	
-														</f:if>
-														</a:for>
-													</thead>
-													
-													<f:if condition="{property.sortable}">
-														<f:then>
-															<tbody class="sortable">
-														</f:then>
-														<f:else>
-															<tbody>
-														</f:else>
-													</f:if>
-														<a:for each="{property.inlines}" as="row" loop="loop">
-														<tr>
-															<a:for each="{row}" as="inline">
-															<td>
-																<a:render value="{inline.widget}" /> 
-																<f:if condition="{inline.error}">
-																	<div class="ui-error-text">
-																		<a:render value="{inline.error}" />
-																	</div>
-																</f:if>
-															</td>
-															</a:for>
-														</tr>
-														</a:for>
-													</tbody>
-												</table>
-											</f:else>
-										</f:if>
-									</f:if>	
-								</div>
+					<legend>{set}</legend>
+						<f:for each="{properties}" as="property">
+						<div class="fluid mbs pl pt">
+							<label class="dl10 pl">{property.label}</label>
+							<div class="fluid ml10 psl">
+								<a:render partial="{property.widget}" fallbacks="Widgets"/> 
+								<f:if condition="{property.error}">
+									<div class="ui-error-text">
+										<a:render value="{property.error}" />
+									</div>
+								</f:if>
 							</div>
-						</a:for>
-					</a:modelForm>
+						</div>
+						</f:for>
 					</fieldset>
 				</f:for>
 				<div class="fluid mb mls">	

@@ -2,30 +2,25 @@
 # Settings Configuration for the Admin package                           #
 #                                                                        #
 
-# FLOW3: 
-#   security: 
-#     enable: yes
-#     authentication:
-#       providers:
-#         DefaultProvider:
-#           providerClass: PersistedUsernamePasswordProvider
-#     roles:
-#       Administrator: []
-#       User: []
-#     resources:
-#       create: "method(F3\Admin\Controller\ModelController->createAction())"
-#       update: "method(F3\Admin\Controller\ModelController->updateAction())"
-#       delete: "method(F3\Admin\Controller\ModelController->deleteAction())"
-#       list: "method(F3\Admin\Controller\ModelController->listAction())"
-#       view: "method(F3\Admin\Controller\ModelController->viewAction())"
-#       bulk: "method(F3\Admin\Controller\ModelController->bulkAction())"
-#       index: "method(F3\Admin\Controller\ModelController->indexAction())"
-#       all: "create || update || delete || list || view || bulk || index"
-#     Administrator:
-#       all: ACCESS_GRANT
-
-
 Admin:
+  Models: []
+  Defaults:
+    newinlines: 3
+  Adapters:
+    F3\Admin\Adapters\PHPCRAdapter: active
+  Fallbacks:
+    Views:
+      - package://@package/Private/Templates/@model/@action/@variant.html
+      - package://@package/Private/Templates/Admin/@action/@variant.html
+      - package://@package/Private/Templates/@model/@action.html
+      - package://@package/Private/Templates/Admin/@action.html
+      - package://Admin/Private/Templates/Standard/@action/@variant.html
+      - package://Admin/Private/Templates/Standard/@action.html
+    Widgets:
+      - package://@group/Private/Templates/@being/Widgets/@partial.html
+      - package://@group/Private/Templates/Widgets/@partial.html
+      - package://Admin/Private/Templates/@partial.html
+PHPCR:
   Widgets:
     Mapping:
       string:   Textfield
@@ -36,10 +31,3 @@ Admin:
       \DateTime: DateTime
       ^\\F3\\[A-Za-z]+\\Domain\\Model\\[A-Za-z]+$: SingleRelation
       ^\\\SplObjectStorage\<\\*F3\\[A-Za-z]+\\Domain\\Model\\[A-za-z]+>$: MultipleRelation
-  Models:
-    - \F3\Blog\Domain\Model\Blog
-    - \F3\Blog\Domain\Model\Post
-    - \F3\Blog\Domain\Model\Category
-  Defaults:
-    newinlines: 3
-      

@@ -30,11 +30,11 @@ namespace F3\Admin\ViewHelpers;
  */
 class NavigationViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	/**
-	 * @var \F3\Admin\Utilities
+	 * @var \F3\Admin\Helper
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 * @inject
 	 */
-	protected $utilities;
+	protected $helper;
 	
 	/**
 	 * Iterates through elements of $each and renders child nodes
@@ -48,18 +48,18 @@ class NavigationViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper 
 		$items = array(
 			array(
 				"name"=>"Overview",
-				"controller"=>"model",
+				"controller"=>"standard",
 				"action"=>"index",
 				"active" => true
 			)
 		);
-		$packages = $this->utilities->getEnabledModels();
-		foreach ($packages as $packageName => $models) {
+		$groups = $this->helper->getGroups();
+		foreach ($groups as $group => $beings) {
 			$items[] = array(
-				"name"=>$packageName,
-				"controller"=>"model",
+				"name"=>$group,
+				"controller"=>"standard",
 				"action"=>"index",
-				"package"=>$packageName,
+				"group"=>$group,
 				"active" => false
 			);
 		}

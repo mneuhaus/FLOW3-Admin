@@ -1,9 +1,9 @@
 <?php
- 
-namespace F3\Admin\ViewHelpers;
+
+namespace F3\Admin\Adapters;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the FLOW3 framework.                            *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License as published by the *
@@ -23,48 +23,49 @@ namespace F3\Admin\ViewHelpers;
  *                                                                        */
 
 /**
- * @version $Id: ForViewHelper.php 3346 2009-10-22 17:26:10Z k-fish $
+ * Abstract validator
+ *
+ * @version $Id: AbstractValidator.php 3837 2010-02-22 15:17:24Z robert $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @api
- * @scope prototype
+ * @prototype
  */
-class RenderViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class PHPCRAdapter extends AbstractAdapter {
 	/**
-	 * @var \F3\Admin\Helper
+	 * @var \F3\FLOW3\Package\PackageManagerInterface
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 * @inject
 	 */
-	protected $helper;
+	protected $packageManager;
 	
 	/**
-	 *
-	 * @param object $value
-	 * @param string $partial
-	 * @param string $fallbacks
-	 * @return string Rendered string
-	 * @author Marc Neuhaus <apocalip@gmail.com>
-	 * @api
+	 * @var \F3\FLOW3\Reflection\ReflectionService
+	 * @author Marc Neuhaus
+	 * @inject
 	 */
-	public function render($value='',$partial='',$fallbacks='') {
-		if($value !== '')
-			return $value;
-
-		if ($partial !== '') {
-			if($fallbacks !== ''){
-				$this->view = $this->viewHelperVariableContainer->getView();
-				
-				$replacements = array(
-					"@partial" => $partial,
-					"@group" => $GLOBALS["Admin"]["group"],
-					"@being" => $GLOBALS["Admin"]["being"]
-				);
-				
-				$template = $this->helper->getPathByPatternFallbacks($fallbacks,$replacements);
-				$this->view->setTemplatePathAndFilename($template);
-				
-				return $this->view->render();
+	protected $reflection;
+	
+	public function getGroups(){
+		$activePackages = $this->packageManager->getActivePackages();
+		$groups = array();
+		$settings = $this->helper->getSettings();
+		foreach ($activePackages as $packageName => $package) {
+			foreach ($package->getClassFiles() as $class => $file) {
+				if(strpos($class,"\Model\\")>0){
+					$tags = $this->reflection->getClassTagsValues($class);
+					$parts = explode('\\',$class);
+					$name = end($parts);
+					$repository = $this->helper->getModelRepository($class);
+					if( ( in_array("autoadmin",array_keys($tags)) || in_array("\\".$class,$settings["Models"]) )
+						&& class_exists($repository)){
+						$groups[$packageName][] = array(
+							"being" => $class,
+							"name"	=> $name
+						);
+					}
+				}
 			}
 		}
+		return $groups;
 	}
 }
 

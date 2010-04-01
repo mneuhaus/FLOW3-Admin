@@ -1,9 +1,9 @@
 <?php
- 
-namespace F3\Admin\ViewHelpers;
+
+namespace F3\Admin\Adapters;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the FLOW3 framework.                            *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License as published by the *
@@ -23,49 +23,13 @@ namespace F3\Admin\ViewHelpers;
  *                                                                        */
 
 /**
- * @version $Id: ForViewHelper.php 3346 2009-10-22 17:26:10Z k-fish $
+ *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @api
- * @scope prototype
+ * @author Marc Neuhaus <marc@mneuhaus.com>
+ * @prototype
  */
-class RenderViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
-	/**
-	 * @var \F3\Admin\Helper
-	 * @author Marc Neuhaus <apocalip@gmail.com>
-	 * @inject
-	 */
-	protected $helper;
-	
-	/**
-	 *
-	 * @param object $value
-	 * @param string $partial
-	 * @param string $fallbacks
-	 * @return string Rendered string
-	 * @author Marc Neuhaus <apocalip@gmail.com>
-	 * @api
-	 */
-	public function render($value='',$partial='',$fallbacks='') {
-		if($value !== '')
-			return $value;
-
-		if ($partial !== '') {
-			if($fallbacks !== ''){
-				$this->view = $this->viewHelperVariableContainer->getView();
-				
-				$replacements = array(
-					"@partial" => $partial,
-					"@group" => $GLOBALS["Admin"]["group"],
-					"@being" => $GLOBALS["Admin"]["being"]
-				);
-				
-				$template = $this->helper->getPathByPatternFallbacks($fallbacks,$replacements);
-				$this->view->setTemplatePathAndFilename($template);
-				
-				return $this->view->render();
-			}
-		}
-	}
+interface AdapterInterface {
+	public function getGroups();
 }
 
 ?>
