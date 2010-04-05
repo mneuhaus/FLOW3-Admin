@@ -57,7 +57,7 @@ class Helper{
 
 	/**
 	 *
-	 * @var \F3\FLOW3\Validation\ValidatorResolver
+	 * @var \F3\Admin\ValidatorResolver
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 * @inject
 	 **/
@@ -245,27 +245,7 @@ class Helper{
 	 * @author Marc Neuhaus
 	 **/
 	public function getModelValidator($model){
-		$objectValidator = $this->ValidatorResolver->createValidator('F3\FLOW3\Validation\Validator\GenericObjectValidator');
-		if (class_exists($model)) {
-			$validatorCount = 0;
-
-			foreach ($this->reflection->getClassPropertyNames($model) as $classPropertyName) {
-				$classPropertyTagsValues = $this->reflection->getPropertyTagsValues($model, $classPropertyName);
-				if (!isset($classPropertyTagsValues['validate'])) continue;
-
-				foreach ($classPropertyTagsValues['validate'] as $validateValue) {
-					$parsedAnnotation = $this->parseValidatorAnnotation($validateValue);
-					foreach ($parsedAnnotation['validators'] as $validatorConfiguration) {
-						$newValidator = $this->ValidatorResolver->createValidator($validatorConfiguration['validatorName'], $validatorConfiguration['validatorOptions']);
-						if ($newValidator === NULL) {
-							throw new \F3\FLOW3\Validation\Exception\NoSuchValidatorException('Invalid validate annotation in ' . $model . '::' . $classPropertyName . ': Could not resolve class name for  validator "' . $validatorConfiguration['validatorName'] . '".', 1241098027);
-						}
-						$objectValidator->addPropertyValidator($classPropertyName, $newValidator);
-						$validatorCount ++;
-					}
-				}
-			}
-		}
+		$objectValidator = $this->ValidatorResolver->getModelValidator($model);
 		return $objectValidator;
 	}
 	
@@ -342,10 +322,10 @@ class Helper{
 	}
 	
 	public function getSettings($namespace = "Admin"){
-		if(!isset($this->cache["settings"])){
-			$this->cache["settings"] = $this->configurationManager->getConfiguration(\F3\FLOW3\Configuration\ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, $namespace);
+		if(!isset($this->cache["settings"]) || !isset($this->cache["settings"][$namespace])){
+			$this->cache["settings"][$namespace] = $this->configurationManager->getConfiguration(\F3\FLOW3\Configuration\ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, $namespace);
 		}
-		return $this->cache["settings"];
+		return $this->cache["settings"][$namespace];
 	}
 	
 	public function toString($object){

@@ -2,55 +2,52 @@
 {namespace a=F3\Admin\ViewHelpers}
 <f:section name="content">
 	<div class="ui-container">
-		<h3 class="ui-header">Edit <a:modelName model="{model}" /></h3>
+		<h3 class="ui-header">Edit {beingName}</h3>
 		<div class="mr ml">
 			<f:form method="post" action="update" name="item" object="{object}">
-				<fieldset class="pl">
-				<legend>General</legend>	
-					<a:modelForm model="{model}" object="{object}" errors="{errors}" properties="{set.properties}">
-						<a:for each="{props}" as="property">
-							<div class="fluid mbs pl pt">
-								<label class="dl10 pl">{property.label}</label>
-								<div class="fluid ml10 psl">
-									<a:render value="{property.widget}" /> 
-									<f:if condition="{property.error}">
-										<div class="ui-error-text">
-											<a:render value="{property.error}" />
-										</div>
-									</f:if>
-									<f:if condition="{property.inlines}">
-										<a:for each="{property.inlines}" as="row" loop="loop">
-											<table>
-												<f:if condition="{loop.first}">
-												<tr>
-												<a:for each="{row}" as="inline">
-													<th>{inline.label}</th>
-												</a:for>
-												</tr>
+				<f:form.textfield name="adapter" id="adapter" value="{adapter}"/>
+				<f:form.textfield name="being" id="being" value="{being}"/>
+				<f:form.textfield name="item[__identity]" id="id" value="{id}"/>
+				<f:for each="{sets}" as="properties" key="set">
+					<fieldset class="pl">
+					<legend>{set}</legend>
+						<f:for each="{properties}" as="property">
+						<div class="fluid mbs pl pt">
+							<label class="dl10 pl">{property.label}</label>
+							<div class="fluid ml10 psl">
+								<a:render partial="{property.widget}" fallbacks="Widgets" partialVars="{property:property}"/> 
+								<f:if condition="{property.error}">
+									<div class="ui-error-text">
+										<f:for each="{property.error}" as="error">
+											<a:render value="{error}" /><br />
+										</f:for>
+									</div>
+								</f:if>
+								<f:for each="{property.inline}" as="inlineProperties" key="inlineSet">
+									<fieldset class="pl">
+									<legend>{inlineSet}</legend>
+										<f:for each="{inlineProperties}" as="inlineProperty">
+										<div class="fluid mbs pl pt">
+											<label class="dl10 pl">{inlineProperty.label}</label>
+											<div class="fluid ml10 psl">
+												<a:render partial="{inlineProperty.widget}" fallbacks="Widgets"/> 
+												<f:if condition="{inlineProperty.error}">
+													<div class="ui-error-text">
+														<a:render value="{inlineProperty.error}" />
+													</div>
 												</f:if>
-												<tr>
-												<a:for each="{row}" as="inline">
-													<td>
-														<a:render value="{inline.widget}" /> 
-														<f:if condition="{inline.error}">
-															<div class="ui-error-text">
-																<a:render value="{inline.error}" />
-															</div>
-														</f:if>
-													</td>
-												</a:for>
-												</tr>
-											</table>
-										</a:for>
-									</f:if>	
-								</div>
+											</div>
+										</div>
+										</f:for>
+									</fieldset>
+								</f:for>
 							</div>
-						</a:for>
-					</a:modelForm>
-				</fieldset>
+						</div>
+						</f:for>
+					</fieldset>
+				</f:for>
 				<div class="fluid mb mls">	
 					<input type="submit" name="update" value="Update" class="submit ui-button"/>
-					<input type="submit" name="delete" value="Delete" class="ui-button ui-dangerous dr" />
 				</div>
 				<div class="clear">&nbsp;</div>
 			</f:form>

@@ -2,9 +2,11 @@
 {namespace a=F3\Admin\ViewHelpers}
 <f:section name="content">
 	<div class="ui-container">
-		<h3 class="ui-header">New <a:modelName model="{model}" /></h3>
+		<h3 class="ui-header">New {name}</h3>
 		<div class="mr ml">
 			<f:form method="post" action="create" name="item" object="{object}">
+				<f:form.textfield name="adapter" id="adapter" value="{adapter}"/>
+				<f:form.textfield name="being" id="being" value="{being}"/>
 				<f:for each="{sets}" as="properties" key="set">
 					<fieldset class="pl">
 					<legend>{set}</legend>
@@ -12,12 +14,32 @@
 						<div class="fluid mbs pl pt">
 							<label class="dl10 pl">{property.label}</label>
 							<div class="fluid ml10 psl">
-								<a:render partial="{property.widget}" fallbacks="Widgets"/> 
+								<a:render partial="{property.widget}" fallbacks="Widgets" partialVars="{property:property}"/> 
 								<f:if condition="{property.error}">
 									<div class="ui-error-text">
-										<a:render value="{property.error}" />
+										<f:for each="{property.error}" as="error">
+											<a:render value="{error}" /><br />
+										</f:for>
 									</div>
 								</f:if>
+								<f:for each="{property.inline}" as="inlineProperties" key="inlineSet">
+									<fieldset class="pl">
+									<legend>{inlineSet}</legend>
+										<f:for each="{inlineProperties}" as="inlineProperty">
+										<div class="fluid mbs pl pt">
+											<label class="dl10 pl">{inlineProperty.label}</label>
+											<div class="fluid ml10 psl">
+												<a:render partial="{inlineProperty.widget}" fallbacks="Widgets"/> 
+												<f:if condition="{inlineProperty.error}">
+													<div class="ui-error-text">
+														<a:render value="{inlineProperty.error}" />
+													</div>
+												</f:if>
+											</div>
+										</div>
+										</f:for>
+									</fieldset>
+								</f:for>
 							</div>
 						</div>
 						</f:for>

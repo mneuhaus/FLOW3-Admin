@@ -19,7 +19,7 @@ Admin:
     Widgets:
       - package://@group/Private/Templates/@being/Widgets/@partial.html
       - package://@group/Private/Templates/Widgets/@partial.html
-      - package://Admin/Private/Templates/@partial.html
+      - package://Admin/Private/Templates/Standard/Widgets/@partial.html
 PHPCR:
   Widgets:
     Mapping:

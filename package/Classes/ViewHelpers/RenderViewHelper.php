@@ -41,11 +41,12 @@ class RenderViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @param object $value
 	 * @param string $partial
 	 * @param string $fallbacks
+	 * @param array $partialVars
 	 * @return string Rendered string
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 * @api
 	 */
-	public function render($value='',$partial='',$fallbacks='') {
+	public function render($value='',$partial='',$fallbacks='',$partialVars = array()) {
 		if($value !== '')
 			return $value;
 
@@ -62,6 +63,8 @@ class RenderViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 				$template = $this->helper->getPathByPatternFallbacks($fallbacks,$replacements);
 				$this->view->setTemplatePathAndFilename($template);
 				
+				foreach ($partialVars as $key => $value)
+					$this->view->assign($key,$value);
 				return $this->view->render();
 			}
 		}

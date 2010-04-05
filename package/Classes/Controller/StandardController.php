@@ -53,8 +53,26 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	 */
 	public function createAction() {
 		$this->prepare("create");
-		$sets = $this->getAdapter()->getSets();
-		$this->view->assign("sets",$sets);
+		$being = $this->request->getArgument("being");
+		$attributeSets = $this->getAdapter()->getAttributeSets($being);
+		
+		if($this->request->hasArgument("create")){
+			$errors = $this->getAdapter()->createObject($being,$this->request->getArgument("item"));
+			if(empty($errors)){
+				$arguments = array("being"=>$this->being,"adapter" => $this->adapter);
+				$this->redirect('list',NULL,NULL,$arguments);
+			}else{
+				foreach ($attributeSets as $set => $attributes) {
+					foreach ($attributes as $key => $attribute) {
+						if(array_key_exists($attribute["name"],$errors)){
+							$attributeSets[$set][$key]["error"] = $errors[$attribute["name"]];
+						}
+					}
+				}
+			}
+		}
+		
+		$this->view->assign("sets",$attributeSets);
 	}
 	
 	/**
@@ -83,14 +101,93 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	public function listAction() {
 		$this->prepare("list");
 		
+		$objects = $this->getAdapter()->getObjects($this->being);
+		
+		$this->view->assign("objects",$objects);
+		
 		// Redirect to creating a new Object if there aren't any (Clean Slate)
-		#if(count($objects) < 1){
-			$arguments = array("being"=>$this->being,"adapter" => $this->adapter);
+		if(count($objects) < 1){
+			$arguments = array( "being" => $this->being , "adapter" => $this->adapter);
 			$this->redirect("create",NULL,NULL,	$arguments);
-		#}
+		}
 	}
-
+	
+	/**
+	 * Confirm previous requested action
+	 *
+	 * @return void
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 */
+	public function confirmAction() {
+		$this->prepare("confirm");
+		$object = $this->getAdapter()->getObject($this->being,$this->request->getArgument("id"));
+		$this->view->assign("object",$object);
+	}
+	
+	/**
+	 * delete action
+	 *
+	 * @return void
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 */
+	public function deleteAction() {
+		$this->prepare("delete");
+		if($this->request->hasArgument("confirm")){
+			$this->getAdapter()->deleteObject($this->being,$this->request->getArgument("id"));
+			
+			$arguments = array("adapter"=>$this->adapter,"being"=>$this->being);
+			$this->redirect('list',NULL,NULL,$arguments);
+		}else{
+			$this->redirect('confirm',NULL,NULL,$this->request->getArguments());
+		}
+	}
+	
+	/**
+	 * update action
+	 *
+	 * @return void
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 */
+	public function updateAction() {
+		$this->prepare("update");
+		
+#		if($this->request->hasArgument("delete")){
+#			$arguments = $this->request->getArguments();
+#			$this->redirect('confirm',NULL,NULL,$arguments);
+#		}
+		
+		$being = $this->request->getArgument("being");
+		$attributeSets = $this->getAdapter()->getAttributeSets($being);
+		
+		if($this->request->hasArgument("update")){
+			$errors = $this->getAdapter()->updateObject($being,$this->request->getArgument("item"));
+			if(empty($errors)){
+				$arguments = array("being"=>$this->being,"adapter" => $this->adapter);
+				$this->redirect('list',NULL,NULL,$arguments);
+			}else{
+				foreach ($attributeSets as $set => $attributes) {
+					foreach ($attributes as $key => $attribute) {
+						if(array_key_exists($attribute["name"],$errors)){
+							$attributeSets[$set][$key]["error"] = $errors[$attribute["name"]];
+						}
+					}
+				}
+			}
+		}
+		
+		$object = $this->getAdapter()->getObject($this->being,$this->request->getArgument("id"));
+		foreach ($attributeSets as $set => $attributes) {
+			foreach ($attributes as $key => $attribute) {
+				if(array_key_exists($attribute["name"],$object["properties"])){
+					$attributeSets[$set][$key]["value"] = $object["properties"][$attribute["name"]]["value"];
+				}
+			}
+		}
+		$this->view->assign("sets",$attributeSets);
+	}
+	
 	private function prepare($action){
+		\F3\Dump\Dump::getInstance();
 		$this->adapters = $this->helper->getAdapters();
 		$this->settings = $this->helper->getSettings();
 		if($this->request->hasArgument("being")){
@@ -121,6 +218,19 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 		
 		$template = $this->helper->getPathByPatternFallbacks("Views",$replacements);
 		$this->view->setTemplatePathAndFilename($template);
+		
+		if($this->request->hasArgument("being")){
+			$this->view->assign("being",$this->request->getArgument("being"));
+			$this->view->assign("beingName",$this->getAdapter()->getName($this->request->getArgument("being")));
+		}
+			
+		if($this->request->hasArgument("adapter")){
+			$this->view->assign("adapter",$this->request->getArgument("adapter"));
+		}
+		
+		if($this->request->hasArgument("id")){
+			$this->view->assign("id",$this->request->getArgument("id"));
+		}
 	}
 	
 	private function getAdapter(){

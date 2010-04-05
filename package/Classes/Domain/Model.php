@@ -29,6 +29,17 @@ namespace F3\Admin\Domain;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
 class Model {
+	/**
+	 * Injects the object manager
+	 *
+	 * @param \F3\FLOW3\Object\ObjectManagerInterface $manager
+	 * @return void
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 */
+	public function injectManager(\F3\FLOW3\Object\ObjectManagerInterface $manager) {
+		$this->objectManager = $manager;
+	}
+	
 	function getModelName(){
 		$class = get_class($this);
 		$parts = explode("\\",$class);

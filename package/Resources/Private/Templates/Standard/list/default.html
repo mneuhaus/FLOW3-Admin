@@ -2,27 +2,7 @@
 {namespace a=F3\Admin\ViewHelpers}
 <f:section name="content">
 	<div class="fluid ui-container">
-		<h3 class="ui-header mb"><a:modelName model="{model}" /></h3>
-		
-		<f:if condition="{quickproperties}">
-		<div class="mr ml">
-			<f:form method="post" action="create" name="item" object="{quickobject}">
-				<a:modelForm model="{model}" object="{quickobject}" errors="{errors}" properties="{quickproperties}" namespace="item">
-					<div class="dl">
-						<label class="dl mrs">{label}: </label>
-						<div class="dl mr">
-							<a:render value="{widget}" />
-						</div>
-					</div>
-				</a:modelForm>
-				<input type="submit" name="submit" value="Create" class="submit ui-button dl"/>
-				<div class="clear">&nbsp;</div>
-			</f:form>
-		</div>
-		</f:if>
-		
-		<f:form method="post" action="list" name="list">
-		<f:form.hidden name="model" value="{model}" />
+		<h3 class="ui-header mb">{beingName}</h3>
 		
 		<div class="fluid mr ml mbs">
 		<!--
@@ -35,10 +15,13 @@
 			</div>
 		-->
 			<div class="dr ml mb1">
-				<f:link.action action="create" controller="Model" arguments="{model:model}" class="ui-button">
-					Add <a:modelName model="{model}" />
-				</f:link.action>
+				<f:form method="post" action="create" name="create">
+					<f:form.hidden name="adapter" id="adapter" value="{adapter}"/>
+					<f:form.hidden name="being" id="being" value="{being}"/>
+					<input type="submit" name="new" value="Add {beingName}" class="submit ui-button"/>
+				</f:form>
 			</div>
+			<!--
 			<f:if condition="{filters}">
 				<div class="fluid mb1">
 					<f:for each="{filters}" as="options" key="filter">
@@ -59,53 +42,58 @@
 					<input type="submit" name="filter" value="Apply" id="filter" class="ui-button ui-secondary">
 				</div>
 			</f:if>
+			-->
 		</div>
 		<div class="mr ml">
 			<table class="ui-box fluid hp">
 				<thead class="ui-subsection">
 					<tr class="">
 					<!-- <th class="ui-small"></th> -->
-					<f:for each="{properties}" as="configuration" key="property">
-						<th>{a:f.cuf(value: property, funcs: "ucfirst")}</th>
-					</f:for>
+						<a:for each="{objects}" as="object" key="id" loop="loop">
+							<f:if condition="{loop.first}">
+								<f:for each="{object}" as="value" key="property">
+									<th>{value.label}</th>
+								</f:for>
+							</f:if>
+						</a:for>
+						<th></th>
 						<th></th>
 					</tr>
 				</thead>
 				<tbody>
-				<f:for each="{objects}" as="object">
+				<f:for each="{objects}" as="object" key="id">
 					<f:cycle values="{0: 'odd', 1: 'even'}" as="zebraClass">
 						<tr class="ui-{zebraClass} ui-row">
 					</f:cycle>
 						<!-- <td class="ui-small">
 							<a:identifierInput object="{object}" type="checkbox" name="bulk" value="1"/>
 						</td> -->
-						<f:for each="{properties}" as="configuration" key="property">
+						<f:for each="{object}" as="value" key="property">
 							<td>
-								<f:if condition="{configuration.identity}">
-									<f:then>
-										<f:link.action action="view" controller="Model" arguments="{item:object,model:model}">
-											<a:modelProperty model="{object}" property="{property}" />
-										</f:link.action>
-									</f:then>
-									<f:else>
-										<a:modelProperty model="{object}" property="{property}" />
-									</f:else>
-								</f:if>
+								{value.value}
 							</td>
 						</f:for>
 						<td>
-							<f:link.action action="update" controller="Model" arguments="{item:object,model:model}">
-								edit
-							</f:link.action>
-							
-							<f:link.action action="delete" controller="Model" arguments="{item:object,model:model}">
-								delete
-							</f:link.action>
+							<f:form method="post" action="update" name="delete">
+								<f:form.hidden name="adapter" id="adapter" value="{adapter}"/>
+								<f:form.hidden name="being" id="being" value="{being}"/>
+								<f:form.hidden name="id" value="{id}"/>
+								<input type="submit" name="edit" value="Edit" class="submit ui-button"/>
+							</f:form>
+						</td>
+						<td>
+							<f:form method="post" action="delete" name="delete">
+								<f:form.hidden name="adapter" value="{adapter}"/>
+								<f:form.hidden name="being" value="{being}"/>
+								<f:form.hidden name="id" value="{id}"/>
+								<input type="submit" name="delete" value="Delete" class="submit ui-button"/>
+							</f:form>
 						</td>
 					</tr>
 				</f:for>
 				</tbody>
 			</table>
+			<!--
 			<div class="dl mts">
 				<f:for each="{limits}" as="active" key="value">
 					<f:if condition="{active}" >
@@ -130,8 +118,8 @@
 					</f:if>
 				</f:for>
 			</div>
+			-->
 			<div class="clear mt  mb">&nbsp;</div>
 		</div>
-		</f:form>
 	</div>
 </f:section>

@@ -50,7 +50,7 @@ class RecursiveViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	public function render($root,$objects,$subs,$current) {
 		$output = "";
 		$subContent = "";
-		
+		print_r($root);
 		foreach ($root as $node) {
 			if(isset($node[$subs])){
 				$subContent .= $this->render($node[$subs],$objects,$subs,$current);
