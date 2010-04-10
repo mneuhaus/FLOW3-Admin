@@ -288,6 +288,7 @@ class Helper{
 		return $properties;
 	}
 	
+	
 	public function getFilters($properties,$objects,$active){
 		$filters = array();
 		foreach ($properties as $property => $tags) {

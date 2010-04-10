@@ -101,7 +101,19 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	public function listAction() {
 		$this->prepare("list");
 		
-		$objects = $this->getAdapter()->getObjects($this->being);
+		$objects = $this->getAdapter()->getBeings($this->being);
+		
+		foreach ($objects as $key => $object) {
+			foreach($object["properties"] as $property => $meta){
+				if(is_array($meta["value"])){
+					$values = array();
+					foreach ($meta["value"] as $value) {
+						$values[] = $value["name"];
+					}
+					$objects[$key]["properties"][$property]["value"] = implode(",",$values);
+				}
+			}
+		}
 		
 		$this->view->assign("objects",$objects);
 		
@@ -120,7 +132,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	 */
 	public function confirmAction() {
 		$this->prepare("confirm");
-		$object = $this->getAdapter()->getObject($this->being,$this->request->getArgument("id"));
+		$object = $this->getAdapter()->getBeing($this->being,$this->request->getArgument("id"));
 		$this->view->assign("object",$object);
 	}
 	
@@ -157,10 +169,10 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 #		}
 		
 		$being = $this->request->getArgument("being");
-		$attributeSets = $this->getAdapter()->getAttributeSets($being);
+		$attributeSets = $this->getAdapter()->getAttributeSets($being,$this->request->getArgument("id"));
 		
 		if($this->request->hasArgument("update")){
-			$errors = $this->getAdapter()->updateObject($being,$this->request->getArgument("item"));
+			$errors = $this->getAdapter()->updateObject($being,$this->id,$this->request->getArgument("item"));
 			if(empty($errors)){
 				$arguments = array("being"=>$this->being,"adapter" => $this->adapter);
 				$this->redirect('list',NULL,NULL,$arguments);
@@ -174,17 +186,22 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 				}
 			}
 		}
-		
-		$object = $this->getAdapter()->getObject($this->being,$this->request->getArgument("id"));
-		foreach ($attributeSets as $set => $attributes) {
-			foreach ($attributes as $key => $attribute) {
-				if(array_key_exists($attribute["name"],$object["properties"])){
-					$attributeSets[$set][$key]["value"] = $object["properties"][$attribute["name"]]["value"];
-				}
-			}
-		}
 		$this->view->assign("sets",$attributeSets);
 	}
+	
+	/**
+	 * view action
+	 *
+	 * @return void
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 */
+	public function viewAction() {
+		$this->prepare("view");
+		
+		$being = $this->getAdapter()->getBeing($this->being,$this->request->getArgument("id"));
+		$this->view->assign("being",$being);
+	}
+	
 	
 	private function prepare($action){
 		\F3\Dump\Dump::getInstance();
@@ -196,6 +213,9 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 		}
 		if($this->request->hasArgument("adapter"))
 			$GLOBALS["Admin"]["adapter"] = $this->adapter = $this->request->getArgument("adapter");
+		
+		if($this->request->hasArgument("id"))
+			$GLOBALS["Admin"]["id"] = $this->id = $this->request->getArgument("id");
 			
 		$this->setTemplate($action);
 	}
@@ -213,28 +233,33 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 				$variant = $tags[$action."view"][0];
 			}
 			$replacements["@package"] =$this->helper->getPackageByClassName($this->model);
-			$replacements["@model"] =$this->helper->getObjectNameByClassName($this->model);
+			$replacements["@model"] =$this->helper->getBeingNameByClassName($this->model);
 		}
 		
 		$template = $this->helper->getPathByPatternFallbacks("Views",$replacements);
 		$this->view->setTemplatePathAndFilename($template);
 		
+		$meta = array();
 		if($this->request->hasArgument("being")){
-			$this->view->assign("being",$this->request->getArgument("being"));
-			$this->view->assign("beingName",$this->getAdapter()->getName($this->request->getArgument("being")));
+			$meta["being"]["identifier"] = $this->request->getArgument("being");
+			$meta["being"]["name"] = $this->getAdapter()->getName($this->request->getArgument("being"));
 		}
 			
 		if($this->request->hasArgument("adapter")){
-			$this->view->assign("adapter",$this->request->getArgument("adapter"));
+			$meta["adapter"]["identifier"] = $this->request->getArgument("adapter");
 		}
 		
 		if($this->request->hasArgument("id")){
-			$this->view->assign("id",$this->request->getArgument("id"));
+			$meta["id"] = $this->request->getArgument("id");
 		}
+		
+		$this->view->assign("meta",$meta);
 	}
 	
 	private function getAdapter(){
-		return $this->objectManager->getObject($this->adapter);
+		$adapter =  $this->objectManager->getObject($this->adapter);
+		$adapter->init();
+		return $adapter;
 	}
 }
 

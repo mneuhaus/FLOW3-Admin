@@ -54,6 +54,21 @@ class Argument extends \F3\FLOW3\MVC\Controller\Argument{
 	 */
 	protected $objectFactory;
 	
+	/**
+	 * Injects the FLOW3 Property Mapper
+	 *
+	 * @param \F3\FLOW3\Property\PropertyMapper $propertyMapper
+	 * @return void
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 */
+	public function replacePropertyMapper($propertyMapper) {
+		$this->propertyMapper = $propertyMapper;
+	}
+	
+	public function setTarget($target){
+		$this->target = $target;
+	}
+	
 	protected function transformValue($value) {
 		if ($value === NULL) {
 			return NULL;
@@ -61,10 +76,13 @@ class Argument extends \F3\FLOW3\MVC\Controller\Argument{
 		if (!class_exists($this->dataType)) {
 			return $value;
 		}
-		if(array_key_exists("__identity",$value)){
+		if(isset($this->target))
+			$transformedValue = $this->target;
+		else if(array_key_exists("__identity",$value))
 			$transformedValue = clone $this->persistenceManager->getObjectByIdentifier($value["__identity"]);
-		}else
+		else
 			$transformedValue = $this->objectFactory->create($this->dataType);
+			
 		if ($this->dataTypeClassSchema !== NULL) {
 				// The target object is an Entity or ValueObject.
 			if (is_string($value) && preg_match(self::PATTERN_MATCH_UUID, $value) === 1) {

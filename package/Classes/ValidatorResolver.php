@@ -55,12 +55,14 @@ class ValidatorResolver extends \F3\FLOW3\Validation\ValidatorResolver{
 
 			foreach ($this->reflectionService->getClassPropertyNames($targetClassName) as $classPropertyName) {
 				$classPropertyTagsValues = $this->reflectionService->getPropertyTagsValues($targetClassName, $classPropertyName);
-
-				$propertyTargetClassName = trim(implode('' , $classPropertyTagsValues['var']));
-				if (class_exists($propertyTargetClassName)) {
-					$subObjectValidator = $this->buildBaseValidatorConjunction($propertyTargetClassName);
-					if ($subObjectValidator !== NULL) {
-						$objectValidator->addPropertyValidator($classPropertyName, $subObjectValidator);
+				
+				if(array_key_exists("var",$classPropertyTagsValues)){
+					$propertyTargetClassName = trim(implode('' , $classPropertyTagsValues['var']));
+					if (class_exists($propertyTargetClassName)) {
+						$subObjectValidator = $this->buildBaseValidatorConjunction($propertyTargetClassName);
+						if ($subObjectValidator !== NULL) {
+							$objectValidator->addPropertyValidator($classPropertyName, $subObjectValidator);
+						}
 					}
 				}
 
@@ -78,15 +80,18 @@ class ValidatorResolver extends \F3\FLOW3\Validation\ValidatorResolver{
 					}
 				}
 			}
+			
 			if ($validatorCount > 0) return $objectValidator;
 		}
-
+		
 			// Custom validator for the class
 		$possibleValidatorClassName = str_replace('\\Model\\', '\\Validator\\', $targetClassName) . 'Validator';
 		$customValidator = $this->createValidator($possibleValidatorClassName);
 		if ($customValidator !== NULL) {
 			return $customValidator;
 		}
+		
+		return $objectValidator;
 	}
 }
 

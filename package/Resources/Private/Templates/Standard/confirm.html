@@ -5,12 +5,12 @@
 		<h3 class="ui-header">Are you sure?</h3>
 		<div class="mr ml">
 			<f:form method="post" action="delete" name="item">
-				<f:form.hidden name="adapter" id="adapter" value="{adapter}"/>
-				<f:form.hidden name="being" id="being" value="{being}"/>
-				<f:form.hidden name="id" value="{id}"/>
+				<f:form.hidden name="adapter" id="adapter" value="{meta.adapter.identifier}"/>
+				<f:form.hidden name="being" id="being" value="{meta.being.identifier}"/>
+				<f:form.hidden name="id" value="{meta.id}"/>
 				<ul class="ml mt">
 					<li>
-						<b>{beingName}</b>: {object.meta.name}
+						<b>{meta.being.name}</b>: {object.meta.name}
 						<ul>
 							<a:render value="{childs}" />
 						</ul>

@@ -30,13 +30,6 @@ namespace F3\Admin\ViewHelpers;
  */
 class RecursiveViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	/**
-	 * @var \F3\Admin\Utilities
-	 * @author Marc Neuhaus <apocalip@gmail.com>
-	 * @inject
-	 */
-	protected $utilities;
-	
-	/**
 	 * Iterates through elements of $each and renders child nodes
 	 *
 	 * @param object $root
@@ -50,7 +43,7 @@ class RecursiveViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	public function render($root,$objects,$subs,$current) {
 		$output = "";
 		$subContent = "";
-		print_r($root);
+		
 		foreach ($root as $node) {
 			if(isset($node[$subs])){
 				$subContent .= $this->render($node[$subs],$objects,$subs,$current);

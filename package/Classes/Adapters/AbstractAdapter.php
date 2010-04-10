@@ -37,116 +37,220 @@ abstract class AbstractAdapter implements AdapterInterface {
 	 */
 	protected $helper;
 	
-	protected $conf = array(
-		"F3\Admin\Domain\Model\Tag" => array(
-			array(
-				"label" => "Name",
-				"name" => "name",
-				"type" => "Textfield",
-				"validation" =>"required"
-			)
-		)
-	);
+	/**
+	 * @var \F3\FLOW3\Package\PackageManagerInterface
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 * @inject
+	 */
+	protected $packageManager;
 	
-	protected $objects = array(
-		"F3\Admin\Domain\Model\Tag" => array(
-			array("name"=>"Hello World"),
-			array("name"=>"sdfasd"),
-			array("name"=>"opdas8ioj"),
-			array("name"=>"oasd0ißü")
-		)
-	);
+	/**
+	 * @var \F3\FLOW3\Reflection\ReflectionService
+	 * @author Marc Neuhaus
+	 * @inject
+	 */
+	protected $reflection;
+	
+	/**
+	 * @var \F3\FLOW3\Object\ObjectManagerInterface
+	 * @api
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 * @inject
+	 */
+	protected $objectManager;
+	
+	public function transformToObject($being,$data,$target=null,$propertyMapper = null){
+#		$item = $this->convertArray($this->request->getArgument("item"),$being);
+		$data = $this->cleanUpItem($data);
+
+		$arg = $this->objectManager->get("F3\Admin\Argument","item",$being);
+		if($propertyMapper !== null)
+			$arg->replacePropertyMapper($propertyMapper);
+		if($target !== null)
+			$arg->setTarget($target);
+		$validator = $this->helper->getModelValidator($being);
+		if(is_object($validator))
+			$arg->setValidator($validator);
+		$arg->setValue($data);
+
+		$targetObject = $arg->getValue();
+
+		$validationErrors = $arg->getValidator()->getErrors();
+
+		$errors = array();
+		if(count($validationErrors)>0){
+			foreach ($validationErrors as $propertyError) {
+				$errors[$propertyError->getPropertyName()] = array();
+				foreach ($propertyError->getErrors() as $error) {
+					$errors[$propertyError->getPropertyName()][] = $error->getMessage();
+				}
+			}
+		}
+		
+		return array(
+			"errors" => $errors,
+			"object" => $targetObject
+		);
+	}
+	
+	public function cleanUpItem($item){
+		foreach ($item as $key => $value) {
+			if(is_array($value)){
+				$item[$key] = $this->cleanUpItem($value);
+			}
+			if(empty($item[$key]) && $item[$key] !== false){
+				unset($item[$key]);
+			}
+		}
+		return $item;
+	}
 	
 	public function getName($being){
 		$parts = explode("\\",$being);
 		return str_replace("_AOPProxy_Development","",end($parts));
 	}
-	
-	public function getGroups(){
-		$groups = array();
-		foreach ($this->conf as $key => $value) {
-			$groups["Abstract"][] = array(
-				"being" => $key,
-				"name" => ucfirst($value["name"]),
-			);
+
+	public function getSetting($raw,$default = null,$path = "Widgets.Mapping"){
+		$mappings = \F3\FLOW3\Reflection\ObjectAccess::getPropertyPath($this->settings,$path);
+
+		if(isset($mappings[$raw])){
+			return $mappings[$raw];
 		}
-		return $groups;
-	}
-	
-	public function getAttributeSets($being, $id = null){		
-		$attributes = array();
-		$fields = $this->conf[$being];
-		foreach ($fields as $key => $value) {
-			$attributes["General"][] = array(
-				"label" 	=> $value["name"],
-				"name" 	=> $key,
-				"error" 	=> "",
-				"widget" 	=> $value["type"]
-			);
-		}
-		return $attributes;
-	}
-	
-	public function createObject($being, $data){
-		$fields = $this->conf[$being];
-		$errors = array();
-		foreach ($fields as $conf) {
-			if(array_key_exists("validation",$conf)){
-				switch ($conf["validation"]) {
-					case 'required':
-							if(empty($data[$conf["name"]]))
-								$errors[$conf["name"]][] = "Field is required!";
-						break;
-					
-					default:
-						break;
-				}
+
+		foreach ($mappings as $pattern => $widget) {
+			if(preg_match("/".$pattern."/",$raw) > 0){
+				return $widget;
 			}
 		}
-		
-		return $errors;
+
+		if($default !== null)
+			return $default;
+
+		return $raw;
+    }
+
+	public function convertValues($values,$properties){
+		foreach ($values as $property => $value) {
+			$values[$property] = $this->convertValue($value,$properties[$property]["var"][0],"storage");
+		}
+		return $values;
 	}
-	
-	public function getObjects($being){
-		$objects = array();
-		foreach ($this->objects[$being] as $id => $object) {
-			foreach ($this->conf[$being] as $property) {
-				$property["value"] = $object[$property["name"]];
-				$objects[$id][] = $property;
+
+	public function convertValue($value,$type,$target="presentation"){
+		$widgetType = $this->getSetting($type,"TextField");
+		
+		if($target == "presentation"){
+			switch ($type) {
+				case 'string':
+					return strval($value);
+				case 'integer':
+					return intval($value);
+				case 'float':
+					return floatval($value);
+				case 'boolean':
+					return $value ? "true" : "false";
+
+				default:
+					$callback = $this->getCallback($this->getSetting($type,null,"Conversions.Presentation"));
+					if(!empty($callback))
+						return call_user_func($callback,$value);
+#					echo "Type:".$type."<br />";
+					return $value;
+					break;
+			}
+		}else{
+			switch ($type) {
+				case 'string':
+					return strval($value);
+				case 'integer':
+					return intval($value);
+				case 'float':
+					return floatval($value);
+				case 'boolean':
+					return $value == "true" ? true : false;
+
+				default:
+					$callback = $this->getCallback($this->getSetting($type,null,"Conversions.Storage"));
+					if(!empty($callback))
+						return call_user_func($callback,$value);
+#					echo "Type:".$type."<br />";
+					return $value;
+					break;
 			}
 		}
-		
-		return $objects;
 	}
-	
-	public function getObject($being,$id){
-		$objects = $this->getObjects($being);
-		$object = $objects[$id];
-		return $object;
-	}
-	
-	public function updateObject($being, $data){
-		$fields = $this->conf[$being];
-		$errors = array();
-		foreach ($fields as $conf) {
-			if(array_key_exists("validation",$conf)){
-				switch ($conf["validation"]) {
-					case 'required':
-							if(empty($data[$conf["name"]]))
-								$errors[$conf["name"]][] = "Field is required!";
-						break;
-					
-					default:
-						break;
-				}
+
+	public function getCallback($raw){
+		$callback = null;
+
+		if(function_exists($raw)){
+			$callback = $raw;
+		}elseif(stristr($raw,"::")){
+			$callback = $raw;
+		}elseif(stristr($raw,"->")){
+			$parts = explode("->",$raw);
+
+			if($parts[0] == __CLASS__ || $parts[0] == "self" || $parts[0] == "this"){
+				$callback = array(
+					$this,
+					$parts[1]
+				);
+			}elseif(class_exists($parts[0])){
+				$callback = array(
+					$this->objectManager->getObject($parts[0]),
+					$parts[1]
+				);
 			}
 		}
-		
-		return $errors;
+
+		return $callback;
 	}
 	
-	public function deleteObject($being,$id){
-		unset($this->objects[$id]);
+	
+	## Conversion Functions
+	public function dateTimeToString($datetime){		
+		if(is_object($datetime)){
+			$string = date("l, F d, Y h:m:s A",$datetime->getTimestamp());
+			return $string;
+		}
+	}
+	
+	public function stringToDateTime($string){
+		$datetime = new \DateTime($string);
+		return $datetime;
+	}
+	
+	public function identifierToModel($identifier){
+		if(!empty($identifier)){
+			return $this->persistenceManager->getObjectByIdentifier($identifier);
+		}
+	}
+	
+	public function modelToIdentifier($model){
+		if(is_object($model)){
+			return array(array(
+				"id" => $this->persistenceManager->getIdentifierByObject($model),
+				"name" => $model->__toString()
+			));
+		}
+	}
+	
+	public function identifiersToSplObjectStorage($identifiers){
+		$spl = new \SplObjectStorage();
+		foreach ($identifiers as $identifier) {
+			$spl->attach($this->identifierToModel($identifier));
+		}
+		return $spl;
+	}
+	
+	public function splObjectStorageToIdentifiers($spl){
+		$identifiers = array();
+		if(count($spl)>0){
+			foreach ($spl as $model) {
+				$identifiers[] = current($this->modelToIdentifier($model));
+			}
+		}
+		return $identifiers;
 	}
 }
 

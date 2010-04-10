@@ -2,7 +2,7 @@
 {namespace a=F3\Admin\ViewHelpers}
 <f:section name="content">
 	<div class="fluid ui-container">
-		<h3 class="ui-header mb">{beingName}</h3>
+		<h3 class="ui-header mb">{meta.being.name}</h3>
 		
 		<div class="fluid mr ml mbs">
 		<!--
@@ -16,9 +16,9 @@
 		-->
 			<div class="dr ml mb1">
 				<f:form method="post" action="create" name="create">
-					<f:form.hidden name="adapter" id="adapter" value="{adapter}"/>
-					<f:form.hidden name="being" id="being" value="{being}"/>
-					<input type="submit" name="new" value="Add {beingName}" class="submit ui-button"/>
+					<f:form.hidden name="adapter" id="adapter" value="{meta.adapter.identifier}"/>
+					<f:form.hidden name="being" id="being" value="{meta.being.identifier}"/>
+					<input type="submit" name="new" value="Add {meta.being.name}" class="submit ui-button"/>
 				</f:form>
 			</div>
 			<!--
@@ -51,41 +51,49 @@
 					<!-- <th class="ui-small"></th> -->
 						<a:for each="{objects}" as="object" key="id" loop="loop">
 							<f:if condition="{loop.first}">
-								<f:for each="{object}" as="value" key="property">
+								<f:for each="{object.properties}" as="value" key="property">
 									<th>{value.label}</th>
 								</f:for>
 							</f:if>
 						</a:for>
 						<th></th>
 						<th></th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>
-				<f:for each="{objects}" as="object" key="id">
+				<f:for each="{objects}" as="object">
 					<f:cycle values="{0: 'odd', 1: 'even'}" as="zebraClass">
 						<tr class="ui-{zebraClass} ui-row">
 					</f:cycle>
 						<!-- <td class="ui-small">
-							<a:identifierInput object="{object}" type="checkbox" name="bulk" value="1"/>
 						</td> -->
-						<f:for each="{object}" as="value" key="property">
+						<f:for each="{object.properties}" as="value" key="property">
 							<td>
 								{value.value}
 							</td>
 						</f:for>
 						<td>
+							<f:form method="post" action="view" name="view">
+								<f:form.hidden name="adapter" id="adapter" value="{meta.adapter.identifier}"/>
+								<f:form.hidden name="being" id="being" value="{meta.being.identifier}"/>
+								<f:form.hidden name="id" value="{object.meta.id}"/>
+								<input type="submit" name="view" value="View" class="submit ui-button"/>
+							</f:form>
+						</td>
+						<td>
 							<f:form method="post" action="update" name="delete">
-								<f:form.hidden name="adapter" id="adapter" value="{adapter}"/>
-								<f:form.hidden name="being" id="being" value="{being}"/>
-								<f:form.hidden name="id" value="{id}"/>
+								<f:form.hidden name="adapter" id="adapter" value="{meta.adapter.identifier}"/>
+								<f:form.hidden name="being" id="being" value="{meta.being.identifier}"/>
+								<f:form.hidden name="id" value="{object.meta.id}"/>
 								<input type="submit" name="edit" value="Edit" class="submit ui-button"/>
 							</f:form>
 						</td>
 						<td>
 							<f:form method="post" action="delete" name="delete">
-								<f:form.hidden name="adapter" value="{adapter}"/>
-								<f:form.hidden name="being" value="{being}"/>
-								<f:form.hidden name="id" value="{id}"/>
+								<f:form.hidden name="adapter" id="adapter" value="{meta.adapter.identifier}"/>
+								<f:form.hidden name="being" id="being" value="{meta.being.identifier}"/>
+								<f:form.hidden name="id" value="{object.meta.id}"/>
 								<input type="submit" name="delete" value="Delete" class="submit ui-button"/>
 							</f:form>
 						</td>

@@ -5,9 +5,9 @@
 		<h3 class="ui-header">Edit {beingName}</h3>
 		<div class="mr ml">
 			<f:form method="post" action="update" name="item" object="{object}">
-				<f:form.textfield name="adapter" id="adapter" value="{adapter}"/>
-				<f:form.textfield name="being" id="being" value="{being}"/>
-				<f:form.textfield name="item[__identity]" id="id" value="{id}"/>
+				<f:form.hidden name="adapter" id="adapter" value="{meta.adapter.identifier}"/>
+				<f:form.hidden name="being" id="being" value="{meta.being.identifier}"/>
+				<f:form.hidden name="id" value="{meta.id}"/>
 				<f:for each="{sets}" as="properties" key="set">
 					<fieldset class="pl">
 					<legend>{set}</legend>
@@ -15,7 +15,7 @@
 						<div class="fluid mbs pl pt">
 							<label class="dl10 pl">{property.label}</label>
 							<div class="fluid ml10 psl">
-								<a:render partial="{property.widget}" fallbacks="Widgets" partialVars="{property:property}"/> 
+								<a:render partial="{property.type}" fallbacks="Widgets" partialVars="{property:property}"/> 
 								<f:if condition="{property.error}">
 									<div class="ui-error-text">
 										<f:for each="{property.error}" as="error">
@@ -30,7 +30,7 @@
 										<div class="fluid mbs pl pt">
 											<label class="dl10 pl">{inlineProperty.label}</label>
 											<div class="fluid ml10 psl">
-												<a:render partial="{inlineProperty.widget}" fallbacks="Widgets"/> 
+												<a:render partial="{inlineProperty.type}" fallbacks="Widgets"/> 
 												<f:if condition="{inlineProperty.error}">
 													<div class="ui-error-text">
 														<a:render value="{inlineProperty.error}" />

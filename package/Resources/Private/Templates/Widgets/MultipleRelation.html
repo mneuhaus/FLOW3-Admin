@@ -1,12 +1,12 @@
 {namespace a=F3\Admin\ViewHelpers}
-<select name="{objectname}[{name}][]" multiple="true" class="{class}">
-    <f:for each="{options}" as="option">
+<select name="item[{property.name}][]" id="item-{property.name}" multiple="true">
+    <f:for each="{property.options}" as="option">
         <f:if condition="{option.selected}">
             <f:then>
-                <option value="{option.value}" selected="selected">{option.name}</option>
+                <option value="{option.id}" selected="selected">{option.name}</option>
             </f:then>
             <f:else>
-                <option value="{option.value}" >{option.name}</option>
+                <option value="{option.id}" >{option.name}</option>
             </f:else>
         </f:if>
     </f:for>

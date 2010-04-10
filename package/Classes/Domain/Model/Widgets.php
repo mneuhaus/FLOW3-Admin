@@ -83,34 +83,34 @@ class Widgets extends \F3\Admin\Domain\Model{
 	 * @var string
 	 * @widget textarea
 	 */
-	protected $textarea;
+#	protected $textarea;
 	
 	/**
 	 * @var string
 	 * @widget textarea
 	 * @class f-autoexpand
 	 */
-	protected $autoexpand;
+#	protected $autoexpand;
 	
 	/**
 	 * @var string
 	 * @widget textarea
 	 * @class f-fullrte
 	 */
-	protected $fullrte;
+#	protected $fullrte;
 	
 	/**
 	 * @var string
 	 * @widget textarea
 	 * @class f-markdown
 	 */
-	protected $markdown;
+#	protected $markdown;
 	
 	/**
 	 * @var \F3\Admin\Domain\Model\Widgets
 	 * @inline
 	 */
-	protected $widget;
+#	protected $widget;
 }
 
 ?>
