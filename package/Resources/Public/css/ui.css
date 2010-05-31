@@ -1,39 +1,66 @@
 .ui-container{
-	background:!container;
-	border:1px solid !border;
-	+box-shadow(3px, 5px, #CCC, 0px);
+	background:#fff;
+    border:1px solid #C0C0C0;
+    border-top:0;
+    -moz-box-shadow:#CCC 0px 3px 5px;
+    -webkit-box-shadow:#CCC 0px 3px 5px;
+    box-shadow:#CCC 0px 3px 5px;
+	margin:1em;
 }
 
 .ui-header{
-	background:!header;
-	border-bottom:1px solid !border;
-	padding:!smallspacing !spacing;
-	color:!header-color;
+	background:#EFF5F8;
+	border-bottom:1px solid #CCC;
+	border-top:1px solid #CCC;
+	padding:0.5em 20px;
 	text-shadow: white 0px 1px;
 }
 
+.ui-button{
+	border:1px solid #CCC;
+	font-weight:bold;
+	padding:1px 4px;
+	text-align:center;
+	vertical-align:middle;
+	width:auto;
+	margin:0 5px;
+}
+a.ui-button{
+	height:16px;
+	line-height:16px;
+	font-size:79%;
+	padding:1px 6px;
+}
+
+.ui-button:hover{
+	border:1px solid #CCC;
+	text-decoration:none;
+}
+
+/*
+
 .ui-section{
 	background:!section;
-	border:1px solid !border;
-	padding:!smallspacing;
+	border:1px solid #CCC;
+	padding:0.5em;
 	margin-bottom:0px;
 	color:!section-color;
 }
 
 .ui-subsection{
-	background:!subsection;
-	padding:!smallspacing !middlespacing;
+	background:#E7E7E7;
+	padding:0.5em 0.8em;
 	margin-bottom:0px;
-	color:!subsection-color;
+	color:#E7E7E7-color;
 }
 
 .ui-box{
 	background:!box;
-	border:1px solid !border;
+	border:1px solid #CCC;
 }
 
 .ui-row{
-	border-bottom:1px solid !border-secondary;
+	border-bottom:1px solid #CCC-secondary;
 }
 
 .ui-row:hover,
@@ -64,7 +91,7 @@ tr.active{ background:!alternate-hover; }
 .ui-button{
 	background:!primary-background;
 	color:!primary-color;
-	border:1px solid !border;
+	border:1px solid #CCC;
 	+border-radius(!button-radius);
 	font-weight:bold;
 	padding:1px 4px;
@@ -74,15 +101,13 @@ tr.active{ background:!alternate-hover; }
 }
 a.ui-button{
 	height:16px;
-/*	display:block;*/
 	line-height:16px;
 	font-size:79%;
-/*	float:left;*/
 	padding:1px 6px;
 }
 
 .ui-button:hover{
-	border:1px solid !border-primary;
+	border:1px solid #CCC-primary;
 	text-decoration:none;
 }
 
@@ -92,7 +117,7 @@ a.ui-button{
 }
 
 .ui-secondary:hover{
-	border:1px solid !border-hover;
+	border:1px solid #CCC-hover;
 }
 
 .ui-dangerous{
@@ -103,7 +128,7 @@ a.ui-button{
 .ui-small{
 	width:10px;
 	overflow:visible;
-	padding:!smallspacing;
+	padding:0.5em;
 }
 
 .ui-important{
@@ -126,7 +151,7 @@ a.ui-button{
 }
 
 .ui-slider{
-	background:!border;
+	background:#CCC;
 	height:2px;
 	width:300px;
 	float:left;
@@ -166,7 +191,7 @@ a.ui-button{
 
 .ui-multiselect{
 	width:460px;
-	border:1px solid !border;
+	border:1px solid #CCC;
 	.selected,
 	.available{
 		float:left;
@@ -193,7 +218,7 @@ a.ui-button{
 }
 
 .as-selections{
-	border:1px solid !border;
+	border:1px solid #CCC;
 }
 
 ul.as-selections li.as-selection-item {

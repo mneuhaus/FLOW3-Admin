@@ -201,11 +201,15 @@ class Model {
 			}
 			
 			if(in_array("identity",array_keys($tags))){
-				$identity[] = \F3\FLOW3\Reflection\ObjectAccess::getProperty($this,$property);
+				$value = \F3\FLOW3\Reflection\ObjectAccess::getProperty($this,$property);
+				if(!is_object($value))
+					$identity[] = $value;
 			}
 		
 			if(in_array($property,$usualSuspects) && $goodGuess === null){
-					$goodGuess = \F3\FLOW3\Reflection\ObjectAccess::getProperty($this,$property);
+				$value = \F3\FLOW3\Reflection\ObjectAccess::getProperty($this,$property);
+				if(!is_object($value))
+					$goodGuess[] = $value;
 			}
 		}
 		

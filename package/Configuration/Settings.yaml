@@ -3,7 +3,10 @@
 #                                                                        #
 
 Admin:
-  Models: []
+  Models: 
+    - \F3\Blog\Domain\Model\Blog
+    - \F3\Blog\Domain\Model\Post
+    - \F3\Blog\Domain\Model\Category
   Defaults:
     newinlines: 3
   Adapters:
@@ -25,19 +28,20 @@ PHPCR:
   Widgets:
     Mapping:
       string:   Textfield
+      readonly:   TextfieldReadonly
       integer:  Spinner
       float:    Textfield
       boolean:  Boolean
-#      \F3\FLOW3\Resource\Resource: Upload
+      \F3\FLOW3\Resource\Resource: Upload
 #      \DateTime: DateTime
-      ^\\F3\\[A-Za-z]+\\Domain\\Model\\[A-Za-z]+$: SingleRelation
-      ^\\\SplObjectStorage\<\\*F3\\[A-Za-z]+\\Domain\\Model\\[A-za-z]+>$: MultipleRelation
+      ^\\*F3\\[A-Za-z]+\\Domain\\Model\\[A-Za-z]+$: SingleRelation
+      ^\\*\SplObjectStorage\<\\*F3\\[A-Za-z]+\\Domain\\Model\\[A-za-z]+>$: MultipleRelation
   Conversions:
     Storage:
       \DateTime: this->stringToDateTime
-#      ^\\F3\\[A-Za-z]+\\Domain\\Model\\[A-Za-z]+$: this->identifierToModel
+      ^\\F3\\[A-Za-z]+\\Domain\\Model\\[A-Za-z]+$: this->identifierToModel
  #     ^\\\SplObjectStorage\<\\*F3\\[A-Za-z]+\\Domain\\Model\\[A-za-z]+>$: this->identifiersToSplObjectStorage
     Presentation:
       \DateTime: this->dateTimeToString
-      ^\\F3\\[A-Za-z]+\\Domain\\Model\\[A-Za-z]+$: this->modelToIdentifier
-      ^\\\SplObjectStorage\<\\*F3\\[A-Za-z]+\\Domain\\Model\\[A-za-z]+>$: this->splObjectStorageToIdentifiers
+      ^\\*F3\\[A-Za-z]+\\Domain\\Model\\[A-Za-z]+$: this->modelToIdentifier
+      ^\\*\SplObjectStorage\<\\*F3\\[A-Za-z]+\\Domain\\Model\\[A-za-z]+>$: this->splObjectStorageToIdentifiers

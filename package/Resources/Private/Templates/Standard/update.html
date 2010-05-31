@@ -1,5 +1,8 @@
 <f:layout name="base" />
 {namespace a=F3\Admin\ViewHelpers}
+<f:section name="actions">
+	
+</f:section>
 <f:section name="content">
 	<div class="ui-container">
 		<h3 class="ui-header">Edit {beingName}</h3>
@@ -12,12 +15,12 @@
 					<fieldset class="pl">
 					<legend>{set}</legend>
 						<f:for each="{properties}" as="property">
-						<div class="fluid mbs pl pt">
-							<label class="dl10 pl">{property.label}</label>
+						<div class="contain f-row">
+							<label class="dl10 pl">{property.label}: </label>
 							<div class="fluid ml10 psl">
 								<a:render partial="{property.type}" fallbacks="Widgets" partialVars="{property:property}"/> 
 								<f:if condition="{property.error}">
-									<div class="ui-error-text">
+									<div class="ui-error-text f-info">
 										<f:for each="{property.error}" as="error">
 											<a:render value="{error}" /><br />
 										</f:for>
@@ -32,7 +35,7 @@
 											<div class="fluid ml10 psl">
 												<a:render partial="{inlineProperty.type}" fallbacks="Widgets"/> 
 												<f:if condition="{inlineProperty.error}">
-													<div class="ui-error-text">
+													<div class="ui-error-text f-info">
 														<a:render value="{inlineProperty.error}" />
 													</div>
 												</f:if>

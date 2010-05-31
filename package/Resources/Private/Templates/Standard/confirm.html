@@ -1,5 +1,8 @@
 <f:layout name="base" />
 {namespace a=F3\Admin\ViewHelpers}
+<f:section name="actions">
+	
+</f:section>
 <f:section name="content">
 	<div class="ui-container">
 		<h3 class="ui-header">Are you sure?</h3>
@@ -17,10 +20,10 @@
 					</li>
 				</ul>			
 				<div class="fluid mls">	
-					<input type="submit" name="confirm" value="Confirm" class="ui-button ui-dangerous" />
-					<f:link.action action="list" arguments="{adapter:adapter,being:being}" class="ui-button ui-secondary dr">
+					<f:link.action action="list" arguments="{adapter:adapter,being:being}" class="ui-button ui-secondary dl">
 						Cancel
 					</f:link.action>
+					<input type="submit" name="confirm" value="Confirm" class="ui-button ui-dangerous dr" />
 				</div>
 			</f:form>
 			<div class="clear mb">&nbsp;</div>

@@ -39,6 +39,39 @@ class PHPCRAdapter extends AbstractAdapter {
 	
 	public function init(){
 		$this->settings = $this->helper->getSettings("PHPCR");
+		if(array_key_exists("being",$GLOBALS["Admin"])){
+			$this->being = $GLOBALS["Admin"]["being"];
+			$this->session = $GLOBALS["Admin"]["session"];
+			
+			$this->repository = str_replace("Domain\Model","Domain\Repository",$this->being) . "Repository";
+			$this->repositoryObject = $this->objectManager->getObject($this->repository);
+			$this->query = $this->repositoryObject->createQuery();
+			
+			$this->classTags = $this->reflection->getClassTagsValues($this->being);
+			
+			if(array_key_exists("sort",$this->classTags) || $this->session->hasKey($this->being.":limit")){
+				if(array_key_exists("sort",$this->classTags))
+					$parts = explode(" ",$this->classTags["sort"][0]);
+					
+				if($this->session->hasKey($this->being.":limit"))
+					$parts = explode(" ",$this->session->getData($this->being.":limit"));
+					
+				$order = $parts[1] == "ASC" ? \F3\FLOW3\Persistence\QueryInterface::ORDER_ASCENDING : \F3\FLOW3\Persistence\QueryInterface::ORDER_DESCENDING;
+				$field = $parts[0];
+				$this->query->setOrderings(array($field => $order));
+			}
+			
+			if(array_key_exists("limit",$this->classTags)){
+				$this->query->setLimit(intval($this->classTags["limit"][0]));
+			}
+			
+			#if(array_key_exists("filter",$this->classTags)){
+				#$parts = explode(" ",$this->classTags["sort"][0]);
+				#$order = $parts[1] == "ASC" ? \F3\FLOW3\Persistence\QueryInterface::ORDER_ASCENDING : \F3\FLOW3\Persistence\QueryInterface::ORDER_DESCENDING;
+				#$field = $parts[0];
+				#$this->query->setOrderings(array($field => $order));
+			#}
+		}
 	}
 	
 	public function getGroups(){
@@ -69,6 +102,11 @@ class PHPCRAdapter extends AbstractAdapter {
 		$being = ltrim($being,"\\");
 		$objectArray = $this->getBeing($being,$id);
 		
+		if($id == null)
+			$object = $this->objectManager->create($being);
+		else
+			$object = $this->persistenceManager->getObjectByIdentifier($id);
+		
 		$properties = $this->helper->getModelProperties($being);
 		$tags = $this->reflection->getClassTagsValues($being);
 		
@@ -76,7 +114,11 @@ class PHPCRAdapter extends AbstractAdapter {
 		$attributes = array();
 		foreach ($properties as $attribute => $conf) {
 			if(!isset($properties[$attribute])) continue;
-			$type = $this->getSetting($properties[$attribute]["var"][0],"TextField");
+			if(array_key_exists("inject",$conf)) continue;
+			if(array_key_exists("ignore",$conf)) continue;
+			
+			$type = array_key_exists("widget",$properties[$attribute]) ? $properties[$attribute]["widget"][0] : $this->getSetting($properties[$attribute]["var"][0],"TextField");
+			
 			$value = $objectArray["properties"][$attribute]["value"];
 			
 			$options = array();
@@ -87,7 +129,21 @@ class PHPCRAdapter extends AbstractAdapter {
 				}elseif($type == "SingleRelation"){
 					$repository = $properties[$attribute]["var"][0];
 				}
-				$options = $this->getOptions($repository,$value);
+				if(class_exists("\\".$this->helper->getModelRepository($repository))){
+					$repository = $this->objectManager->getObject($this->helper->getModelRepository($repository));
+					/*
+					print_r($properties[$attribute]);
+					if(array_key_exists("filter",$properties[$attribute])){
+						$this->helper->stringToConstraint($properties[$attribute]["filter"][0],$being);
+						#$query = $repository->createQuery();
+						#$query->equals
+					}
+					*/
+					$objects = $repository->findAll();
+				}else{
+					$objects = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$attribute);
+				}
+				$options = $this->getOptions($objects,$value);
 			}
 			
 			$inline = array();
@@ -104,7 +160,7 @@ class PHPCRAdapter extends AbstractAdapter {
 				"type"	 	=> $type,
 				"inline"	=> $inline,
 				"options" 	=> $options,
-				"value" 	=> $value
+				"value" 	=> $this->convertValue($value,$type)
 			);
 		}
 		
@@ -129,27 +185,26 @@ class PHPCRAdapter extends AbstractAdapter {
 	}
 	
 	public function getBeings($being){
-		$repository = str_replace("Domain\Model","Domain\Repository",$being) . "Repository";
-		$repositoryObject = $this->objectManager->getObject($repository);
-		
 		$properties = $this->helper->getModelProperties($being);
 		
-		$query = $repositoryObject->createQuery();
-		$rawObjects = $query->execute();
+		$rawObjects = $this->query->execute();
 		
 		$objects = array();
 		foreach ($rawObjects as $object) {
 			$tmp = array();
 			foreach ($properties as $property => $meta) {
+				if(array_key_exists("inject",$meta)) continue;
+				if(array_key_exists("ignore",$meta)) continue;
+				
 				$tmp["meta"] = array(
 					"id" => $this->persistenceManager->getIdentifierByObject($object),
-					"name" => $object->__toString()
+					"name" => $this->toString($object)
 				);
 				$tmp["properties"][$property] = array(
 					"label" => ucfirst($property),
 					"name"	=> $property,
 					"type"	=> $this->getSetting($meta["var"][0],"TextField"),
-					"value" => $this->convertValue(\F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property),$meta["var"][0])
+					"value" => $this->convertValue(\F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property),$meta["var"][0],"presentation",$meta)
 				);
 			}
 			$objects[] = $tmp;
@@ -167,9 +222,11 @@ class PHPCRAdapter extends AbstractAdapter {
 		
 		$array = array();
 		foreach ($properties as $property => $meta) {
+			if(array_key_exists("inject",$meta)) continue;
+			
 			$array["meta"] = array(
 				"id" => $id,
-				"name" => $object->__toString()
+				"name" => $this->toString($object)
 			);
 			$array["properties"][$property] = array(
 				"label" => ucfirst($property),
@@ -177,6 +234,7 @@ class PHPCRAdapter extends AbstractAdapter {
 				"type"	=> $this->getSetting($meta["var"][0],"TextField"),
 				"value" => $this->convertValue(\F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property),$meta["var"][0])
 			);
+			$array["object"] = $object;
 		}
 		
 		return $array;
@@ -200,6 +258,7 @@ class PHPCRAdapter extends AbstractAdapter {
 		$result = $this->transformToObject($being,$data);
 		$repository = $this->objectManager->getObject(str_replace("Domain\Model","Domain\Repository",$being) . "Repository");
 		$repository->add($result["object"]);
+		$this->persistenceManager->persistAll();
 		return $result["errors"];
 	}
 	
@@ -210,12 +269,15 @@ class PHPCRAdapter extends AbstractAdapter {
 		$result = $this->transformToObject($being,$data);
 		$repository = $this->objectManager->getObject(str_replace("Domain\Model","Domain\Repository",$being) . "Repository");
 		$repository->update($result["object"]);
+		$this->persistenceManager->persistAll();
 		return $result["errors"];
 	}
 	
 	## Helper Functions from here on
 	
-	public function getOptions($repository,$values = array()){
+	public function getOptions($objects,$values = array()){
+		if(empty($objects)) return array();
+		
 		$selected = array();
 		if(count($values)>0){
 			foreach ($values as $value) {
@@ -224,13 +286,11 @@ class PHPCRAdapter extends AbstractAdapter {
 		}
 		
 		$options = array();
-		$repository = $this->objectManager->getObject($this->helper->getModelRepository($repository));
-		$objects = $repository->findAll();
 		foreach ($objects as $object) {
 			$uuid = $this->persistenceManager->getIdentifierByObject($object);
 			$options[] = array(
 				"id" => $uuid,
-				"name" => $object->__toString(),
+				"name" => $this->toString($object),
 				"selected" => in_array($uuid,$selected)
 			);
 		}

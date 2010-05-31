@@ -59,6 +59,15 @@ abstract class AbstractAdapter implements AdapterInterface {
 	 */
 	protected $objectManager;
 	
+	/**
+	 * @var \F3\FLOW3\Reflection\ReflectionService
+	 * @api
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 * @inject
+	 */
+	protected $reflectionService;
+	
+	
 	public function transformToObject($being,$data,$target=null,$propertyMapper = null){
 #		$item = $this->convertArray($this->request->getArgument("item"),$being);
 		$data = $this->cleanUpItem($data);
@@ -98,6 +107,9 @@ abstract class AbstractAdapter implements AdapterInterface {
 			if(is_array($value)){
 				$item[$key] = $this->cleanUpItem($value);
 			}
+			if(is_object($value) && !empty($value->FLOW3_Persistence_Entity_UUID)){
+				$item[$key] = $value->FLOW3_Persistence_Entity_UUID;
+			}
 			if(empty($item[$key]) && $item[$key] !== false){
 				unset($item[$key]);
 			}
@@ -131,14 +143,20 @@ abstract class AbstractAdapter implements AdapterInterface {
 
 	public function convertValues($values,$properties){
 		foreach ($values as $property => $value) {
-			$values[$property] = $this->convertValue($value,$properties[$property]["var"][0],"storage");
+			$values[$property] = $this->convertValue($value,$properties[$property]["var"][0],"storage",$properties[$property]);
 		}
 		return $values;
 	}
 
-	public function convertValue($value,$type,$target="presentation"){
+	public function convertValue($value,$type,$target="presentation",$conf = array()){
 		$widgetType = $this->getSetting($type,"TextField");
-		
+		#echo "<br />".$type." (".$target.")";
+		#\F3\dump(array(
+		#	"value" => $value,
+		#	"type" => $type,
+		#	"target" => $target,
+		#	"conf" => $conf
+		#));
 		if($target == "presentation"){
 			switch ($type) {
 				case 'string':
@@ -151,9 +169,10 @@ abstract class AbstractAdapter implements AdapterInterface {
 					return $value ? "true" : "false";
 
 				default:
-					$callback = $this->getCallback($this->getSetting($type,null,"Conversions.Presentation"));
+					$callback = $this->getCallback($this->getSetting($type,null,"Conversions.Presentation"),$conf);
+#					echo "[".$this->getSetting($type,null,"Conversions.Presentation")."]";
 					if(!empty($callback))
-						return call_user_func($callback,$value);
+						return call_user_func($callback,$value,$conf);
 #					echo "Type:".$type."<br />";
 					return $value;
 					break;
@@ -170,9 +189,9 @@ abstract class AbstractAdapter implements AdapterInterface {
 					return $value == "true" ? true : false;
 
 				default:
-					$callback = $this->getCallback($this->getSetting($type,null,"Conversions.Storage"));
+					$callback = $this->getCallback($this->getSetting($type,null,"Conversions.Storage"),$conf);
 					if(!empty($callback))
-						return call_user_func($callback,$value);
+						return call_user_func($callback,$value,$conf);
 #					echo "Type:".$type."<br />";
 					return $value;
 					break;
@@ -202,20 +221,74 @@ abstract class AbstractAdapter implements AdapterInterface {
 				);
 			}
 		}
-
+		
 		return $callback;
+	}
+	
+	public function toString($object){
+		if(is_callable(array($object,"__toString")))
+			return $object->__toString();
+			
+		$class = get_class($object);
+		$properties = $this->reflectionService->getClassPropertyNames($class);
+		$identity = array();
+		$title = array();
+		$goodGuess = null;
+		$usualSuspects = array("title","name");
+		foreach($properties as $property){
+			$tags = $this->reflectionService->getPropertyTagsValues($class,$property);
+			if(in_array("title",array_keys($tags))){
+				$title[] = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
+			}
+			
+			if(in_array("identity",array_keys($tags))){
+				$value = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
+				if(is_string($value) || is_integer($value))
+					$identity[] = $value;
+			}
+		
+			if(in_array($property,$usualSuspects) && $goodGuess === null){
+				$goodGuess = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
+			}
+		}
+		
+		if(count($title)>0)
+			return implode(", ",$title);
+		if(count($identity)>0)
+			return implode(", ",$identity);
+		if($goodGuess !== null)
+			return $goodGuess;
+	}
+	
+	public function getOptions($beings,$selected = array()){
+		if(is_string($beings)) $beings = $this->getBeings($beings);
+		if(empty($beings)) return array();
+		
+		$options = array();
+		foreach ($beings as $being) {
+			$options[] = array(
+				"id" => $being["meta"]["id"],
+				"name" => $being["meta"]["name"],
+				"selected" => in_array($being["meta"]["id"],$selected)
+			);
+		}
+		
+		return $options;
 	}
 	
 	
 	## Conversion Functions
-	public function dateTimeToString($datetime){		
+	public function dateTimeToString($datetime,$conf){
 		if(is_object($datetime)){
-			$string = date("l, F d, Y h:m:s A",$datetime->getTimestamp());
+			$format = array_key_exists("format",$conf) ? $conf["format"][0] : "H:i:s d.m.Y";
+			$string = date($format,$datetime->getTimestamp());
 			return $string;
 		}
 	}
 	
 	public function stringToDateTime($string){
+		if(is_object($string) && get_class($string) == "DateTime")
+			return $string;
 		$datetime = new \DateTime($string);
 		return $datetime;
 	}
@@ -230,7 +303,7 @@ abstract class AbstractAdapter implements AdapterInterface {
 		if(is_object($model)){
 			return array(array(
 				"id" => $this->persistenceManager->getIdentifierByObject($model),
-				"name" => $model->__toString()
+				"name" => $this->toString($model)
 			));
 		}
 	}

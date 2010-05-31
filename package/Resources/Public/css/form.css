@@ -1,104 +1,24 @@
-.container form{
-	width:100%;
-	
-	legend{
-		display:block;
-		margin-left:20px;
-		font-weight:bold;
-	}
-	
-	fieldset{
-		float:left;
-		clear:both;
-		width:100%;
-		background:none;
-		border-top:1px solid !border;
-		margin-bottom:10px;
-		padding:0.1em;
-		
-		div.ui-widget-header{
-			border-right:none;
-			border-left:none;
-			padding-left:5px;
-		}
-		
-		div.f-row{
-			background:none;
-			border-bottom:none;
-			border-right:none;
-			border-left:none;
+.container form{ width:100%; }
+	legend { display:block; margin-left:20px; font-weight:bold; }
+	fieldset { float:left; clear:both; width:100%; background:none; border:0; border-top:1px solid #bbb; margin-bottom:10px; padding:0.1em; }
+		div.ui-widget-header{ border-right:none; border-left:none; padding-left:5px; }
+		div.f-row{ background:none; border-bottom:none; border-right:none; border-left:none; margin-bottom:0.7em; }
+			label { width:24%; text-align:right; margin-right:1%; line-height:14px; }
+			label.f-inline{ width:auto; text-align:left; }
+			div.f-inline{ float:left; margin-left:5px; margin-top:2px; }
+			input{ padding:3px 3px 0; }
 			
-			label{
-				width:24%;
-				text-align:right;
-				margin-right:1%;
-				&.f-inline{
-					width:auto;
-					text-align:left;
-				}
-			}
-			
-			div.f-inline{
-				float:left;
-				margin-left:5px;
-				margin-top:2px;
-			}
-			
-			input{
-				padding:3px 3px 0;
-			}
-			
-			.f-group{
-				width:auto;
-				float:left;
-				width:80px;
-				label{
-					margin-top:2px;
-					margin-left:2px;
-				}
-				input{
-					margin-left:0;
-				}
-			}
-			
+			.f-group{ width:auto; float:left; width:80px; }
+				.f-group label{ margin-top:2px; margin-left:2px; }
+				.f-group input{ margin-left:0; }
 			input,
 			.as-selections,
 			select,
 			.ui-multiselect,
-			.f-slider-value{
-				float:left;
-			}
-		}
-	}
-	
-	span.ui-state-error{
-		height:19px;
-		float:left;
-		padding:2px 5px 0;
-		margin-left:10px;
-	}
-	
-	.f-slider-value{
-		margin-left:10px;
-		margin-top:2px;
-	}
-	
-	.f-float{
-		float:left;
-		width:75%;
-		position:relative;
-	}
-	
-	.f-footer{
-		width:100%;
-		float:left;
-		clear:both;
-	}
-	
-	.f-info{
-		font-weight:normal;
-		float:left;
-		clear:both;
-		margin-top:5px;
-	}
-}
+			.f-slider-value{ float:left; margin-top:3px; }
+	span.ui-state-error{ height:19px; float:left; padding:2px 5px 0; margin-left:10px; }
+	.f-slider-value{ margin-left:10px; margin-top:2px; }
+	.f-float{ float:left; width:75%; position:relative; }
+	.f-footer{ width:100%; float:left; clear:both; }
+	.f-info{ clear:both; display:block; margin-left:14px; }
+	.readonly { background:none;border:none; }

@@ -32,7 +32,7 @@ jQuery(document).ready(function(){
 	jQuery('.f-dotclear').markItUp(dotclearSettings);
 	jQuery('.f-texy').markItUp(texySettings);
 	
-	jQuery('#navigation a, .subnav a, a.ui-button').css("position","relative").hotnav();
+	jQuery('#navigation a, .subnav a, a.ui-button, .hotnav').css("position","relative").hotnav();
 	
 	jQuery("input[type='text']:first").focus();
 	

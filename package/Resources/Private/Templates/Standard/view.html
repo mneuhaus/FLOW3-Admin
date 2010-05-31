@@ -1,5 +1,8 @@
 <f:layout name="base" />
 {namespace a=F3\Admin\ViewHelpers}
+<f:section name="actions">
+	
+</f:section>
 <f:section name="content">
 	<div class="fluid ui-container">
 		<h3 class="ui-header mb">{meta.being.name}</h3>
@@ -16,7 +19,7 @@
 		<div class="mr ml">
 			<f:for each="{being.properties}" as="configuration" key="property">
 				<div class="fluid">
-					<b class="dl10">
+					<b class="dl15">
 						{a:f.cuf(value: property, funcs: "ucfirst")}: 
 					</b>
 					{configuration.value}

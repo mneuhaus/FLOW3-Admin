@@ -37,6 +37,13 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	protected $helper;
 	
 	/**
+	 * @var \F3\FLOW3\Session\PhpSession
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 * @inject
+	 */
+	protected $session;
+	
+	/**
 	 * @var \F3\FLOW3\Object\ObjectManagerInterface
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 * @inject
@@ -82,14 +89,6 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	 */
 	public function indexAction() {
 		$this->prepare("index");
-		
-		$groups = $this->helper->getGroups();
-		if($this->request->hasArgument("group")){
-			$group = $this->request->getArgument("group");
-			$groups = array($group => $groups[$group]);
-		}
-		
-		$this->view->assign('groups',$groups);
 	}
 	
 	/**
@@ -186,6 +185,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 				}
 			}
 		}
+		
 		$this->view->assign("sets",$attributeSets);
 	}
 	
@@ -207,6 +207,11 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 		\F3\Dump\Dump::getInstance();
 		$this->adapters = $this->helper->getAdapters();
 		$this->settings = $this->helper->getSettings();
+		$GLOBALS["Admin"]["session"] = $this->session;
+		$GLOBALS["objectManager"] = $this->objectManager;
+		
+		$GLOBALS["Admin"]["action"] = $action;
+		
 		if($this->request->hasArgument("being")){
 			$GLOBALS["Admin"]["being"] = $this->being = $this->request->getArgument("being");
 			$GLOBALS["Admin"]["group"] = $this->group = $this->helper->getGroupByBeing($this->being);
@@ -216,24 +221,43 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 		
 		if($this->request->hasArgument("id"))
 			$GLOBALS["Admin"]["id"] = $this->id = $this->request->getArgument("id");
+		
+		$groups = $this->helper->getGroups();
+		if(!empty($this->adapter)){
+			foreach($groups as $package => $group){
+				foreach($group["beings"] as $key => $being){
+					if($being["being"] == $this->being && $being["adapter"] == $this->adapter){
+						$groups[$package]["beings"][$key]["active"] = true;
+					}else{
+						$groups[$package]["beings"][$key]["active"] = false;
+					}
+				}
+			}
+		}
+		
+		$this->view->assign('groups',$groups);
 			
 		$this->setTemplate($action);
 	}
 	
 	public function setTemplate($action){
-		$variant = "default";
 		$replacements = array(
 			"@action" => $action,
-			"@variant" => $variant,
+			"@variant" => "default",
 			"@package" => "Admin",
 		);
-		if(class_exists($this->model)){
-			$tags = $this->reflectionService->getClassTagsValues($this->model);
-			if(in_array($action."view",array_keys($tags))){
-				$variant = $tags[$action."view"][0];
+		if(!empty($this->being)){
+			if(class_exists($this->being)){
+				$tags = $this->reflectionService->getClassTagsValues($this->being);
+				if(in_array($action."view",array_keys($tags))){
+					$variant = $tags[$action."view"][0];
+				}
+				$replacements["@package"] =$this->helper->getPackageByClassName($this->being);
+				$replacements["@model"] =$this->helper->getObjectNameByClassName($this->being);
+				if(array_key_exists("variant-".$action,$tags)){
+					$replacements["@model"] = current($tags["variant-".$action]);
+				}
 			}
-			$replacements["@package"] =$this->helper->getPackageByClassName($this->model);
-			$replacements["@model"] =$this->helper->getBeingNameByClassName($this->model);
 		}
 		
 		$template = $this->helper->getPathByPatternFallbacks("Views",$replacements);
@@ -258,7 +282,14 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	
 	private function getAdapter(){
 		$adapter =  $this->objectManager->getObject($this->adapter);
+		if(!empty($this->being) && class_exists($this->being)){
+			$tags = $this->reflectionService->getClassTagsValues($this->being);
+			if(array_key_exists("adapter",$tags) && class_exists("\\".$tags["adapter"][0])){
+				$adapter = $this->objectManager->getObject($tags["adapter"][0]);
+			}
+		}
 		$adapter->init();
+		
 		return $adapter;
 	}
 }

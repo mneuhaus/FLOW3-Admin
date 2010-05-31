@@ -29,6 +29,11 @@ namespace F3\Admin\Adapters;
  * @prototype
  */
 class DummyAdapter extends AbstractAdapter {
+	
+	public function init(){
+		
+	}
+	
 	public function getName($being){
 		return "Dummy Being";
 	}

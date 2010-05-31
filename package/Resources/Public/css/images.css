@@ -1,0 +1,3 @@
+.topbar{height:43px; background: url(../img/controls.png) 0 -3696px;}
+.sidebar .vnav li a:hover,
+.sidebar .vnav .active a{ background: url(../img/controls.png) 0 -4214px; color:white; }

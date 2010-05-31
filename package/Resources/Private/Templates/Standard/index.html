@@ -1,27 +1,8 @@
 <f:layout name="base" />
 
 {namespace a=F3\Admin\ViewHelpers}
+<f:section name="actions">
+	
+</f:section>
 <f:section name="content">
-	<table class="ui-widget subnav">
-		<a:for each="{groups}" as="beings" key="group">
-			<thead>
-			<tr class="ui-widget-header">
-				<th>{group}</th>
-			</tr>
-			</thead>
-			<tbody>
-			<a:for each="{beings}" as="being">
-				<f:cycle values="{0: 'odd', 1: 'even'}" as="zebraClass">
-					<tr class="ui-widget-content {zebraClass}">
-				</f:cycle>
-					<td>
-						<f:link.action action="list" controller="Standard" arguments="{being : being.being, adapter : being.adapter}">
-							{being.name}
-						</f:link.action>
-					</td>
-				</tr>
-			</a:for>
-			</tbody>	
-		</a:for>
-	</table>
 </f:section>

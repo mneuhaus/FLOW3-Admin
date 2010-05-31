@@ -133,7 +133,7 @@ class Helper{
 	 * @return $name String Type
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 **/
-    public function getWidgetType($raw){
+    public function getWidgetType($raw,$conf = array()){
 		$settings = $this->getSettings();
 		$mappings = $settings["Widgets"]["Mapping"];
 		
@@ -428,7 +428,7 @@ class Helper{
 				foreach ($adapters[$adapter]->getGroups() as $group => $beings) {
 					foreach ($beings as $being => $conf) {
 						$conf["adapter"] = $adapter;
-						$groups[$group][$being] = $conf;
+						$groups[$group]["beings"][$being] = $conf;
 					}
 				}
 			}
@@ -449,6 +449,28 @@ class Helper{
 				}
 			}
 		}
+	}
+	
+	public function stringToConstraint($string,$being){
+		/*
+		$repository = $this->objectManager->getObject($this->getModelRepository("\\".$being));
+		$query = $repository->createQuery();
+		#$query->equals()
+		preg_match_all("/([&|]*)([a-zA-Z0-9 ]+)([!=><]+)([a-zA-Z0-9 ]+)/s",$string,$matches);
+		\F3\dump($matches);
+		foreach($matches[1] as $logical => $value){
+			$matches
+			switch(strtolower($logical)){
+				case "and":
+				case "&&":
+					break;
+				default:
+					break;
+			}
+		}
+		
+		exit;
+		*/
 	}
 }
 

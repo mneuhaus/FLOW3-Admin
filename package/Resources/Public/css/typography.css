@@ -56,15 +56,6 @@ dl dt { font-weight: 700; }
 dl dd { margin-left: 1.618em; }
 
 
- /* Tables */
- 
-table { border-collapse: collapse; font-size:0.85em; }
-th { font-weight:700;text-align:left; }
-tr,th,td { margin:0; padding:!smallspacing 1.618em !smallspacing 1em; height:21px; }
-tfoot { font-style: italic; }
-caption { text-align:center; font-family:Georgia, serif; }
-
-
  /* Quotes */
  
 blockquote { padding-left:1.618em; margin:0 0 0.8125em ; border-left:3px solid #ccc; font-style:italic; letter-spacing:0.03em; }

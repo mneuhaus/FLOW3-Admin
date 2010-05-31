@@ -33,6 +33,7 @@ namespace F3\Admin\Domain\Model;
  * @set Default Types(string,integer,float,boolean,datetime,resource,tag,tags)
  * @set Textinput(textarea,autoexpand,fullrte,markdown)
  * @set Inline(widget)
+ * @variant-list block
  */
 class Widgets extends \F3\Admin\Domain\Model{
 	/**
