@@ -252,8 +252,8 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	
 	public function setTemplate($action){
 		$replacements = array(
-			"@action" => $action,
-			"@variant" => "default",
+			"@action" => ucfirst($action),
+			"@variant" => "Default",
 			"@package" => "Admin",
 		);
 		if(!empty($this->being)){
@@ -265,7 +265,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 				$replacements["@package"] =$this->helper->getPackageByClassName($this->being);
 				$replacements["@model"] =$this->helper->getObjectNameByClassName($this->being);
 				if(array_key_exists("variant-".$action,$tags)){
-					$replacements["@variant"] = current($tags["variant-".$action]);
+					$replacements["@variant"] = ucfirst(current($tags["variant-".$action]));
 				}
 			}
 		}
