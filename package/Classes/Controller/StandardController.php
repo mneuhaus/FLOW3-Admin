@@ -80,6 +80,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 		}
 		
 		$this->view->assign("sets",$attributeSets);
+		$this->preRender();
 	}
 	
 	/**
@@ -89,6 +90,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	 */
 	public function indexAction() {
 		$this->prepare("index");
+		$this->preRender();
 	}
 	
 	/**
@@ -121,6 +123,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 			$arguments = array( "being" => $this->being , "adapter" => $this->adapter);
 			$this->redirect("create",NULL,NULL,	$arguments);
 		}
+		$this->preRender();
 	}
 	
 	/**
@@ -133,6 +136,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 		$this->prepare("confirm");
 		$object = $this->getAdapter()->getBeing($this->being,$this->request->getArgument("id"));
 		$this->view->assign("object",$object);
+		$this->preRender();
 	}
 	
 	/**
@@ -151,6 +155,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 		}else{
 			$this->redirect('confirm',NULL,NULL,$this->request->getArguments());
 		}
+		$this->preRender();
 	}
 	
 	/**
@@ -187,6 +192,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 		}
 		
 		$this->view->assign("sets",$attributeSets);
+		$this->preRender();
 	}
 	
 	/**
@@ -200,10 +206,12 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 		
 		$being = $this->getAdapter()->getBeing($this->being,$this->request->getArgument("id"));
 		$this->view->assign("being",$being);
+		$this->preRender();
 	}
 	
 	
 	private function prepare($action){
+		$this->start = microtime();
 		\F3\Dump\Dump::getInstance();
 		$this->adapters = $this->helper->getAdapters();
 		$this->settings = $this->helper->getSettings();
@@ -238,6 +246,8 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 		$this->view->assign('groups',$groups);
 			
 		$this->setTemplate($action);
+		$context = getenv("FLOW3_CONTEXT") ? getenv("FLOW3_CONTEXT") : "Production";
+		$this->view->assign("context",$context);
 	}
 	
 	public function setTemplate($action){
@@ -255,7 +265,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 				$replacements["@package"] =$this->helper->getPackageByClassName($this->being);
 				$replacements["@model"] =$this->helper->getObjectNameByClassName($this->being);
 				if(array_key_exists("variant-".$action,$tags)){
-					$replacements["@model"] = current($tags["variant-".$action]);
+					$replacements["@variant"] = current($tags["variant-".$action]);
 				}
 			}
 		}
@@ -291,6 +301,10 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 		$adapter->init();
 		
 		return $adapter;
+	}
+	
+	private function preRender(){
+		$this->view->assign("rendering_time",(microtime() - $this->start));
 	}
 }
 

@@ -1,11 +1,29 @@
 
  /* Tables */
-
-table { border:solid #D7D7D7; border-width:1px 1px 0px 1px; border-collapse: collapse; font-size:0.85em; }
-	tr,th,td { margin:0; padding:0.3em 1.618em 0.3em 1em; height:21px; }
-    tr { border-bottom:1px solid #D7D7D7;  }
-        th { background:#EBF2F6; font-weight:700;text-align:left; }
-        td {  }
-		td.actions { width:165px; padding:0 0 0 0; }
-			td .ui-button { margin-bottom:-6px; }
-    tr.odd { background:#F7F7F7; }
+table.ui-table { border-width:1px 1px 0px 1px; border-collapse: collapse; width:100%;}
+	table.ui-table tr,
+	table.ui-table th,
+	table.ui-table td { margin:0; padding:0.3em 1.618em 0.3em 1em; }
+    table.ui-table tr { }
+	/*
+	table.ui-table tr:hover,
+	table.ui-table tr.even:hover,
+	table.ui-table tr.odd:hover { background:#D6DDE5;  }
+	*/
+        table.ui-table thead {  }
+			table.ui-table thead tr:hover,
+			table.ui-table thead tr.even:hover, 
+			table.ui-table thead tr.odd:hover { color:inherit; }
+				table.ui-table th {
+					text-align:left;
+					border-right:1px solid #A4A4A4;
+					padding:0 0.5em;
+					font-size:12px;
+					line-height:12px;
+					overflow:hidden;
+					height:16px;
+				}
+        table.ui-table td {  }
+		table.ui-table td.actions { width:120px; padding:0 0 0 0; }
+			table.ui-table td .ui-button { margin-bottom:-6px; }
+    table.ui-table tr.odd { background:#F7F7F7; }

@@ -31,7 +31,7 @@ namespace F3\Admin\Adapters;
 class DummyAdapter extends AbstractAdapter {
 	
 	public function init(){
-		
+		$this->fmc = $this->objectManager->get('F3\FLOW3\MVC\Controller\FlashMessageContainer');
 	}
 	
 	public function getName($being){
@@ -75,22 +75,45 @@ class DummyAdapter extends AbstractAdapter {
 	}
 	
 	public function getBeings($being){
-		return array(
-			array(
+		$start = microtime();
+		$beings = array();
+		for($i=0;$i<150;$i++){
+			$beings[] = array(
 				"meta" => array(
 					"id" => 1,
 					"name" => "First Entry"
 				),
 				"properties" => array(
-					"name" => array(
-						"label" => "Name",
+					"firstname" => array(
+						"label" => "Firstname",
 						"name" => "name",
 						"type" => "Textfield",
-						"value" => "First Entry"
+						"value" => \F3\Faker\Name::firstName()
+					),
+					"lastname" => array(
+						"label" => "Lastname",
+						"name" => "name",
+						"type" => "Textfield",
+						"value" => \F3\Faker\Name::lastName()
+					),
+					"street" => array(
+						"label" => "Street",
+						"name" => "name",
+						"type" => "Textfield",
+						"value" => \F3\Faker\Address::streetName()
+					),
+					"city" => array(
+						"label" => "Street",
+						"name" => "name",
+						"type" => "Textfield",
+						"value" => \F3\Faker\Address::city()
 					)
 				)
-			)
-		);
+			);
+		}
+		$elapsed = microtime() - $start;
+		#$this->fmc->add("Time to Collect Entries:".$elapsed);
+		return $beings;
 	}
 	
 	public function getBeing($being,$id){

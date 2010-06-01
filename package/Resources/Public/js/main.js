@@ -55,4 +55,16 @@ jQuery(document).ready(function(){
 		})
 		container.after(button);
 	});
+	
+	
+	jQuery(".ui-table").tablesorter({widgets: ['zebra']});
+	
+	jQuery(".ui-table th").click(function(){	
+		jQuery(".ui-table").each(function(index) {
+			jQuery(this).find("tbody tr").removeClass("even").removeClass("odd");
+			jQuery(this).find("tbody tr:even").addClass("even");
+			jQuery(this).find("tbody tr:odd").addClass("odd");
+		});
+	});
+	
 });

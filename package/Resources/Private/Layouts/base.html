@@ -16,10 +16,6 @@
 <link rel="stylesheet" href="{f:uri.resource(path: 'css/ui.css', package: 'Admin')}" type="text/css" media="screen" title="no title" charset="utf-8">
 <link rel="stylesheet" href="{f:uri.resource(path: 'css/images.css', package: 'Admin')}" type="text/css" media="screen" title="no title" charset="utf-8">
 <link rel="stylesheet" href="{f:uri.resource(path: 'css/screen.css', package: 'Admin')}" type="text/css" media="screen" title="no title" charset="utf-8">
-	
-<link type="text/css" rel="stylesheet" href="http://jqueryui.com/themes/base/ui.all.css" />
-<link rel="stylesheet" href="{f:uri.resource(path: 'js/markitup/skins/simple/style.css', package: 'Admin')}" type="text/css" media="screen" title="no title" charset="utf-8">
-
 <a:resources />
 <f:base />
 </head>
@@ -31,6 +27,11 @@
 			</a>
 			<div class="actions">	
 				<f:render section='actions' />
+			</div>
+			<div class="dr context">
+				<div class="dl">{context}</div>
+				<div class="dl mr1 ml1">|</div>
+				<div class="dl mr1">Rendering Time: {rendering_time}</div>
 			</div>
 		</div>
 		<div class="sidebar dl10">

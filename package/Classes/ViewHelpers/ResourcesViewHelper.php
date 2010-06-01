@@ -68,6 +68,7 @@ class ResourcesViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 			"js/jquery.MultiFile.js",
 			"js/jquery.elastic.js",
 			"js/jquery.hotkeys.js",
+			"js/jquery.tablesorter.js",
 			"js/jquery.keynav.js",
 			"js/jquery.datejs.js",
 			"js/ckeditor/ckeditor.js",

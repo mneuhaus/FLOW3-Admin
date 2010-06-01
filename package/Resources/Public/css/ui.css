@@ -23,7 +23,7 @@
 	text-align:center;
 	vertical-align:middle;
 	width:auto;
-	margin:0 5px;
+	margin:6px 5px;
 }
 a.ui-button{
 	height:16px;
@@ -35,6 +35,15 @@ a.ui-button{
 .ui-button:hover{
 	border:1px solid #CCC;
 	text-decoration:none;
+}
+
+.ui-icon {
+	text-indent:-999em;
+	display:block;
+	border:0;
+	margin:0;
+	padding:0;
+	overflow:hidden;
 }
 
 /*

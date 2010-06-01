@@ -1,21 +1,19 @@
 <f:layout name="base" />
 {namespace a=F3\Admin\ViewHelpers}
 <f:section name="actions">
-	
+	<f:link.action 	class="ui-icon ui-button-w32-pencil"
+					controller="Standard"
+					action="update"
+					arguments="{	being : meta.being.identifier,
+									adapter : meta.adapter.identifier,
+									id : being.meta.id
+								}">
+		View
+	</f:link.action>
 </f:section>
 <f:section name="content">
 	<div class="fluid ui-container">
 		<h3 class="ui-header mb">{meta.being.name}</h3>
-		<div class="fluid mr ml mbs">
-			<div class="dr ml mb1">
-				<f:form method="post" action="update" name="delete">
-					<f:form.hidden name="adapter" id="adapter" value="{meta.adapter.identifier}"/>
-					<f:form.hidden name="being" id="being" value="{meta.being.identifier}"/>
-					<f:form.hidden name="id" value="{being.meta.id}"/>
-					<input type="submit" name="edit" value="Edit" class="submit ui-button"/>
-				</f:form>
-			</div>
-		</div>
 		<div class="mr ml">
 			<f:for each="{being.properties}" as="configuration" key="property">
 				<div class="fluid">
