@@ -61,11 +61,13 @@ class RenderViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 				);
 				
 				$template = $this->helper->getPathByPatternFallbacks($fallbacks,$replacements);
-				$this->view->setTemplatePathAndFilename($template);
-				
-				foreach ($partialVars as $key => $value)
-					$this->view->assign($key,$value);
-				return $this->view->render();
+				if(!empty($template)){
+					$this->view->setTemplatePathAndFilename($template);
+					
+					foreach ($partialVars as $key => $value)
+						$this->view->assign($key,$value);
+					return $this->view->render();
+				}
 			}
 		}
 	}

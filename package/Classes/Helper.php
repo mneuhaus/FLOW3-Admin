@@ -316,10 +316,16 @@ class Helper{
 		
 		foreach($patterns as $pattern){
 			$pattern = str_replace(array_keys($replacements),array_values($replacements),$pattern);
+			$tried[] = $pattern;
 			if(file_exists($pattern)){
 				return $pattern;
 			}
 		}
+		echo "<pre>";
+		print_r($tried);
+		echo "</pre>";
+		
+		throw new \Exception('Could not find any Matching Path.');
 	}
 	
 	public function getSettings($namespace = "Admin"){
