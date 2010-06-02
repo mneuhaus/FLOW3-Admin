@@ -39,12 +39,9 @@ class PHPCRAdapter extends AbstractAdapter {
 	
 	public function init(){
 		$this->settings = $this->helper->getSettings("PHPCR");
-		$this->session = \F3\Admin\register::get("session");
+		parent::init();
 		
 		if(\F3\Admin\register::has("being")){
-			$this->being = \F3\Admin\register::get("being");
-			$this->conf = $this->getConfiguration($this->being);
-			
 			$this->repository = str_replace("Domain\Model","Domain\Repository",$this->being) . "Repository";
 			$this->repositoryObject = $this->objectManager->getObject($this->repository);
 			$this->query = $this->repositoryObject->createQuery();

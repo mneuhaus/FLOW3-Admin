@@ -345,7 +345,7 @@ abstract class AbstractAdapter implements AdapterInterface {
 		if(is_string($beings)) $beings = $this->getBeings($beings);
 		if(empty($beings)) return array();
 		
-		$options = array();
+		$options = array(""=>"");
 		foreach ($beings as $being) {
 			$options[] = array(
 				"id" => $being["meta"]["id"],
