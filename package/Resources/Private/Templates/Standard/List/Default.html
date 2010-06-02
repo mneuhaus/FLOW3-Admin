@@ -45,7 +45,10 @@
 				<a:for each="{objects}" as="object" key="id" loop="loop">
 					<f:if condition="{loop.first}">
 						<f:for each="{object.properties}" as="value" key="property">
-							<th>{value.label}</th>
+							<f:if condition="{value.meta.ignore}">
+								<f:then></f:then>
+								<f:else><th>{value.label}</th></f:else>
+							</f:if>
 						</f:for>
 					</f:if>
 				</a:for>
@@ -54,9 +57,12 @@
 		</thead>
 		<tbody>
 		<f:for each="{objects}" as="object">
-			<tr>
+			<tr>				
 				<f:for each="{object.properties}" as="value" key="property">
-				<td>{value.value}</td>
+					<f:if condition="{value.meta.ignore}">
+						<f:then></f:then>
+						<f:else><td>{value.value}</td></f:else>
+					</f:if>
 				</f:for>
 				<td class="actions">
 					<f:link.action 	class="ui-icon ui-button-b16-top_right_expand"
