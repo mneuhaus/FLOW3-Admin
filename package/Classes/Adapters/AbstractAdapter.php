@@ -69,7 +69,13 @@ abstract class AbstractAdapter implements AdapterInterface {
 	
 	public function init(){
 		$this->session = \F3\Admin\register::get("session");
-		if($this->session->hasKey($this->being))
+		
+		if(\F3\Admin\register::has("being")){
+			$this->being = \F3\Admin\register::get("being");
+			$this->conf = $this->getConfiguration($this->being);
+		}
+		
+		if(!empty($this->being) && $this->session->hasKey($this->being))
 			$this->userSettings = $this->session->getData($this->being);
 		else
 			$this->userSettings = array();
@@ -114,18 +120,20 @@ abstract class AbstractAdapter implements AdapterInterface {
 		$sets = array();
 		if(!empty($this->conf) && isset($this->conf["class"]["set"])){
 			foreach ($this->conf["class"]["set"] as $set) {
-				preg_match("/(.*)\(([a-z,]+)\)/",$set,$matches);
+				preg_match("/(.*)\(([a-z, ]+)\)/",$set,$matches);
 				if(!isset($matches[2])) continue;
 				
 				$setName = isset($matches[1]) ? $matches[1] : "General";
+				$fields = str_replace(" ","",$matches[2]);
 				
-				$setAttributes = array_intersect_key($attributes, array_flip(explode(",",$matches[2])));
+				$setAttributes = array_intersect_key($attributes, array_flip(explode(",",$fields)));
 				if(count($setAttributes)>0)
 					$sets[$setName] = $setAttributes;
 			}
-		}else{
-			$sets["General"] = array_values($attributes);
 		}
+		if(empty($sets))
+			$sets["General"] = array_values($attributes);
+		
 		return $sets;
 	}
 	
