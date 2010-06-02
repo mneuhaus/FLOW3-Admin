@@ -67,9 +67,78 @@ abstract class AbstractAdapter implements AdapterInterface {
 	 */
 	protected $reflectionService;
 	
+	public function init(){
+		$this->session = \F3\Admin\register::get("session");
+		if($this->session->hasKey($this->being))
+			$this->userSettings = $this->session->getData($this->being);
+		else
+			$this->userSettings = array();
+	}
+	
+	public function __destruct(){
+		#$this->session->setData($this->being,$this->userSettings);
+	}
+	
+	public function restoreSorting(){
+		if(empty($this->userSettings["sorting"]) && array_key_exists("sort",$this->conf["class"])){
+			$parts = explode(" ",$this->conf["class"]["sort"][0]);
+			$this->userSettings["property"] = array(
+				"property" => $parts[0],
+				"direction" => $parts[1]
+			);
+		}
+		$this->setSorting($this->userSettings["sorting"]["property"],$this->userSettings["sorting"]["direction"]);
+	}
+	
+	public function setSorting($property,$direction = "asc"){}
+	
+	public function restoreLimit(){
+		if(empty($this->userSettings["limit"]) && array_key_exists("limit",$this->conf["class"])){
+			$this->userSettings["limit"] = $this->conf["class"]["limit"][0];
+		}
+		$this->setLimit($this->userSettings["limit"]);
+	}
+	
+	public function setLimit($limit){}
+	
+	public function restoreOffset(){
+		if(empty($this->userSettings["offset"]) && array_key_exists("offset",$this->conf["class"])){
+			$this->userSettings["offset"] = $this->conf["class"]["offset"][0];
+		}
+		$this->setOffset($this->userSettings["offset"]);
+	}
+	
+	public function setOffset($offset){}
+	
+	public function groupPropertiesIntoSets($attributes){
+		$sets = array();
+		if(!empty($this->conf) && isset($this->conf["class"]["set"])){
+			foreach ($this->conf["class"]["set"] as $set) {
+				preg_match("/(.*)\(([a-z,]+)\)/",$set,$matches);
+				if(!isset($matches[2])) continue;
+				
+				$setName = isset($matches[1]) ? $matches[1] : "General";
+				
+				$setAttributes = array_intersect_key($attributes, array_flip(explode(",",$matches[2])));
+				if(count($setAttributes)>0)
+					$sets[$setName] = $setAttributes;
+			}
+		}else{
+			$sets["General"] = array_values($attributes);
+		}
+		return $sets;
+	}
+	
+	public function getConfiguration($being){
+		$configuration = array(
+			"class" => $this->reflection->getClassTagsValues($being),
+			"properties" => $this->helper->getModelProperties($being)
+		);
+		
+		return $configuration;
+	}
 	
 	public function transformToObject($being,$data,$target=null,$propertyMapper = null){
-#		$item = $this->convertArray($this->request->getArgument("item"),$being);
 		$data = $this->cleanUpItem($data);
 
 		$arg = $this->objectManager->get("F3\Admin\Argument","item",$being);
@@ -121,6 +190,13 @@ abstract class AbstractAdapter implements AdapterInterface {
 		$parts = explode("\\",$being);
 		return str_replace("_AOPProxy_Development","",end($parts));
 	}
+	
+	public function getLabel($conf,$property){
+		if(array_key_exists("label",$conf) && is_array($conf["label"]))
+			return $conf["label"][0];
+			
+		return ucfirst($property);
+	}
 
 	public function getSetting($raw,$default = null,$path = "Widgets.Mapping"){
 		$mappings = \F3\FLOW3\Reflection\ObjectAccess::getPropertyPath($this->settings,$path);
@@ -170,10 +246,8 @@ abstract class AbstractAdapter implements AdapterInterface {
 
 				default:
 					$callback = $this->getCallback($this->getSetting($type,null,"Conversions.Presentation"),$conf);
-#					echo "[".$this->getSetting($type,null,"Conversions.Presentation")."]";
 					if(!empty($callback))
 						return call_user_func($callback,$value,$conf);
-#					echo "Type:".$type."<br />";
 					return $value;
 					break;
 			}
@@ -192,7 +266,6 @@ abstract class AbstractAdapter implements AdapterInterface {
 					$callback = $this->getCallback($this->getSetting($type,null,"Conversions.Storage"),$conf);
 					if(!empty($callback))
 						return call_user_func($callback,$value,$conf);
-#					echo "Type:".$type."<br />";
 					return $value;
 					break;
 			}
@@ -284,6 +357,7 @@ abstract class AbstractAdapter implements AdapterInterface {
 			$string = date($format,$datetime->getTimestamp());
 			return $string;
 		}
+		return $datetime;
 	}
 	
 	public function stringToDateTime($string){

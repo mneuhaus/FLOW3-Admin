@@ -213,22 +213,29 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	private function prepare($action){
 		$this->start = microtime();
 		\F3\Dump\Dump::getInstance();
+		
 		$this->adapters = $this->helper->getAdapters();
 		$this->settings = $this->helper->getSettings();
-		$GLOBALS["Admin"]["session"] = $this->session;
-		$GLOBALS["objectManager"] = $this->objectManager;
-		
-		$GLOBALS["Admin"]["action"] = $action;
+		\F3\Admin\register::set("settings",$this->settings);
+		\F3\Admin\register::set("session",$this->session);
+		\F3\Admin\register::set("objectManager",$this->objectManager);
+		\F3\Admin\register::set("action",$action);
 		
 		if($this->request->hasArgument("being")){
-			$GLOBALS["Admin"]["being"] = $this->being = $this->request->getArgument("being");
-			$GLOBALS["Admin"]["group"] = $this->group = $this->helper->getGroupByBeing($this->being);
+			$this->being = $this->request->getArgument("being");
+			\F3\Admin\register::set("being",$this->being);
+			$this->group = $this->helper->getGroupByBeing($this->being);
+			\F3\Admin\register::set("group",$this->group);
 		}
-		if($this->request->hasArgument("adapter"))
-			$GLOBALS["Admin"]["adapter"] = $this->adapter = $this->request->getArgument("adapter");
+		if($this->request->hasArgument("adapter")){
+			$this->adapter = $this->request->getArgument("adapter");
+			\F3\Admin\register::set("adapter",$this->adapter);
+		}
 		
-		if($this->request->hasArgument("id"))
-			$GLOBALS["Admin"]["id"] = $this->id = $this->request->getArgument("id");
+		if($this->request->hasArgument("id")){
+			$this->id = $this->request->getArgument("id");
+			\F3\Admin\register::set("being_id",$this->id);
+		}
 		
 		$groups = $this->helper->getGroups();
 		if(!empty($this->adapter)){

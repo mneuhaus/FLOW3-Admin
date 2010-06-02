@@ -56,8 +56,8 @@ class RenderViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 				
 				$replacements = array(
 					"@partial" => $partial,
-					"@group" => $GLOBALS["Admin"]["group"],
-					"@being" => $GLOBALS["Admin"]["being"]
+					"@group" => \F3\Admin\register::get("group"),
+					"@being" => \F3\Admin\register::get("being")
 				);
 				
 				$template = $this->helper->getPathByPatternFallbacks($fallbacks,$replacements);

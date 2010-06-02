@@ -39,39 +39,59 @@ class PHPCRAdapter extends AbstractAdapter {
 	
 	public function init(){
 		$this->settings = $this->helper->getSettings("PHPCR");
-		if(array_key_exists("being",$GLOBALS["Admin"])){
-			$this->being = $GLOBALS["Admin"]["being"];
-			$this->session = $GLOBALS["Admin"]["session"];
+		$this->session = \F3\Admin\register::get("session");
+		
+		if(\F3\Admin\register::has("being")){
+			$this->being = \F3\Admin\register::get("being");
+			$this->conf = $this->getConfiguration($this->being);
 			
 			$this->repository = str_replace("Domain\Model","Domain\Repository",$this->being) . "Repository";
 			$this->repositoryObject = $this->objectManager->getObject($this->repository);
 			$this->query = $this->repositoryObject->createQuery();
-			
-			$this->classTags = $this->reflection->getClassTagsValues($this->being);
-			
-			if(array_key_exists("sort",$this->classTags) || $this->session->hasKey($this->being.":limit")){
-				if(array_key_exists("sort",$this->classTags))
-					$parts = explode(" ",$this->classTags["sort"][0]);
-					
-				if($this->session->hasKey($this->being.":limit"))
-					$parts = explode(" ",$this->session->getData($this->being.":limit"));
-					
-				$order = $parts[1] == "ASC" ? \F3\FLOW3\Persistence\QueryInterface::ORDER_ASCENDING : \F3\FLOW3\Persistence\QueryInterface::ORDER_DESCENDING;
-				$field = $parts[0];
-				$this->query->setOrderings(array($field => $order));
-			}
-			
-			if(array_key_exists("limit",$this->classTags)){
-				$this->query->setLimit(intval($this->classTags["limit"][0]));
-			}
-			
-			#if(array_key_exists("filter",$this->classTags)){
-				#$parts = explode(" ",$this->classTags["sort"][0]);
-				#$order = $parts[1] == "ASC" ? \F3\FLOW3\Persistence\QueryInterface::ORDER_ASCENDING : \F3\FLOW3\Persistence\QueryInterface::ORDER_DESCENDING;
-				#$field = $parts[0];
-				#$this->query->setOrderings(array($field => $order));
-			#}
 		}
+	}
+	
+	public function setSorting($property,$direction = "asc"){
+		if(strtoupper($direction) == "ASC")
+			$direction = \F3\FLOW3\Persistence\QueryInterface::ORDER_ASCENDING;
+		else
+			$direction = \F3\FLOW3\Persistence\QueryInterface::ORDER_DESCENDING;
+		
+		$this->query->setOrderings(array($property => $direction));
+	}
+	
+	public function setLimit($limit){
+		$this->query->setLimit(intval($limit));
+	}
+	
+	public function deleteObject($being,$id){
+		$object = $this->persistenceManager->getObjectByIdentifier($id);
+		if($object == null) return;
+		$repository = str_replace("Domain\Model","Domain\Repository",$being) . "Repository";
+		$repositoryObject = $this->objectManager->getObject($repository);
+		$repositoryObject->remove($object);
+		$this->persistenceManager->persistAll();
+	}
+
+	public function createObject($being, $data){
+		$configuration = $this->getConfiguration($being);
+		$data = $this->convertValues($data,$configuration["properties"]);
+		$result = $this->transformToObject($being,$data);
+		$repository = $this->objectManager->getObject(str_replace("Domain\Model","Domain\Repository",$being) . "Repository");
+		$repository->add($result["object"]);
+		$this->persistenceManager->persistAll();
+		return $result["errors"];
+	}
+	
+	public function updateObject($being, $id, $data){
+		$configuration = $this->getConfiguration($being);
+		$data = $this->convertValues($data,$configuration["properties"]);
+		$data["__identity"] = $id;
+		$result = $this->transformToObject($being,$data);
+		$repository = $this->objectManager->getObject(str_replace("Domain\Model","Domain\Repository",$being) . "Repository");
+		$repository->update($result["object"]);
+		$this->persistenceManager->persistAll();
+		return $result["errors"];
 	}
 	
 	public function getGroups(){
@@ -100,139 +120,88 @@ class PHPCRAdapter extends AbstractAdapter {
 	
 	public function getAttributeSets($being, $id = null, $level = 0){
 		$being = ltrim($being,"\\");
-		$objectArray = $this->getBeing($being,$id);
+		$object = $this->getObject($being, $id);
+		$configuration = $this->getConfiguration($being);
 		
-		if($id == null)
-			$object = $this->objectManager->create($being);
-		else
-			$object = $this->persistenceManager->getObjectByIdentifier($id);
-		
-		$properties = $this->helper->getModelProperties($being);
-		$tags = $this->reflection->getClassTagsValues($being);
-		
-		# Compile all Attributes Informations
-		$attributes = array();
-		foreach ($properties as $attribute => $conf) {
-			if(!isset($properties[$attribute])) continue;
-			if(array_key_exists("inject",$conf)) continue;
+		$properties = array();
+		foreach ($configuration["properties"] as $property => $conf) {
+			if(!isset($configuration["properties"][$property])) continue;
 			if(array_key_exists("ignore",$conf)) continue;
 			
-			$type = array_key_exists("widget",$properties[$attribute]) ? $properties[$attribute]["widget"][0] : $this->getSetting($properties[$attribute]["var"][0],"TextField");
-			
-			$value = $objectArray["properties"][$attribute]["value"];
+			$value = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
 			
 			$options = array();
-			if($type == "SingleRelation" || $type == "MultipleRelation"){
-				if($type == "MultipleRelation"){
-			        preg_match("/<(.+)>/",$properties[$attribute]["var"][0],$matches);
-			        $repository = $matches[1];
-				}elseif($type == "SingleRelation"){
-					$repository = $properties[$attribute]["var"][0];
-				}
-				if(class_exists("\\".$this->helper->getModelRepository($repository))){
-					$repository = $this->objectManager->getObject($this->helper->getModelRepository($repository));
-					/*
-					print_r($properties[$attribute]);
-					if(array_key_exists("filter",$properties[$attribute])){
-						$this->helper->stringToConstraint($properties[$attribute]["filter"][0],$being);
-						#$query = $repository->createQuery();
-						#$query->equals
-					}
-					*/
-					$objects = $repository->findAll();
-				}else{
-					$objects = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$attribute);
-				}
-				$options = $this->getOptions($objects,$value);
-			}
-			
 			$inline = array();
-			if(array_key_exists("inline",$properties[$attribute]) && $level < 1){
-				if($type == "SingleRelation"){
-					$inline = $this->getAttributeSets($properties[$attribute]["var"][0], $id, $level+1);
+			if(($conf["widget"] == "SingleRelation" || $conf["widget"] == "MultipleRelation") && !array_key_exists("inline",$conf) && $level < 1){
+				$this->handleRelation($conf["widget"],$conf,$value);
+			}else if(array_key_exists("inline",$conf) && $level < 1){
+				if($conf["widget"] == "SingleRelation"){
+					$inline = $this->getAttributeSets($conf["type"], $id, $level+1);
 				}
 			}
 			
-			$attributes[$attribute] = array(
-				"label" 	=> ucfirst($attribute),
-				"name" 		=> $attribute,
+			$properties[$property] = array(
+				"label" 	=> $this->getLabel($conf,$property),
+				"name" 		=> $property,
 				"error" 	=> "",
-				"type"	 	=> $type,
+				"type"	 	=> $conf["widget"],
 				"inline"	=> $inline,
 				"options" 	=> $options,
-				"value" 	=> $this->convertValue($value,$type)
+				"value" 	=> $this->convertValue($value,$conf["widget"])
 			);
 		}
 		
 		# Sort it into Sets
-		$sets = array();
-		if(isset($tags["set"])){
-			foreach ($tags["set"] as $set) {
-				preg_match("/(.*)\(([a-z,]+)\)/",$set,$matches);
-				if(!isset($matches[2])) continue;
-				
-				$setName = isset($matches[1]) ? $matches[1] : "General";
-				
-				$setAttributes = array_intersect_key($attributes, array_flip(explode(",",$matches[2])));
-				if(count($setAttributes)>0)
-					$sets[$setName] = $setAttributes;
-			}
-		}else{
-			$sets["General"] = array_values($attributes);
-		}
+		$sets = $this->groupPropertiesIntoSets($properties);
 		
 		return $sets;
 	}
 	
-	public function getBeings($being){
-		$properties = $this->helper->getModelProperties($being);
-		
-		$rawObjects = $this->query->execute();
-		
-		$objects = array();
-		foreach ($rawObjects as $object) {
-			$tmp = array();
-			foreach ($properties as $property => $meta) {
-				if(array_key_exists("inject",$meta)) continue;
-				if(array_key_exists("ignore",$meta)) continue;
-				
-				$tmp["meta"] = array(
-					"id" => $this->persistenceManager->getIdentifierByObject($object),
-					"name" => $this->toString($object)
-				);
-				$tmp["properties"][$property] = array(
-					"label" => ucfirst($property),
-					"name"	=> $property,
-					"type"	=> $this->getSetting($meta["var"][0],"TextField"),
-					"value" => $this->convertValue(\F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property),$meta["var"][0],"presentation",$meta)
-				);
-			}
-			$objects[] = $tmp;
+	public function handleRelation($type,$conf,$value){
+		if($type == "MultipleRelation"){
+			preg_match("/<(.+)>/",$conf["var"][0],$matches);
+			$repository = $matches[1];
+		}else if($type == "SingleRelation"){
+			$repository = $conf["var"][0];
 		}
-		return $objects;
+		
+		if(class_exists("\\".$this->helper->getModelRepository($repository))){
+			$repository = $this->objectManager->getObject($this->helper->getModelRepository($repository));
+			/*
+			print_r($properties[$attribute]);
+			if(array_key_exists("filter",$properties[$attribute])){
+				$this->helper->stringToConstraint($properties[$attribute]["filter"][0],$being);
+				#$query = $repository->createQuery();
+				#$query->equals
+			}
+			*/
+			$objects = $repository->findAll();
+		}else{
+			$objects = $value;
+		}
+		return $this->getOptions($objects,$value);
 	}
 	
 	public function getBeing($being,$id = null){
-		$properties = $this->helper->getModelProperties($being);
+		$configuration = $this->getConfiguration($being);
+		$object = $this->getObject($being, $id);
 		
-		if($id == null)
-			$object = $this->objectManager->create($being);
-		else
-			$object = $this->persistenceManager->getObjectByIdentifier($id);
-		
-		$array = array();
-		foreach ($properties as $property => $meta) {
-			if(array_key_exists("inject",$meta)) continue;
-			
-			$array["meta"] = array(
+		$array = array(
+			"meta" => array(
 				"id" => $id,
 				"name" => $this->toString($object)
-			);
+			)
+		);
+		foreach ($configuration["properties"] as $property => $conf) {
+			if(array_key_exists("ignore",$conf)) continue;
+			
+			$value = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
 			$array["properties"][$property] = array(
-				"label" => ucfirst($property),
+				"label" => $this->getLabel($conf,$property),
 				"name"	=> $property,
-				"type"	=> $this->getSetting($meta["var"][0],"TextField"),
-				"value" => $this->convertValue(\F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property),$meta["var"][0])
+				"type"	=> $this->getSetting($conf["var"][0],"TextField"),
+				"value" => $this->convertValue($value,$conf["var"][0]),
+				"conf" 	=> $conf
 			);
 			$array["object"] = $object;
 		}
@@ -240,37 +209,45 @@ class PHPCRAdapter extends AbstractAdapter {
 		return $array;
 	}
 	
-	public function deleteObject($being,$id){
-		$object = $this->persistenceManager->getObjectByIdentifier($id);
+	public function getBeings($being){
+		$rawObjects = $this->query->execute();
 		
-		if($object == null) return;
-		
-		$repository = str_replace("Domain\Model","Domain\Repository",$being) . "Repository";
-		$repositoryObject = $this->objectManager->getObject($repository);
-		
-		$repositoryObject->remove($object);
-		$this->persistenceManager->persistAll();
-	}
-
-	public function createObject($being, $data){
-		$properties = $this->helper->getModelProperties($being);
-		$data = $this->convertValues($data,$properties);
-		$result = $this->transformToObject($being,$data);
-		$repository = $this->objectManager->getObject(str_replace("Domain\Model","Domain\Repository",$being) . "Repository");
-		$repository->add($result["object"]);
-		$this->persistenceManager->persistAll();
-		return $result["errors"];
+		$objects = array();
+		foreach ($rawObjects as $object) {
+			$id = $this->persistenceManager->getIdentifierByObject($object);
+			$array = $this->getBeing($being,$id);
+			if(!empty($array))
+				$objects[] = $array;
+		}
+		return $objects;
 	}
 	
-	public function updateObject($being, $id, $data){
-		$properties = $this->helper->getModelProperties($being);
-		$data = $this->convertValues($data,$properties);
-		$data["__identity"] = $id;
-		$result = $this->transformToObject($being,$data);
-		$repository = $this->objectManager->getObject(str_replace("Domain\Model","Domain\Repository",$being) . "Repository");
-		$repository->update($result["object"]);
-		$this->persistenceManager->persistAll();
-		return $result["errors"];
+	public function getObject($being, $id = null){
+		if($id == null)
+			$object = $this->objectManager->create($being);
+		else
+			$object = $this->persistenceManager->getObjectByIdentifier($id);
+		return $object;
+	}
+	
+	public function getConfiguration($being){
+		$configuration = parent::getConfiguration($being);
+		
+		foreach($configuration["properties"] as $property => $conf){
+			if( array_key_exists("inject",$conf) ||
+				array_key_exists("ignore",$conf) 	){
+				$configuration["properties"][$property]["ignore"] = true;
+			}
+			
+			if(array_key_exists("widget",$conf))
+				$configuration["properties"][$property]["widget"] = $conf["widget"][0];
+			else
+				$configuration["properties"][$property]["widget"] = $this->getSetting($conf["var"][0],"TextField");
+			
+			$configuration["properties"][$property]["type"] = $conf["var"][0];
+		}
+		
+		return $configuration;
 	}
 	
 	## Helper Functions from here on
