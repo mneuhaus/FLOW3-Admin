@@ -23,7 +23,7 @@ table.ui-table { border-width:1px 1px 0px 1px; border-collapse: collapse; width:
 					overflow:hidden;
 					height:16px;
 				}
-        table.ui-table td {  }
+        table.ui-table td { max-width:300px; overflow:hidden; }
 		table.ui-table td.actions { width:120px; padding:0 0 0 0; }
 			table.ui-table td .ui-button { margin-bottom:-6px; }
     table.ui-table tr.odd { background:#F7F7F7; }

@@ -226,6 +226,7 @@ abstract class AbstractAdapter implements AdapterInterface {
     }
 
 	public function convertValues($values,$properties){
+		$values = $this->cleanUpItem($values);
 		foreach ($values as $property => $value) {
 			$values[$property] = $this->convertValue($value,$properties[$property]["var"][0],"storage",$properties[$property]);
 		}
@@ -371,8 +372,11 @@ abstract class AbstractAdapter implements AdapterInterface {
 	public function stringToDateTime($string){
 		if(is_object($string) && get_class($string) == "DateTime")
 			return $string;
-		$datetime = new \DateTime($string);
-		return $datetime;
+		if(!empty($string)){
+			$datetime = new \DateTime($string);
+			return $datetime;
+		}
+		return null;
 	}
 	
 	public function identifierToModel($identifier){
