@@ -314,7 +314,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	}
 	
 	private function preRender(){
-		$this->view->assign("rendering_time",(microtime() - $this->start));
+		$this->view->assign("rendering_time",(microtime() - $this->start) * 1000);
 	}
 }
 
