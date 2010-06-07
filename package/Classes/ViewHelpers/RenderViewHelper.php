@@ -41,12 +41,12 @@ class RenderViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @param object $value
 	 * @param string $partial
 	 * @param string $fallbacks
-	 * @param array $partialVars
+	 * @param array $vars
 	 * @return string Rendered string
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 * @api
 	 */
-	public function render($value='',$partial='',$fallbacks='',$partialVars = array()) {
+	public function render($value='',$partial='',$fallbacks='',$vars = array()) {
 		if($value !== '')
 			return $value;
 
@@ -56,15 +56,16 @@ class RenderViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 				
 				$replacements = array(
 					"@partial" => $partial,
-					"@group" => \F3\Admin\register::get("group"),
-					"@being" => \F3\Admin\register::get("being")
+					"@package" => \F3\Admin\register::get("package"),
+					"@being" => \F3\Admin\register::get("being"),
+					"@action" => $partial
 				);
 				
 				$template = $this->helper->getPathByPatternFallbacks($fallbacks,$replacements);
 				if(!empty($template)){
 					$this->view->setTemplatePathAndFilename($template);
 					
-					foreach ($partialVars as $key => $value)
+					foreach ($vars as $key => $value)
 						$this->view->assign($key,$value);
 					return $this->view->render();
 				}
