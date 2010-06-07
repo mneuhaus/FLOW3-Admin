@@ -11,44 +11,9 @@
 				<f:form.hidden name="adapter" id="adapter" value="{meta.adapter.identifier}"/>
 				<f:form.hidden name="being" id="being" value="{meta.being.identifier}"/>
 				<f:form.hidden name="id" value="{meta.id}"/>
-				<f:for each="{sets}" as="properties" key="set">
-					<fieldset class="pl">
-					<legend>{set}</legend>
-						<f:for each="{properties}" as="property">
-						<div class="contain f-row">
-							<label class="dl10 pl">{property.label}: </label>
-							<div class="fluid ml10 psl">
-								<a:render partial="{property.type}" fallbacks="Widgets" partialVars="{property:property}"/> 
-								<f:if condition="{property.error}">
-									<div class="ui-error-text f-info">
-										<f:for each="{property.error}" as="error">
-											<a:render value="{error}" /><br />
-										</f:for>
-									</div>
-								</f:if>
-								<f:for each="{property.inline}" as="inlineProperties" key="inlineSet">
-									<fieldset class="pl">
-									<legend>{inlineSet}</legend>
-										<f:for each="{inlineProperties}" as="inlineProperty">
-										<div class="fluid mbs pl pt">
-											<label class="dl10 pl">{inlineProperty.label}</label>
-											<div class="fluid ml10 psl">
-												<a:render partial="{inlineProperty.type}" fallbacks="Widgets"/> 
-												<f:if condition="{inlineProperty.error}">
-													<div class="ui-error-text f-info">
-														<a:render value="{inlineProperty.error}" />
-													</div>
-												</f:if>
-											</div>
-										</div>
-										</f:for>
-									</fieldset>
-								</f:for>
-							</div>
-						</div>
-						</f:for>
-					</fieldset>
-				</f:for>
+				
+				<a:render partial="Form" fallbacks="Partials"/>
+				
 				<div class="fluid mb mls">	
 					<input type="submit" name="update" value="Update" class="submit ui-button"/>
 				</div>

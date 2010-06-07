@@ -1,2 +1,38 @@
-Just a Dummy to prevent automatic routing Exceptions
-Look into the List folder instead
+<f:layout name="base" />
+{namespace a=F3\Admin\ViewHelpers}
+
+<f:section name="actions">
+    <f:link.action class="ui-icon ui-button-w32-round_plus" controller="Standard" action="create" arguments="{being : meta.being.identifier, adapter : meta.adapter.identifier}">
+        New {meta.being.name}
+    </f:link.action>
+</f:section>
+
+<f:section name="content">
+	<a:render partial="Table" fallbacks="Partials"/> 
+	<!--
+	<div class="dl mts">
+		<f:for each="{limits}" as="active" key="value">
+			<f:if condition="{active}" >
+				<f:then>
+					<button type="submit" name="limit" value="{value}" class="ui-button">{value}</button>
+				</f:then>
+				<f:else>
+					<button type="submit" name="limit" value="{value}" class="ui-button ui-secondary">{value}</button>
+				</f:else>
+			</f:if>
+		</f:for>
+	</div>
+	<div class="dr mts">
+		<f:for each="{pages}" as="page">
+			<f:if condition="{currentpage} == {page}" >
+				<f:then>
+					<button type="submit" name="page" value="{page}" class="ui-button">{page}</button>
+				</f:then>
+				<f:else>
+					<button type="submit" name="page" value="{page}" class="ui-button ui-secondary">{page}</button>
+				</f:else>
+			</f:if>
+		</f:for>
+	</div>
+	-->
+</f:section>

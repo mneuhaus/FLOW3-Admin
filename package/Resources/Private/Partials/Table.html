@@ -1,0 +1,33 @@
+{namespace a=F3\Admin\ViewHelpers}
+<table class="ui-table ui-table-fixed-header">
+    <thead>
+        <tr>
+            <a:for each="{objects}" as="object" key="id" loop="loop">
+                <f:if condition="{loop.first}">
+                    <f:for each="{object.properties}" as="value" key="property">
+                        <f:if condition="{value.meta.ignore}">
+                            <f:then></f:then>
+                            <f:else><th>{value.label}</th></f:else>
+                        </f:if>
+                    </f:for>
+                </f:if>
+            </a:for>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    <f:for each="{objects}" as="object">
+        <tr>				
+            <f:for each="{object.properties}" as="value" key="property">
+                <f:if condition="{value.meta.ignore}">
+                    <f:then></f:then>
+                    <f:else><td>{value.value}</td></f:else>
+                </f:if>
+            </f:for>
+            <td class="actions">
+                <a:render partial="Table" fallbacks="Actions" vars="{object:object}" />
+            </td>
+        </tr>
+    </f:for>
+    </tbody>
+</table>
