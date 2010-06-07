@@ -69,7 +69,6 @@ abstract class AbstractAdapter implements AdapterInterface {
 	
 	public function init(){
 		$this->session = \F3\Admin\register::get("session");
-		
 		if(\F3\Admin\register::has("being")){
 			$this->being = \F3\Admin\register::get("being");
 			$this->conf = $this->getConfiguration($this->being);
@@ -116,19 +115,53 @@ abstract class AbstractAdapter implements AdapterInterface {
 	
 	public function setOffset($offset){}
 	
+	public function getAttributeSets($being, $id = null){
+		$being = ltrim($being,"\\");
+		$object = $this->getObject($being, $id);
+		
+		$array = $this->beingToArray($object,$being);
+		$properties = $array["properties"];
+		foreach ($this->conf["properties"] as $property => $conf) {
+			if(array_key_exists("ignore",$conf)) continue;
+			$value = $properties[$property]["value"];
+			
+			$options = array();
+			$inline = array();
+			if(($conf["widget"] == "SingleRelation" || $conf["widget"] == "MultipleRelation") && !array_key_exists("inline",$conf)){
+				$options = $this->handleRelation($conf["widget"],$conf,$value);
+			}else if(array_key_exists("inline",$conf) && $level < 1){
+				if($conf["widget"] == "SingleRelation"){
+					$inline = $this->getAttributeSets($conf["type"], $id, $level+1);
+				}
+			}
+			$properties[$property]["error"] = "";
+			$properties[$property]["inline"] = $inline;
+			$properties[$property]["options"] = $options;
+		}
+		
+		#\F3\dump($properties);
+		
+		# Sort it into Sets
+		$sets = $this->groupPropertiesIntoSets($properties);
+		
+		return $sets;
+	}
+	
 	public function groupPropertiesIntoSets($attributes){
 		$sets = array();
-		if(!empty($this->conf) && isset($this->conf["class"]["set"])){
-			foreach ($this->conf["class"]["set"] as $set) {
-				preg_match("/(.*)\(([a-z, ]+)\)/",$set,$matches);
+		if(!empty($this->conf) && ( isset($this->conf["class"]["set"]) || isset($this->conf["set"]))){
+			$tmp = isset($this->conf["class"]["set"]) ? $this->conf["class"]["set"] : $this->conf["set"];
+			foreach ($tmp as $set) {
+				preg_match("/(.*)\(([A-Za-z0-9, ]+)\)/",$set,$matches);
 				if(!isset($matches[2])) continue;
 				
-				$setName = isset($matches[1]) ? $matches[1] : "General";
+				$setName = isset($matches[1]) ? $matches[1] : "";
 				$fields = str_replace(" ","",$matches[2]);
-				
 				$setAttributes = array_intersect_key($attributes, array_flip(explode(",",$fields)));
+				
 				if(count($setAttributes)>0)
 					$sets[$setName] = $setAttributes;
+				unset($matches);
 			}
 		}
 		if(empty($sets))
@@ -138,11 +171,13 @@ abstract class AbstractAdapter implements AdapterInterface {
 	}
 	
 	public function getConfiguration($being){
-		$configuration = array(
-			"class" => $this->reflection->getClassTagsValues($being),
-			"properties" => $this->helper->getModelProperties($being)
-		);
-		
+		$configuration = array();
+		if(class_exists($being)){
+			$configuration = array(
+				"class" => $this->reflection->getClassTagsValues($being),
+				"properties" => $this->helper->getModelProperties($being)
+			);
+		}
 		return $configuration;
 	}
 	
@@ -194,31 +229,83 @@ abstract class AbstractAdapter implements AdapterInterface {
 		return $item;
 	}
 	
+	public function getBeings($being){
+		$objects = $this->getObjects($being);
+		$arrays = array();
+		foreach ($objects as $object) {
+			$array = $this->beingToArray($object,$being);
+			if(!empty($array))
+				$arrays[] = $array;
+		}
+		return $arrays;
+	}
+	
+	public function getBeing($being,$id = null){
+		$object = $this->getObject($being, $id);
+		$array = $this->beingToArray($object,$being);
+		
+		return $array;
+	}
+	
+	public function beingToArray($object,$being){
+		$id = $this->getId($object);
+		$configuration = $this->getConfiguration($being);
+		$array = array(
+			"meta" => array(
+				"id" => $id,
+				"name" => $this->toString($object,$configuration)
+			),
+			"object" => $object
+		);
+		foreach ($configuration["properties"] as $property => $conf) {
+			if(array_key_exists("ignore",$conf)) continue;
+			
+			try{	
+				$value = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
+			}catch(\F3\FLOW3\Reflection\Exception\PropertyNotAccessibleException $e){
+				$value = null;
+			}
+			
+			$array["properties"][$property] = array_merge($conf,array(
+				"label" => $this->getLabel($conf,$property),
+				"name"	=> $property,
+				"type"	=> $conf["type"],
+				"widget"=> $conf["widget"],
+				"value" => $this->convertValue($value,$conf["type"],"presentation",$conf,$property),
+				"conf" 	=> $conf
+			));
+		}
+		#\F3\dump($array);
+		#exit;
+		return $array;
+	}
+	
 	public function getName($being){
 		$parts = explode("\\",$being);
 		return str_replace("_AOPProxy_Development","",end($parts));
 	}
 	
 	public function getLabel($conf,$property){
-		if(array_key_exists("label",$conf) && is_array($conf["label"]))
-			return $conf["label"][0];
-			
+		if(array_key_exists("label",$conf))
+			return $conf["label"];			
 		return ucfirst($property);
 	}
 
 	public function getSetting($raw,$default = null,$path = "Widgets.Mapping"){
 		$mappings = \F3\FLOW3\Reflection\ObjectAccess::getPropertyPath($this->settings,$path);
+		#echo "path:".$path."<br />";
+		#\F3\dump($mappings);
+		if(!empty($mappings)){
+			if(isset($mappings[$raw])){
+				return $mappings[$raw];
+			}
 
-		if(isset($mappings[$raw])){
-			return $mappings[$raw];
-		}
-
-		foreach ($mappings as $pattern => $widget) {
-			if(preg_match("/".$pattern."/",$raw) > 0){
-				return $widget;
+			foreach ($mappings as $pattern => $widget) {
+				if(preg_match("/".$pattern."/",$raw) > 0){
+					return $widget;
+				}
 			}
 		}
-
 		if($default !== null)
 			return $default;
 
@@ -228,12 +315,12 @@ abstract class AbstractAdapter implements AdapterInterface {
 	public function convertValues($values,$properties){
 		$values = $this->cleanUpItem($values);
 		foreach ($values as $property => $value) {
-			$values[$property] = $this->convertValue($value,$properties[$property]["var"][0],"storage",$properties[$property]);
+			$values[$property] = $this->convertValue($value,$properties[$property]["var"][0],"storage",$properties[$property],$property);
 		}
 		return $values;
 	}
 
-	public function convertValue($value,$type,$target="presentation",$conf = array()){
+	public function convertValue($value,$type,$target="presentation",$conf = array(), $property = ""){
 		$widgetType = $this->getSetting($type,"TextField");
 		#echo "<br />".$type." (".$target.")";
 		#\F3\dump(array(
@@ -256,7 +343,7 @@ abstract class AbstractAdapter implements AdapterInterface {
 				default:
 					$callback = $this->getCallback($this->getSetting($type,null,"Conversions.Presentation"),$conf);
 					if(!empty($callback))
-						return call_user_func($callback,$value,$conf);
+						return call_user_func($callback,$value,$conf,$property);
 					return $value;
 					break;
 			}
@@ -274,7 +361,7 @@ abstract class AbstractAdapter implements AdapterInterface {
 				default:
 					$callback = $this->getCallback($this->getSetting($type,null,"Conversions.Storage"),$conf);
 					if(!empty($callback))
-						return call_user_func($callback,$value,$conf);
+						return call_user_func($callback,$value,$conf,$property);
 					return $value;
 					break;
 			}
@@ -307,33 +394,43 @@ abstract class AbstractAdapter implements AdapterInterface {
 		return $callback;
 	}
 	
-	public function toString($object){
-		if(is_callable(array($object,"__toString")))
-			return $object->__toString();
-			
-		$class = get_class($object);
-		$properties = $this->reflectionService->getClassPropertyNames($class);
+	public function toString($object,$configuration = array()){
 		$identity = array();
 		$title = array();
 		$goodGuess = null;
 		$usualSuspects = array("title","name");
-		foreach($properties as $property){
-			$tags = $this->reflectionService->getPropertyTagsValues($class,$property);
-			if(in_array("title",array_keys($tags))){
-				$title[] = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
-			}
-			
-			if(in_array("identity",array_keys($tags))){
-				$value = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
-				if(is_string($value) || is_integer($value))
-					$identity[] = $value;
-			}
+		if(is_object($object)){
+			if(is_callable(array($object,"__toString")))
+				return $object->__toString();
 		
-			if(in_array($property,$usualSuspects) && $goodGuess === null){
-				$goodGuess = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
+			$class = get_class($object);
+			$properties = $this->reflectionService->getClassPropertyNames($class);
+			foreach($properties as $property){
+				$tags = $this->reflectionService->getPropertyTagsValues($class,$property);
+				if(in_array("title",array_keys($tags))){
+					$title[] = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
+				}
+			
+				if(in_array("identity",array_keys($tags))){
+					$value = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
+					if(is_string($value) || is_integer($value))
+						$identity[] = $value;
+				}
+		
+				if(in_array($property,$usualSuspects) && $goodGuess === null){
+					$goodGuess = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
+				}
+			}
+		}else if(is_array($object)){
+			foreach($configuration["properties"] as $property => $conf){
+				if(isset($conf["title"])){
+					$title[] = $object[$property];
+				}
+				if(in_array($property,$usualSuspects) && $goodGuess === null){
+					$goodGuess = $object[$property];
+				}
 			}
 		}
-		
 		if(count($title)>0)
 			return implode(", ",$title);
 		if(count($identity)>0)
@@ -343,7 +440,9 @@ abstract class AbstractAdapter implements AdapterInterface {
 	}
 	
 	public function getOptions($beings,$selected = array()){
+		$name = $beings;
 		if(is_string($beings)) $beings = $this->getBeings($beings);
+		if(!is_array($selected)) $selected = explode(",",$selected);
 		if(empty($beings)) return array();
 		
 		$options = array(""=>"");
@@ -354,7 +453,6 @@ abstract class AbstractAdapter implements AdapterInterface {
 				"selected" => in_array($being["meta"]["id"],$selected)
 			);
 		}
-		
 		return $options;
 	}
 	
