@@ -14,17 +14,24 @@ Admin:
     F3\Admin\Adapters\DummyAdapter: active
   Fallbacks:
     Views:
-      - package://@package/Private/Templates/@model/@action/@variant.html
+      - package://@package/Private/Templates/@being/@action/@variant.html
       - package://@package/Private/Templates/Admin/@action/@variant.html
-      - package://@package/Private/Templates/@model/@action.html
+      - package://@package/Private/Templates/@being/@action.html
       - package://@package/Private/Templates/Admin/@action.html
       - package://Admin/Private/Templates/Standard/@action/@variant.html
       - package://Admin/Private/Templates/Standard/@action.html
+    Partials:
+      - package://@package/Private/Partials/@being/@action.html
+      - package://@package/Private/Partials/@action.html
+      - package://Admin/Private/Partials/@action.html
+    Actions:
+      - package://@package/Private/Partials/@being/Actions/@action.html
+      - package://@package/Private/Partials/Actions/@action.html
+      - package://Admin/Private/Partials/Actions/@action.html
     Widgets:
-      - package://@group/Private/Templates/@being/Widgets/@partial.html
-      - package://@group/Private/Templates/Widgets/@partial.html
-      - package://Admin/Private/Templates/Standard/Widgets/@partial.html
-      - package://Admin/Private/Templates/Widgets/@partial.html
+      - package://@package/Private/Partials/@being/Widgets/@partial.html
+      - package://@package/Private/Partials/Widgets/@partial.html
+      - package://Admin/Private/Partials/Widgets/@partial.html
 PHPCR:
   Widgets:
     Mapping:
@@ -46,3 +53,80 @@ PHPCR:
       \DateTime: this->dateTimeToString
       ^\\*F3\\[A-Za-z]+\\Domain\\Model\\[A-Za-z]+$: this->modelToIdentifier
       ^\\*\SplObjectStorage\<\\*F3\\[A-Za-z]+\\Domain\\Model\\[A-za-z]+>$: this->splObjectStorageToIdentifiers
+
+Dummy:
+  DataStorage: '%FLOW3_PATH_DATA%Persistent/DummyData'
+  Widgets:
+    Mapping:
+      string:   Textfield
+      readonly: TextfieldReadonly
+      integer:  Spinner
+      float:    Textfield
+      boolean:  Boolean
+      resource: Upload
+  #      \DateTime: DateTime
+      ^\\*Being\\([A-Za-z]+)$: SingleRelation
+      ^\\*Beings\\([A-za-z]+)$: MultipleRelation
+  Conversions:
+    Storage:
+      ^\\*Being\\([A-Za-z]+)$: this->getId
+      ^\\*Beings\\([A-za-z]+)$: this->beingsToIdentifiers
+    Presentation:
+      ^\\*Being\\([A-Za-z]+)$: this->identifierToBeing
+      ^\\*Beings\\([A-za-z]+)$: this->identifiersToBeings
+  Beings:
+    Tag:
+      properties:
+        title:
+          type:string 
+    Widgets:
+      properties:
+        string:
+          type:string
+        integer:
+          type:integer
+        float:
+          type:float
+        boolean:
+          type:boolean
+#        resource:
+#          type:resource
+        singleRelation:
+          type: \Being\Tag
+        multipleRelation:
+          type: \Beings\Tag
+    Options:
+      properties:
+        ingoredField:
+          type: string
+          ignore: true
+          infotext: This field will be ignored by autoadmin
+        specificWidget:
+          type: string
+          widget: TextArea
+          infotext: This field has a Textarea specified as Widget
+        specificLabel:
+          type: string
+          label: Specific Label
+          infotext: This field has a label set to override the internal name
+    Sets:
+      set:
+        - First Set (string,integer,float,boolean)
+        - Second Set (string2,integer2,float2,boolean2)
+      properties:
+        string:
+          type:string
+        integer:
+          type:integer
+        float:
+          type:float
+        boolean:
+          type:boolean
+        string2:
+          type:string
+        integer2:
+          type:integer
+        float2:
+          type:float
+        boolean2:
+          type:boolean

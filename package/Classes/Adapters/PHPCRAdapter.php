@@ -41,7 +41,7 @@ class PHPCRAdapter extends AbstractAdapter {
 		$this->settings = $this->helper->getSettings("PHPCR");
 		parent::init();
 		
-		if(\F3\Admin\register::has("being")){
+		if(\F3\Admin\register::has("being") && class_exists($this->being)){
 			$this->repository = str_replace("Domain\Model","Domain\Repository",$this->being) . "Repository";
 			$this->repositoryObject = $this->objectManager->getObject($this->repository);
 			$this->query = $this->repositoryObject->createQuery();
@@ -94,6 +94,7 @@ class PHPCRAdapter extends AbstractAdapter {
 	public function getGroups(){
 		$activePackages = $this->packageManager->getActivePackages();
 		$groups = array();
+		$this->settings = $this->helper->getSettings("PHPCR");
 		$settings = $this->helper->getSettings();
 		foreach ($activePackages as $packageName => $package) {
 			foreach ($package->getClassFiles() as $class => $file) {
@@ -113,45 +114,6 @@ class PHPCRAdapter extends AbstractAdapter {
 			}
 		}
 		return $groups;
-	}
-	
-	public function getAttributeSets($being, $id = null, $level = 0){
-		$being = ltrim($being,"\\");
-		$object = $this->getObject($being, $id);
-		$configuration = $this->getConfiguration($being);
-		
-		$properties = array();
-		foreach ($configuration["properties"] as $property => $conf) {
-			if(!isset($configuration["properties"][$property])) continue;
-			if(array_key_exists("ignore",$conf)) continue;
-			
-			$value = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
-			
-			$options = array();
-			$inline = array();
-			if(($conf["widget"] == "SingleRelation" || $conf["widget"] == "MultipleRelation") && !array_key_exists("inline",$conf) && $level < 1){
-				$this->handleRelation($conf["widget"],$conf,$value);
-			}else if(array_key_exists("inline",$conf) && $level < 1){
-				if($conf["widget"] == "SingleRelation"){
-					$inline = $this->getAttributeSets($conf["type"], $id, $level+1);
-				}
-			}
-			
-			$properties[$property] = array(
-				"label" 	=> $this->getLabel($conf,$property),
-				"name" 		=> $property,
-				"error" 	=> "",
-				"type"	 	=> $conf["widget"],
-				"inline"	=> $inline,
-				"options" 	=> $options,
-				"value" 	=> $this->convertValue($value,$conf["widget"])
-			);
-		}
-		
-		# Sort it into Sets
-		$sets = $this->groupPropertiesIntoSets($properties);
-		
-		return $sets;
 	}
 	
 	public function handleRelation($type,$conf,$value){
@@ -179,69 +141,41 @@ class PHPCRAdapter extends AbstractAdapter {
 		return $this->getOptions($objects,$value);
 	}
 	
-	public function getBeing($being,$id = null){
-		$configuration = $this->getConfiguration($being);
-		$object = $this->getObject($being, $id);
-		
-		$array = array(
-			"meta" => array(
-				"id" => $id,
-				"name" => $this->toString($object)
-			)
-		);
-		foreach ($configuration["properties"] as $property => $conf) {
-			if(array_key_exists("ignore",$conf)) continue;
-			
-			$value = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
-			$array["properties"][$property] = array(
-				"label" => $this->getLabel($conf,$property),
-				"name"	=> $property,
-				"type"	=> $this->getSetting($conf["var"][0],"TextField"),
-				"value" => $this->convertValue($value,$conf["var"][0]),
-				"conf" 	=> $conf
-			);
-			$array["object"] = $object;
+	public function getObject($being, $id = null){
+		if(class_exists($being)){
+			if($id == null)
+				$object = $this->objectManager->create($being);
+			else
+				$object = $this->persistenceManager->getObjectByIdentifier($id);
 		}
-		
-		return $array;
+		return $object;
 	}
 	
-	public function getBeings($being){
-		$rawObjects = $this->query->execute();
-		
-		$objects = array();
-		foreach ($rawObjects as $object) {
-			$id = $this->persistenceManager->getIdentifierByObject($object);
-			$array = $this->getBeing($being,$id);
-			if(!empty($array))
-				$objects[] = $array;
-		}
+	public function getObjects($being){
+		$objects = $this->query->execute();
 		return $objects;
 	}
 	
-	public function getObject($being, $id = null){
-		if($id == null)
-			$object = $this->objectManager->create($being);
-		else
-			$object = $this->persistenceManager->getObjectByIdentifier($id);
-		return $object;
+	public function getId($object){
+		return $this->persistenceManager->getIdentifierByObject($object);
 	}
 	
 	public function getConfiguration($being){
 		$configuration = parent::getConfiguration($being);
-		
-		foreach($configuration["properties"] as $property => $conf){
-			if( array_key_exists("inject",$conf) ||
-				array_key_exists("ignore",$conf) 	){
-				$configuration["properties"][$property]["ignore"] = true;
+		if(!empty($configuration)){
+			foreach($configuration["properties"] as $property => $conf){
+				if( array_key_exists("inject",$conf) ||
+					array_key_exists("ignore",$conf) 	){
+					$configuration["properties"][$property]["ignore"] = true;
+				}
+				
+				if(array_key_exists("widget",$conf))
+					$configuration["properties"][$property]["widget"] = $conf["widget"][0];
+				else
+					$configuration["properties"][$property]["widget"] = $this->getSetting($conf["var"][0],"TextField");
+				
+				$configuration["properties"][$property]["type"] = $conf["var"][0];
 			}
-			
-			if(array_key_exists("widget",$conf))
-				$configuration["properties"][$property]["widget"] = $conf["widget"][0];
-			else
-				$configuration["properties"][$property]["widget"] = $this->getSetting($conf["var"][0],"TextField");
-			
-			$configuration["properties"][$property]["type"] = $conf["var"][0];
 		}
 		
 		return $configuration;

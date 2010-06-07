@@ -431,6 +431,7 @@ class Helper{
 		foreach ($this->adapters as $adapter) {
 			if(class_exists($adapter)){
 				$adapters[$adapter] = $this->objectManager->getObject($adapter);
+				#$adapters[$adapter]->init();
 				foreach ($adapters[$adapter]->getGroups() as $group => $beings) {
 					foreach ($beings as $being => $conf) {
 						$conf["adapter"] = $adapter;
