@@ -106,10 +106,12 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 		
 		foreach ($objects as $key => $object) {
 			foreach($object["properties"] as $property => $meta){
+				#\F3\dump($meta);
 				if(is_array($meta["value"])){
 					$values = array();
 					foreach ($meta["value"] as $value) {
-						$values[] = $value["name"];
+						if(isset($value["title"]))
+							$values[] = $value["title"];
 					}
 					$objects[$key]["properties"][$property]["value"] = implode(",",$values);
 				}
@@ -269,8 +271,8 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 				if(in_array($action."view",array_keys($tags))){
 					$variant = $tags[$action."view"][0];
 				}
-				$replacements["@package"] =$this->helper->getPackageByClassName($this->being);
-				$replacements["@model"] =$this->helper->getObjectNameByClassName($this->being);
+				$replacements["@package"] = $this->helper->getPackageByClassName($this->being) ? $this->helper->getPackageByClassName($this->being) : "Admin";
+				$replacements["@being"] =$this->helper->getObjectNameByClassName($this->being);
 				if(array_key_exists("variant-".$action,$tags)){
 					$replacements["@variant"] = ucfirst(current($tags["variant-".$action]));
 				}
@@ -284,6 +286,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 		if($this->request->hasArgument("being")){
 			$meta["being"]["identifier"] = $this->request->getArgument("being");
 			$meta["being"]["name"] = $this->getAdapter()->getName($this->request->getArgument("being"));
+			\F3\Admin\Register::set("package",$replacements["@package"]);
 		}
 			
 		if($this->request->hasArgument("adapter")){
