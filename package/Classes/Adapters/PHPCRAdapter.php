@@ -97,6 +97,8 @@ class PHPCRAdapter extends AbstractAdapter {
 		$this->settings = $this->helper->getSettings("PHPCR");
 		$settings = $this->helper->getSettings();
 		foreach ($activePackages as $packageName => $package) {
+            if( $this->objectManager->getContext() != "Development" && $packageName == "Admin" ) continue;
+            
 			foreach ($package->getClassFiles() as $class => $file) {
 				if(strpos($class,"\Model\\")>0){
 					$tags = $this->reflection->getClassTagsValues($class);

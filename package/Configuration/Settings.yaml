@@ -3,10 +3,10 @@
 #                                                                        #
 
 Admin:
-  Models: 
-    - \F3\Blog\Domain\Model\Blog
-    - \F3\Blog\Domain\Model\Post
-    - \F3\Blog\Domain\Model\Category
+  Models: [] 
+#    - \F3\Blog\Domain\Model\Blog
+#    - \F3\Blog\Domain\Model\Post
+#    - \F3\Blog\Domain\Model\Category
   Defaults:
     newinlines: 3
   Adapters:
