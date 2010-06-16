@@ -39,6 +39,10 @@ class Model {
 	public function injectManager(\F3\FLOW3\Object\ObjectManagerInterface $manager) {
 		$this->objectManager = $manager;
 	}
+
+    public function __construct(){
+        
+    }
 	
 	function getModelName(){
 		$class = get_class($this);
@@ -47,12 +51,17 @@ class Model {
 		$nameParts = explode("_AOPProxy",$tmp);
 		return array_shift($nameParts);
 	}
+	
+	function getIdentity(){
+		$persistenceManager = $this->objectManager->get("F3\FLOW3\Persistence\PersistenceManagerInterface");
+        return $persistenceManager->getIdentifierByObject($this);
+	}
 
 	function __call($name,$arguments) {
 		if(count($arguments)>0){
 			$value = $arguments[0];
-		}	
-
+		}
+        
 		switch (true) {
 			// Magic Setter Function: setProperty($value) sets $this->property = $value;
 			case substr($name,0,3) == "set":
@@ -84,8 +93,8 @@ class Model {
 	}
 	
 	public function _set($name,$value){
-		$property = strtolower(substr($name,3));
-		if(!property_exists(get_class($this),$property))
+		$property = $this->getPropertyName(substr($name,3));
+		if($property === false)
 			throw new \Exception('The Property '.$property.' you are trying to set isn\'t defined in this class '.get_class($this).".");
 #		echo $name." "."<br />";
 		/*
@@ -100,8 +109,8 @@ class Model {
 	}
 	
 	public function _get($name){
-		$property = strtolower(substr($name,3));
-		if(!property_exists(get_class($this),$property))
+        $property = $this->getPropertyName(substr($name,3));
+		if($property === false)
 			throw new \Exception('The Property '.$property.' you are trying to get isn\'t defined in this class.');
 		if ($this->$property instanceof \F3\FLOW3\Persistence\LazyLoadingProxy) {
 			$this->$property->_loadRealInstance();
@@ -114,7 +123,7 @@ class Model {
 	
 	public function _add($name,$value){
 		$model = $this->getModelName();
-		$property = strtolower(substr($name,3));
+		$property = $this->getPropertyName(substr($name,3));
 		$pluralized = \F3\Admin\Service\Inflect::pluralize($property);
 
 		if(!property_exists(get_class($this),$pluralized))
@@ -137,7 +146,7 @@ class Model {
 	}
 	
 	public function _has($name,$value){
-		$property = strtolower(substr($name,3));
+		$property = $this->getPropertyName(substr($name,3));
 		$pluralized = \F3\Admin\Service\Inflect::pluralize($property);
 		if ($this->$pluralized instanceof \F3\FLOW3\Persistence\LazyLoadingProxy) {
 			$this->$pluralized->_loadRealInstance();
@@ -146,7 +155,7 @@ class Model {
 	}
 	
 	public function _remove($name,$value){
-		$property = strtolower(substr($name,3));
+		$property = $this->getPropertyName(substr($name,3));
 		if(!property_exists(get_class($this),$property))
 			throw new \Exception('The Property '.$property.' you are trying to set isn\'t defined in this class '.get_class($this).".");
 		$pluralized = \F3\Admin\Service\Inflect::pluralize($property);
@@ -220,6 +229,16 @@ class Model {
 		if($goodGuess !== null)
 			return $goodGuess;
 	}
+
+    public function getPropertyName($property = null){
+        $properties = get_class_vars(get_class($this));
+        foreach($properties as $p => $value){
+            if(strtolower($property) == strtolower($p)){
+                return $p;
+            }
+        }
+        return false;
+    }
 }
 
 ?>
