@@ -29,8 +29,8 @@ namespace F3\Admin\Adapters;
  * @prototype
  */
 class DummyAdapter extends AbstractAdapter {
-	
-	public function init(){
+
+	public function init() {
 		$this->settings = $this->helper->getSettings("Dummy");
 		parent::init();
 		$this->fmc = $this->objectManager->get('F3\FLOW3\MVC\Controller\FlashMessageContainer');
@@ -40,123 +40,103 @@ class DummyAdapter extends AbstractAdapter {
 		#\F3\dump($this->settings);
 		$this->loadData();
 	}
-	
-	public function loadData(){
+
+	public function loadData() {
 		$this->data = $this->yamlSource->load($this->settings["DataStorage"]);
 	}
-	
-	public function saveData(){
-		$this->yamlSource->save($this->settings["DataStorage"],$this->data);
+
+	public function saveData() {
+		$this->yamlSource->save($this->settings["DataStorage"], $this->data);
 	}
-	
-	public function getName($being){
+
+	public function getName($being) {
 		return ucfirst($being);
 	}
-	
-	public function getGroups(){
+
+	public function getGroups() {
 		$this->settings = $this->helper->getSettings("Dummy");
-		$beings = array();
+		$beings = array ();
 		
-		if($this->objectManager->getContext() == "Development"){
-			foreach($this->settings["Beings"] as $being => $conf){
-				$beings["Dummy"][$being] = array(
-					"name" => $this->getName($being),
-					"being"=> $being
-				);
+		if( $this->objectManager->getContext() == "Development" ) {
+			foreach($this->settings ["Beings"] as $being => $conf) {
+				$beings ["Dummy"] [$being] = array ("name" => $this->getName($being), "being" => $being );
 			}
 		}
 		
 		return $beings;
 	}
-	
-	public function getObject($being,$id){
-		return isset($this->data[$being][$id]) ? $this->data[$being][$id] : array();
+
+	public function getObject($being, $id) {
+		return isset($this->data [$being] [$id]) ? $this->data [$being] [$id] : array ();
 	}
-	
-	public function getObjects($being){
-		return isset($this->data[$being]) ? $this->data[$being] : array();
+
+	public function getObjects($being) {
+		return isset($this->data [$being]) ? $this->data [$being] : array ();
 	}
-	
-	public function getId($object){
-		return isset($object["id"]) ? $object["id"] : null;
+
+	public function getId($object) {
+		return isset($object ["id"]) ? $object ["id"] : null;
 	}
-	
-	public function createObject($being, $data){
+
+	public function createObject($being, $data) {
 		$id = count($this->data);
-		$data["id"] = $id;
-		$this->data[$being][$id] = $data;
+		$data ["id"] = $id;
+		$this->data [$being] [$id] = $data;
 		$this->saveData();
-		return array();
+		return array ();
 	}
-	
-	public function updateObject($being, $id, $data){
-		$data["id"] = $id;
-		$this->data[$being][$id] = $data;
+
+	public function updateObject($being, $id, $data) {
+        $this->loadData();
+		$data ["id"] = $id;
+		$this->data [$being] [$id] = $data;
 		$this->saveData();
 	}
-	
-	public function deleteObject($being,$id){
-		unset($this->data[$being][$id]);
+
+	public function deleteObject($being, $id) {
+		unset($this->data [$being] [$id]);
+		$this->saveData();
 	}
-	
-	public function getConfiguration($being){
-		$configuration = $this->settings["Beings"][$being];
-		# Map assign Widgets according to Types
-		foreach($configuration["properties"] as $property => $conf){
-			$conf["type"] = isset($conf["type"]) ? $conf["type"] : "string";
-			if(isset($conf["widget"]))
-				$widget = $conf["widget"];
-			else
-				$widget = $this->getSetting($conf["type"],"TextField");
-			$configuration["properties"][$property]["widget"] = $widget;
-		}
-		
-		#\F3\dump($configuration);
-		return $configuration;
+
+	public function getConfiguration($being) {
+		$c = $this->settings ["Beings"] [$being];
+
+        foreach($c["properties"] as $property => $conf){
+            preg_match("/\\\\Beings*\\\\([A-Za-z]+)$/", $conf ["type"], $matches);
+            if(!empty($matches))
+                $c["properties"][$property]["being"] = $matches [1];
+        }
+		return $c;
 	}
-	
-	public function handleRelation($type,$conf,$value){
-		#\F3\dump(array($type,$conf,$value));
-		
-		if($type == "MultipleRelation"){
-			preg_match("/\\\\Beings\\\\([A-Za-z]+)$/",$conf["type"],$matches);
-			$being = $matches[1];
-		}else if($type == "SingleRelation"){
-			preg_match("/\\\\Being\\\\([A-Za-z]+)/",$conf["type"],$matches);
-			$being = $matches[1];
-		}
-		
-		return $this->getOptions($being,$value);
-	}
-	
-	
+    
 	## Conversion Functions
 	
-	public function beingsToIdentifiers($beings){
-		$identifiers = array();
-		if(is_array($beings)){
-			foreach ($beings as $key => $being) {
-				$identifiers[] = $this->getId($being);
+
+	public function beingsToIdentifiers($beings) {
+		$identifiers = array ();
+		if( is_array($beings) ) {
+			foreach($beings as $key => $being) {
+				$identifiers [] = $this->getId($being);
 			}
 		}
-		return implode(",",$identifiers);
+		return implode(",", $identifiers);
 	}
-	
-	public function identifiersToBeings($identifiers,$conf,$property){
-		preg_match("/\\\\Beings\\\\([A-Za-z]+)$/",$conf["type"],$matches);
-		$being = $matches[1];
-		$identifiers = explode(",",$identifiers);
-		$beings = array();
-		foreach($identifiers as $identifier){
-			$beings[] = $this->getObject($being,$identifier);
+
+	public function identifiersToBeings($identifiers, $conf, $property) {
+		preg_match("/\\\\Beings\\\\([A-Za-z]+)$/", $conf ["type"], $matches);
+		$being = $matches [1];
+		$identifiers = explode(",", $identifiers);
+		$beings = array ();
+		foreach($identifiers as $identifier) {
+			$beings [] = $this->getObject($being, $identifier);
 		}
 		return $beings;
 	}
-	
-	public function identifierToBeing($identifier,$conf,$property){
-		preg_match("/\\\\Being\\\\([A-Za-z]+)$/",$conf["type"],$matches);
-		$being = $matches[1];
-		return $this->getObject($being,$identifier);
+
+	public function identifierToBeing($identifier, $conf, $property) {
+		preg_match("/\\\\Being\\\\([A-Za-z]+)$/", $conf ["type"], $matches);
+		$being = $matches [1];
+		return $this->getObject($being, $identifier);
 	}
 }
 

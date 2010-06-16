@@ -45,13 +45,6 @@ abstract class AbstractAdapter implements AdapterInterface {
 	protected $packageManager;
 	
 	/**
-	 * @var \F3\FLOW3\Reflection\ReflectionService
-	 * @author Marc Neuhaus
-	 * @inject
-	 */
-	protected $reflection;
-	
-	/**
 	 * @var \F3\FLOW3\Object\ObjectManagerInterface
 	 * @api
 	 * @author Marc Neuhaus <apocalip@gmail.com>
@@ -66,449 +59,442 @@ abstract class AbstractAdapter implements AdapterInterface {
 	 * @inject
 	 */
 	protected $reflectionService;
-	
-	public function init(){
-		$this->session = \F3\Admin\register::get("session");
-		if(\F3\Admin\register::has("being")){
-			$this->being = \F3\Admin\register::get("being");
-			$this->conf = $this->getConfiguration($this->being);
-		}
-		
-		if(!empty($this->being) && $this->session->hasKey($this->being))
-			$this->userSettings = $this->session->getData($this->being);
-		else
-			$this->userSettings = array();
-	}
-	
-	public function __destruct(){
-		#$this->session->setData($this->being,$this->userSettings);
-	}
-	
-	public function restoreSorting(){
-		if(empty($this->userSettings["sorting"]) && array_key_exists("sort",$this->conf["class"])){
-			$parts = explode(" ",$this->conf["class"]["sort"][0]);
-			$this->userSettings["property"] = array(
-				"property" => $parts[0],
-				"direction" => $parts[1]
-			);
-		}
-		$this->setSorting($this->userSettings["sorting"]["property"],$this->userSettings["sorting"]["direction"]);
-	}
-	
-	public function setSorting($property,$direction = "asc"){}
-	
-	public function restoreLimit(){
-		if(empty($this->userSettings["limit"]) && array_key_exists("limit",$this->conf["class"])){
-			$this->userSettings["limit"] = $this->conf["class"]["limit"][0];
-		}
-		$this->setLimit($this->userSettings["limit"]);
-	}
-	
-	public function setLimit($limit){}
-	
-	public function restoreOffset(){
-		if(empty($this->userSettings["offset"]) && array_key_exists("offset",$this->conf["class"])){
-			$this->userSettings["offset"] = $this->conf["class"]["offset"][0];
-		}
-		$this->setOffset($this->userSettings["offset"]);
-	}
-	
-	public function setOffset($offset){}
-	
-	public function getAttributeSets($being, $id = null){
-		$being = ltrim($being,"\\");
-		$object = $this->getObject($being, $id);
-		
-		$array = $this->beingToArray($object,$being);
-		$properties = $array["properties"];
-		foreach ($this->conf["properties"] as $property => $conf) {
-			if(array_key_exists("ignore",$conf)) continue;
-			$value = $properties[$property]["value"];
-			
-			$options = array();
-			$inline = array();
-			if(($conf["widget"] == "SingleRelation" || $conf["widget"] == "MultipleRelation") && !array_key_exists("inline",$conf)){
-				$options = $this->handleRelation($conf["widget"],$conf,$value);
-			}else if(array_key_exists("inline",$conf) && $level < 1){
-				if($conf["widget"] == "SingleRelation"){
-					$inline = $this->getAttributeSets($conf["type"], $id, $level+1);
-				}
-			}
-			$properties[$property]["error"] = "";
-			$properties[$property]["inline"] = $inline;
-			$properties[$property]["options"] = $options;
-		}
-		
-		#\F3\dump($properties);
-		
-		# Sort it into Sets
-		$sets = $this->groupPropertiesIntoSets($properties);
-		
-		return $sets;
-	}
-	
-	public function groupPropertiesIntoSets($attributes){
-		$sets = array();
-		if(!empty($this->conf) && ( isset($this->conf["class"]["set"]) || isset($this->conf["set"]))){
-			$tmp = isset($this->conf["class"]["set"]) ? $this->conf["class"]["set"] : $this->conf["set"];
-			foreach ($tmp as $set) {
-				preg_match("/(.*)\(([A-Za-z0-9, ]+)\)/",$set,$matches);
-				if(!isset($matches[2])) continue;
-				
-				$setName = isset($matches[1]) ? $matches[1] : "";
-				$fields = str_replace(" ","",$matches[2]);
-				$setAttributes = array_intersect_key($attributes, array_flip(explode(",",$fields)));
-				
-				if(count($setAttributes)>0)
-					$sets[$setName] = $setAttributes;
-				unset($matches);
-			}
-		}
-		if(empty($sets))
-			$sets["General"] = array_values($attributes);
-		
-		return $sets;
-	}
-	
-	public function getConfiguration($being){
-		$configuration = array();
-		if(class_exists($being)){
-			$configuration = array(
-				"class" => $this->reflection->getClassTagsValues($being),
-				"properties" => $this->helper->getModelProperties($being)
-			);
-		}
-		return $configuration;
-	}
-	
-	public function transformToObject($being,$data,$target=null,$propertyMapper = null){
-		$data = $this->cleanUpItem($data);
 
-		$arg = $this->objectManager->get("F3\Admin\Argument","item",$being);
-		if($propertyMapper !== null)
-			$arg->replacePropertyMapper($propertyMapper);
-		if($target !== null)
-			$arg->setTarget($target);
-		$validator = $this->helper->getModelValidator($being);
-		if(is_object($validator))
-			$arg->setValidator($validator);
-		$arg->setValue($data);
+    /**
+     * Holds the Converters
+     * @var array
+     * @author Marc Neuhaus <mneuhaus@famelo.com>
+     * */
+    protected $objectConverters = array();
 
-		$targetObject = $arg->getValue();
+    /**
+     * Initialize the Adapter
+     *
+     * @author Marc Neuhaus <mneuhaus@famelo.com>
+     * */
+    public function init() {
+        $this->initializeConverters();
+	}
 
-		$validationErrors = $arg->getValidator()->getErrors();
+    /**
+     * Initializes the Datatype Converters which are later used in convertData
+     * @author Marc Neuhaus <mneuhaus@famelo.com>
+     * */
+    public function initializeConverters(){
+        $objectConverters = array();
+        foreach($this->reflectionService->getAllImplementationClassNamesForInterface('F3\FLOW3\Property\ObjectConverterInterface') as $objectConverterClassName) {
+            $objectConverter = $this->objectManager->get($objectConverterClassName);
+            foreach ($this->objectManager->get($objectConverterClassName)->getSupportedTypes() as $supportedType) {
+                $objectConverters[$supportedType] = $objectConverter;
+            }
+        }
+        $this->objectConverters = $objectConverters;
+    }
 
-		$errors = array();
-		if(count($validationErrors)>0){
-			foreach ($validationErrors as $propertyError) {
-				$errors[$propertyError->getPropertyName()] = array();
-				foreach ($propertyError->getErrors() as $error) {
-					$errors[$propertyError->getPropertyName()][] = $error->getMessage();
-				}
-			}
-		}
-		
-		return array(
-			"errors" => $errors,
-			"object" => $targetObject
-		);
+    public function getClass(){
+        return ltrim(get_class($this),"\\");
+    }
+
+	public function getName($being) {
+		$parts = explode("\\", $being);
+		return str_replace("_AOPProxy_Development", "", end($parts));
 	}
-	
-	public function cleanUpItem($item){
-		foreach ($item as $key => $value) {
-			if(is_array($value)){
-				$item[$key] = $this->cleanUpItem($value);
-			}
-			if(is_object($value) && !empty($value->FLOW3_Persistence_Entity_UUID)){
-				$item[$key] = $value->FLOW3_Persistence_Entity_UUID;
-			}
-			if(empty($item[$key]) && $item[$key] !== false){
-				unset($item[$key]);
-			}
-		}
-		return $item;
-	}
-	
-	public function getBeings($being){
-		$objects = $this->getObjects($being);
-		$arrays = array();
-		foreach ($objects as $object) {
-			$array = $this->beingToArray($object,$being);
-			if(!empty($array))
-				$arrays[] = $array;
-		}
-		return $arrays;
-	}
-	
-	public function getBeing($being,$id = null){
-		$object = $this->getObject($being, $id);
-		$array = $this->beingToArray($object,$being);
-		
-		return $array;
-	}
-	
-	public function beingToArray($object,$being){
-		$id = $this->getId($object);
-		$configuration = $this->getConfiguration($being);
-		$array = array(
-			"meta" => array(
-				"id" => $id,
-				"name" => $this->toString($object,$configuration)
-			),
-			"object" => $object
-		);
-		foreach ($configuration["properties"] as $property => $conf) {
-			if(array_key_exists("ignore",$conf)) continue;
-			
-			try{	
-				$value = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
-			}catch(\F3\FLOW3\Reflection\Exception\PropertyNotAccessibleException $e){
-				$value = null;
-			}
-			
-			$array["properties"][$property] = array_merge($conf,array(
-				"label" => $this->getLabel($conf,$property),
-				"name"	=> $property,
-				"type"	=> $conf["type"],
-				"widget"=> $conf["widget"],
-				"value" => $this->convertValue($value,$conf["type"],"presentation",$conf,$property),
-				"conf" 	=> $conf
-			));
-		}
-		#\F3\dump($array);
-		#exit;
-		return $array;
-	}
-	
-	public function getName($being){
-		$parts = explode("\\",$being);
-		return str_replace("_AOPProxy_Development","",end($parts));
-	}
-	
-	public function getLabel($conf,$property){
-		if(array_key_exists("label",$conf))
-			return $conf["label"];			
+
+	public function getLabel($property) {
 		return ucfirst($property);
 	}
 
-	public function getSetting($raw,$default = null,$path = "Widgets.Mapping"){
-		$mappings = \F3\FLOW3\Reflection\ObjectAccess::getPropertyPath($this->settings,$path);
-		#echo "path:".$path."<br />";
-		#\F3\dump($mappings);
-		if(!empty($mappings)){
-			if(isset($mappings[$raw])){
+    /**
+     * Tries to get most of the Configuration automatically from most of the
+     * Sources like Class and YAML
+     *
+     * @param string $being Name of Class of the Being
+     * @author Marc Neuhaus <mneuhaus@famelo.com>
+     * */
+	public function getConfiguration($being) {
+		$configuration = array ();
+		$configuration = array_merge($configuration,$this->getClassAnnotationConfiguration($being));
+		$configuration = array_merge($configuration,$this->getYamlConfiguration($being));
+		return $configuration;
+	}
+
+    /**
+     * Tries to get the Configuration from the Class if it Exists
+     *
+     * @param string $being Name of Class of the Being
+     * @author Marc Neuhaus <mneuhaus@famelo.com>
+     * */
+    public function getClassAnnotationConfiguration($being){
+		$configuration = array ();
+		if( class_exists($being) ) {
+			$configuration = array (
+                "class" => $this->reflectionService->getClassTagsValues($being),
+                "properties" => $this->helper->getModelProperties($being)
+            );
+
+            foreach($configuration["properties"] as $property => $conf) {
+                // Injected Properties shouldn't be managed
+                if( array_key_exists("inject", $conf) || array_key_exists("ignore", $conf) )
+                    $configuration["properties"][$property]["ignore"] = true;
+
+                foreach($conf as $key => $value){
+                    if(is_array($value) && empty($value)){
+                        $configuration["properties"][$property][$key] = true;
+                    }
+
+                    if(is_array($value) && count($value) == 1){
+                        while(is_array($value))
+                            $value = current($value);
+                        $configuration["properties"][$property][$key] = $value;
+                    }
+                }
+            }
+        }
+        return $configuration;
+    }
+
+    /**
+     * Tries to get the Configuration from the Settings.yaml if
+     * it Contains Configuration about the being.
+     *
+     * @param string $being Name of Class of the Being
+     * @author Marc Neuhaus <mneuhaus@famelo.com>
+     * */
+    public function getYamlConfiguration($being){
+        $configuration = array();
+        
+        if(isset($this->settings["Beings"]))
+            $configuration = $this->settings["Beings"];
+
+        return $configuration;
+    }
+
+    /**
+     * PostProcesses the Configuration
+     * 
+     * @author Marc Neuhaus <mneuhaus@famelo.com>
+     * */
+    public function postProcessConfiguration($configuration){
+        foreach($configuration["properties"] as $property => $c){
+            if(array_key_exists("widget",$c))
+                $configuration["properties"][$property]["widget"] = $c["widget"];
+            else
+                $configuration["properties"][$property]["widget"] = $this->getWidget($c["type"],"TextField");
+        }
+        return $configuration;
+    }
+
+    /**
+     * Gets the Processed Being
+     *
+     * @param string $being Name of Class of the Being
+     * @param string $id Identifier of the Being
+     * @author Marc Neuhaus <mneuhaus@famelo.com>
+     * */
+    public function getBeing($being, $id = null) {
+        $this->conf = $this->getConfiguration($being);
+        
+        $b = $this->objectManager->create("F3\Admin\Core\Being",$this);
+        $b->setClass($being);
+        if($id !== null){
+            $b->setObject($this->getObject($being, $id));
+            $b->setId($id);
+        }
+        $properties = $this->getProperties($being);
+        $b->setProperties($properties);
+        $b->setSets($this->getSets(array_keys($properties)));
+        return $b;
+	}
+
+    /**
+     * Gets multiple Processed Beings
+     *
+     * @param string $being Name of Class of the Being
+     * @author Marc Neuhaus <mneuhaus@famelo.com>
+     * */
+    public function getBeings($being, $filters = null) {
+        $this->conf = $this->getConfiguration($being);
+        
+		$objects = $this->getObjects($being);
+		$beings = array ();
+        if(!empty($objects)){
+            foreach($objects as $object) {
+                $b = $this->getBeing($being,$this->getId($object));
+                $beings[] = $b;
+            }
+        }
+
+        if($filters != null)
+            $beings = $this->applyFilters($beings,$filters);
+        
+		return $beings;
+	}
+
+    /**
+     * Compiles the Properties of a Being
+     *
+     * @param string $being Name of Class of the Being
+     * @author Marc Neuhaus <mneuhaus@famelo.com>
+     * */
+	public function getProperties($being){
+		$configuration = $this->getConfiguration($being);
+        
+        $properties = array();
+		foreach($configuration ["properties"] as $property => $conf) {
+			if( array_key_exists("ignore", $conf) ) continue;
+
+            $p = $this->objectManager->create("F3\Admin\Core\Property",$this);
+
+            $p->setName($property);
+            $p->setConf($conf);
+
+            $properties[$property] = $p;
+		}
+        return $properties;
+    }
+    
+    /**
+     * Resolves the Sets for a Being
+     *
+     * @param array $properties All properties from the Being
+     * @author Marc Neuhaus <mneuhaus@famelo.com>
+     * */
+    public function getSets($properties) {
+		$sets = array ();
+		if( !empty($this->conf) && isset($this->conf["set"]) ) {
+			foreach($this->conf["set"] as $set) {
+				preg_match("/(.*)\(([A-Za-z0-9, ]+)\)/", $set, $matches);
+				if( ! isset($matches [2]) ) continue;
+
+				$setName = isset($matches [1]) ? $matches [1] : "";
+				$fields = str_replace(" ", "", $matches [2]);
+
+				$sets [$setName] = explode(",", $fields);
+				unset($matches);
+			}
+		}
+		if( empty($sets) )
+			$sets ["General"] = $properties;
+        
+		return $sets;
+	}
+
+    /**
+     * Resolve the Type of Widget based on the Settings Configuration
+     *
+     * First step tries to Find a exact Match
+     * Second Step Tries every found pattern in the Settings as RegEx
+     * Third Step returns the Default if set
+     * Fourth Step simply Returns the Raw Value
+     *
+     * @param string $raw     Raw Input Value to Search for in the Settings
+     * @param string $default If everything Fails this will be returned instead of the Raw Value
+     * @param string $path    Path in the Settings Array to Search for the Widget
+     * @author Marc Neuhaus <mneuhaus@famelo.com>
+     * */
+	public function getWidget($raw, $default = null, $path = "Widgets.Mapping") {
+		$mappings = \F3\FLOW3\Reflection\ObjectAccess::getPropertyPath($this->settings, $path);
+        
+		if( ! empty($mappings) ) {
+			if( isset($mappings[$raw]) ) {
 				return $mappings[$raw];
 			}
 
-			foreach ($mappings as $pattern => $widget) {
-				if(preg_match("/".$pattern."/",$raw) > 0){
+			if( isset($mappings[strtolower($raw)]) ) {
+				return $mappings[$raw];
+			}
+
+			if( isset($mappings[ucfirst($raw)]) ) {
+				return $mappings[$raw];
+			}
+
+			foreach($mappings as $pattern => $widget) {
+				if( preg_match("/" . $pattern . "/", $raw) > 0 ) {
 					return $widget;
 				}
 			}
 		}
-		if($default !== null)
+		if( $default !== null )
 			return $default;
 
 		return $raw;
+	}
+
+    public function getValue($property, $mixed){
+        $value = null;
+        try {
+            if(is_object($mixed) || is_array($mixed))
+                $value = \F3\FLOW3\Reflection\ObjectAccess::getProperty($mixed, $property);
+        } catch(\F3\FLOW3\Reflection\Exception\PropertyNotAccessibleException $e) {}
+        return $value;
     }
 
-	public function convertValues($values,$properties){
-		$values = $this->cleanUpItem($values);
-		foreach ($values as $property => $value) {
-			$values[$property] = $this->convertValue($value,$properties[$property]["var"][0],"storage",$properties[$property],$property);
-		}
-		return $values;
-	}
+    /**
+     * Resolves Beings to Usable Options for Select Form Elements
+     *
+     * @param array $beings Array of the Beings
+     * @param array $selected Array of the Selected Keys
+     * @author Marc Neuhaus <mneuhaus@famelo.com>
+     * */
+	public function getOptions($beings, $selected = array()) {
+		if( is_string($beings) )
+			$beings = $this->getBeings($beings);
 
-	public function convertValue($value,$type,$target="presentation",$conf = array(), $property = ""){
-		$widgetType = $this->getSetting($type,"TextField");
-		#echo "<br />".$type." (".$target.")";
-		#\F3\dump(array(
-		#	"value" => $value,
-		#	"type" => $type,
-		#	"target" => $target,
-		#	"conf" => $conf
-		#));
-		if($target == "presentation"){
-			switch ($type) {
-				case 'string':
-					return strval($value);
-				case 'integer':
-					return intval($value);
-				case 'float':
-					return floatval($value);
-				case 'boolean':
-					return $value ? "true" : "false";
+		if( ! is_array($selected) )
+			$selected = explode(",", $selected);
+        
+		if( empty($beings) )
+			return array ();
 
-				default:
-					$callback = $this->getCallback($this->getSetting($type,null,"Conversions.Presentation"),$conf);
-					if(!empty($callback))
-						return call_user_func($callback,$value,$conf,$property);
-					return $value;
-					break;
-			}
-		}else{
-			switch ($type) {
-				case 'string':
-					return strval($value);
-				case 'integer':
-					return intval($value);
-				case 'float':
-					return floatval($value);
-				case 'boolean':
-					return $value == "true" ? true : false;
-
-				default:
-					$callback = $this->getCallback($this->getSetting($type,null,"Conversions.Storage"),$conf);
-					if(!empty($callback))
-						return call_user_func($callback,$value,$conf,$property);
-					return $value;
-					break;
-			}
-		}
-	}
-
-	public function getCallback($raw){
-		$callback = null;
-
-		if(function_exists($raw)){
-			$callback = $raw;
-		}elseif(stristr($raw,"::")){
-			$callback = $raw;
-		}elseif(stristr($raw,"->")){
-			$parts = explode("->",$raw);
-
-			if($parts[0] == __CLASS__ || $parts[0] == "self" || $parts[0] == "this"){
-				$callback = array(
-					$this,
-					$parts[1]
-				);
-			}elseif(class_exists($parts[0])){
-				$callback = array(
-					$this->objectManager->getObject($parts[0]),
-					$parts[1]
-				);
-			}
-		}
-		
-		return $callback;
-	}
-	
-	public function toString($object,$configuration = array()){
-		$identity = array();
-		$title = array();
-		$goodGuess = null;
-		$usualSuspects = array("title","name");
-		if(is_object($object)){
-			if(is_callable(array($object,"__toString")))
-				return $object->__toString();
-		
-			$class = get_class($object);
-			$properties = $this->reflectionService->getClassPropertyNames($class);
-			foreach($properties as $property){
-				$tags = $this->reflectionService->getPropertyTagsValues($class,$property);
-				if(in_array("title",array_keys($tags))){
-					$title[] = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
-				}
-			
-				if(in_array("identity",array_keys($tags))){
-					$value = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
-					if(is_string($value) || is_integer($value))
-						$identity[] = $value;
-				}
-		
-				if(in_array($property,$usualSuspects) && $goodGuess === null){
-					$goodGuess = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object,$property);
-				}
-			}
-		}else if(is_array($object)){
-			foreach($configuration["properties"] as $property => $conf){
-				if(isset($conf["title"])){
-					$title[] = $object[$property];
-				}
-				if(in_array($property,$usualSuspects) && $goodGuess === null){
-					$goodGuess = $object[$property];
-				}
-			}
-		}
-		if(count($title)>0)
-			return implode(", ",$title);
-		if(count($identity)>0)
-			return implode(", ",$identity);
-		if($goodGuess !== null)
-			return $goodGuess;
-	}
-	
-	public function getOptions($beings,$selected = array()){
-		$name = $beings;
-		if(is_string($beings)) $beings = $this->getBeings($beings);
-		if(!is_array($selected)) $selected = explode(",",$selected);
-		if(empty($beings)) return array();
-		
-		$options = array(""=>"");
-		foreach ($beings as $being) {
-			$options[] = array(
-				"id" => $being["meta"]["id"],
-				"name" => $being["meta"]["name"],
-				"selected" => in_array($being["meta"]["id"],$selected)
-			);
+		$options = array ("" => "" );
+		foreach($beings as $being) {
+            $being->setSelected(in_array($being->getId(), $selected));
+			$options [] = $being;
 		}
 		return $options;
 	}
-	
-	
-	## Conversion Functions
-	public function dateTimeToString($datetime,$conf){
-		if(is_object($datetime)){
-			$format = array_key_exists("format",$conf) ? $conf["format"][0] : "H:i:s d.m.Y";
-			$string = date($format,$datetime->getTimestamp());
-			return $string;
-		}
-		return $datetime;
-	}
-	
-	public function stringToDateTime($string){
-		if(is_object($string) && get_class($string) == "DateTime")
-			return $string;
-		if(!empty($string)){
-			$datetime = new \DateTime($string);
-			return $datetime;
-		}
-		return null;
-	}
-	
-	public function identifierToModel($identifier){
-		if(!empty($identifier)){
-			return $this->persistenceManager->getObjectByIdentifier($identifier);
-		}
-	}
-	
-	public function modelToIdentifier($model){
-		if(is_object($model)){
-			return array(array(
-				"id" => $this->persistenceManager->getIdentifierByObject($model),
-				"name" => $this->toString($model)
-			));
-		}
-	}
-	
-	public function identifiersToSplObjectStorage($identifiers){
-		$spl = new \SplObjectStorage();
-		foreach ($identifiers as $identifier) {
-			$spl->attach($this->identifierToModel($identifier));
-		}
-		return $spl;
-	}
-	
-	public function splObjectStorageToIdentifiers($spl){
-		$identifiers = array();
-		if(count($spl)>0){
-			foreach ($spl as $model) {
-				$identifiers[] = current($this->modelToIdentifier($model));
+
+    /**
+     * Transforms an Array to a Specific Target Type/Object
+     *
+     * @param string $being Class/Name of the Being
+     * @param array $data
+     * @param object $target Specific Object to Map the Data to
+     * @author Marc Neuhaus <mneuhaus@famelo.com>
+     * */
+	public function transformToObject($being, $data, $target = null) {
+		$data = $this->cleanUpItem($data);
+		$data = $this->convertData($data,$being);
+
+		$arg = $this->objectManager->get("F3\Admin\Core\Argument", "item", $being);
+
+        if( $target !== null )
+			$arg->setTarget($target);
+
+        $validator = $this->helper->getModelValidator($being);
+        if( is_object($validator) )
+                $arg->setValidator($validator);
+        
+        $arg->setValue($data);
+
+        $targetObject = $arg->getValue();
+
+		$validationErrors = $arg->getValidator()->getErrors();
+
+		$errors = array ();
+		if( count($validationErrors) > 0 ) {
+			foreach($validationErrors as $propertyError) {
+				$errors [$propertyError->getPropertyName()] = array ();
+				foreach($propertyError->getErrors() as $error) {
+					$errors [$propertyError->getPropertyName()] [] = $error->getMessage();
+				}
 			}
 		}
-		return $identifiers;
+
+		return array ("errors" => $errors, "object" => $targetObject );
 	}
+
+    /**
+     * Removes Empty/Dead Data
+     *
+     * @param array $item
+     * @author Marc Neuhaus <mneuhaus@famelo.com>
+     * */
+	public function cleanUpItem($item) {
+		foreach($item as $key => $value) {
+			if( is_array($value) ) {
+				$item [$key] = $this->cleanUpItem($value);
+			}
+			if( is_object($value) && ! empty($value->FLOW3_Persistence_Entity_UUID) ) {
+				$item [$key] = $value->FLOW3_Persistence_Entity_UUID;
+			}
+			if( empty($item [$key]) && $item [$key] !== false && $item [$key] !== 0 ) {
+				unset($item [$key]);
+			}
+		}
+		return $item;
+	}
+
+    /**
+     * Converts Raw Data to the Corresponding Objects using the ObjectConverters
+     *
+     * @param array $data
+     * @param string $being Class of the Being
+     * @author Marc Neuhaus <mneuhaus@famelo.com>
+     * */
+    public function convertData($data,$being){
+        $c = $this->getConfiguration($being);
+        foreach($data as $property => $value){
+            if(isset($c["properties"][$property])){
+                $targetType = $c["properties"][$property]["type"];
+                if(isset($this->objectConverters[$targetType]) && !is_object($value)){
+                    $conversionResult = $this->objectConverters[$targetType]->convertFrom($value, $c["properties"][$property], $this);
+                    if (! $conversionResult instanceof \F3\FLOW3\Error\Error) {
+                        $data[$property] = $value = $conversionResult;
+                    }
+                }
+
+                if(isset($c["properties"][$property]["being"])){
+                    $targetBeing = $c["properties"][$property]["being"];
+                    if(isset($this->objectConverters[$targetBeing]) && !is_object($value)){
+                        $conversionResult = $this->objectConverters[$targetBeing]->convertFrom($value, $c["properties"][$property], $this);
+                        if (! $conversionResult instanceof \F3\FLOW3\Error\Error) {
+                            $data[$property] = $value = $conversionResult;
+                        }
+                    }
+                }
+            }
+            
+            if(\F3\Admin\Core\Helper::isIteratable($value) && isset($c["properties"][$property]["being"])){
+                $data[$property] = $this->convertData($value,$c["properties"][$property]["being"]);
+            }elseif(\F3\Admin\Core\Helper::isIteratable($value)){
+                $data[$property] = $this->convertData($value,$being);
+            }
+        }
+        return $data;
+    }
+
+    public function getFilter($being,$selected = array()){
+        $beings = $this->getBeings($being);
+        $filters = array();
+        foreach($beings as $being){
+            $properties = $being->getProperties();
+            foreach($properties as $property){
+                if($property->isFilter()){
+                    if(!isset($filters[$property->getName()]))
+                        $filters[$property->getName()] = $this->objectManager->get("F3\Admin\Core\Filter");
+
+                    if(isset($selected[$property->getName()]) && $selected[$property->getName()] == $property->getString()){
+                        $property->setSelected(true);
+                    }
+                    #$string = $property->getString();
+                    #if(!empty($string))
+                        $filters[$property->getName()]->addProperty($property);
+                }
+            }
+        }
+        return $filters;
+    }
+
+    public function setFilter($filters){
+        $this->filters = $filters;
+    }
+
+    public function applyFilters($beings, $filters){
+        $filtered = array();
+        foreach($beings as $being){
+            $matches = true;
+            foreach($filters as $filter => $value){
+                if($value != "_all_"){
+                    if(strval($being->getValue($filter)) != $value)
+                        $matches = false;
+                }
+            }
+            if($matches)
+                $filtered[] = $being;
+        }
+        return $filtered;
+    }
 }
 
 ?>

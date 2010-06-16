@@ -36,176 +36,146 @@ class PHPCRAdapter extends AbstractAdapter {
 	 * @inject
 	 */
 	protected $persistenceManager;
-	
-	public function init(){
+
+    public $debuglog = array();
+
+    public function init() {
 		$this->settings = $this->helper->getSettings("PHPCR");
 		parent::init();
-		
-		if(\F3\Admin\register::has("being") && class_exists($this->being)){
-			$this->repository = str_replace("Domain\Model","Domain\Repository",$this->being) . "Repository";
-			$this->repositoryObject = $this->objectManager->getObject($this->repository);
-			$this->query = $this->repositoryObject->createQuery();
-		}
-	}
-	
-	public function setSorting($property,$direction = "asc"){
-		if(strtoupper($direction) == "ASC")
-			$direction = \F3\FLOW3\Persistence\QueryInterface::ORDER_ASCENDING;
-		else
-			$direction = \F3\FLOW3\Persistence\QueryInterface::ORDER_DESCENDING;
-		
-		$this->query->setOrderings(array($property => $direction));
-	}
-	
-	public function setLimit($limit){
-		$this->query->setLimit(intval($limit));
-	}
-	
-	public function deleteObject($being,$id){
+    }
+
+    public function createObject($being, $data) {
+		$configuration = $this->getConfiguration($being);
+		$result = $this->transformToObject($being, $data);
+		$repository = $this->objectManager->getObject(str_replace("Domain\\Model", "Domain\\Repository", $being) . "Repository");
+		$repository->add($result ["object"]);
+		$this->persistenceManager->persistAll();
+		return $result;
+    }
+
+    public function deleteObject($being, $id) {
 		$object = $this->persistenceManager->getObjectByIdentifier($id);
-		if($object == null) return;
-		$repository = str_replace("Domain\Model","Domain\Repository",$being) . "Repository";
+		if( $object == null ) return;
+		$repository = str_replace("Domain\\Model", "Domain\\Repository", $being) . "Repository";
 		$repositoryObject = $this->objectManager->getObject($repository);
 		$repositoryObject->remove($object);
 		$this->persistenceManager->persistAll();
-	}
+    }
 
-	public function createObject($being, $data){
-		$configuration = $this->getConfiguration($being);
-		$data = $this->convertValues($data,$configuration["properties"]);
-		$result = $this->transformToObject($being,$data);
-		$repository = $this->objectManager->getObject(str_replace("Domain\Model","Domain\Repository",$being) . "Repository");
-		$repository->add($result["object"]);
-		$this->persistenceManager->persistAll();
-		return $result["errors"];
-	}
-	
-	public function updateObject($being, $id, $data){
-		$configuration = $this->getConfiguration($being);
-		$data = $this->convertValues($data,$configuration["properties"]);
-		$data["__identity"] = $id;
-		$result = $this->transformToObject($being,$data);
-		$repository = $this->objectManager->getObject(str_replace("Domain\Model","Domain\Repository",$being) . "Repository");
-		$repository->update($result["object"]);
-		$this->persistenceManager->persistAll();
-		return $result["errors"];
-	}
-	
-	public function getGroups(){
+    public function getGroups() {
 		$activePackages = $this->packageManager->getActivePackages();
-		$groups = array();
+		$groups = array ();
 		$this->settings = $this->helper->getSettings("PHPCR");
 		$settings = $this->helper->getSettings();
-		foreach ($activePackages as $packageName => $package) {
-            if( $this->objectManager->getContext() != "Development" && $packageName == "Admin" ) continue;
-            
-			foreach ($package->getClassFiles() as $class => $file) {
-				if(strpos($class,"\Model\\")>0){
-					$tags = $this->reflection->getClassTagsValues($class);
-					$parts = explode('\\',$class);
+		foreach($activePackages as $packageName => $package) {
+			if( $this->objectManager->getContext() != "Development" && $packageName == "Admin" ) continue;
+
+			foreach($package->getClassFiles() as $class => $file) {
+				if( strpos($class, "\\Model\\") > 0 ) {
+					$tags = $this->reflectionService->getClassTagsValues($class);
+					$parts = explode('\\', $class);
 					$name = end($parts);
 					$repository = $this->helper->getModelRepository($class);
-					if( ( in_array("autoadmin",array_keys($tags)) || in_array("\\".$class,$settings["Models"]) )
-						&& class_exists($repository)){
-						$groups[$packageName][] = array(
-							"being" => $class,
-							"name"	=> $name
-						);
-					}
+                    $conf = $tags;
+                    if(class_exists($repository)){
+                        if(isset($this->settings["Beings"]) && isset($this->settings["Beings"][$class])) {
+                            $conf = array_merge($conf,$this->settings["Beings"][$class]);
+                        }
+                        if(\array_key_exists("autoadmin", $conf) ) {
+                            $groups [$packageName] [] = array ("being" => $class, "name" => $name );
+                        }
+                    }
 				}
 			}
 		}
 		return $groups;
-	}
-	
-	public function handleRelation($type,$conf,$value){
-		if($type == "MultipleRelation"){
-			preg_match("/<(.+)>/",$conf["var"][0],$matches);
-			$repository = $matches[1];
-		}else if($type == "SingleRelation"){
-			$repository = $conf["var"][0];
+    }
+
+    public function getId($object) {
+        if(is_object($object)){
+            return $this->persistenceManager->getIdentifierByObject($object);
+        }
+        return null;
+    }
+
+    public function getObject($being, $id = null) {
+		if( class_exists($being) ) {
+			if( $id == null ){
+				return $this->objectManager->create($being);
+            }else{
+				return $this->persistenceManager->getObjectByIdentifier($id);
+            }
 		}
-		
-		if(class_exists("\\".$this->helper->getModelRepository($repository))){
-			$repository = $this->objectManager->getObject($this->helper->getModelRepository($repository));
-			/*
-			print_r($properties[$attribute]);
-			if(array_key_exists("filter",$properties[$attribute])){
-				$this->helper->stringToConstraint($properties[$attribute]["filter"][0],$being);
-				#$query = $repository->createQuery();
-				#$query->equals
-			}
-			*/
-			$objects = $repository->findAll();
-		}else{
-			$objects = $value;
-		}
-		return $this->getOptions($objects,$value);
-	}
-	
-	public function getObject($being, $id = null){
-		if(class_exists($being)){
-			if($id == null)
-				$object = $this->objectManager->create($being);
-			else
-				$object = $this->persistenceManager->getObjectByIdentifier($id);
-		}
-		return $object;
-	}
-	
-	public function getObjects($being){
-		$objects = $this->query->execute();
+		return null;
+    }
+
+    public function getObjects($being) {
+        $repository = str_replace("Domain\\Model", "Domain\\Repository", $being) . "Repository";
+        $objects = array();
+        if(\class_exists($repository)){
+            $repositoryObject = $this->objectManager->getObject($repository);
+            $query = $repositoryObject->createQuery();
+            $objects = $query->execute();
+        }else{
+            #$objects = array($this->getObject($being));
+        }
 		return $objects;
-	}
-	
-	public function getId($object){
-		return $this->persistenceManager->getIdentifierByObject($object);
-	}
-	
-	public function getConfiguration($being){
-		$configuration = parent::getConfiguration($being);
-		if(!empty($configuration)){
-			foreach($configuration["properties"] as $property => $conf){
-				if( array_key_exists("inject",$conf) ||
-					array_key_exists("ignore",$conf) 	){
-					$configuration["properties"][$property]["ignore"] = true;
-				}
-				
-				if(array_key_exists("widget",$conf))
-					$configuration["properties"][$property]["widget"] = $conf["widget"][0];
-				else
-					$configuration["properties"][$property]["widget"] = $this->getSetting($conf["var"][0],"TextField");
-				
-				$configuration["properties"][$property]["type"] = $conf["var"][0];
-			}
-		}
-		
-		return $configuration;
-	}
-	
-	## Helper Functions from here on
-	
-	public function getOptions($objects,$values = array()){
-		if(empty($objects)) return array();
-		
-		$selected = array();
-		if(count($values)>0){
-			foreach ($values as $value) {
-				$selected[] = $value["id"];
-			}
-		}
-		
-		$options = array();
-		foreach ($objects as $object) {
-			$uuid = $this->persistenceManager->getIdentifierByObject($object);
-			$options[] = array(
-				"id" => $uuid,
-				"name" => $this->toString($object),
-				"selected" => in_array($uuid,$selected)
-			);
-		}
-		
-		return $options;
+    }
+
+    public function updateObject($being, $id, $data) {
+		$configuration = $this->getConfiguration($being);
+        $data["__identity"] = $id;
+        #\F3\dump($data,$being);
+        #exit;
+		$result = $this->transformToObject($being, $data);
+		$repository = $this->objectManager->getObject(str_replace("Domain\\Model", "Domain\\Repository", $being) . "Repository");
+        #\F3\var_dump($result["object"]);
+		$repository->update($result ["object"]);
+		$this->persistenceManager->persistAll();
+		return $result;
+    }
+
+
+	public function getConfiguration($being) {
+        if(!isset($this->confs[$being])){
+            $configuration = parent::getConfiguration($being);
+            if( ! empty($configuration) ) {
+                // Merge Class Configuration and Yaml Configuration
+                if(isset($this->settings["Beings"]) && isset($this->settings["Beings"][$being])) {
+                    $configuration = array_merge_recursive($configuration,$this->settings["Beings"][$being]);
+                }
+
+                foreach($configuration ["properties"] as $property => $conf) {
+                    $type = $configuration["properties"][$property]["var"];
+
+                    $configuration ["properties"] [$property] ["type"] = $type;
+
+                    preg_match("/<(.+)>/", $configuration ["properties"] [$property] ["type"], $matches);
+                    if(!empty($matches)){
+                        $configuration["properties"][$property]["being"] = ltrim($matches[1],"\\");
+                        $configuration["properties"][$property]["mode"] = \F3\Admin\Core\Property::INLINE_MULTIPLE_MODE;
+                    }
+
+                    if(class_exists($type)){
+                        $reflectClass = new \F3\FLOW3\Reflection\ClassReflection($type);
+                        if($reflectClass->isTaggedWith("entity")){
+                            $configuration ["properties"] [$property] ["being"] = ltrim($type,"\\");
+                            $configuration["properties"][$property]["mode"] = \F3\Admin\Core\Property::INLINE_SINGLE_MODE;
+                        }
+                    }
+
+                    if(isset($configuration["properties"][$property]["being"])){
+                        $repository = $this->helper->getModelRepository($configuration["properties"][$property]["being"]);
+                        if(!class_exists($repository)){
+                            $configuration["properties"][$property]["inline"] = true;
+                        }
+                    }
+                }
+            }
+            
+            $this->confs[$being] = $configuration;
+        }
+		return $this->confs[$being];
 	}
 }
 

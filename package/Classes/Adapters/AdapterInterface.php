@@ -29,7 +29,78 @@ namespace F3\Admin\Adapters;
  * @prototype
  */
 interface AdapterInterface {
+    /**
+     * Returns a Representational String for a being
+     *
+     * @param string $being The Identifier for the being
+     * @return string $name The Name of the Being
+     * @author Marc Neuhaus <mneuhaus@famelo.com>
+     * */
+	public function getName($being);
+
+    /**
+     * Should return all Available Beings grouped by Package
+     *
+     * @return array $groups of Beings
+     * @author Marc Neuhaus <mneuhaus@famelo.com>
+     * */
 	public function getGroups();
+
+    /**
+     * Handles the needed Steps to get a Single Being from
+     * whereever the Adapters stores its Data
+     *
+     * @param string $being Class of the Being
+     * @param string $id Identifier of the Being
+     * @return mixed $object
+     * @author Marc Neuhaus <mneuhaus@famelo.com>
+     * */
+	public function getObject($being, $id);
+
+    /**
+     * Same as getObject but gets all Available Objects
+     *
+     * @return mixed $objects
+     * @author Marc Neuhaus <mneuhaus@famelo.com>
+     * */
+	public function getObjects($being);
+
+    /**
+     * Returns the ID for the given Object
+     *
+     * @param mixed $object the Object in question
+     * @return string $id
+     * @author Marc Neuhaus <mneuhaus@famelo.com>
+     * */
+	public function getId($object);
+
+    /**
+     * Handles the creation of a new Being
+     *
+     * @param string $being Class of the Being
+     * @param array $data Raw Form Data
+     * @author Marc Neuhaus <mneuhaus@famelo.com>
+     * */
+	public function createObject($being, $data);
+
+    /**
+     * Updates a Being
+     *
+     * @param string $being Class of the Being
+     * @param string $id
+     * @param array $data Raw Form Data
+     * @author Marc Neuhaus <mneuhaus@famelo.com>
+     * */
+	public function updateObject($being, $id, $data);
+
+    /**
+     * Deletes a Being
+     *
+     * @param string $being Class of the Being
+     * @param string $id
+     * @author Marc Neuhaus <mneuhaus@famelo.com>
+     * */
+	public function deleteObject($being, $id);
 }
 
 ?>
