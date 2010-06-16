@@ -3,10 +3,6 @@
 #                                                                        #
 
 Admin:
-  Models: [] 
-#    - \F3\Blog\Domain\Model\Blog
-#    - \F3\Blog\Domain\Model\Post
-#    - \F3\Blog\Domain\Model\Category
   Defaults:
     newinlines: 3
   Adapters:
@@ -33,6 +29,22 @@ Admin:
       - resource://@package/Private/Partials/Widgets/@partial.html
       - resource://Admin/Private/Partials/Widgets/@partial.html
 PHPCR:
+  Beings:
+    F3\Blog\Domain\Model\Blog:
+      autoadmin: true
+    F3\Blog\Domain\Model\Post:
+      autoadmin: true
+      properties:
+        image:
+          inline: true
+        content:
+          widget: TextArea
+#        tags:
+#          inline: true
+#        comments:
+#          inline: true
+    F3\Blog\Domain\Model\Category:
+      autoadmin: true
   Widgets:
     Mapping:
       string:   Textfield
@@ -41,14 +53,14 @@ PHPCR:
       float:    Textfield
       boolean:  Boolean
       \F3\FLOW3\Resource\Resource: Upload
-#      \DateTime: DateTime
+      \DateTime: DateTime
       ^\\*F3\\[A-Za-z]+\\Domain\\Model\\[A-Za-z]+$: SingleRelation
       ^\\*\SplObjectStorage\<\\*F3\\[A-Za-z]+\\Domain\\Model\\[A-za-z]+>$: MultipleRelation
   Conversions:
     Storage:
       \DateTime: this->stringToDateTime
       ^\\F3\\[A-Za-z]+\\Domain\\Model\\[A-Za-z]+$: this->identifierToModel
- #     ^\\\SplObjectStorage\<\\*F3\\[A-Za-z]+\\Domain\\Model\\[A-za-z]+>$: this->identifiersToSplObjectStorage
+#      ^\\\SplObjectStorage\<\\*F3\\[A-Za-z]+\\Domain\\Model\\[A-za-z]+>$: this->identifiersToSplObjectStorage
     Presentation:
       \DateTime: this->dateTimeToString
       ^\\*F3\\[A-Za-z]+\\Domain\\Model\\[A-Za-z]+$: this->modelToIdentifier
@@ -75,6 +87,12 @@ Dummy:
       ^\\*Being\\([A-Za-z]+)$: this->identifierToBeing
       ^\\*Beings\\([A-za-z]+)$: this->identifiersToBeings
   Beings:
+    Relation:
+      properties:
+        singleRelation:
+          type: \Being\Tag
+        multipleRelation:
+          type: \Beings\Tag
     Tag:
       properties:
         title:
