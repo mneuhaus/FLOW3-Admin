@@ -1,46 +1,41 @@
 {namespace a=F3\Admin\ViewHelpers}
-<f:for each="{sets}" as="properties" key="set">
-<fieldset class="pl">
-<f:if condition="{set}">
-<legend>{set}</legend>
-</f:if>
-    <f:for each="{properties}" as="property">
-    <div class="contain f-row">
-        <label class="dl10 pl">{property.label}: </label>
-        <div class="fluid ml10 psl">
-            <a:render partial="{property.widget}" fallbacks="Widgets" vars="{property:property}"/>
-            <div class="f-info">
-            <f:if condition="{property.infotext}">
-                {property.infotext}
-            </f:if>
-            <f:if condition="{property.error}">
-                <div class="ui-error-text">
-                    <f:for each="{property.error}" as="error">
-                        <a:render value="{error}" /><br />
+
+<f:for each="{being.sets}" as="properties" key="set">
+    <fieldset class="pl">
+        <f:if condition="{set}">
+            <legend>{set}</legend>
+        </f:if>
+        <f:for each="{properties}" as="property">
+            <div class="contain f-row">
+                <label class="dl10 pl">{property.label}: </label>
+                <div class="fluid ml10 psl">
+                    <f:for each="{being.hiddenProperties}" as="value" key="name" >
+                        <f:form.hidden name="{name}" value="{value}"/>
                     </f:for>
-                </div>
-            </f:if>
-            </div>
-            <f:for each="{property.inline}" as="inlineProperties" key="inlineSet">
-                <fieldset class="pl">
-                <legend>{inlineSet}</legend>
-                    <f:for each="{inlineProperties}" as="inlineProperty">
-                    <div class="fluid mbs pl pt">
-                        <label class="dl10 pl">{inlineProperty.label}</label>
-                        <div class="fluid ml10 psl">
-                            <a:render partial="{inlineProperty.widget}" fallbacks="Widgets"/> 
-                            <f:if condition="{inlineProperty.error}">
-                                <div class="ui-error-text f-info">
-                                    <a:render value="{inlineProperty.error}" />
+                    <f:if condition="{property.inline}">
+                        <f:then>
+                            <f:for each="{property.children}" as="child">
+                                <a:render partial="Form" fallbacks="Partials" vars="{being:child}" />
+                            </f:for>
+                        </f:then>
+                        <f:else>
+                            <a:render partial="{property.widget}" fallbacks="Widgets" vars="{property:property}"/>
+                            <div class="f-info">
+                            <f:if condition="{property.infotext}">
+                                {property.infotext}
+                            </f:if>
+                            <f:if condition="{property.error}">
+                                <div class="ui-error-text">
+                                    <f:for each="{property.error}" as="error">
+                                        <a:render value="{error}" /><br />
+                                    </f:for>
                                 </div>
                             </f:if>
-                        </div>
-                    </div>
-                    </f:for>
-                </fieldset>
-            </f:for>
-        </div>
-    </div>
-    </f:for>
-</fieldset>
+                            </div>
+                        </f:else>
+                    </f:if>
+                </div>
+            </div>
+        </f:for>
+    </fieldset>
 </f:for>

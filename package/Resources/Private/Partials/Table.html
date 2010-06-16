@@ -2,13 +2,13 @@
 <table class="ui-table ui-table-fixed-header">
     <thead>
         <tr>
+            <th class="ui-small">
+                <input type="checkbox" class="ux-select-all" />
+            </th>
             <a:for each="{objects}" as="object" key="id" loop="loop">
                 <f:if condition="{loop.first}">
                     <f:for each="{object.properties}" as="value" key="property">
-                        <f:if condition="{value.meta.ignore}">
-                            <f:then></f:then>
-                            <f:else><th>{value.label}</th></f:else>
-                        </f:if>
+                        <th>{value.label}</th>
                     </f:for>
                 </f:if>
             </a:for>
@@ -17,15 +17,15 @@
     </thead>
     <tbody>
     <f:for each="{objects}" as="object">
-        <tr>				
+        <tr>
+            <td class="ui-small">
+                <input type="checkbox" name="bulkItems[]" value="{object.id}" class="ux-select-row"/>
+            </td>
             <f:for each="{object.properties}" as="value" key="property">
-                <f:if condition="{value.meta.ignore}">
-                    <f:then></f:then>
-                    <f:else><td>{value.value}</td></f:else>
-                </f:if>
+                <td>{value.string}</td>
             </f:for>
             <td class="actions">
-                <a:render partial="Table" fallbacks="Actions" vars="{object:object}" />
+                <a:render partial="Table" fallbacks="Actions" vars="{being:object}" />
             </td>
         </tr>
     </f:for>

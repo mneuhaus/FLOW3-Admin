@@ -1,1 +1,3 @@
-<f:form.upload name="item[{property.name}]" id="item-{property.name}" value="{property.value}" class="{property.class}"/>
+{namespace a=F3\Admin\ViewHelpers}
+<input type="file" name="{property.prefix}[{property.name}]" id="item-{property.name}"  class="{property.class}" />
+<a:preview resource="{property.value}" />

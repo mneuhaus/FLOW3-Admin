@@ -20,32 +20,15 @@
             <f:for each="{objects}" as="object">
                     <div class="block">
                         <h3 class="ui-header">
-                            {object.meta.name}
+                            {object}
                             <div class="actions">
-                                <f:form method="post" action="view" name="view">
-                                    <f:form.hidden name="adapter" id="adapter" value="{meta.adapter.identifier}"/>
-                                    <f:form.hidden name="being" id="being" value="{meta.being.identifier}"/>
-                                    <f:form.hidden name="id" value="{object.meta.id}"/>
-                                    <input type="submit" name="view" value="View" class="submit ui-button"/>
-                                </f:form>
-                                <f:form method="post" action="update" name="delete">
-                                    <f:form.hidden name="adapter" id="adapter" value="{meta.adapter.identifier}"/>
-                                    <f:form.hidden name="being" id="being" value="{meta.being.identifier}"/>
-                                    <f:form.hidden name="id" value="{object.meta.id}"/>
-                                    <input type="submit" name="edit" value="Edit" class="submit ui-button"/>
-                                </f:form>
-                                <f:form method="post" action="delete" name="delete">
-                                    <f:form.hidden name="adapter" id="adapter" value="{meta.adapter.identifier}"/>
-                                    <f:form.hidden name="being" id="being" value="{meta.being.identifier}"/>
-                                    <f:form.hidden name="id" value="{object.meta.id}"/>
-                                    <input type="submit" name="delete" value="Delete" class="submit ui-button"/>
-                                </f:form>
+                                <a:render partial="Table" fallbacks="Actions" vars="{being:object}" />
                             </div>
                         </h3>
                     <f:for each="{object.properties}" as="value" key="property">
                         <f:if condition="{value.value}">
                         <div class="mr ml row">
-                            <label>{value.label}:</label> {value.value}<br />
+                            <label>{value.label}:</label> {value.string}<br />
                         </div>
                         </f:if>
                     </f:for>

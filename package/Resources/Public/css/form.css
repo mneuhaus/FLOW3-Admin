@@ -15,10 +15,16 @@
 			.as-selections,
 			select,
 			.ui-multiselect,
-			.f-slider-value{ float:left; margin-top:3px; }
+			.f-slider-value{ float:left; margin-top:4px; margin-right:5px; }
+			table input,
+			table .as-selections,
+			table select,
+			table .ui-multiselect,
+			table .f-slider-value{ float:none; display:inline; margin:0; }
 	span.ui-state-error{ height:19px; float:left; padding:2px 5px 0; margin-left:10px; }
 	.f-slider-value{ margin-left:10px; margin-top:2px; }
 	.f-float{ float:left; width:75%; position:relative; }
 	.f-footer{ width:100%; float:left; clear:both; }
 	.f-info{ clear:both; display:block; margin-left:14px; }
 	.readonly { background:none;border:none; }
+    button { margin-right:5px; }

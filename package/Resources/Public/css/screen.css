@@ -92,3 +92,5 @@ div .fluid {padding:0;}
             .block .row label{margin-left:-2em;font-weight:bold;}
             
 .context { margin-top:10px; color:white; margin-right:0px; font-size:12px; }
+
+img.preview {clear:both;display:block;float:left;margin-left:15px;margin-top:10px;max-width:200px;}

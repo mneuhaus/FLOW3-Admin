@@ -1,12 +1,9 @@
-<select name="item[{property.name}]" id="item-{property.name}">
+{namespace a=F3\Admin\ViewHelpers}
+<select name="{property.inputName}">
     <f:for each="{property.options}" as="option">
         <f:if condition="{option.selected}">
-            <f:then>
-                <option value="{option.id}" selected="selected">{option.name}</option>
-            </f:then>
-            <f:else>
-                <option value="{option.id}" >{option.name}</option>
-            </f:else>
+            <f:then><option value="{option.id}" selected="selected">{option}</option></f:then>
+            <f:else><option value="{option.id}" >{option}</option></f:else>
         </f:if>
     </f:for>
 </select>

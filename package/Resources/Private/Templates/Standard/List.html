@@ -2,13 +2,23 @@
 {namespace a=F3\Admin\ViewHelpers}
 
 <f:section name="actions">
-    <f:link.action class="ui-icon ui-button-w32-round_plus" controller="Standard" action="create" arguments="{being : meta.being.identifier, adapter : meta.adapter.identifier}">
-        New {meta.being.name}
+    <f:link.action
+            class="ui-icon ui-button-w32-round_plus"
+            controller="Standard"
+            action="create"
+            arguments="{
+                being : objects.0.class,
+                adapter : objects.0.adapter.class
+            }">
+        New {being.name}
     </f:link.action>
 </f:section>
 
 <f:section name="content">
-	<a:render partial="Table" fallbacks="Partials"/> 
+    <form method="post">
+        <a:render partial="Toolbar" fallbacks="Partials"/>
+        <a:render partial="Table" fallbacks="Partials"/>
+    </form>
 	<!--
 	<div class="dl mts">
 		<f:for each="{limits}" as="active" key="value">

@@ -17,6 +17,7 @@ table.ui-table { border-width:1px 1px 0px 1px; border-collapse: collapse; width:
 				table.ui-table th {
 					text-align:left;
 					border-right:1px solid #A4A4A4;
+					border-top:1px solid #A4A4A4;
 					padding:0 0.5em;
 					font-size:12px;
 					line-height:12px;

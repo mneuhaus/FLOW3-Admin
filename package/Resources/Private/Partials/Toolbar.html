@@ -1,0 +1,30 @@
+<div class="ui-toolbar">
+    <div class="ui-toolbar-item">
+        <select name="bulkAction">
+            <option value="">Bulk Actions</option>
+            <f:for each="{actions}" as="action" key="class">
+                <option value="{class}">{action}</option>
+            </f:for>
+        </select>
+        <button name="bulk" value="execute">Apply</button>
+    </div>
+    <div class="ui-toolbar-item dr mr">
+        <f:for each="{filters}" as="filter">
+            <select name="{filter.inputName}">
+                <option value="_all_">{filter}</option>
+                <option value="">Empty</option>
+                <f:for each="{filter.properties}" as="property" key="label">
+                    <f:if condition="{property.selected}">
+                        <f:then>
+                            <option value="{property.value}" selected="true" >{label}</option>
+                        </f:then>
+                        <f:else>
+                            <option value="{property.value}">{label}</option>
+                        </f:else>
+                    </f:if>
+                </f:for>
+            </select>
+        </f:for>
+        <button name="filter" value="apply">Filter</button>
+    </div>
+</div>
