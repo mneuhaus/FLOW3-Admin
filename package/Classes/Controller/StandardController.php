@@ -51,7 +51,16 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	protected $objectManager;
 	
 	protected $model = "";
-	
+
+    public function initializeCreateAction(){
+		#$being = $this->request->getArgument("being");
+        #$this->arguments->addNewArgument("item", $being, false, null);
+    }
+    
+    public function initializeUpdateAction(){
+        #$this->initializeCreateAction();
+    }
+
 	/**
 	 * Create action
 	 *
@@ -61,25 +70,29 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	public function createAction() {
 		$this->prepare("create");
 		$being = $this->request->getArgument("being");
-		$attributeSets = $this->getAdapter()->getAttributeSets($being);
-		
+
+        $object = $this->getAdapter()->getBeing($being);
+
 		if($this->request->hasArgument("create")){
-			$errors = $this->getAdapter()->createObject($being,$this->request->getArgument("item"));
+            #\F3\var_dump($item);
+            #exit;
+			$result = $this->getAdapter()->createObject($being,$this->request->getArgument("item"));
+            $errors = $result["errors"];
 			if(empty($errors)){
 				$arguments = array("being"=>$this->being,"adapter" => $this->adapter);
 				$this->redirect('list',NULL,NULL,$arguments);
 			}else{
-				foreach ($attributeSets as $set => $attributes) {
-					foreach ($attributes as $key => $attribute) {
-						if(array_key_exists($attribute["name"],$errors)){
-							$attributeSets[$set][$key]["error"] = $errors[$attribute["name"]];
-						}
-					}
-				}
+#				foreach ($attributeSets as $set => $attributes) {
+#					foreach ($attributes as $key => $attribute) {
+#						if(array_key_exists($attribute["name"],$errors)){
+#							$attributeSets[$set][$key]["error"] = $errors[$attribute["name"]];
+#						}
+#					}
+#				}
 			}
 		}
-		
-		$this->view->assign("sets",$attributeSets);
+
+		$this->view->assign("being",$object);
 		$this->preRender();
 	}
 	
@@ -101,30 +114,38 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	 */
 	public function listAction() {
 		$this->prepare("list");
-		
-		$objects = $this->getAdapter()->getBeings($this->being);
-		
-		foreach ($objects as $key => $object) {
-			foreach($object["properties"] as $property => $meta){
-				#\F3\dump($meta);
-				if(is_array($meta["value"])){
-					$values = array();
-					foreach ($meta["value"] as $value) {
-						if(isset($value["title"]))
-							$values[] = $value["title"];
-					}
-					$objects[$key]["properties"][$property]["value"] = implode(",",$values);
-				}
-			}
-		}
-		
-		$this->view->assign("objects",$objects);
+
+        $actions = $this->getActions();
+        $this->view->assign("actions",$actions);
+
+        if($this->request->hasArgument("bulk")){
+            $bulkAction = $this->request->getArgument("bulkAction");
+            if(isset($actions[$bulkAction])){
+                $action = $actions[$bulkAction];
+                $items = $this->request->getArgument("bulkItems");
+                $action->execute($items,$this->being);
+            }
+			$arguments = array( "being" => $this->being , "adapter" => $this->adapter);
+			$this->redirect("list",NULL,NULL,$arguments);
+        }
+
+        if($this->request->hasArgument("filter")){
+            $filters = $this->request->getArgument("filters");
+            $beings = $this->getAdapter()->getBeings($this->being,$filters);
+            $this->view->assign("filters", $this->getAdapter()->getFilter($this->being,$filters));
+        }else{
+            $beings = $this->getAdapter()->getBeings($this->being);
+            $this->view->assign("filters", $this->getAdapter()->getFilter($this->being));
+        }
+        
+		$this->view->assign("objects",$beings);
 		
 		// Redirect to creating a new Object if there aren't any (Clean Slate)
-		if(count($objects) < 1){
+		if(count($beings) < 1){
 			$arguments = array( "being" => $this->being , "adapter" => $this->adapter);
 			$this->redirect("create",NULL,NULL,	$arguments);
 		}
+
 		$this->preRender();
 	}
 	
@@ -168,32 +189,36 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	 */
 	public function updateAction() {
 		$this->prepare("update");
-		
+
+		$being = $this->request->getArgument("being");
+		$id = $this->request->getArgument("id");
+        
 #		if($this->request->hasArgument("delete")){
 #			$arguments = $this->request->getArguments();
 #			$this->redirect('confirm',NULL,NULL,$arguments);
 #		}
-		
-		$being = $this->request->getArgument("being");
-		$attributeSets = $this->getAdapter()->getAttributeSets($being,$this->request->getArgument("id"));
-		
-		if($this->request->hasArgument("update")){
-			$errors = $this->getAdapter()->updateObject($being,$this->id,$this->request->getArgument("item"));
+
+        if($this->request->hasArgument("update")){
+			$result = $this->getAdapter()->updateObject($being, $id, $this->request->getArgument("item"));
+            $errors = $result["errors"];
 			if(empty($errors)){
 				$arguments = array("being"=>$this->being,"adapter" => $this->adapter);
 				$this->redirect('list',NULL,NULL,$arguments);
 			}else{
-				foreach ($attributeSets as $set => $attributes) {
-					foreach ($attributes as $key => $attribute) {
-						if(array_key_exists($attribute["name"],$errors)){
-							$attributeSets[$set][$key]["error"] = $errors[$attribute["name"]];
-						}
-					}
-				}
+#				foreach ($attributeSets as $set => $attributes) {
+#					foreach ($attributes as $key => $attribute) {
+#						if(array_key_exists($attribute["name"],$errors)){
+#							$attributeSets[$set][$key]["error"] = $errors[$attribute["name"]];
+#						}
+#					}
+#				}
 			}
 		}
+        
+        $object = $this->getAdapter()->getBeing($being,$id);
+        
+		$this->view->assign("being",$object);
 		
-		$this->view->assign("sets",$attributeSets);
 		$this->preRender();
 	}
 	
@@ -218,25 +243,25 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 		
 		$this->adapters = $this->helper->getAdapters();
 		$this->settings = $this->helper->getSettings();
-		\F3\Admin\register::set("settings",$this->settings);
-		\F3\Admin\register::set("session",$this->session);
-		\F3\Admin\register::set("objectManager",$this->objectManager);
-		\F3\Admin\register::set("action",$action);
+		\F3\Admin\Register::set("settings",$this->settings);
+		\F3\Admin\Register::set("session",$this->session);
+		\F3\Admin\Register::set("objectManager",$this->objectManager);
+		\F3\Admin\Register::set("action",$action);
 		
 		if($this->request->hasArgument("being")){
 			$this->being = $this->request->getArgument("being");
-			\F3\Admin\register::set("being",$this->being);
+			\F3\Admin\Register::set("being",$this->being);
 			$this->group = $this->helper->getGroupByBeing($this->being);
-			\F3\Admin\register::set("group",$this->group);
+			\F3\Admin\Register::set("group",$this->group);
 		}
 		if($this->request->hasArgument("adapter")){
 			$this->adapter = $this->request->getArgument("adapter");
-			\F3\Admin\register::set("adapter",$this->adapter);
+			\F3\Admin\Register::set("adapter",$this->adapter);
 		}
 		
 		if($this->request->hasArgument("id")){
 			$this->id = $this->request->getArgument("id");
-			\F3\Admin\register::set("being_id",$this->id);
+			\F3\Admin\Register::set("being_id",$this->id);
 		}
 		
 		$groups = $this->helper->getGroups();
@@ -316,6 +341,15 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	private function preRender(){
 		$this->view->assign("rendering_time",(microtime() - $this->start) * 1000);
 	}
+
+    public function getActions(){
+        $actions = array();
+        foreach($this->reflectionService->getAllImplementationClassNamesForInterface('F3\Admin\Actions\ActionInterface') as $actionClassName) {
+            $actions[$actionClassName] = $this->objectManager->get($actionClassName);
+            $actions[$actionClassName]->injectAdapter($this->getAdapter());
+		}
+        return $actions;
+    }
 }
 
 ?>
