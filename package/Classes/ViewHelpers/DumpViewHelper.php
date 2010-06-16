@@ -33,12 +33,16 @@ class DumpViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 *
 	 * @param mixed $mixed
 	 * @param string $name
+	 * @param boolean $return
 	 * @return string Rendered string
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 * @api
 	 */
-	public function render($mixed,$name='') {
-		\F3\dump($mixed,$name);
+	public function render($mixed = null,$name='',$return = false) {
+        if($mixed == null)
+            return \F3\dump(\F3\Admin\Register::get("DebugLog"),"",true);
+        else
+            return \F3\dump($mixed,$name,$return);
 	}
 }
 
