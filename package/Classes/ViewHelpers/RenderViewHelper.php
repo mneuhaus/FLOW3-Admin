@@ -36,6 +36,18 @@ class RenderViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 */
 	protected $helper;
 	
+    /**
+     * @var \F3\FLOW3\Object\ObjectManagerInterface
+     * @inject
+     */
+    protected $objectManager;
+    
+    /**
+     * @var \F3\Fluid\Core\Parser\TemplateParser
+     * @inject
+     */
+    protected $templateParser;
+    
 	/**
 	 *
 	 * @param object $value
@@ -52,26 +64,63 @@ class RenderViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 		if ($partial !== '') {
 			if($fallbacks !== ''){
-				$this->view = $this->viewHelperVariableContainer->getView();
+                $replacements = array(
+                    "@partial" => $partial,
+                    "@package" => \F3\Admin\Register::get("package"),
+                    "@being" => \F3\Admin\Register::get("being"),
+                    "@action" => $partial
+                );
+                $template = $this->helper->getPathByPatternFallbacks($fallbacks,$replacements);
+                
+				if(empty($vars)){
+				    $this->view = $this->viewHelperVariableContainer->getView();
+                    $this->view->setTemplatePathAndFilename($template);
 				
-				$replacements = array(
-					"@partial" => $partial,
-					"@package" => \F3\Admin\register::get("package"),
-					"@being" => \F3\Admin\register::get("being"),
-					"@action" => $partial
-				);
-				
-				$template = $this->helper->getPathByPatternFallbacks($fallbacks,$replacements);
-				if(!empty($template)){
-					$this->view->setTemplatePathAndFilename($template);
-					
-					foreach ($vars as $key => $value)
-						$this->view->assign($key,$value);
-					return $this->view->render();
+	                if(!empty($template)){
+	                    return $this->view->render();
+	                }
+				}else{
+			        $partial = $this->parseTemplate($template);
+			        $variableContainer = $this->objectManager->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $vars);
+			        $renderingContext = $this->buildRenderingContext($variableContainer);
+			        return $partial->render($renderingContext);
 				}
 			}
 		}
 	}
+	
+   protected function parseTemplate($templatePathAndFilename) {
+        $templateSource = \F3\FLOW3\Utility\Files::getFileContents($templatePathAndFilename, FILE_TEXT);
+        if ($templateSource === FALSE) {
+            throw new \F3\Fluid\View\Exception\InvalidTemplateResourceException('"' . $templatePathAndFilename . '" is not a valid template resource URI.', 1257246929);
+        }
+        return $this->templateParser->parse($templateSource);
+    }
+    
+    /**
+     * Build the rendering context
+     *
+     * @param \F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer
+     * @return \F3\Fluid\Core\Rendering\RenderingContext
+     * @author Sebastian Kurfürst <sebastian@typo3.org>
+     */
+    protected function buildRenderingContext(\F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer = NULL) {
+        if ($variableContainer === NULL) {
+            $variableContainer = $this->objectManager->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $this->variables);
+        }
+
+        $renderingContext = $this->objectManager->create('F3\Fluid\Core\Rendering\RenderingContext');
+        $renderingContext->setTemplateVariableContainer($variableContainer);
+        if ($this->controllerContext !== NULL) {
+            $renderingContext->setControllerContext($this->controllerContext);
+        }
+
+        $viewHelperVariableContainer = $this->objectManager->create('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
+        $viewHelperVariableContainer->setView($this->viewHelperVariableContainer->getView());
+        $renderingContext->setViewHelperVariableContainer($viewHelperVariableContainer);
+
+        return $renderingContext;
+    }
 }
 
 ?>
