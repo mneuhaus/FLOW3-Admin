@@ -44,12 +44,12 @@ class Widgets extends \F3\Admin\Domain\Model{
 	/**
 	 * @var integer
 	 */
-	protected $integer;
+	#protected $integer;
 	
 	/**
 	 * @var float
 	 */
-	protected $float;
+	#protected $float;
 	
 	/**
 	 * @var boolean
@@ -111,6 +111,10 @@ class Widgets extends \F3\Admin\Domain\Model{
 	 * @inline
 	 */
 #	protected $widget;
+
+    public function __construct(){
+		$this->tags = new \SplObjectStorage();
+    }
 }
 
 ?>

@@ -23,7 +23,6 @@ namespace F3\Admin\Domain\Model;
  *                                                                        */
 
 /**
- * A Adress
  *
  * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
@@ -31,46 +30,12 @@ namespace F3\Admin\Domain\Model;
  * @entity
  * @autoadmin
  */
-class Relation extends \F3\Admin\Domain\Model{
+class Info extends \F3\Admin\Domain\Model{
 	/**
-	 * @var \F3\Admin\Domain\Model\Tag
-	 */
-	protected $tag;
-	
-	/**
-	 * @var \SplObjectStorage<F3\Admin\Domain\Model\Tag>
-	 */
-	protected $tags;
-
-    /**
-	 * @var \F3\Admin\Domain\Model\Widgets
-     * @inline
-	 */
-	protected $inlineWidget;
-
-	/**
-	 * @var \SplObjectStorage<F3\Admin\Domain\Model\Widgets>
-     * @inline
-	 */
-	protected $inlineWidgets;
-
-    /**
-	 * @var \F3\Admin\Domain\Model\Info
-     * @infotext This Property has no Repository and Belongs to its Parent Object
+	 * @var string
+	 * @identity
 	 */
 	protected $info;
-
-	/**
-	 * @var \SplObjectStorage<F3\Admin\Domain\Model\Info>
-     * @infotext This Property has no Repository and Belongs to its Parent Object
-	 */
-	protected $infos;
-	
-	public function __construct() {
-		$this->tags = new \SplObjectStorage();
-		$this->inlineWidgets = new \SplObjectStorage();
-		$this->infos = new \SplObjectStorage();
-	}
 }
 
 ?>
