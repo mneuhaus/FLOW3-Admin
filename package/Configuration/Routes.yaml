@@ -1,0 +1,12 @@
+#                                                                        #
+# Default subroutes configuration for the Blog package                   #
+#                                                                        #
+
+# $Id: Routes.yaml 3886 2010-02-28 17:03:50Z robert $
+
+
+-
+  name: 'Home'
+  uriPattern: ''
+  defaults:
+    '@package': Admin

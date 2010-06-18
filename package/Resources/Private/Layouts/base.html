@@ -13,10 +13,10 @@
 <link rel="stylesheet" href="{f:uri.resource(path: 'css/layout.css', package: 'Admin')}" type="text/css" media="screen" title="no title" charset="utf-8">
 <link rel="stylesheet" href="{f:uri.resource(path: 'css/form.css', package: 'Admin')}" type="text/css" media="screen" title="no title" charset="utf-8">
 <link rel="stylesheet" href="{f:uri.resource(path: 'css/table.css', package: 'Admin')}" type="text/css" media="screen" title="no title" charset="utf-8">
+<a:resources />
 <link rel="stylesheet" href="{f:uri.resource(path: 'css/ui.css', package: 'Admin')}" type="text/css" media="screen" title="no title" charset="utf-8">
 <link rel="stylesheet" href="{f:uri.resource(path: 'css/images.css', package: 'Admin')}" type="text/css" media="screen" title="no title" charset="utf-8">
 <link rel="stylesheet" href="{f:uri.resource(path: 'css/screen.css', package: 'Admin')}" type="text/css" media="screen" title="no title" charset="utf-8">
-<a:resources />
 <f:base />
 </head>
 <body>
@@ -29,9 +29,11 @@
 				<f:render section='actions' />
 			</div>
 			<div class="dr context">
-				<div class="dl">{context}</div>
+				<div class="dl">Welcome, {account.accountIdentifier}</div>
 				<div class="dl mr1 ml1">|</div>
-				<div class="dl mr1">Rendering Time: {rendering_time} ms</div>
+				<div class="dl"><f:link.action action="logout" controller="Login">Logout</f:link.action></div>
+				<div class="dl mr1 ml1">|</div>
+				<div class="dl mr1">{context}</div>
 			</div>
 		</div>
 		<div class="sidebar dl10">

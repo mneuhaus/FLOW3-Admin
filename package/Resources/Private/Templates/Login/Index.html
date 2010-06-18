@@ -1,0 +1,20 @@
+<div id="loginscreen">
+    <h2>Authentication required</h2>
+    <p><f:flashMessages class="flashmessages" /></p>
+    <f:form action="../../authenticate" method="post">
+        <fieldset>
+            <legend></legend>
+            <div class="row username">
+                <label id="usernameLabel" for="username" class="placeholder"><span>Username</span></label>
+                <f:form.textbox name="F3\FLOW3\Security\Authentication\Token\UsernamePassword::username" tabindex="1" />
+            </div>
+
+            <div class="row password">
+                <label id="passwordLabel" for="password" class="placeholder"><span>Password</span></label>
+                <f:form.password  name="F3\FLOW3\Security\Authentication\Token\UsernamePassword::password" tabindex="2" />
+            </div>
+
+            <f:form.submit value="Login" />
+        </fieldset>
+    </f:form>
+</div>

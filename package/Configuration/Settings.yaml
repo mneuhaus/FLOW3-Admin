@@ -2,6 +2,16 @@
 # Settings Configuration for the Admin package                           #
 #                                                                        #
 
+FLOW3:
+  security:
+    authentication:
+      providers:
+        PHPCRProvider:
+          providerClass: F3\Admin\Security\PHPCRProvider
+          entryPoint:
+            WebRedirect:
+              uri: admin/login/
+
 Admin:
   Defaults:
     newinlines: 3

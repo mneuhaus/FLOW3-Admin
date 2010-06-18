@@ -50,6 +50,12 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	 */
 	protected $objectManager;
 	
+	/**
+	 * @inject
+	 * @var F3\FLOW3\Security\Context
+	 */
+	protected $securityContext;
+
 	protected $model = "";
 
     public function initializeCreateAction(){
@@ -74,8 +80,6 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
         $object = $this->getAdapter()->getBeing($being);
 
 		if($this->request->hasArgument("create")){
-            #\F3\var_dump($item);
-            #exit;
 			$result = $this->getAdapter()->createObject($being,$this->request->getArgument("item"));
             $errors = $result["errors"];
 			if(empty($errors)){
@@ -265,6 +269,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 		}
 		
 		$groups = $this->helper->getGroups();
+        ksort($groups);
 		if(!empty($this->adapter)){
 			foreach($groups as $package => $group){
 				foreach($group["beings"] as $key => $being){
@@ -278,6 +283,15 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 		}
 		
 		$this->view->assign('groups',$groups);
+
+        $activeTokens = $this->securityContext->getAuthenticationTokens();
+		foreach ($activeTokens as $token) {
+			if ($token->isAuthenticated()) {
+				$account = $token->getAccount();
+				$this->view->assign('account', $account);
+                break;
+			}
+		}
 			
 		$this->setTemplate($action);
 		$context = getenv("FLOW3_CONTEXT") ? getenv("FLOW3_CONTEXT") : "Production";
