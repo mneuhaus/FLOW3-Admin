@@ -48,7 +48,8 @@ class PHPCRAdapter extends AbstractAdapter {
 		$configuration = $this->getConfiguration($being);
 		$result = $this->transformToObject($being, $data);
 		$repository = $this->objectManager->getObject(str_replace("Domain\\Model", "Domain\\Repository", $being) . "Repository");
-		$repository->add($result ["object"]);
+		$repository->add($result["object"]);
+
 		$this->persistenceManager->persistAll();
 		return $result;
     }
@@ -69,20 +70,26 @@ class PHPCRAdapter extends AbstractAdapter {
 		$settings = $this->helper->getSettings();
 		foreach($activePackages as $packageName => $package) {
 			if( $this->objectManager->getContext() != "Development" && $packageName == "Admin" ) continue;
+            $group = $packageName;
 
 			foreach($package->getClassFiles() as $class => $file) {
-				if( strpos($class, "\\Model\\") > 0 ) {
+				if( strpos($class, "\\Model\\") > 0 || isset($this->settings["Beings"][$class])) {
 					$tags = $this->reflectionService->getClassTagsValues($class);
 					$parts = explode('\\', $class);
 					$name = end($parts);
 					$repository = $this->helper->getModelRepository($class);
                     $conf = $tags;
+
+                    $group = $packageName;
+                    if(isset($tags["group"]))
+                        $group = current($tags["group"]);
+                    
                     if(class_exists($repository)){
                         if(isset($this->settings["Beings"]) && isset($this->settings["Beings"][$class])) {
                             $conf = array_merge($conf,$this->settings["Beings"][$class]);
                         }
                         if(\array_key_exists("autoadmin", $conf) ) {
-                            $groups [$packageName] [] = array ("being" => $class, "name" => $name );
+                            $groups [$group] [] = array ("being" => $class, "name" => $name );
                         }
                     }
 				}
@@ -125,9 +132,9 @@ class PHPCRAdapter extends AbstractAdapter {
     public function updateObject($being, $id, $data) {
 		$configuration = $this->getConfiguration($being);
         $data["__identity"] = $id;
-        #\F3\dump($data,$being);
-        #exit;
 		$result = $this->transformToObject($being, $data);
+        \F3\dump(array($data,$result),$being);
+        exit;
 		$repository = $this->objectManager->getObject(str_replace("Domain\\Model", "Domain\\Repository", $being) . "Repository");
         #\F3\var_dump($result["object"]);
 		$repository->update($result ["object"]);

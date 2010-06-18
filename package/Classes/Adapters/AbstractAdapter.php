@@ -241,7 +241,7 @@ abstract class AbstractAdapter implements AdapterInterface {
         
         $properties = array();
 		foreach($configuration ["properties"] as $property => $conf) {
-			if( array_key_exists("ignore", $conf) ) continue;
+			if( $this->shouldBeIgnored($conf) ) continue;
 
             $p = $this->objectManager->create("F3\Admin\Core\Property",$this);
 
@@ -494,6 +494,20 @@ abstract class AbstractAdapter implements AdapterInterface {
                 $filtered[] = $being;
         }
         return $filtered;
+    }
+
+    public function shouldBeIgnored($conf){
+        if(!isset($conf["ignore"]))
+            return false;
+        
+        if($conf["ignore"] == "true")
+            return true;
+
+        $actions = explode(",",$conf["ignore"]);
+        $action = \F3\Admin\Register::get("action");
+        return in_array($action,$actions);
+
+        return false;
     }
 }
 
