@@ -31,7 +31,7 @@ namespace F3\Admin\Controller;
 class LoginController extends \F3\Blog\Controller\AbstractBaseController {
 
 	/**
-	 * @var \F3\Admin\Domain\Repository\UserRepository
+	 * @var \F3\Admin\Security\UserRepository
      * @inject
 	 */
 	protected $userRepository;
@@ -58,9 +58,10 @@ class LoginController extends \F3\Blog\Controller\AbstractBaseController {
 	public function indexAction() {
 		$users = $this->userRepository->findAll();
         if(empty($users)){
-            $user = $this->objectManager->get("F3\Admin\Domain\Model\User");
+            $user = $this->objectManager->get("F3\Admin\Security\User");
             $user->setAccountIdentifier("admin");
             $user->setCredentialsSource("password");
+            $user->setAdmin(true);
             $this->userRepository->add($user);
 			$this->flashMessageContainer->add('A Default User has been Created. admin:password');
         }
@@ -79,6 +80,7 @@ class LoginController extends \F3\Blog\Controller\AbstractBaseController {
 		try {
 			$this->authenticationManager->authenticate();
 			$this->redirect('index', 'Standard');
+			$this->flashMessageContainer->add('Successfully logged in');
 		} catch (\F3\FLOW3\Security\Exception\AuthenticationRequiredException $exception) {
 			$this->flashMessageContainer->add('Wrong username or password.');
 			throw $exception;

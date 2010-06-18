@@ -70,12 +70,12 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	/**
 	 * Create action
 	 *
+     * @param string $being
 	 * @return void
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
-	public function createAction() {
+	public function createAction($being) {
 		$this->prepare("create");
-		$being = $this->request->getArgument("being");
 
         $object = $this->getAdapter()->getBeing($being);
 
@@ -113,10 +113,11 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	/**
 	 * List action
 	 *
+     * @param string $being
 	 * @return void
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
-	public function listAction() {
+	public function listAction($being) {
 		$this->prepare("list");
 
         $actions = $this->getActions();
@@ -156,12 +157,14 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	/**
 	 * Confirm previous requested action
 	 *
+     * @param string $being
+     * @param string $id
 	 * @return void
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
-	public function confirmAction() {
+	public function confirmAction($being, $id) {
 		$this->prepare("confirm");
-		$object = $this->getAdapter()->getBeing($this->being,$this->request->getArgument("id"));
+		$object = $this->getAdapter()->getBeing($being,$id);
 		$this->view->assign("object",$object);
 		$this->preRender();
 	}
@@ -169,15 +172,16 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	/**
 	 * delete action
 	 *
+     * @param string $being
 	 * @return void
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
-	public function deleteAction() {
+	public function deleteAction($being) {
 		$this->prepare("delete");
 		if($this->request->hasArgument("confirm")){
-			$this->getAdapter()->deleteObject($this->being,$this->request->getArgument("id"));
+			$this->getAdapter()->deleteObject($being,$this->request->getArgument("id"));
 			
-			$arguments = array("adapter"=>$this->adapter,"being"=>$this->being);
+			$arguments = array("adapter"=>$this->adapter,"being"=>$being);
 			$this->redirect('list',NULL,NULL,$arguments);
 		}else{
 			$this->redirect('confirm',NULL,NULL,$this->request->getArguments());
@@ -188,14 +192,13 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	/**
 	 * update action
 	 *
+     * @param string $being
+     * @param string $id
 	 * @return void
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
-	public function updateAction() {
+	public function updateAction($being, $id) {
 		$this->prepare("update");
-
-		$being = $this->request->getArgument("being");
-		$id = $this->request->getArgument("id");
         
 #		if($this->request->hasArgument("delete")){
 #			$arguments = $this->request->getArguments();
@@ -229,13 +232,15 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	/**
 	 * view action
 	 *
+     * @param string $being
+     * @param string $id
 	 * @return void
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
-	public function viewAction() {
+	public function viewAction($being, $id) {
 		$this->prepare("view");
 		
-		$being = $this->getAdapter()->getBeing($this->being,$this->request->getArgument("id"));
+		$being = $this->getAdapter()->getBeing($being,$id);
 		$this->view->assign("being",$being);
 		$this->preRender();
 	}
@@ -267,31 +272,44 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 			$this->id = $this->request->getArgument("id");
 			\F3\Admin\Register::set("being_id",$this->id);
 		}
-		
-		$groups = $this->helper->getGroups();
-        ksort($groups);
-		if(!empty($this->adapter)){
-			foreach($groups as $package => $group){
-				foreach($group["beings"] as $key => $being){
-					if($being["being"] == $this->being && $being["adapter"] == $this->adapter){
-						$groups[$package]["beings"][$key]["active"] = true;
-					}else{
-						$groups[$package]["beings"][$key]["active"] = false;
-					}
-				}
-			}
-		}
-		
-		$this->view->assign('groups',$groups);
 
         $activeTokens = $this->securityContext->getAuthenticationTokens();
+        $allowedBeings = array("list"=>array());
 		foreach ($activeTokens as $token) {
-			if ($token->isAuthenticated()) {
-				$account = $token->getAccount();
-				$this->view->assign('account', $account);
+			if ( $token->isAuthenticated() && is_callable(array($token,"getUser")) ) {
+				$user = $token->getUser();
+				$this->view->assign('user', $user);
+
+                foreach ($user->getRoles() as $role) {
+                    foreach ($role->getGrant() as $policy) {
+                        $allowedBeings[$policy->getAction()][] = $policy->getBeing();
+                    }
+                }
                 break;
 			}
 		}
+        
+		$groups = $this->helper->getGroups();
+        ksort($groups);
+        foreach($groups as $package => $group){
+            foreach($group["beings"] as $key => $being){
+                if( !in_array($being["being"],$allowedBeings["list"]) )
+                    if( !$user->isAdmin() )
+                        unset($groups[$package]["beings"][$key]);
+
+                if(!empty($this->adapter)){
+                    if($being["being"] == $this->being && $being["adapter"] == $this->adapter){
+                        $groups[$package]["beings"][$key]["active"] = true;
+                    }else{
+                        $groups[$package]["beings"][$key]["active"] = false;
+                    }
+                }
+            }
+            if(empty($groups[$package]["beings"]))
+                unset($groups[$package]);
+        }
+        
+		$this->view->assign('groups',$groups);
 			
 		$this->setTemplate($action);
 		$context = getenv("FLOW3_CONTEXT") ? getenv("FLOW3_CONTEXT") : "Production";
@@ -363,6 +381,14 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
             $actions[$actionClassName]->injectAdapter($this->getAdapter());
 		}
         return $actions;
+    }
+
+    public function getRequest(){
+        return $this->request;
+    }
+
+    public function getAction(){
+        return str_replace("Action","",$this->actionMethodName);
     }
 }
 

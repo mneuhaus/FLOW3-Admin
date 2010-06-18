@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Admin\Domain\Repository;
+namespace F3\Admin\Security;
 
 /*                                                                        *
  * This script belongs to the FLOW3 framework.                            *
@@ -23,43 +23,68 @@ namespace F3\Admin\Domain\Repository;
  *                                                                        */
 
 /**
- * The repository for accounts
+ * An account model
  *
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
+ * @scope prototype
+ * @entity
+ * @autoadmin
+ * @group Settings
  */
-class UserRepository extends \F3\FLOW3\Persistence\Repository {
+class User extends \F3\Admin\Domain\Model{
+	/**
+	 * @var string
+	 * @identity
+	 * @validate NotEmpty, StringLength(minimum = 1, maximum = 255)
+     * @label Username
+	 */
+	protected $accountIdentifier;
 
 	/**
-	 * Constructs the Account Repository
-	 *
-	 * @author Robert Lemke <robert@typo3.org>
+	 * @var string
+	 * @identity
+	 * @validate NotEmpty
+     * @ignore
 	 */
-	public function __construct() {
-		parent::__construct();
-	}
+	protected $authenticationProviderName = "PHPCRProvider";
 
 	/**
-	 * Returns the account for a specific authentication provider with the given identitifer
-	 *
-	 * @param string $accountIdentifier The account identifier
-	 * @param string $authenticationProviderName The authentication provider name
-	 * @return F3\FLOW3\Security\Account
-	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
+	 * @var string
+     * @widget Password
+     * @label Password
+     * @ignore list,view
 	 */
-	public function findByAccountIdentifierAndAuthenticationProviderName($accountIdentifier, $authenticationProviderName) {
-		$result = array();
+	protected $credentialsSource;
 
-		$query = $this->createQuery();
-		$result = $query->matching(
-			$query->logicalAnd(
-				$query->equals('accountIdentifier', $accountIdentifier),
-				$query->equals('authenticationProviderName', $authenticationProviderName)
-			)
-		)->execute();
+	/**
+	 * @var boolean
+	 */
+	protected $admin = false;
 
-		return isset($result[0]) ? $result[0] : FALSE;
+
+	/**
+	 * @var \SplObjectStorage<\F3\Admin\Security\Role>
+	 */
+	protected $roles;
+
+    public function __construct(){
+        $this->roles = new \SplObjectStorage();
+        #$this->roles[] = \F3\Admin\Register::get("objectManager")->create('F3\FLOW3\Security\Policy\Role', 'Administrator');
+    }
+
+    /**
+	 *
+	 * @param string $credentialsSource
+	 * @return void
+	 */
+	public function setCredentialsSource($credentialsSource) {
+        $salt = sha1(rand(0,4).time());
+        $this->credentialsSource = md5(md5($credentialsSource) . $salt) . ',' . $salt;
 	}
+
+    public function isAdmin(){
+        return $this->admin;
+    }
 }
-
 ?>

@@ -34,7 +34,7 @@ namespace F3\Admin\Security;
 class PHPCRProvider implements \F3\FLOW3\Security\Authentication\AuthenticationProviderInterface {
 
 	/**
-	 * @var \F3\Admin\Domain\Repository\UserRepository
+	 * @var \F3\Admin\Security\UserRepository
      * @inject
 	 */
 	protected $userRepository;
@@ -52,11 +52,11 @@ class PHPCRProvider implements \F3\FLOW3\Security\Authentication\AuthenticationP
 	/**
 	 * Injects the user repository
 	 *
-	 * @param \F3\Admin\Domain\Repository\UserRepository $userRepository The account repository
+	 * @param \F3\Admin\Security\UserRepository $userRepository The account repository
 	 * @return void
 	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
 	 */
-	public function injectUserRepository(\F3\Admin\Domain\Repository\UserRepository $userRepository) {
+	public function injectUserRepository(\F3\Admin\Security\UserRepository $userRepository) {
 		$this->userRepository = $userRepository;
 	}
 
@@ -102,7 +102,7 @@ class PHPCRProvider implements \F3\FLOW3\Security\Authentication\AuthenticationP
 	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
 	 */
 	public function getTokenClassNames() {
-		return array('F3\FLOW3\Security\Authentication\Token\UsernamePassword');
+		return array('F3\Admin\Security\Token\UsernamePassword');
 	}
 
 	/**
@@ -125,7 +125,7 @@ class PHPCRProvider implements \F3\FLOW3\Security\Authentication\AuthenticationP
 		if (is_object($user)) {
 			if ($this->hashService->validateSaltedMd5($credentials['password'], $user->getCredentialsSource())) {
 				$authenticationToken->setAuthenticationStatus(\F3\FLOW3\Security\Authentication\TokenInterface::AUTHENTICATION_SUCCESSFUL);
-				$authenticationToken->setAccount($user);
+				$authenticationToken->setUser($user);
 			} else {
 				$authenticationToken->setAuthenticationStatus(\F3\FLOW3\Security\Authentication\TokenInterface::WRONG_CREDENTIALS);
 			}

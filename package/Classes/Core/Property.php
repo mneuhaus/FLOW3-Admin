@@ -107,6 +107,8 @@ class Property{
     }
 
     public function setWidget($widget) {
+        if($widget == "MultipleRelation")
+            $this->mode = \F3\Admin\Core\Property::INLINE_MULTIPLE_MODE;
         $this->widget = $widget;
     }
 
@@ -119,7 +121,13 @@ class Property{
     }
 
     public function getOptions() {
-        $options = $this->adapter->getOptions($this->being, $this->getIds());
+        if(isset($this->conf["optionsProvider"])){
+            $provider = $this->objectManager->get(ltrim($this->conf["optionsProvider"],"\\"));
+            $provider->setProperty($this);
+            $options = $provider->getOptions();
+        }else{
+            $options = $this->adapter->getOptions($this->being, $this->getIds());
+        }
         return $options;
     }
 
@@ -258,6 +266,30 @@ class Property{
 
     public function setSelected($selected) {
         $this->selected = $selected;
+    }
+
+    public function getAdapter() {
+        return $this->adapter;
+    }
+
+    public function setAdapter($adapter) {
+        $this->adapter = $adapter;
+    }
+
+    public function getMode() {
+        return $this->mode;
+    }
+
+    public function setMode($mode) {
+        $this->mode = $mode;
+    }
+
+    public function getFilter() {
+        return $this->filter;
+    }
+
+    public function setFilter($filter) {
+        $this->filter = $filter;
     }
 }
 

@@ -1,9 +1,9 @@
 <?php
-
-namespace F3\Admin\Core;
+declare(ENCODING = 'utf-8');
+namespace F3\Admin\Security\Token;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the FLOW3 framework.                            *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License as published by the *
@@ -23,51 +23,39 @@ namespace F3\Admin\Core;
  *                                                                        */
 
 /**
- * @version $Id: ForViewHelper.php 3346 2009-10-22 17:26:10Z k-fish $
+ * An authentication token used for simple username and password authentication.
+ *
+ * @version $Id: UsernamePassword.php 3926 2010-03-10 17:57:21Z robert $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @api
  * @scope prototype
  */
-class Option{
-    /**
-	 * @var \F3\FLOW3\Object\ObjectManagerInterface
-	 * @api
-	 * @author Marc Neuhaus <apocalip@gmail.com>
-	 * @inject
+class UsernamePassword extends \F3\FLOW3\Security\Authentication\Token\UsernamePassword {
+
+	/**
+	 * @var F3\Admin\Security\User
 	 */
-	protected $objectManager;
+	protected $user;
 
-    protected $name;
-    protected $value;
-    protected $id;
+	/**
+	 * Returns the account if one is authenticated, NULL otherwise.
+	 *
+	 * @return F3\Admin\Security\User An account object
+	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
+	 */
+	public function getUser() {
+		return $this->user;
+	}
 
-    public function __toString(){
-        return $this->getName();
-    }
-
-    public function getValue() {
-        return $this->value;
-    }
-
-    public function setValue($value) {
-        $this->value = $value;
-    }
-
-    public function getName() {
-        return $this->name;
-    }
-
-    public function setName($name) {
-        $this->name = $name;
-    }
-
-    public function getId(){
-        return $this->id;
-    }
-
-    public function setId($id){
-        $this->id = $id;
-    }
+	/**
+	 * Set the (authenticated) account
+	 *
+	 * @param F3\Admin\Security\User $account An account object
+	 * @return void
+	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
+	 */
+	public function setUser(\F3\Admin\Security\User $user) {
+		$this->user = $user;
+	}
 }
 
 ?>

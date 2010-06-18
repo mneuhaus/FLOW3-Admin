@@ -336,21 +336,22 @@ abstract class AbstractAdapter implements AdapterInterface {
      * @param array $selected Array of the Selected Keys
      * @author Marc Neuhaus <mneuhaus@famelo.com>
      * */
-	public function getOptions($beings, $selected = array()) {
-		if( is_string($beings) )
-			$beings = $this->getBeings($beings);
+	public function getOptions($being, $selected = array()) {
+        #$options = array ("" => "" );
+        $options = array();
+        if( is_string($being) )
+            $beings = $this->getBeings($being);
 
-		if( ! is_array($selected) )
-			$selected = explode(",", $selected);
-        
-		if( empty($beings) )
-			return array ();
+        if( ! is_array($selected) )
+            $selected = explode(",", $selected);
 
-		$options = array ("" => "" );
-		foreach($beings as $being) {
+        if( empty($beings) )
+            return array ();
+
+        foreach($beings as $being) {
             $being->setSelected(in_array($being->getId(), $selected));
-			$options [] = $being;
-		}
+            $options [] = $being;
+        }
 		return $options;
 	}
 

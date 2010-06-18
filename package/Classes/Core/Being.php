@@ -54,7 +54,7 @@ class Being{
     }
 
     public function __toString(){
-        if(is_object($this->object))
+        if(is_object($this->object) && is_callable(array($this->object,"__toString")))
             return strval($this->object->__toString());
         return "";
     }

@@ -73,7 +73,7 @@ class PHPCRAdapter extends AbstractAdapter {
             $group = $packageName;
 
 			foreach($package->getClassFiles() as $class => $file) {
-				if( strpos($class, "\\Model\\") > 0 || isset($this->settings["Beings"][$class])) {
+				#if( strpos($class, "\\Model\\") > 0 || isset($this->settings["Beings"][$class])) {
 					$tags = $this->reflectionService->getClassTagsValues($class);
 					$parts = explode('\\', $class);
 					$name = end($parts);
@@ -92,7 +92,7 @@ class PHPCRAdapter extends AbstractAdapter {
                             $groups [$group] [] = array ("being" => $class, "name" => $name );
                         }
                     }
-				}
+				#}
 			}
 		}
 		return $groups;
@@ -133,8 +133,6 @@ class PHPCRAdapter extends AbstractAdapter {
 		$configuration = $this->getConfiguration($being);
         $data["__identity"] = $id;
 		$result = $this->transformToObject($being, $data);
-        \F3\dump(array($data,$result),$being);
-        exit;
 		$repository = $this->objectManager->getObject(str_replace("Domain\\Model", "Domain\\Repository", $being) . "Repository");
         #\F3\var_dump($result["object"]);
 		$repository->update($result ["object"]);
