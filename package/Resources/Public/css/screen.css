@@ -10,6 +10,7 @@ body{ background:#fff; padding-left:10em; }
     .topbar {  position:fixed; width:100%; top:0; left:0; height:43px; background: url(../img/controls.png) 0 -3696px; }
 		.topbar #logo { margin-left:10px; margin-top:10px; display:block; float:left; }
         .topbar .actions { position:absolute; left:50%; top:5px; }
+            .topbar a { color:white; }
             .topbar .actions a { color:white; font-size:10px; float:left; margin-right:0.5em; }
 	.sidebar{ background:#F2F2F2; height:100%; position:fixed; left:0; top:44px; border-right:1px solid #D9D9D9;}
         .sidebar .vnav ul { border-top:1px solid #D9D9D9; }
