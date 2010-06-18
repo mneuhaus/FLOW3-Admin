@@ -3,6 +3,8 @@ jQuery(document).ready(function(){
 		jQuery(this).find("tbody tr:even").addClass("even");
 		jQuery(this).find("tbody tr:odd").addClass("odd");
 	});
+    
+	jQuery("input[type='text']:first").focus();
 	
 	jQuery(".sortable").sortable();
 	jQuery(".sortable").each(function(){
@@ -30,6 +32,9 @@ jQuery(document).ready(function(){
    jQuery(".ux-select-all").change(function(){
        jQuery(".ux-select-row").attr('checked', jQuery(this).attr('checked'));
    });
+
+   jQuery(".f-multiselect").selectbox();
+   jQuery(".f-date").datepicker({dateFormat: "dd.mm.yy"});
 });
 
 

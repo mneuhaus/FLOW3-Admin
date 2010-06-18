@@ -1,0 +1,14 @@
+.selectbox { overflow:hidden; }
+	.selectbox a { text-decoration:none; }
+	.selectbox-available { width:200px; float:left; }
+		.selectbox-search { height:20px; }
+		.selectbox-available input { width:193px; border:1px solid #ccc; }
+		.selectbox-available select { width:200px; border:1px solid #ccc; }
+		.selectbox-all { text-align:center; }
+	.selectbox-selected { width:200px; float:left;}
+		.selectbox-header { font-weight:bold; }
+		.selectbox-info { font-size:12px; height:24px; }
+		.selectbox-selected select { width:202px; border:1px solid #ccc; }
+		.selectbox-clear { text-align:center; }
+	.selectbox-toolbar { float:left; width:30px; margin-top:90px; text-align:center; }
+		.selectbox-toolbar a { display:block; }
