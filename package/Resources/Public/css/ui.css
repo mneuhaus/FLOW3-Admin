@@ -51,4 +51,4 @@ a.ui-button{
 
 table.ui-table th.ui-small,
 table.ui-table td.ui-small { width:22px; padding:0; overflow:hidden;}
-    table.ui-table .ui-small input { margin-top:4px;margin-bottom:-1px; }
+    table.ui-table .ui-small input { margin-top:4px;margin-bottom:-1px;margin-left:4px; }
