@@ -40,66 +40,60 @@ class ResourcesViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	public function injectResourcePublisher(\F3\FLOW3\Resource\Publishing\ResourcePublisher $resourcePublisher) {
 		$this->resourcePublisher = $resourcePublisher;
 	}
+
+    protected $templates = array(
+        "js"    => '<script src="@file" type="text/javascript" charset="utf-8"></script>\n',
+        "css"   => '<link rel="stylesheet" href="@file" type="text/css" media="screen" charset="utf-8">\n'
+    );
+
+    static protected $files = array();
 	
 	/**
 	 *
-	 *
+	 * @param string $file
+     * @param string $dependencies
 	 * @return string
 	 */
-	public function render() {
+	public function _render($file = null, $dependencies = null) {
 		$package = $this->controllerContext->getRequest()->getControllerPackageKey();
 		$mirrorPath = str_replace("/http://dev.flow3.local/_","",$this->resourcePublisher->getStaticResourcesWebBaseUri());
 		$uri = $mirrorPath . '/Packages/' . $package . '/';
-		// if ($absolute) {
-		// 	$uri = $this->controllerContext->getRequest()->getBaseURI() . $uri;
-		// }
-		
-		$output = "";
+
+        if($file == null && $dependencies == null){
+            
+        }else{
+            
+        }
+
+        return "";
+	}
+
+    public function render(){
+		$package = $this->controllerContext->getRequest()->getControllerPackageKey();
+		$mirrorPath = str_replace("/http://dev.flow3.local/_","",$this->resourcePublisher->getStaticResourcesWebBaseUri());
+		$uri = $mirrorPath . '/Packages/' . $package . '/';
+        $output = "";
 		$jsfiles = array(
-			"js/jquery-1.3.2.min.js",
-			"js/jquery-ui-1.7.2.custom.min.js",
-			"js/jquery.livesearch.js",
-			#"js/daterangepicker.jQuery.js",
-			#"js/jquery-ui.spinner.js",
-			#"js/jquery.scrollTo-min.js",
-			#"js/jquery.localisation-min.js",
-			"js/ui.multiselect.js",
-			"js/ui-multiselect-en.js",
-			#"js/jquery.autoSuggest.js",
-			#"js/jquery.MultiFile.js",
-			#"js/jquery.elastic.js",
-			#"js/jquery.hotkeys.js",
-			"js/jquery.tablesorter.js",
-			#"js/jquery.keynav.js",
-			#"js/jquery.datejs.js",
-			#"js/ckeditor/ckeditor.js",
-			#"js/ckeditor/adapters/jquery.js",
-			#"js/markitup/jquery.markitup.js",
-			#"js/jquery.sexy-combo.js",
-			#"js/markitup/sets/wiki/set.js",
-			#"js/markitup/sets/texy/set.js",
-			#"js/markitup/sets/textile/set.js",
-			#"js/markitup/sets/markdown/set.js",
-			#"js/markitup/sets/dotclear/set.js",
-			#"js/markitup/sets/bbcode/set.js",
+			"js/jquery/jquery.js",
+			"js/jquery/jquery.ui.js",
+			"js/jquery/jquery.livesearch.js",
+			"js/jquery/jquery.hotkeys.js",
+			"js/jquery/jquery.selectbox.js",
+			"js/jquery/jquery.keynav.js",
 			"js/main.js"
 		);
 		foreach($jsfiles as $jsfile){
 			$output .= '<script src="'.$uri.$jsfile.'" type="text/javascript" charset="utf-8"></script>'."\n";
 		}
 		$cssfiles = array(
-			"js/markitup/sets/wiki/style.css",
-			"js/markitup/sets/texy/style.css",
-			"js/markitup/sets/textile/style.css",
-			"js/markitup/sets/markdown/style.css",
-			"js/markitup/sets/dotclear/style.css",
-			"js/markitup/sets/bbcode/style.css"
+            "css/jquery/jquery.ui.css",
+            "css/jquery/jquery.selector.css"
 		);
 		foreach($cssfiles as $cssfile){
 			$output .= '<link rel="stylesheet" href="'.$uri.$cssfile.'" type="text/css" media="screen" title="no title" charset="utf-8">'."\n";
 		}
-		return $output;
-	}
+        return $output;
+    }
 }
 
 ?>
