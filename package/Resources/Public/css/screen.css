@@ -19,6 +19,13 @@ body{ background:#fff; padding-left:10em; }
     #content { margin-left:-6px; padding-top:44px; overflow:hidden; }
         #content .actions {}
             #content .actions .ui-icon { float:left; margin-left:0.5em; }
+    #login { width:auto; position:absolute; left:50%; top:30%; margin-left:-150px;}
+        #login .f-row { margin-top:1em; }
+            #login .f-row input { width:160px; margin-right:1.5em; }
+            #login .f-row label { width:72px; float:left; margin-left:1em; margin-right:0.5em; }
+            #login .ui-button { margin-right:1.5em; margin-bottom:1.5em; margin-top:0px; }
+        #login .vnav { margin:0 1em; }
+            #login .vnav li { margin-bottom:1em; }
     
 .hnav{ list-style-type:none; margin:0; }
 	.hnav li{ display:inline; padding-right:5px;}

@@ -9,4 +9,4 @@
   name: 'Home'
   uriPattern: ''
   defaults:
-    '@package': Admin
+    '@package': 'Admin'

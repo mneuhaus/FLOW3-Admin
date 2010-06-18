@@ -29,7 +29,8 @@
 			sortItems(select.find("option"));
 
 			var name = select.attr("name").replace(/]/g,"").replace(/\[$/g,"").replace(/\[/g,"-");
-
+            select.attr("id",name);
+            
 			var selectbox = jQuery(o.tpl.wrap);
 
 			var availableWrap = jQuery(o.tpl.availableWrap);
@@ -46,6 +47,7 @@
 			var availableSelect = jQuery(o.tpl.availableSelect);
 				availableSelect.attr("id","selectbox-available-"+name);
 				availableSelect.data("ref",name);
+				availableSelect.data("name",select.attr("name"));
 				availableWrap.append(availableSelect);
 
 			var selectAll = jQuery(o.tpl.selectAll);
@@ -66,6 +68,7 @@
 			var selectedSelect = jQuery(o.tpl.selectedSelect);
 				selectedSelect.attr("id","selectbox-selected-"+name);
 				selectedSelect.data("ref",name);
+				selectedSelect.data("name",select.attr("name"));
 				selectedWrap.append(selectedSelect);
 
 			var clearAll = jQuery(o.tpl.clearAll);
@@ -74,8 +77,8 @@
 			availableSelect.append(select.find("option").clone());
 			selectedSelect.append(availableSelect.find("option:selected").removeAttr("selected"));
 
-		    jQuery(availableSelect).bind('keydown', 'right', function(){ return selectItem(this); });
-		    jQuery(selectedSelect).bind('keydown', 'left', function(){ return removeItem(this); });
+		    jQuery(availableSelect).bind('keydown', 'right', function(){ return selectItem(availableSelect); });
+		    jQuery(selectedSelect).bind('keydown', 'left', function(){ return removeItem(selectedSelect); });
 
 			selectAll.click(function(){selectAllItems(availableSelect); return false;});
 			clearAll.click(function(){clearAllItems(selectedSelect); return false;});
@@ -93,7 +96,7 @@
 		}
 
 		function selectItem(e){
-			var select = jQuery("select[name="+jQuery(e).data("ref")+"]");
+			var select = jQuery("#"+jQuery(e).data("ref"));
 			var target = jQuery("#selectbox-selected-"+jQuery(e).data("ref"));
 			var items = jQuery(e).find("option:selected").removeAttr("selected");
 			target.append(items);
@@ -102,7 +105,7 @@
 		}
 
 		function removeItem(e){
-			var select = jQuery("select[name="+jQuery(e).data("ref")+"]");
+			var select = jQuery("#"+jQuery(e).data("ref"));
 			var target = jQuery("#selectbox-available-"+jQuery(e).data("ref"));
 			var items = jQuery(e).find("option:selected").removeAttr("selected");
 			target.append(items);
@@ -111,16 +114,17 @@
 		}
 
 		function selectAllItems(e){
-			var select = jQuery("select[name="+jQuery(e).data("ref")+"]");
+			var select = jQuery("#"+jQuery(e).data("ref"));
 			var target = jQuery("#selectbox-selected-"+jQuery(e).data("ref"));
 			var items = jQuery(e).find("option");
 			target.append(items);
 			pushSelection(select);
+            console.log(select,"select[name="+jQuery(e).data("name")+"]");
 			return false;
 		}
 
 		function clearAllItems(e){
-			var select = jQuery("select[name="+jQuery(e).data("ref")+"]");
+			var select = jQuery("#"+jQuery(e).data("ref"));
 			var target = jQuery("#selectbox-available-"+jQuery(e).data("ref"));
 			var items = jQuery(e).find("option");
 			target.append(items);
@@ -129,7 +133,7 @@
 		}
 
 		function pushSelection(select){
-			var name = select.attr("name");
+			var name = select.attr("name").replace(/]/g,"").replace(/\[$/g,"").replace(/\[/g,"-");
 			select.empty();
 
 			selectedSelect = jQuery("#selectbox-selected-"+name);

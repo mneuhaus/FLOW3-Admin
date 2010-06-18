@@ -11,7 +11,7 @@
 			.f-group{ width:auto; float:left; width:80px; }
 				.f-group label{ margin-top:2px; margin-left:2px; }
 				.f-group input{ margin-left:0; }
-			input,
+			input { float:left; }
 			.as-selections,
 			select,
 			.ui-multiselect,

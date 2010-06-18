@@ -11,13 +11,16 @@ FLOW3:
           entryPoint:
             WebRedirect:
               uri: admin/login/
+    authorization:
+      # An array of access decision voters that should vote when access decisions are made
+      accessDecisionVoters: [F3\Admin\Security\Voter\Policy]
 
 Admin:
   Defaults:
     newinlines: 3
   Adapters:
     F3\Admin\Adapters\PHPCRAdapter: active
-    F3\Admin\Adapters\DummyAdapter: active
+    F3\Admin\Adapters\DummyAdapter: inactive
   Fallbacks:
     Views:
       - resource://@package/Private/Templates/@being/@action/@variant.html
@@ -66,6 +69,7 @@ PHPCR:
       \DateTime: DateTime
       ^\\*F3\\[A-Za-z]+\\Domain\\Model\\[A-Za-z]+$: SingleRelation
       ^\\*\SplObjectStorage\<\\*F3\\[A-Za-z]+\\Domain\\Model\\[A-za-z]+>$: MultipleRelation
+      ^\\*\SplObjectStorage\<\\*F3\\[A-Za-z]+\\Security\\[A-za-z]+>$: MultipleRelation
   Conversions:
     Storage:
       \DateTime: this->stringToDateTime

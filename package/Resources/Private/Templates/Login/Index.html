@@ -1,20 +1,45 @@
-<div id="loginscreen">
-    <h2>Authentication required</h2>
-    <p><f:flashMessages class="flashmessages" /></p>
-    <f:form action="../../authenticate" method="post">
-        <fieldset>
-            <legend></legend>
-            <div class="row username">
-                <label id="usernameLabel" for="username" class="placeholder"><span>Username</span></label>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+{namespace a=F3\Admin\ViewHelpers}
+<title>
+	Base
+</title>
+<link rel="stylesheet" href="{f:uri.resource(path: 'css/emtastic/grid-min.css', package: 'Admin')}" type="text/css" media="screen" title="no title" charset="utf-8">
+<link rel="stylesheet" href="{f:uri.resource(path: 'css/emtastic/type-min.css', package: 'Admin')}" type="text/css" media="screen" title="no title" charset="utf-8">
+<link rel="stylesheet" href="{f:uri.resource(path: 'css/typography.css', package: 'Admin')}" type="text/css" media="screen" title="no title" charset="utf-8">
+<link rel="stylesheet" href="{f:uri.resource(path: 'css/layout.css', package: 'Admin')}" type="text/css" media="screen" title="no title" charset="utf-8">
+<link rel="stylesheet" href="{f:uri.resource(path: 'css/form.css', package: 'Admin')}" type="text/css" media="screen" title="no title" charset="utf-8">
+<link rel="stylesheet" href="{f:uri.resource(path: 'css/table.css', package: 'Admin')}" type="text/css" media="screen" title="no title" charset="utf-8">
+<a:resources />
+<link rel="stylesheet" href="{f:uri.resource(path: 'css/ui.css', package: 'Admin')}" type="text/css" media="screen" title="no title" charset="utf-8">
+<link rel="stylesheet" href="{f:uri.resource(path: 'css/images.css', package: 'Admin')}" type="text/css" media="screen" title="no title" charset="utf-8">
+<link rel="stylesheet" href="{f:uri.resource(path: 'css/screen.css', package: 'Admin')}" type="text/css" media="screen" title="no title" charset="utf-8">
+<f:base />
+</head>
+<body>
+    <div class="topbar contain">
+        <a href="index.php" id="logo">
+            <img src="{f:uri.resource(path: 'img/flow3.png', package: 'Admin')}" height="20" alt="FLOW3">
+        </a>
+    </div>
+    <div id="login" class="ui-container">
+        <h3 class="ui-header">Login</h3>
+        <f:form actionUri="/admin/login/authenticate" method="post">
+            <div class="contain f-row">
+                <label id="usernameLabel" for="username" >Username</label>
                 <f:form.textbox name="F3\FLOW3\Security\Authentication\Token\UsernamePassword::username" tabindex="1" />
             </div>
-
-            <div class="row password">
-                <label id="passwordLabel" for="password" class="placeholder"><span>Password</span></label>
+            <div class="contain f-row">
+                <label id="passwordLabel" for="password" ><span>Password</span></label>
                 <f:form.password  name="F3\FLOW3\Security\Authentication\Token\UsernamePassword::password" tabindex="2" />
             </div>
-
-            <f:form.submit value="Login" />
-        </fieldset>
-    </f:form>
-</div>
+            <f:form.submit value="Login" class="ui-button dr"/>
+        </f:form>
+        <div class="clear"></div>
+        <f:flashMessages class="flashmessages vnav" />
+    </div>
+</body>
+</html>
