@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="fluid.usermanual"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xl="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:xhtml="http://www.w3.org/1999/xhtml"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:ns="http://docbook.org/ns/docbook"
+         xmlns:mathml="http://www.w3.org/1998/Math/MathML">
+  <title>Templates</title>
+
+  <para>Since the Admin Interface would be not of much use if you could only
+  use the Templates that the Admin Package ships with by default there is a
+  Fallback System in place to automatically choose the most specific Template
+  possible to Render the Admin Interface. The Fallbacks are Configured in the
+  Settings.yaml and can be customized if needed.</para>
+
+  <section>
+    <title>Views</title>
+
+    <para>The Admin Interface will check for the existence of each of this
+    Fallbacks until a Template is found and then Render accordingly:</para>
+
+    <para><programlisting>- resource://@package/Private/Templates/@being/@action/@variant.html
+- resource://@package/Private/Templates/Admin/@action/@variant.html
+- resource://@package/Private/Templates/@being/@action.html
+- resource://@package/Private/Templates/Admin/@action.html
+- resource://Admin/Private/Templates/Standard/@action/@variant.html
+- resource://Admin/Private/Templates/Standard/@action.html</programlisting></para>
+
+    <para>⁄<note>
+        <para><table>
+            <title>These Variables are available</title>
+
+            <tgroup cols="2">
+              <thead>
+                <row>
+                  <entry align="center">Placeholder</entry>
+
+                  <entry align="center">Replacement</entry>
+                </row>
+              </thead>
+
+              <tbody>
+                <row>
+                  <entry>@package</entry>
+
+                  <entry>Name of the Package which Contains the Model to be
+                  Rendered</entry>
+                </row>
+
+                <row>
+                  <entry>@being</entry>
+
+                  <entry>Short Name of the Model (F3\Blog\Domain\Model\Post
+                  -&gt; Post)</entry>
+                </row>
+
+                <row>
+                  <entry>@action</entry>
+
+                  <entry>Action to Render
+                  (List,Create,Update,Confirm,View)</entry>
+                </row>
+
+                <row>
+                  <entry>@variant</entry>
+
+                  <entry>Variant of the Action (Tabular, Block)</entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </table></para>
+      </note></para>
+  </section>
+
+  <section>
+    <title>Partials</title>
+
+    <para>Partials are Subparts which can be Reused in more than one View
+    (Form, Table, Toolbar,...)</para>
+
+    <para><programlisting>- resource://@package/Private/Partials/@being/@action/@partial.html
+- resource://@package/Private/Partials/@being/@partial.html
+- resource://@package/Private/Partials/@action/@partial.html
+- resource://@package/Private/Partials/@partial.html
+- resource://Admin/Private/Partials/@action/@partial.html
+- resource://Admin/Private/Partials/@partial.html</programlisting><note>
+        <para><table>
+            <title>These Variables are available</title>
+
+            <tgroup cols="2">
+              <thead>
+                <row>
+                  <entry align="center">Placeholder</entry>
+
+                  <entry align="center">Replacement</entry>
+                </row>
+              </thead>
+
+              <tbody>
+                <row>
+                  <entry>@package</entry>
+
+                  <entry>Name of the Package which Contains the Model to be
+                  Rendered</entry>
+                </row>
+
+                <row>
+                  <entry>@being</entry>
+
+                  <entry>Short Name of the Model (F3\Blog\Domain\Model\Post
+                  -&gt; Post)</entry>
+                </row>
+
+                <row>
+                  <entry>@partial</entry>
+
+                  <entry>Name of the Partial (Form, Table, Toolbar,...
+                  )</entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </table></para>
+      </note></para>
+  </section>
+
+  <section>
+    <title>Widgets</title>
+
+    <para><programlisting>- resource://@package/Private/Partials/@being/Widgets/@partial.html
+- resource://@package/Private/Partials/Widgets/@partial.html
+- resource://Admin/Private/Partials/Widgets/@partial.html</programlisting><note>
+        <para><table>
+            <title>These Variables are available</title>
+
+            <tgroup cols="2">
+              <thead>
+                <row>
+                  <entry align="center">Placeholder</entry>
+
+                  <entry align="center">Replacement</entry>
+                </row>
+              </thead>
+
+              <tbody>
+                <row>
+                  <entry>@package</entry>
+
+                  <entry>Name of the Package which Contains the Model to be
+                  Rendered</entry>
+                </row>
+
+                <row>
+                  <entry>@being</entry>
+
+                  <entry>Short Name of the Model (F3\Blog\Domain\Model\Post
+                  -&gt; Post)</entry>
+                </row>
+
+                <row>
+                  <entry>@partial</entry>
+
+                  <entry>Name of the Partial (TextField, Boolean, DateTime,...
+                  )</entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </table></para>
+      </note></para>
+  </section>
+</chapter>

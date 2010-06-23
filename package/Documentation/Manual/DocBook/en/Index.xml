@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="css/docbook.css" type="text/css"?>
+<book version="5.0" xml:id="fluid" xmlns="http://docbook.org/ns/docbook"
+      xmlns:xl="http://www.w3.org/1999/xlink"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xmlns:xhtml="http://www.w3.org/1999/xhtml"
+      xmlns:svg="http://www.w3.org/2000/svg"
+      xmlns:ns="http://docbook.org/ns/docbook"
+      xmlns:mathml="http://www.w3.org/1998/Math/MathML">
+  <title>Automatic Administration Interface</title>
+
+  <!-- Meta information -->
+
+  <info>
+    <abstract>
+      <para>Automatic Administration Interface for FLOW3</para>
+    </abstract>
+
+    <author>
+      <personname>
+        <firstname>Marc</firstname>
+        <surname>Neuhaus</surname>
+      </personname>
+
+      <email>mneuhaus@famelo.com</email>
+    </author>
+
+    <copyright>
+      <year>2010</year>
+      <holder>Marc Neuhaus</holder>
+    </copyright>
+  </info>
+
+  <!-- Chapters -->
+
+  <xi:include href="Introduction.xml"/>
+
+  <xi:include href="UserManual.xml"/>
+
+  <xi:include href="Configuration.xml"/>
+
+  <xi:include href="Templates.xml"/>
+
+  <xi:include href="Widgets.xml"/>
+
+  <xi:include href="BulkActions.xml"/>
+
+  <xi:include href="OptionsProviders.xml"/>
+
+  <xi:include href="ObjectConverters.xml"/>
+
+  <xi:include href="Adapters.xml"/>
+
+  <!-- Appendixes -->
+</book>
