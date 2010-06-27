@@ -52,7 +52,8 @@ class DateTimeObjectConverter implements \F3\FLOW3\Property\ObjectConverterInter
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function convertFrom($string, $conf = null) {
-        $string = current($string);
+        if(is_array($string))
+            $string = current($string);
         return new \DateTime($string);
 	}
 
