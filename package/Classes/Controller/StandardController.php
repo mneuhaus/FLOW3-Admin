@@ -1,5 +1,5 @@
 <?php
- 
+
 namespace F3\Admin\Controller;
 
 /*                                                                        *
@@ -35,21 +35,21 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	 * @inject
 	 */
 	protected $helper;
-	
+
 	/**
 	 * @var \F3\FLOW3\Session\PhpSession
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 * @inject
 	 */
 	protected $session;
-	
+
 	/**
 	 * @var \F3\FLOW3\Object\ObjectManagerInterface
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 * @inject
 	 */
 	protected $objectManager;
-	
+
 	/**
 	 * @inject
 	 * @var F3\FLOW3\Security\Context
@@ -57,217 +57,94 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	protected $securityContext;
 
 	protected $model = "";
-
-    public function initializeCreateAction(){
-		#$being = $this->request->getArgument("being");
-        #$this->arguments->addNewArgument("item", $being, false, null);
-    }
+    protected $being = null;
+    protected $id = null;
     
-    public function initializeUpdateAction(){
-        #$this->initializeCreateAction();
+    /**
+	 * Resolves and checks the current action method name
+	 *
+	 * @return string Method name of the current action
+	 * @author Robert Lemke <robert@typo3.org>
+	 */
+	protected function resolveActionMethodName() {
+		$actionMethodName = $this->request->getControllerActionName() . 'Action';
+        $action = $this->getActionByShortName($actionMethodName);
+		if (!method_exists($this, $actionMethodName) && $action !== null) {
+			#throw new \F3\FLOW3\MVC\Exception\NoSuchActionException('An action "' . $actionMethodName . '" does not exist in controller "' . get_class($this) . '".', 1186669086);
+		}
+		return $actionMethodName;
+	}
+
+    /**
+	 * Calls the specified action method and passes the arguments.
+	 *
+	 * If the action returns a string, it is appended to the content in the
+	 * response object. If the action doesn't return anything and a valid
+	 * view exists, the view is rendered automatically.
+	 *
+	 * @param string $actionMethodName Name of the action method to call
+	 * @return void
+	 * @author Robert Lemke <robert@typo3.org>
+	 */
+	protected function callActionMethod() {
+		$preparedArguments = array();
+		foreach ($this->arguments as $argument) {
+			$preparedArguments[] = $argument->getValue();
+		}
+
+        if ($this->argumentsMappingResults->hasErrors()) {
+			$actionResult = call_user_func(array($this, $this->errorMethodName));
+		} else {
+			#$actionResult = call_user_func_array(array($this, $this->actionMethodName), $preparedArguments);
+            $actionResult = $this->__call($this->actionMethodName, $preparedArguments);
+		}
+
+		if ($actionResult === NULL && $this->view instanceof \F3\FLOW3\MVC\View\ViewInterface) {
+			$this->response->appendContent($this->view->render());
+		} elseif (is_string($actionResult) && strlen($actionResult) > 0) {
+			$this->response->appendContent($actionResult);
+		} elseif (is_object($actionResult) && method_exists($actionResult, '__toString')) {
+			$this->response->appendContent((string)$actionResult);
+		}
+	}
+
+    public function __call($name, $args){
+        $actionName = str_replace("Action","",$name);
+		$this->prepare($actionName);
+        $action = $this->getActionByShortName($name);
+        
+        if($action !== null){
+           $result = $action->execute($this->being, $this->id);
+           #\F3\var_dump($result);
+           if(is_array($result)){
+               #$this->redirect($result[0],$result[1],$result[1],$result[3]);
+           }
+        }
     }
 
-	/**
-	 * Create action
-	 *
-     * @param string $being
-	 * @return void
-	 * @author Marc Neuhaus <apocalip@gmail.com>
-	 */
-	public function createAction($being) {
-		$this->prepare("create");
-
-        $object = $this->getAdapter()->getBeing($being);
-
-		if($this->request->hasArgument("create")){
-			$result = $this->getAdapter()->createObject($being,$this->request->getArgument("item"));
-            $errors = $result["errors"];
-			if(empty($errors)){
-				$arguments = array("being"=>$this->being,"adapter" => $this->adapter);
-				$this->redirect('list',NULL,NULL,$arguments);
-			}else{
-#				foreach ($attributeSets as $set => $attributes) {
-#					foreach ($attributes as $key => $attribute) {
-#						if(array_key_exists($attribute["name"],$errors)){
-#							$attributeSets[$set][$key]["error"] = $errors[$attribute["name"]];
-#						}
-#					}
-#				}
-			}
-		}
-
-		$this->view->assign("being",$object);
-		$this->preRender();
-	}
-	
-	/**
-	 * Index action
-	 *
-	 * @return void
-	 */
-	public function indexAction() {
-		$this->prepare("index");
-		$this->preRender();
-	}
-	
-	/**
-	 * List action
-	 *
-     * @param string $being
-	 * @return void
-	 * @author Marc Neuhaus <apocalip@gmail.com>
-	 */
-	public function listAction($being) {
-		$this->prepare("list");
-
-        $actions = $this->getActions();
-        $this->view->assign("actions",$actions);
-
-        if($this->request->hasArgument("bulk")){
-            $bulkAction = $this->request->getArgument("bulkAction");
-            if(isset($actions[$bulkAction])){
-                $action = $actions[$bulkAction];
-                $items = $this->request->getArgument("bulkItems");
-                $action->execute($items,$this->being);
-            }
-			$arguments = array( "being" => $this->being , "adapter" => $this->adapter);
-			$this->redirect("list",NULL,NULL,$arguments);
-        }
-
-        if($this->request->hasArgument("filter")){
-            $filters = $this->request->getArgument("filters");
-            $beings = $this->getAdapter()->getBeings($this->being,$filters);
-            $this->view->assign("filters", $this->getAdapter()->getFilter($this->being,$filters));
-        }else{
-            $beings = $this->getAdapter()->getBeings($this->being);
-            $this->view->assign("filters", $this->getAdapter()->getFilter($this->being));
-        }
-        
-		$this->view->assign("objects",$beings);
-		
-		// Redirect to creating a new Object if there aren't any (Clean Slate)
-		if(count($beings) < 1){
-			$arguments = array( "being" => $this->being , "adapter" => $this->adapter);
-			$this->redirect("create",NULL,NULL,	$arguments);
-		}
-
-		$this->preRender();
-	}
-	
-	/**
-	 * Confirm previous requested action
-	 *
-     * @param string $being
-     * @param string $id
-	 * @return void
-	 * @author Marc Neuhaus <apocalip@gmail.com>
-	 */
-	public function confirmAction($being, $id) {
-		$this->prepare("confirm");
-		$object = $this->getAdapter()->getBeing($being,$id);
-		$this->view->assign("object",$object);
-		$this->preRender();
-	}
-	
-	/**
-	 * delete action
-	 *
-     * @param string $being
-	 * @return void
-	 * @author Marc Neuhaus <apocalip@gmail.com>
-	 */
-	public function deleteAction($being) {
-		$this->prepare("delete");
-		if($this->request->hasArgument("confirm")){
-			$this->getAdapter()->deleteObject($being,$this->request->getArgument("id"));
-			
-			$arguments = array("adapter"=>$this->adapter,"being"=>$being);
-			$this->redirect('list',NULL,NULL,$arguments);
-		}else{
-			$this->redirect('confirm',NULL,NULL,$this->request->getArguments());
-		}
-		$this->preRender();
-	}
-	
-	/**
-	 * update action
-	 *
-     * @param string $being
-     * @param string $id
-	 * @return void
-	 * @author Marc Neuhaus <apocalip@gmail.com>
-	 */
-	public function updateAction($being, $id) {
-		$this->prepare("update");
-        
-#		if($this->request->hasArgument("delete")){
-#			$arguments = $this->request->getArguments();
-#			$this->redirect('confirm',NULL,NULL,$arguments);
-#		}
-
-        if($this->request->hasArgument("update")){
-			$result = $this->getAdapter()->updateObject($being, $id, $this->request->getArgument("item"));
-            $errors = $result["errors"];
-			if(empty($errors)){
-				$arguments = array("being"=>$this->being,"adapter" => $this->adapter);
-				$this->redirect('list',NULL,NULL,$arguments);
-			}else{
-#				foreach ($attributeSets as $set => $attributes) {
-#					foreach ($attributes as $key => $attribute) {
-#						if(array_key_exists($attribute["name"],$errors)){
-#							$attributeSets[$set][$key]["error"] = $errors[$attribute["name"]];
-#						}
-#					}
-#				}
-			}
-		}
-        
-        $object = $this->getAdapter()->getBeing($being,$id);
-        
-		$this->view->assign("being",$object);
-		
-		$this->preRender();
-	}
-	
-	/**
-	 * view action
-	 *
-     * @param string $being
-     * @param string $id
-	 * @return void
-	 * @author Marc Neuhaus <apocalip@gmail.com>
-	 */
-	public function viewAction($being, $id) {
-		$this->prepare("view");
-		
-		$being = $this->getAdapter()->getBeing($being,$id);
-		$this->view->assign("being",$being);
-		$this->preRender();
-	}
-	
-	
 	private function prepare($action){
 		$this->start = microtime();
 		\F3\Dump\Dump::getInstance();
-		
+
 		$this->adapters = $this->helper->getAdapters();
 		$this->settings = $this->helper->getSettings();
 		\F3\Admin\Register::set("settings",$this->settings);
 		\F3\Admin\Register::set("session",$this->session);
-		\F3\Admin\Register::set("objectManager",$this->objectManager);
 		\F3\Admin\Register::set("action",$action);
-		
+
 		if($this->request->hasArgument("being")){
 			$this->being = $this->request->getArgument("being");
 			\F3\Admin\Register::set("being",$this->being);
+            
 			$this->group = $this->helper->getGroupByBeing($this->being);
 			\F3\Admin\Register::set("group",$this->group);
 		}
+
 		if($this->request->hasArgument("adapter")){
 			$this->adapter = $this->request->getArgument("adapter");
 			\F3\Admin\Register::set("adapter",$this->adapter);
 		}
-		
+
 		if($this->request->hasArgument("id")){
 			$this->id = $this->request->getArgument("id");
 			\F3\Admin\Register::set("being_id",$this->id);
@@ -288,7 +165,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
                 break;
 			}
 		}
-        
+
 		$groups = $this->helper->getGroups();
         ksort($groups);
         foreach($groups as $package => $group){
@@ -308,14 +185,17 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
             if(empty($groups[$package]["beings"]))
                 unset($groups[$package]);
         }
-        
+
 		$this->view->assign('groups',$groups);
-			
+
 		$this->setTemplate($action);
 		$context = getenv("FLOW3_CONTEXT") ? getenv("FLOW3_CONTEXT") : "Production";
 		$this->view->assign("context",$context);
+
+        $topBarActions = $this->getActions($action, $this->being, false);
+		$this->view->assign('topBarActions',$topBarActions);
 	}
-	
+
 	public function setTemplate($action){
 		$replacements = array(
 			"@action" => ucfirst($action),
@@ -335,52 +215,69 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 				}
 			}
 		}
-		
+
 		$template = $this->helper->getPathByPatternFallbacks("Views",$replacements);
 		$this->view->setTemplatePathAndFilename($template);
-		
+
 		$meta = array();
 		if($this->request->hasArgument("being")){
 			$meta["being"]["identifier"] = $this->request->getArgument("being");
 			$meta["being"]["name"] = $this->getAdapter()->getName($this->request->getArgument("being"));
 			\F3\Admin\Register::set("package",$replacements["@package"]);
 		}
-			
+
 		if($this->request->hasArgument("adapter")){
 			$meta["adapter"]["identifier"] = $this->request->getArgument("adapter");
 		}
-		
+
 		if($this->request->hasArgument("id")){
 			$meta["id"] = $this->request->getArgument("id");
 		}
-		
+
 		$this->view->assign("meta",$meta);
 	}
-	
-	private function getAdapter(){
-		$adapter =  $this->objectManager->getObject($this->adapter);
-		if(!empty($this->being) && class_exists($this->being)){
-			$tags = $this->reflectionService->getClassTagsValues($this->being);
-			if(array_key_exists("adapter",$tags) && class_exists("\\".$tags["adapter"][0])){
-				$adapter = $this->objectManager->getObject($tags["adapter"][0]);
-			}
-		}
-		$adapter->init();
-		
-		return $adapter;
-	}
-	
-	private function preRender(){
-		$this->view->assign("rendering_time",(microtime() - $this->start) * 1000);
-	}
 
-    public function getActions(){
+	private function getAdapter(){
+        if(isset($this->adapter)){
+            $adapter =  $this->objectManager->getObject($this->adapter);
+            if(!empty($this->being) && class_exists($this->being)){
+                $tags = $this->reflectionService->getClassTagsValues($this->being);
+                if(array_key_exists("adapter",$tags) && class_exists("\\".$tags["adapter"][0])){
+                    $adapter = $this->objectManager->getObject($tags["adapter"][0]);
+                }
+            }
+            $adapter->init();
+
+            return $adapter;
+        }else{
+            return null;
+        }
+	}
+    public function getActions($action = null, $being = null, $id = false){
         $actions = array();
         foreach($this->reflectionService->getAllImplementationClassNamesForInterface('F3\Admin\Actions\ActionInterface') as $actionClassName) {
-            $actions[$actionClassName] = $this->objectManager->get($actionClassName);
-            $actions[$actionClassName]->injectAdapter($this->getAdapter());
+            #$a = $this->objectManager->create($actionClassName, $this->getAdapter(), $this->request, $this->view, $this);
+            $a = new $actionClassName($this->getAdapter(), $this->request, $this->view, $this);
+            if($a->canHandle($being, $action, $id)){
+                $actionName = \F3\Admin\Core\Helper::getShortName($actionClassName);
+                $actionName = str_replace("Action","",$actionName);
+                $actions[$actionName] = $a;
+            }
 		}
+        ksort($actions);
         return $actions;
+    }
+
+    public function getActionByShortName($action = null){
+        $actions = array();
+        foreach($this->reflectionService->getAllImplementationClassNamesForInterface('F3\Admin\Actions\ActionInterface') as $actionClassName) {
+            $actionName = \F3\Admin\Core\Helper::getShortName($actionClassName);
+            if($actionName == ucfirst($action)){
+                #return $this->objectManager->create($actionClassName, $this->getAdapter(), $this->request, $this->view, $this);
+                return new $actionClassName($this->getAdapter(), $this->request, $this->view, $this);
+            }
+		}
+        return null;
     }
 
     public function getRequest(){
@@ -390,6 +287,40 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
     public function getAction(){
         return str_replace("Action","",$this->actionMethodName);
     }
+
+	public function redirect($actionName, $controllerName = NULL, $packageKey = NULL, array $arguments = NULL, $delay = 0, $statusCode = 303) {
+        return parent::redirect($actionName, $controllerName, $packageKey, $arguments, $delay, $statusCode);
+    }
+
+	public function forward($actionName, $controllerName = NULL, $packageKey = NULL, array $arguments = NULL) {
+        return parent::forward($actionName, $controllerName, $packageKey, $arguments);
+    }
+
+    /**
+	 * Redirects the web request to another uri.
+	 *
+	 * NOTE: This method only supports web requests and will throw an exception
+	 * if used with other request types.
+	 *
+	 * @param mixed $uri Either a string representation of a URI or a \F3\FLOW3\Property\DataType\Uri object
+	 * @param integer $delay (optional) The delay in seconds. Default is no delay.
+	 * @param integer $statusCode (optional) The HTTP status code for the redirect. Default is "303 See Other"
+	 * @throws \F3\FLOW3\MVC\Exception\UnsupportedRequestTypeException If the request is not a web request
+	 * @throws \F3\FLOW3\MVC\Exception\StopActionException
+	 * @author Robert Lemke <robert@typo3.org>
+	 * @api
+	 */
+	protected function redirectToUri($uri, $delay = 0, $statusCode = 303) {
+		if (!$this->request instanceof \F3\FLOW3\MVC\Web\Request) throw new \F3\FLOW3\MVC\Exception\UnsupportedRequestTypeException('redirect() only supports web requests.', 1220539734);
+
+		$uri = $this->request->getBaseUri() . (string)$uri;
+		$escapedUri = htmlentities($uri, ENT_QUOTES, 'utf-8');
+		$this->response->setContent('<html><head><meta http-equiv="refresh" content="' . intval($delay) . ';url=' . $escapedUri . '"/></head></html>');
+		$this->response->setStatus($statusCode);
+		$this->response->setHeader('Location', (string)$uri);
+        return;
+		throw new \F3\FLOW3\MVC\Exception\StopActionException();
+	}
 }
 
 ?>

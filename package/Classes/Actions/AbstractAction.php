@@ -23,29 +23,54 @@ namespace F3\Admin\Actions;
  *                                                                        */
 
 /**
+ * Abstract validator
  *
+ * @version $Id: AbstractValidator.php 3837 2010-02-22 15:17:24Z robert $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @author Marc Neuhaus <marc@mneuhaus.com>
  */
-interface ActionInterface {
+abstract class AbstractAction implements ActionInterface {
     /**
-     * Function to Check if this Requested Action is supported
+     * @var F3\Admin\Adapters\AdapterInterface $adapter
      * @author Marc Neuhaus <mneuhaus@famelo.com>
      * */
-    public function canHandle($being, $action = null);
+    protected $adapter;
+
+    protected $controller;
+
+    protected $request;
 
     /**
-     * The Name of this Action
+     * @param F3\Admin\Adapters\AdapterInterface $adapter
      * @author Marc Neuhaus <mneuhaus@famelo.com>
      * */
-    public function __toString();
+    public function injectAdapter($adapter){
+        $this->adapter = $adapter;
+    }
 
-    /**
-     * @param string $being
-     * @param array $ids
-     * @author Marc Neuhaus <mneuhaus@famelo.com>
-     * */
-    public function execute($being, $ids = null);
+    public function __construct($adapter, $request, &$view, &$controller){
+        $this->adapter = $adapter;
+        $this->view = $view;
+        $this->request = $request;
+        $this->controller = $controller;
+    }
+
+    public function canHandle($being, $action = null, $id = false){
+        return false;
+    }
+
+    public function getPackage(){
+        return null;
+    }
+
+    public function getController(){
+        return null;
+    }
+
+    public function getAction(){
+        $action = \F3\Admin\Core\Helper::getShortName($this);
+        $action = str_replace("Action","",$action);
+        return $action;
+    }
 }
 
 ?>

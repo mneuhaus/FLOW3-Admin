@@ -23,29 +23,70 @@ namespace F3\Admin\Actions;
  *                                                                        */
 
 /**
+ * Abstract validator
  *
+ * @version $Id: AbstractValidator.php 3837 2010-02-22 15:17:24Z robert $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @author Marc Neuhaus <marc@mneuhaus.com>
+ * @scope prototype
  */
-interface ActionInterface {
+class CreateAction extends AbstractAction {
     /**
      * Function to Check if this Requested Action is supported
      * @author Marc Neuhaus <mneuhaus@famelo.com>
      * */
-    public function canHandle($being, $action = null);
+    public function canHandle($being, $action = null, $id = false){
+        return !$id;
+    }
 
     /**
      * The Name of this Action
      * @author Marc Neuhaus <mneuhaus@famelo.com>
      * */
-    public function __toString();
+    public function getClass(){
+        return "ui-icon ui-button-w32-round_plus";
+    }
+    
+    /**
+     * The Name of this Action
+     * @author Marc Neuhaus <mneuhaus@famelo.com>
+     * */
+    public function __toString(){
+        return "Create";
+    }
 
     /**
+     * Create objects
+     *
      * @param string $being
      * @param array $ids
      * @author Marc Neuhaus <mneuhaus@famelo.com>
      * */
-    public function execute($being, $ids = null);
+    public function execute($being, $ids = null){
+        $object = $this->adapter->getBeing($being);
+
+		if($this->request->hasArgument("create")){
+			$result = $this->adapter->createObject($being,$this->request->getArgument("item"));
+            $errors = $result["errors"];
+			if(empty($errors)){
+				$arguments = array(
+                    "being"=>$being,
+                    "adapter" => get_class($this->adapter)
+                );
+				$this->controller->redirect('list',NULL,NULL,$arguments);
+                #return array('list',NULL,NULL,$arguments);
+			}else{
+#				foreach ($attributeSets as $set => $attributes) {
+#					foreach ($attributes as $key => $attribute) {
+#						if(array_key_exists($attribute["name"],$errors)){
+#							$attributeSets[$set][$key]["error"] = $errors[$attribute["name"]];
+#						}
+#					}
+#				}
+			}
+		}
+
+		$this->view->assign("being",$object);
+    }
 }
 
 ?>

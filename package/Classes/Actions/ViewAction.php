@@ -23,29 +23,49 @@ namespace F3\Admin\Actions;
  *                                                                        */
 
 /**
+ * Abstract validator
  *
+ * @version $Id: AbstractValidator.php 3837 2010-02-22 15:17:24Z robert $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @author Marc Neuhaus <marc@mneuhaus.com>
+ * @scope prototype
  */
-interface ActionInterface {
+class ViewAction extends AbstractAction{
     /**
      * Function to Check if this Requested Action is supported
      * @author Marc Neuhaus <mneuhaus@famelo.com>
      * */
-    public function canHandle($being, $action = null);
-
+    public function canHandle($being, $action = null, $id = false){
+        switch($action){
+            case "bulk":
+                return false;
+            default:
+                return $id;
+        }
+    }
+    
     /**
      * The Name of this Action
      * @author Marc Neuhaus <mneuhaus@famelo.com>
      * */
-    public function __toString();
+    public function __toString(){
+        return "View";
+    }
 
+    public function getClass(){
+        return "ui-icon ui-button-b16-top_right_expand";
+    }
+    
     /**
+     * View objects
+     *
      * @param string $being
      * @param array $ids
      * @author Marc Neuhaus <mneuhaus@famelo.com>
      * */
-    public function execute($being, $ids = null);
+    public function execute($being, $ids = null){
+		$being = $this->adapter->getBeing($being,$ids);
+		$this->view->assign("being",$being);
+    }
 }
 
 ?>

@@ -24,28 +24,44 @@ namespace F3\Admin\Actions;
 
 /**
  *
+ * @version $Id: AbstractValidator.php 3837 2010-02-22 15:17:24Z robert $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @author Marc Neuhaus <marc@mneuhaus.com>
+ * @scope prototype
  */
-interface ActionInterface {
+class IndexAction extends AbstractAction {
     /**
      * Function to Check if this Requested Action is supported
      * @author Marc Neuhaus <mneuhaus@famelo.com>
      * */
-    public function canHandle($being, $action = null);
+    public function canHandle($being, $action = null, $id = false){
+        return false;
+    }
 
     /**
      * The Name of this Action
      * @author Marc Neuhaus <mneuhaus@famelo.com>
      * */
-    public function __toString();
+    public function __toString(){
+        return "Index";
+    }
+
+    public function getClass(){
+        return "";
+    }
+
+    public function getAction(){
+        return "index";
+    }
 
     /**
+     * Delete objects
+     *
      * @param string $being
      * @param array $ids
      * @author Marc Neuhaus <mneuhaus@famelo.com>
      * */
-    public function execute($being, $ids = null);
+    public function execute($being, $ids = null){
+    }
 }
 
 ?>

@@ -29,29 +29,29 @@ namespace F3\Admin\Actions;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-class DeleteAction extends AbstractAction {
+class ListAction extends AbstractAction {
     /**
      * Function to Check if this Requested Action is supported
      * @author Marc Neuhaus <mneuhaus@famelo.com>
      * */
     public function canHandle($being, $action = null, $id = false){
-        return $id;
+        return false;
     }
-    
+
     /**
      * The Name of this Action
      * @author Marc Neuhaus <mneuhaus@famelo.com>
      * */
     public function __toString(){
-        return "Delete";
+        return "List";
     }
 
     public function getClass(){
-        return "ui-icon ui-button-b16-delete";
+        return "";
     }
 
     public function getAction(){
-        return "confirm";
+        return "list";
     }
 
     /**
@@ -62,20 +62,39 @@ class DeleteAction extends AbstractAction {
      * @author Marc Neuhaus <mneuhaus@famelo.com>
      * */
     public function execute($being, $ids = null){
-        if(is_array($ids)){
-            foreach($ids as $id){
-                $this->adapter->deleteObject($being, $id);
-            }
-        }else{
-            if($this->request->hasArgument("confirm")){
-                $this->adapter->deleteObject($being,$ids);
+        $actions = $this->controller->getActions("bulk", $being, true);
+        $this->view->assign("actions",$actions);
 
-                $arguments = array("adapter"=>get_class($this->adapter),"being"=>$being);
-                $this->controller->redirect('list',NULL,NULL,$arguments);
-            }else{
-                $this->controller->redirect('confirm',NULL,NULL,$this->request->getArguments());
+        if($this->request->hasArgument("bulk")){
+            $bulkAction = $this->request->getArgument("bulkAction");
+            if(isset($actions[$bulkAction])){
+                $action = $actions[$bulkAction];
+                $items = $this->request->getArgument("bulkItems");
+                $action->execute($being,$items);
             }
+			$arguments = array( "being" => $being , "adapter" => get_class($this->adapter));
+			$this->controller->redirect("list",NULL,NULL,$arguments);
         }
+
+        if($this->request->hasArgument("filter")){
+            $filters = $this->request->getArgument("filters");
+            $beings = $this->adapter->getBeings($being,$filters);
+            $this->view->assign("filters", $this->adapter->getFilter($being,$filters));
+        }else{
+            $beings = $this->adapter->getBeings($being);
+            $this->view->assign("filters", $this->adapter->getFilter($being));
+        }
+
+		$this->view->assign("objects",$beings);
+
+		// Redirect to creating a new Object if there aren't any (Clean Slate)
+		if(count($beings) < 1){
+			$arguments = array( "being" => $being , "adapter" => get_class($this->adapter));
+			$this->controller->redirect("create",NULL,NULL,	$arguments);
+		}
+
+        $listActions = $this->controller->getActions("list", $being, true);
+		$this->view->assign('listActions',$listActions);
     }
 }
 
