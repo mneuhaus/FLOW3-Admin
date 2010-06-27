@@ -28,7 +28,7 @@ namespace F3\Admin\Controller;
  * @version $Id: LoginController.php 2817 2009-07-16 14:32:53Z k-fish $
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class LoginController extends \F3\Blog\Controller\AbstractBaseController {
+class LoginController extends \F3\FLOW3\MVC\Controller\ActionController {
 
 	/**
 	 * @var \F3\Admin\Security\UserRepository
