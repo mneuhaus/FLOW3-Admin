@@ -45,6 +45,15 @@ class Helper {
         
         return false;
     }
+
+    static function getShortName($class){
+        if(is_object($class))
+            $class = get_class($class);
+
+        $reflection = new \ReflectionClass($class);
+        
+        return $reflection->getShortName();
+    }
 }
 
 ?>
