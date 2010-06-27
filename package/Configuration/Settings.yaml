@@ -13,7 +13,9 @@ FLOW3:
               uri: admin/login/
     authorization:
       # An array of access decision voters that should vote when access decisions are made
-      accessDecisionVoters: [F3\Admin\Security\Voter\Policy]
+      accessDecisionVoters:
+        - F3\Admin\Security\Voter\Policy
+        - F3\FLOW3\Security\Authorization\Voter\Policy
 
 Admin:
   Defaults:
@@ -23,39 +25,58 @@ Admin:
     F3\Admin\Adapters\DummyAdapter: inactive
   Fallbacks:
     Views:
-      - resource://@package/Private/Templates/@being/@action/@variant.html
-      - resource://@package/Private/Templates/Admin/@action/@variant.html
-      - resource://@package/Private/Templates/@being/@action.html
-      - resource://@package/Private/Templates/Admin/@action.html
-      - resource://Admin/Private/Templates/Standard/@action/@variant.html
-      - resource://Admin/Private/Templates/Standard/@action.html
+      - package://@package/Private/Templates/@being/@action/@variant.html
+      - package://@package/Private/Templates/Admin/@action/@variant.html
+      - package://@package/Private/Templates/@being/@action.html
+      - package://@package/Private/Templates/Admin/@action.html
+      - package://Admin/Private/Templates/Standard/@action/@variant.html
+      - package://Admin/Private/Templates/Standard/@action.html
     Partials:
-      - resource://@package/Private/Partials/@being/@action.html
-      - resource://@package/Private/Partials/@action.html
-      - resource://Admin/Private/Partials/@action.html
+      - package://@package/Private/Partials/@being/@action/@partial.html
+      - package://@package/Private/Partials/@being/@partial.html
+      - package://@package/Private/Partials/@action/@partial.html
+      - package://@package/Private/Partials/@partial.html
+      - package://Admin/Private/Partials/@action/@partial.html
+      - package://Admin/Private/Partials/@partial.html
     Actions:
-      - resource://@package/Private/Partials/@being/Actions/@action.html
-      - resource://@package/Private/Partials/Actions/@action.html
-      - resource://Admin/Private/Partials/Actions/@action.html
+      - package://@package/Private/Partials/@being/Actions/@action.html
+      - package://@package/Private/Partials/Actions/@action.html
+      - package://Admin/Private/Partials/Actions/@action.html
     Widgets:
-      - resource://@package/Private/Partials/@being/Widgets/@partial.html
-      - resource://@package/Private/Partials/Widgets/@partial.html
-      - resource://Admin/Private/Partials/Widgets/@partial.html
+      - package://@package/Private/Partials/@being/Widgets/@partial.html
+      - package://@package/Private/Partials/Widgets/@partial.html
+      - package://Admin/Private/Partials/Widgets/@partial.html
 PHPCR:
   Beings:
     F3\Blog\Domain\Model\Blog:
       autoadmin: true
     F3\Blog\Domain\Model\Post:
       autoadmin: true
+      set:
+        - Main (title,content)
+        - Extended Informations (linkTitle,date,author,image)
       properties:
+        blog:
+          ignore: list
+        relatedPosts:
+          ignore: list
+        linkTitle:
+          ignore: list
         image:
           inline: true
+          ignore: list
         content:
           widget: TextArea
-#        tags:
+        tags:
+          ignore: true
 #          inline: true
-#        comments:
+        comments:
+#          ignore: true
 #          inline: true
+    F3\Blog\Domain\Model\Comment:
+      properties:
+        content:
+          widget: TextArea
     F3\Blog\Domain\Model\Category:
       autoadmin: true
   Widgets:
@@ -70,36 +91,21 @@ PHPCR:
       ^\\*F3\\[A-Za-z]+\\Domain\\Model\\[A-Za-z]+$: SingleRelation
       ^\\*\SplObjectStorage\<\\*F3\\[A-Za-z]+\\Domain\\Model\\[A-za-z]+>$: MultipleRelation
       ^\\*\SplObjectStorage\<\\*F3\\[A-Za-z]+\\Security\\[A-za-z]+>$: MultipleRelation
-  Conversions:
-    Storage:
-      \DateTime: this->stringToDateTime
-      ^\\F3\\[A-Za-z]+\\Domain\\Model\\[A-Za-z]+$: this->identifierToModel
-#      ^\\\SplObjectStorage\<\\*F3\\[A-Za-z]+\\Domain\\Model\\[A-za-z]+>$: this->identifiersToSplObjectStorage
-    Presentation:
-      \DateTime: this->dateTimeToString
-      ^\\*F3\\[A-Za-z]+\\Domain\\Model\\[A-Za-z]+$: this->modelToIdentifier
-      ^\\*\SplObjectStorage\<\\*F3\\[A-Za-z]+\\Domain\\Model\\[A-za-z]+>$: this->splObjectStorageToIdentifiers
 
 Dummy:
   DataStorage: '%FLOW3_PATH_DATA%Persistent/DummyData'
   Widgets:
     Mapping:
+      # Pattern (Text or Regex)          Widget
+      
       string:   Textfield
       readonly: TextfieldReadonly
       integer:  Spinner
       float:    Textfield
       boolean:  Boolean
       resource: Upload
-  #      \DateTime: DateTime
       ^\\*Being\\([A-Za-z]+)$: SingleRelation
       ^\\*Beings\\([A-za-z]+)$: MultipleRelation
-  Conversions:
-    Storage:
-      ^\\*Being\\([A-Za-z]+)$: this->getId
-      ^\\*Beings\\([A-za-z]+)$: this->beingsToIdentifiers
-    Presentation:
-      ^\\*Being\\([A-Za-z]+)$: this->identifierToBeing
-      ^\\*Beings\\([A-za-z]+)$: this->identifiersToBeings
   Beings:
     Relation:
       properties:
