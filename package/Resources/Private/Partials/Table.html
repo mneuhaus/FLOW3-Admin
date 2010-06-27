@@ -25,7 +25,20 @@
                 <td>{value.string}</td>
             </f:for>
             <td class="actions">
-                <a:render partial="Table" fallbacks="Actions" vars="{being:object}" />
+                <f:for each="{listActions}" as="action">
+                    <f:link.action
+                        class="{action.class}"
+                        action="{action.action}"
+                        controller="{action.controller}"
+                        package="{action.package}"
+                        arguments="{
+                            id : object.id,
+                            being : object.class,
+                            adapter : object.adapter.class
+                        }">
+                        {action}
+                    </f:link.action>
+                </f:for>
             </td>
         </tr>
     </f:for>

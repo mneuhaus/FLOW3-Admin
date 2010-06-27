@@ -1,7 +1,19 @@
 <f:layout name="base" />
 {namespace a=F3\Admin\ViewHelpers}
 <f:section name="actions">
-	
+    <f:for each="{topBarActions}" as="action">
+        <f:link.action
+            class="{action.class}"
+            action="{action.action}"
+            controller="{action.controller}"
+            package="{action.package}"
+            arguments="{
+                being : objects.0.class,
+                adapter : objects.0.adapter.class
+            }">
+            {action}
+        </f:link.action>
+    </f:for>
 </f:section>
 <f:section name="content">
 	<div class="ui-container">
