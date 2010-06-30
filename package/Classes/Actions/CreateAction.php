@@ -45,14 +45,6 @@ class CreateAction extends AbstractAction {
     public function getClass(){
         return "ui-icon ui-button-w32-round_plus";
     }
-    
-    /**
-     * The Name of this Action
-     * @author Marc Neuhaus <mneuhaus@famelo.com>
-     * */
-    public function __toString(){
-        return "Create";
-    }
 
     /**
      * Create objects

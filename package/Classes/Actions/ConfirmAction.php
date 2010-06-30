@@ -34,18 +34,6 @@ class ConfirmAction extends AbstractAction {
     }
 
     /**
-     * The Name of this Action
-     * @author Marc Neuhaus <mneuhaus@famelo.com>
-     * */
-    public function __toString(){
-        return "Confirm";
-    }
-
-    public function getClass(){
-        return "";
-    }
-
-    /**
      *
      * @param string $being
      * @param array $ids

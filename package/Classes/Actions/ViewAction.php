@@ -42,14 +42,6 @@ class ViewAction extends AbstractAction{
                 return $id;
         }
     }
-    
-    /**
-     * The Name of this Action
-     * @author Marc Neuhaus <mneuhaus@famelo.com>
-     * */
-    public function __toString(){
-        return "View";
-    }
 
     public function getClass(){
         return "ui-icon ui-button-b16-top_right_expand";

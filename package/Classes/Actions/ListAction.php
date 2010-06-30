@@ -39,22 +39,6 @@ class ListAction extends AbstractAction {
     }
 
     /**
-     * The Name of this Action
-     * @author Marc Neuhaus <mneuhaus@famelo.com>
-     * */
-    public function __toString(){
-        return "List";
-    }
-
-    public function getClass(){
-        return "";
-    }
-
-    public function getAction(){
-        return "list";
-    }
-
-    /**
      * Delete objects
      *
      * @param string $being

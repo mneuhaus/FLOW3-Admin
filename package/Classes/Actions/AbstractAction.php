@@ -47,7 +47,7 @@ abstract class AbstractAction implements ActionInterface {
         $this->adapter = $adapter;
     }
 
-    public function __construct($adapter, $request, &$view, &$controller){
+    public function __construct($adapter=null, $request=null, &$view=null, &$controller=null){
         $this->adapter = $adapter;
         $this->view = $view;
         $this->request = $request;
@@ -66,10 +66,18 @@ abstract class AbstractAction implements ActionInterface {
         return null;
     }
 
-    public function getAction(){
+    public function getClass(){
+        return "";
+    }
+
+    public function __toString(){
         $action = \F3\Admin\Core\Helper::getShortName($this);
         $action = str_replace("Action","",$action);
         return $action;
+    }
+
+    public function getAction(){
+        return lcfirst(self::__toString());
     }
 }
 

@@ -38,22 +38,6 @@ class IndexAction extends AbstractAction {
     }
 
     /**
-     * The Name of this Action
-     * @author Marc Neuhaus <mneuhaus@famelo.com>
-     * */
-    public function __toString(){
-        return "Index";
-    }
-
-    public function getClass(){
-        return "";
-    }
-
-    public function getAction(){
-        return "index";
-    }
-
-    /**
      * Delete objects
      *
      * @param string $being

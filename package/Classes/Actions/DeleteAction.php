@@ -38,14 +38,6 @@ class DeleteAction extends AbstractAction {
         return $id;
     }
     
-    /**
-     * The Name of this Action
-     * @author Marc Neuhaus <mneuhaus@famelo.com>
-     * */
-    public function __toString(){
-        return "Delete";
-    }
-
     public function getClass(){
         return "ui-icon ui-button-b16-delete";
     }

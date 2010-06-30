@@ -55,10 +55,6 @@ class UpdateAction extends AbstractAction {
         return "ui-icon ui-button-b16-pencil";
     }
 
-    public function getAction(){
-        return "update";
-    }
-
     /**
      * Edit objects
      *
