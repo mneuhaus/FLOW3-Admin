@@ -55,12 +55,15 @@ class Policy extends \F3\FLOW3\Security\Authorization\Voter\Policy {
 	 * @return integer One of: VOTE_GRANT, VOTE_ABSTAIN, VOTE_DENY
 	 */
 	public function voteForJoinPoint(\F3\FLOW3\Security\Context $securityContext, \F3\FLOW3\AOP\JoinPointInterface $joinPoint) {
-
         $proxy = $joinPoint->getProxy();
         if($proxy instanceof \F3\Admin\Controller\StandardController){
             $arguments = $joinPoint->getMethodArguments();
             if( isset($arguments["being"]) ){
                 $arguments["action"] = $proxy->getAction();
+                if($arguments["action"] == "list")
+                    $arguments["action"] = "view";
+                
+                #\F3\dump($arguments, __FILE__ . ":" . __LINE__);
                 $accessGrants = 0;
                 $accessDenies = 0;
                 foreach ($securityContext->getAuthenticationTokens() as $token){

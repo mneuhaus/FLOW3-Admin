@@ -43,16 +43,19 @@ class PolicyOptionsProvider extends AbstractOptionsProvider {
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
 	protected $persistenceManager;
+
+	/**
+	 * Reflection service
+	 * @var F3\FLOW3\Reflection\ReflectionService
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 * @inject
+	 */
+	private $reflectionService;
     
     public function getOptions(){
         $options = array();
         $groups = $this->helper->getGroups();
-        $actions = array(
-            "list" => "Can see @being entries",
-            "create" => "Can add @being entries",
-            "update" => "Can change @being entries",
-            "delete" => "Can delete @being entries"
-        );
+        $actions = $this->getActions();
         foreach($groups as $group => $beings){
             foreach($beings["beings"] as $being => $conf){
                 foreach($actions as $action => $label){
@@ -83,6 +86,18 @@ class PolicyOptionsProvider extends AbstractOptionsProvider {
             #$policy->setBeing($being);
             #$this->policyRepository->update($policy);
         }
+    }
+
+    public function getActions(){
+        $actions = array();
+        $blacklist = explode(",","index,list");
+        foreach($this->reflectionService->getAllImplementationClassNamesForInterface('F3\Admin\Actions\ActionInterface') as $actionClassName) {
+            $a = new $actionClassName();
+            if(!in_array($a->getAction(),$blacklist))
+                $actions[$a->getAction()] = $a->__toString();
+		}
+        ksort($actions);
+        return $actions;
     }
 }
 

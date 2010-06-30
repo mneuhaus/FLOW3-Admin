@@ -29,6 +29,8 @@ namespace F3\Admin\Security;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  * @entity
+ * @autoadmin
+ * @group Settings
  */
 class Policy extends \F3\Admin\Domain\Model{
     /**

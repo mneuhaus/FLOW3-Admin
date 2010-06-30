@@ -125,6 +125,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	private function prepare($action){
 		$this->start = microtime();
 		\F3\Dump\Dump::getInstance();
+        $title = array("Admin",ucfirst($action));
 
 		$this->adapters = $this->helper->getAdapters();
 		$this->settings = $this->helper->getSettings();
@@ -132,17 +133,19 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 		\F3\Admin\Register::set("session",$this->session);
 		\F3\Admin\Register::set("action",$action);
 
-		if($this->request->hasArgument("being")){
-			$this->being = $this->request->getArgument("being");
-			\F3\Admin\Register::set("being",$this->being);
-            
-			$this->group = $this->helper->getGroupByBeing($this->being);
-			\F3\Admin\Register::set("group",$this->group);
-		}
-
 		if($this->request->hasArgument("adapter")){
 			$this->adapter = $this->request->getArgument("adapter");
 			\F3\Admin\Register::set("adapter",$this->adapter);
+            #$title[] = \F3\Admin\Core\Helper::getShortName($this->adapter);
+		}
+
+		if($this->request->hasArgument("being")){
+			$this->being = $this->request->getArgument("being");
+			\F3\Admin\Register::set("being",$this->being);
+
+			$this->group = $this->helper->getGroupByBeing($this->being);
+			\F3\Admin\Register::set("group",$this->group);
+            $title[] = \F3\Admin\Core\Helper::getShortName($this->being);
 		}
 
 		if($this->request->hasArgument("id")){
@@ -151,7 +154,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 		}
 
         $activeTokens = $this->securityContext->getAuthenticationTokens();
-        $allowedBeings = array("list"=>array());
+        $allowedBeings = array("view"=>array());
 		foreach ($activeTokens as $token) {
 			if ( $token->isAuthenticated() && is_callable(array($token,"getUser")) ) {
 				$user = $token->getUser();
@@ -170,7 +173,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
         ksort($groups);
         foreach($groups as $package => $group){
             foreach($group["beings"] as $key => $being){
-                if( !in_array($being["being"],$allowedBeings["list"]) )
+                if( !in_array($being["being"],$allowedBeings["view"]) )
                     if( !$user->isAdmin() )
                         unset($groups[$package]["beings"][$key]);
 
@@ -194,6 +197,8 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 
         $topBarActions = $this->getActions($action, $this->being, false);
 		$this->view->assign('topBarActions',$topBarActions);
+
+        $this->view->assign("title",implode(" - ",array_reverse($title)));
 	}
 
 	public function setTemplate($action){
@@ -253,15 +258,18 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
             return null;
         }
 	}
+    
     public function getActions($action = null, $being = null, $id = false){
         $actions = array();
         foreach($this->reflectionService->getAllImplementationClassNamesForInterface('F3\Admin\Actions\ActionInterface') as $actionClassName) {
             #$a = $this->objectManager->create($actionClassName, $this->getAdapter(), $this->request, $this->view, $this);
             $a = new $actionClassName($this->getAdapter(), $this->request, $this->view, $this);
             if($a->canHandle($being, $action, $id)){
-                $actionName = \F3\Admin\Core\Helper::getShortName($actionClassName);
-                $actionName = str_replace("Action","",$actionName);
-                $actions[$actionName] = $a;
+                if($this->isAllowed($being,$a->getAction())){
+                    $actionName = \F3\Admin\Core\Helper::getShortName($actionClassName);
+                    $actionName = str_replace("Action","",$actionName);
+                    $actions[$actionName] = $a;
+                }
             }
 		}
         ksort($actions);
@@ -321,6 +329,33 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
         return;
 		throw new \F3\FLOW3\MVC\Exception\StopActionException();
 	}
+
+    public function isAllowed($being,$action){
+        foreach ($this->securityContext->getAuthenticationTokens() as $token){
+            if(is_callable(array($token,"getUser"))){
+                $user = $token->getUser();
+                if($user->getAdmin())
+                    return true;
+
+                foreach ($user->getRoles() as $role) {
+                    foreach ($role->getGrant() as $policy) {
+                        if($this->comparePolicy(array("action"=>$action,"being"=>$being), $policy)) return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    
+    public function comparePolicy($arguments,$policy){
+        $being = $policy->getBeing();
+        $action = $policy->getAction();
+
+        if( $being == $arguments["being"]  && $action == $arguments["action"] )
+            return true;
+
+        return false;
+    }
 }
 
 ?>
