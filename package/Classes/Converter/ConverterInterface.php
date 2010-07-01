@@ -23,37 +23,34 @@ namespace F3\Admin\Converter;
  *                                                                        */
 
 /**
- * An object converter for Resource objects
+ * Interface for an Object Converter
  *
- * @version $Id: ResourceObjectConverter.php 4031 2010-03-30 09:55:23Z robert $
+ * All classes implementing this interface are automatically registered as object converters
+ * for the Property Mapper
+ *
+ * @version $Id: ObjectConverterInterface.php 3903 2010-03-04 10:06:38Z k-fish $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @api
  */
-class IntegerObjectConverter implements ConverterInterface {
-
-	/**
-	 * @var F3\FLOW3\Object\ObjectManagerInterface
-	 */
-	protected $objectManager;
+interface ConverterInterface {
 
 	/**
 	 * Returns a list of fully qualified class names of those classes which are supported
 	 * by this property editor.
 	 *
 	 * @return array<string>
-	 * @author Robert Lemke <robert@typo3.org>
+	 * @api
 	 */
-	public function getSupportedTypes() {
-		return array('integer');
-	}
+	public function getSupportedTypes();
 
 	/**
-	 * @return object An object or an instance of F3\FLOW3\Error\Error if the input format is not supported or could not be converted for other reasons
-	 * @author Robert Lemke <robert@typo3.org>
-	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 * Converts the given string, array or number to an object supported by the converter.
+	 *
+	 * @return mixed An object or boolean FALSE if the input format is not supported or could not be converted for other reasons
+	 * @api
 	 */
-	public function convertFrom($string) {
-        return intval($string);
-	}
+	public function convertFrom($source);
+
 }
 
 ?>

@@ -28,7 +28,7 @@ namespace F3\Admin\Converter;
  * @version $Id: ResourceObjectConverter.php 4031 2010-03-30 09:55:23Z robert $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class DateTimeObjectConverter implements \F3\FLOW3\Property\ObjectConverterInterface {
+class DateTimeObjectConverter implements ConverterInterface {
 
 	/**
 	 * @var F3\FLOW3\Object\ObjectManagerInterface
@@ -43,7 +43,7 @@ class DateTimeObjectConverter implements \F3\FLOW3\Property\ObjectConverterInter
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	public function getSupportedTypes() {
-		return array('DateTime','datetime',"Datetime");
+		return array('DateTime','datetime',"Datetime", "\DateTime");
 	}
 
 	/**

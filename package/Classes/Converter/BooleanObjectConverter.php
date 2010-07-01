@@ -28,7 +28,7 @@ namespace F3\Admin\Converter;
  * @version $Id: ResourceObjectConverter.php 4031 2010-03-30 09:55:23Z robert $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class BooleanObjectConverter implements \F3\FLOW3\Property\ObjectConverterInterface {
+class BooleanObjectConverter implements ConverterInterface {
 
 	/**
 	 * @var F3\FLOW3\Object\ObjectManagerInterface
