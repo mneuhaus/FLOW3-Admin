@@ -25,36 +25,41 @@ Admin:
     F3\Admin\Adapters\DummyAdapter: inactive
   Fallbacks:
     Views:
-      - package://@package/Private/Templates/@being/@action/@variant.html
-      - package://@package/Private/Templates/Admin/@action/@variant.html
-      - package://@package/Private/Templates/@being/@action.html
-      - package://@package/Private/Templates/Admin/@action.html
-      - package://Admin/Private/Templates/Standard/@action/@variant.html
-      - package://Admin/Private/Templates/Standard/@action.html
+      - resource://@package/Private/Templates/@being/@action/@variant.html
+      - resource://@package/Private/Templates/Admin/@action/@variant.html
+      - resource://@package/Private/Templates/@being/@action.html
+      - resource://@package/Private/Templates/Admin/@action.html
+      - resource://Admin/Private/Templates/Standard/@action/@variant.html
+      - resource://Admin/Private/Templates/Standard/@action.html
     Partials:
-      - package://@package/Private/Partials/@being/@action/@partial.html
-      - package://@package/Private/Partials/@being/@partial.html
-      - package://@package/Private/Partials/@action/@partial.html
-      - package://@package/Private/Partials/@partial.html
-      - package://Admin/Private/Partials/@action/@partial.html
-      - package://Admin/Private/Partials/@partial.html
+      - resource://@package/Private/Partials/@being/@action/@partial.html
+      - resource://@package/Private/Partials/@being/@partial.html
+      - resource://@package/Private/Partials/@action/@partial.html
+      - resource://@package/Private/Partials/@partial.html
+      - resource://Admin/Private/Partials/@action/@partial.html
+      - resource://Admin/Private/Partials/@partial.html
     Actions:
-      - package://@package/Private/Partials/@being/Actions/@action.html
-      - package://@package/Private/Partials/Actions/@action.html
-      - package://Admin/Private/Partials/Actions/@action.html
+      - resource://@package/Private/Partials/@being/Actions/@action.html
+      - resource://@package/Private/Partials/Actions/@action.html
+      - resource://Admin/Private/Partials/Actions/@action.html
     Widgets:
-      - package://@package/Private/Partials/@being/Widgets/@partial.html
-      - package://@package/Private/Partials/Widgets/@partial.html
-      - package://Admin/Private/Partials/Widgets/@partial.html
+      - resource://@package/Private/Partials/@being/Widgets/@partial.html
+      - resource://@package/Private/Partials/Widgets/@partial.html
+      - resource://Admin/Private/Partials/Widgets/@partial.html
 PHPCR:
   Beings:
     F3\Blog\Domain\Model\Blog:
       autoadmin: true
+      properties:
+        authorPicture:
+          ignore: list
+        posts:
+          ignore: list
     F3\Blog\Domain\Model\Post:
       autoadmin: true
       set:
         - Main (title,content)
-        - Extended Informations (linkTitle,date,author,image)
+        - Extended Informations (blog,linkTitle,date,author,image)
       properties:
         blog:
           ignore: list

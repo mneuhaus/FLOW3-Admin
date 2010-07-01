@@ -6,11 +6,11 @@
 
 # @version $Id: Policy.yaml 3886 2010-02-28 17:03:50Z robert $
 
-resources:
-  methods:
-    F3_Admin_RestrictedControllers: 'class(F3\Admin\Controller\(Standard)Controller)'
-roles:
-  Administrator: []
-acls:
-  Administrator:
-    F3_Admin_RestrictedControllers: GRANT
+#resources:
+#  methods:
+#    F3_Admin_RestrictedControllers: 'class(F3\Admin\Controller\(Standard)Controller)'
+#roles:
+#  Administrator: []
+#acls:
+#  Administrator:
+#    F3_Admin_RestrictedControllers: GRANT

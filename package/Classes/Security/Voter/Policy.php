@@ -85,7 +85,7 @@ class Policy extends \F3\FLOW3\Security\Authorization\Voter\Policy {
                 if ($accessDenies > 0) return self::VOTE_DENY;
                 if ($accessGrants > 0) return self::VOTE_GRANT;
             }else{
-                return self::VOTE_GRANT;
+                return self::VOTE_ABSTAIN;
             }
         }
 
