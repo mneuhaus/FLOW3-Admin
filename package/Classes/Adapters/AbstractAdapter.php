@@ -68,6 +68,12 @@ abstract class AbstractAdapter implements AdapterInterface {
     protected $objectConverters = array();
 
     /**
+	 * @var F3\FLOW3\Cache\CacheManager
+	 * @inject
+	 */
+	protected $cacheManager;
+
+    /**
      * Initialize the Adapter
      *
      * @author Marc Neuhaus <mneuhaus@famelo.com>
@@ -81,13 +87,27 @@ abstract class AbstractAdapter implements AdapterInterface {
      * @author Marc Neuhaus <mneuhaus@famelo.com>
      * */
     public function initializeConverters(){
-        $objectConverters = array();
-        foreach($this->reflectionService->getAllImplementationClassNamesForInterface('F3\FLOW3\Property\ObjectConverterInterface') as $objectConverterClassName) {
-            $objectConverter = $this->objectManager->get($objectConverterClassName);
-            foreach ($this->objectManager->get($objectConverterClassName)->getSupportedTypes() as $supportedType) {
-                $objectConverters[$supportedType] = $objectConverter;
+        $cache = $this->cacheManager->getCache('Admin_ImplementationCache');
+
+        $identifier = "ConverterInterface";
+        if(!$cache->has($identifier)){
+            $objectConverters = array();
+            foreach($this->reflectionService->getAllImplementationClassNamesForInterface('F3\Admin\Converter\ConverterInterface') as $objectConverterClassName) {
+                $objectConverter = $this->objectManager->get($objectConverterClassName);
+                foreach ($this->objectManager->get($objectConverterClassName)->getSupportedTypes() as $supportedType) {
+                    $objectConverters[$supportedType] = $objectConverterClassName;
+                }
             }
+            
+            $cache->set($identifier,$objectConverters);
+        }else{
+            $objectConverters = $cache->get($identifier);
         }
+
+        foreach($objectConverters as $supportedType => $objectConverterClassName){
+            $objectConverters[$supportedType] = $this->objectManager->get($objectConverterClassName);
+        }
+        
         $this->objectConverters = $objectConverters;
     }
 
@@ -112,9 +132,20 @@ abstract class AbstractAdapter implements AdapterInterface {
      * @author Marc Neuhaus <mneuhaus@famelo.com>
      * */
 	public function getConfiguration($being) {
-		$configuration = array ();
-		$configuration = array_merge($configuration,$this->getClassAnnotationConfiguration($being));
-		$configuration = array_merge($configuration,$this->getYamlConfiguration($being));
+        $cache = $this->cacheManager->getCache('Admin_ConfigurationCache');
+        $identifier = str_replace("\\","_",$being)."-getConfiguration";
+
+        if(!$cache->has($identifier)){
+            $configuration = array();
+
+            $configuration = array_merge($configuration,$this->getClassAnnotationConfiguration($being));
+            $configuration = array_merge($configuration,$this->getYamlConfiguration($being));
+
+            $cache->set($identifier,$configuration);
+        }else{
+            $configuration = $cache->get($identifier);
+        }
+
 		return $configuration;
 	}
 
@@ -125,30 +156,38 @@ abstract class AbstractAdapter implements AdapterInterface {
      * @author Marc Neuhaus <mneuhaus@famelo.com>
      * */
     public function getClassAnnotationConfiguration($being){
-		$configuration = array ();
-		if( class_exists($being) ) {
-			$configuration = array (
-                "class" => $this->reflectionService->getClassTagsValues($being),
-                "properties" => $this->helper->getModelProperties($being)
-            );
+        $cache = $this->cacheManager->getCache('Admin_ConfigurationCache');
+        $identifier = str_replace("\\","_",$being)."-getClassAnnotationConfiguration";
+        
+        if(!$cache->has($identifier)){
+            $configuration = array ();
+            if( class_exists($being) ) {
+                $configuration = array (
+                    "class" => $this->reflectionService->getClassTagsValues($being),
+                    "properties" => $this->helper->getModelProperties($being)
+                );
 
-            foreach($configuration["properties"] as $property => $conf) {
-                // Injected Properties shouldn't be managed
-                if( array_key_exists("inject", $conf) || array_key_exists("ignore", $conf) )
-                    $configuration["properties"][$property]["ignore"] = true;
+                foreach($configuration["properties"] as $property => $conf) {
+                    // Injected Properties shouldn't be managed
+                    if( array_key_exists("inject", $conf) || array_key_exists("ignore", $conf) )
+                        $configuration["properties"][$property]["ignore"] = true;
 
-                foreach($conf as $key => $value){
-                    if(is_array($value) && empty($value)){
-                        $configuration["properties"][$property][$key] = true;
-                    }
+                    foreach($conf as $key => $value){
+                        if(is_array($value) && empty($value)){
+                            $configuration["properties"][$property][$key] = true;
+                        }
 
-                    if(is_array($value) && count($value) == 1){
-                        while(is_array($value))
-                            $value = current($value);
-                        $configuration["properties"][$property][$key] = $value;
+                        if(is_array($value) && count($value) == 1){
+                            while(is_array($value))
+                                $value = current($value);
+                            $configuration["properties"][$property][$key] = $value;
+                        }
                     }
                 }
             }
+            $cache->set($identifier,$configuration);
+        }else{
+            $configuration = $cache->get($identifier);
         }
         return $configuration;
     }
@@ -161,10 +200,19 @@ abstract class AbstractAdapter implements AdapterInterface {
      * @author Marc Neuhaus <mneuhaus@famelo.com>
      * */
     public function getYamlConfiguration($being){
-        $configuration = array();
+        $cache = $this->cacheManager->getCache('Admin_ConfigurationCache');
+        $identifier = str_replace("\\","_",$being)."-getYamlConfiguration";
+
+        if(!$cache->has($identifier)){
+            $configuration = array();
+
+            if(isset($this->settings["Beings"]))
+                $configuration = $this->settings["Beings"];
         
-        if(isset($this->settings["Beings"]))
-            $configuration = $this->settings["Beings"];
+            $cache->set($identifier,$configuration);
+        }else{
+            $configuration = $cache->get($identifier);
+        }
 
         return $configuration;
     }
@@ -182,6 +230,37 @@ abstract class AbstractAdapter implements AdapterInterface {
                 $configuration["properties"][$property]["widget"] = $this->getWidget($c["type"],"TextField");
         }
         return $configuration;
+    }
+
+    public function getClassesTaggedWith($tags){
+        $cache = $this->cacheManager->getCache('Admin_ImplementationCache');
+        $identifier = "ClassesTaggedWith-".implode("_",$tags);
+
+        if(!$cache->has($identifier)){
+            $classes = array ();
+            
+            $activePackages = $this->packageManager->getActivePackages();
+            foreach($activePackages as $packageName => $package) {
+                foreach($package->getClassFiles() as $class => $file) {
+                    $classTags = $this->reflectionService->getClassTagsValues($class);
+                    if(isset($this->settings["Beings"][$class]))
+                        $classTags = array_merge($classTags,$this->settings["Beings"][$class]);
+                    $tagged = true;
+                    
+                    foreach($tags as $tag){
+                        if(!isset($classTags[$tag])) $tagged = false;
+                    }
+                    
+                    if($tagged)
+                        $classes[$class] = $packageName;
+                }
+            }
+
+            $cache->set($identifier,$classes);
+        }else{
+            $classes = $cache->get($identifier);
+        }
+        return $classes;
     }
 
     /**
@@ -237,11 +316,11 @@ abstract class AbstractAdapter implements AdapterInterface {
      * @author Marc Neuhaus <mneuhaus@famelo.com>
      * */
 	public function getProperties($being){
-		$configuration = $this->getConfiguration($being);
-        
+        $configuration = $this->getConfiguration($being);
+
         $properties = array();
-		foreach($configuration ["properties"] as $property => $conf) {
-			if( $this->shouldBeIgnored($conf) ) continue;
+        foreach($configuration ["properties"] as $property => $conf) {
+            if( $this->shouldBeIgnored($conf) ) continue;
 
             $p = $this->objectManager->create("F3\Admin\Core\Property",$this);
 
@@ -249,7 +328,8 @@ abstract class AbstractAdapter implements AdapterInterface {
             $p->setConf($conf);
 
             $properties[$property] = $p;
-		}
+        }
+
         return $properties;
     }
     
@@ -293,31 +373,48 @@ abstract class AbstractAdapter implements AdapterInterface {
      * @author Marc Neuhaus <mneuhaus@famelo.com>
      * */
 	public function getWidget($raw, $default = null, $path = "Widgets.Mapping") {
-		$mappings = \F3\FLOW3\Reflection\ObjectAccess::getPropertyPath($this->settings, $path);
-        
-		if( ! empty($mappings) ) {
-			if( isset($mappings[$raw]) ) {
-				return $mappings[$raw];
-			}
+        $cache = $this->cacheManager->getCache('Admin_Cache');
+        $identifier = "Widget-".sha1($path.$raw.$default.__CLASS__);
 
-			if( isset($mappings[strtolower($raw)]) ) {
-				return $mappings[$raw];
-			}
+        if(!$cache->has($identifier)){
+            $widget = null;
+            
+            $mappings = \F3\FLOW3\Reflection\ObjectAccess::getPropertyPath($this->settings, $path);
+            if( ! empty($mappings) ) {
+                if( $widget === null && isset($mappings[$raw]) ) {
+                    $widget = $mappings[$raw];
+                }
 
-			if( isset($mappings[ucfirst($raw)]) ) {
-				return $mappings[$raw];
-			}
+                if( $widget === null && isset($mappings[strtolower($raw)]) ) {
+                    $widget = $mappings[$raw];
+                }
 
-			foreach($mappings as $pattern => $widget) {
-				if( preg_match("/" . $pattern . "/", $raw) > 0 ) {
-					return $widget;
-				}
-			}
-		}
-		if( $default !== null )
-			return $default;
+                if( $widget === null && isset($mappings[ucfirst($raw)]) ) {
+                    $widget = $mappings[$raw];
+                }
 
-		return $raw;
+                if( $widget === null){
+                    foreach($mappings as $pattern => $widget) {
+                        if( preg_match("/" . $pattern . "/", $raw) > 0 ) {
+                            $widget = $widget;
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            if( $widget === null && $default !== null )
+                $widget = $default;
+
+            if($widget === null)
+                $widget = $raw;
+
+            $cache->set($identifier,$widget);
+        }else{
+            $widget = $cache->get($identifier);
+        }
+
+		return $widget;
 	}
 
     public function getValue($property, $mixed){

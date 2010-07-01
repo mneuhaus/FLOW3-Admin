@@ -64,37 +64,21 @@ class PHPCRAdapter extends AbstractAdapter {
     }
 
     public function getGroups() {
-		$activePackages = $this->packageManager->getActivePackages();
+        $this->init();
 		$groups = array ();
-		$this->settings = $this->helper->getSettings("PHPCR");
-		$settings = $this->helper->getSettings();
-		foreach($activePackages as $packageName => $package) {
-			if( $this->objectManager->getContext() != "Development" && $packageName == "Admin" ) continue;
-            $group = $packageName;
-
-			foreach($package->getClassFiles() as $class => $file) {
-				#if( strpos($class, "\\Model\\") > 0 || isset($this->settings["Beings"][$class])) {
-					$tags = $this->reflectionService->getClassTagsValues($class);
-					$parts = explode('\\', $class);
-					$name = end($parts);
-					$repository = $this->helper->getModelRepository($class);
-                    $conf = $tags;
-
-                    $group = $packageName;
-                    if(isset($tags["group"]))
-                        $group = current($tags["group"]);
-                    
-                    if(class_exists($repository)){
-                        if(isset($this->settings["Beings"]) && isset($this->settings["Beings"][$class])) {
-                            $conf = array_merge($conf,$this->settings["Beings"][$class]);
-                        }
-                        if(\array_key_exists("autoadmin", $conf) ) {
-                            $groups [$group] [] = array ("being" => $class, "name" => $name );
-                        }
-                    }
-				#}
-			}
-		}
+        $classes = $this->getClassesTaggedWith(array("entity","autoadmin"));
+        foreach($classes as $class => $packageName) {
+            $tags = $this->reflectionService->getClassTagsValues($class);
+            $repository = $this->helper->getModelRepository($class);
+            if(class_exists($repository)){
+                
+                $group = $packageName;
+                if(isset($tags["group"]))
+                    $group = current($tags["group"]);
+                
+                $groups[$group][] = array("being" => $class, "name" => \F3\Admin\Core\Helper::getShortName($class));
+            }
+        }
 		return $groups;
     }
 
@@ -142,7 +126,10 @@ class PHPCRAdapter extends AbstractAdapter {
 
 
 	public function getConfiguration($being) {
-        if(!isset($this->confs[$being])){
+        $cache = $this->cacheManager->getCache('Admin_ConfigurationCache');
+        $identifier = str_replace("\\","_",$being)."-PHPCR-getConfiguration";
+
+        if(!$cache->has($identifier)){
             $configuration = parent::getConfiguration($being);
             if( ! empty($configuration) ) {
                 // Merge Class Configuration and Yaml Configuration
@@ -177,10 +164,11 @@ class PHPCRAdapter extends AbstractAdapter {
                     }
                 }
             }
-            
-            $this->confs[$being] = $configuration;
+            $cache->set($identifier,$configuration);
+        }else{
+            $configuration = $cache->get($identifier);
         }
-		return $this->confs[$being];
+		return $configuration;
 	}
 }
 

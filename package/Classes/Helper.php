@@ -62,6 +62,12 @@ class Helper{
 	 * @inject
 	 **/
 	protected $ValidatorResolver;
+    
+    /**
+	 * @var F3\FLOW3\Cache\CacheManager
+	 * @inject
+	 */
+	protected $cacheManager;
 
 	/**
 	 * Removes escapings from a given argument string.
@@ -427,19 +433,31 @@ class Helper{
 	
 	public function getGroups(){
 		$this->adapters = $this->getAdapters();
-		$groups = array();
-		foreach ($this->adapters as $adapter) {
-			if(class_exists($adapter)){
-				$adapters[$adapter] = $this->objectManager->getObject($adapter);
-				foreach ($adapters[$adapter]->getGroups() as $group => $beings) {
-					foreach ($beings as $conf) {
-                        $being = $conf["being"];
-						$conf["adapter"] = $adapter;
-						$groups[$group]["beings"][$being] = $conf;
-					}
-				}
-			}
-		}
+
+        $cache = $this->cacheManager->getCache('Admin_Cache');
+        $identifier = "Groups-".sha1(implode("-",$this->adapters));
+
+        if(!$cache->has($identifier)){
+            $groups = array();
+
+            foreach ($this->adapters as $adapter) {
+                if(class_exists($adapter)){
+                    $adapters[$adapter] = $this->objectManager->getObject($adapter);
+                    foreach ($adapters[$adapter]->getGroups() as $group => $beings) {
+                        foreach ($beings as $conf) {
+                            $being = $conf["being"];
+                            $conf["adapter"] = $adapter;
+                            $groups[$group]["beings"][$being] = $conf;
+                        }
+                    }
+                }
+            }
+
+            $cache->set($identifier,$groups);
+        }else{
+            $groups = $cache->get($identifier);
+        }
+        
 		return $groups;
 	}
 	

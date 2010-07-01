@@ -51,10 +51,16 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	protected $objectManager;
 
 	/**
-	 * @inject
 	 * @var F3\FLOW3\Security\Context
+	 * @inject
 	 */
 	protected $securityContext;
+    
+    /**
+	 * @var F3\FLOW3\Cache\CacheManager
+	 * @inject
+	 */
+	protected $cacheManager;
 
 	protected $model = "";
     protected $being = null;
@@ -169,6 +175,11 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 			}
 		}
 
+        if(!isset($user) || !is_object($user)){
+			parent::redirect('index', 'Login');
+            throw new \F3\FLOW3\MVC\Exception\StopActionException();
+        }
+
 		$groups = $this->helper->getGroups();
         ksort($groups);
         foreach($groups as $package => $group){
@@ -221,25 +232,33 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 			}
 		}
 
-		$template = $this->helper->getPathByPatternFallbacks("Views",$replacements);
+        $cache = $this->cacheManager->getCache('Admin_TemplateCache');
+        $identifier = implode("-",$replacements);
+        if(!$cache->has($identifier)){
+            $template = $this->helper->getPathByPatternFallbacks("Views",$replacements);
+            $cache->set($identifier,$template);
+        }else{
+            $template = $cache->get($identifier);
+        }
+
 		$this->view->setTemplatePathAndFilename($template);
 
-		$meta = array();
+#		$meta = array();
 		if($this->request->hasArgument("being")){
 			$meta["being"]["identifier"] = $this->request->getArgument("being");
 			$meta["being"]["name"] = $this->getAdapter()->getName($this->request->getArgument("being"));
 			\F3\Admin\Register::set("package",$replacements["@package"]);
 		}
-
-		if($this->request->hasArgument("adapter")){
-			$meta["adapter"]["identifier"] = $this->request->getArgument("adapter");
-		}
-
-		if($this->request->hasArgument("id")){
-			$meta["id"] = $this->request->getArgument("id");
-		}
-
-		$this->view->assign("meta",$meta);
+#
+#		if($this->request->hasArgument("adapter")){
+#			$meta["adapter"]["identifier"] = $this->request->getArgument("adapter");
+#		}
+#
+#		if($this->request->hasArgument("id")){
+#			$meta["id"] = $this->request->getArgument("id");
+#		}
+#
+#		$this->view->assign("meta",$meta);
 	}
 
 	private function getAdapter(){
@@ -260,19 +279,28 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	}
     
     public function getActions($action = null, $being = null, $id = false){
-        $actions = array();
-        foreach($this->reflectionService->getAllImplementationClassNamesForInterface('F3\Admin\Actions\ActionInterface') as $actionClassName) {
-            #$a = $this->objectManager->create($actionClassName, $this->getAdapter(), $this->request, $this->view, $this);
-            $a = new $actionClassName($this->getAdapter(), $this->request, $this->view, $this);
-            if($a->canHandle($being, $action, $id)){
-                if($this->isAllowed($being,$a->getAction())){
-                    $actionName = \F3\Admin\Core\Helper::getShortName($actionClassName);
-                    $actionName = str_replace("Action","",$actionName);
-                    $actions[$actionName] = $a;
+#        $cache = $this->cacheManager->getCache('Admin_ActionCache');
+#        $identifier = sha1($action.$being.$id.$this->adapter);
+
+#        if(!$cache->has($identifier) && false){
+            $actions = array();
+            foreach($this->reflectionService->getAllImplementationClassNamesForInterface('F3\Admin\Actions\ActionInterface') as $actionClassName) {
+                #$a = $this->objectManager->create($actionClassName, $this->getAdapter(), $this->request, $this->view, $this);
+                $a = new $actionClassName($this->getAdapter(), $this->request, $this->view, $this);
+                if($a->canHandle($being, $action, $id)){
+                    if($this->isAllowed($being,$a->getAction())){
+                        $actionName = \F3\Admin\Core\Helper::getShortName($actionClassName);
+                        $actionName = str_replace("Action","",$actionName);
+                        $actions[$actionName] = $a;
+                    }
                 }
             }
-		}
-        ksort($actions);
+            ksort($actions);
+            #$cache->set($identifier,$actions);
+#        }else{
+#            $actions = $cache->get($identifier);
+#        }
+        
         return $actions;
     }
 
@@ -334,7 +362,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
         foreach ($this->securityContext->getAuthenticationTokens() as $token){
             if(is_callable(array($token,"getUser"))){
                 $user = $token->getUser();
-                if($user->getAdmin())
+                if($user->isAdmin())
                     return true;
 
                 foreach ($user->getRoles() as $role) {

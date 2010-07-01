@@ -19,6 +19,12 @@ class Converter {
 	 */
 	protected $reflectionService;
 
+    /**
+	 * @var F3\FLOW3\Cache\CacheManager
+	 * @inject
+	 */
+	protected $cacheManager;
+    
     public function __construct(){
         
     }
@@ -64,18 +70,27 @@ class Converter {
     }
 
     protected function getObjectConverter(){
-        if(!\F3\Admin\Register::has("objectConverters")){
+        $cache = $this->cacheManager->getCache('Admin_ImplementationCache');
+
+        $identifier = "ConverterInterface";
+        if(!$cache->has($identifier)){
             $objectConverters = array();
-            foreach($this->reflectionService->getAllImplementationClassNamesForInterface('F3\FLOW3\Property\ObjectConverterInterface') as $objectConverterClassName) {
+            foreach($this->reflectionService->getAllImplementationClassNamesForInterface('F3\Admin\Converter\ConverterInterface') as $objectConverterClassName) {
                 $objectConverter = $this->objectManager->get($objectConverterClassName);
                 foreach ($this->objectManager->get($objectConverterClassName)->getSupportedTypes() as $supportedType) {
-                    $objectConverters[$supportedType] = $objectConverter;
+                    $objectConverters[$supportedType] = $objectConverterClassName;
                 }
-                \F3\Admin\Register::set("objectConverters",$objectConverters);
             }
-        } else {
-            $objectConverters = \F3\Admin\Register::get("objectConverters");
+
+            $cache->set($identifier,$objectConverters);
+        }else{
+            $objectConverters = $cache->get($identifier);
         }
+
+        foreach($objectConverters as $supportedType => $objectConverterClassName){
+            $objectConverters[$supportedType] = $this->objectManager->get($objectConverterClassName);
+        }
+        
         return $objectConverters;
     }
 }

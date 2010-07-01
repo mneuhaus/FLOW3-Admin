@@ -47,6 +47,12 @@ class RenderViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
      * @inject
      */
     protected $templateParser;
+
+    /**
+	 * @var F3\FLOW3\Cache\CacheManager
+	 * @inject
+	 */
+	protected $cacheManager;
     
 	/**
 	 *
@@ -70,7 +76,15 @@ class RenderViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
                     "@being" => \F3\Admin\Register::get("being"),
                     "@action" => $partial
                 );
-                $template = $this->helper->getPathByPatternFallbacks($fallbacks,$replacements);
+
+                $cache = $this->cacheManager->getCache('Admin_TemplateCache');
+                $identifier = str_replace("\\","_",implode("-",$replacements));
+                if(!$cache->has($identifier)){
+                    $template = $this->helper->getPathByPatternFallbacks($fallbacks,$replacements);
+                    $cache->set($identifier,$template);
+                }else{
+                    $template = $cache->get($identifier);
+                }
                 
 				if(empty($vars)){
 				    $this->view = $this->viewHelperVariableContainer->getView();
@@ -110,14 +124,14 @@ class RenderViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
         }
 
         $renderingContext = $this->objectManager->create('F3\Fluid\Core\Rendering\RenderingContext');
-        $renderingContext->setTemplateVariableContainer($variableContainer);
+        $renderingContext->injectTemplateVariableContainer($variableContainer);
         if ($this->controllerContext !== NULL) {
             $renderingContext->setControllerContext($this->controllerContext);
         }
 
         $viewHelperVariableContainer = $this->objectManager->create('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
         $viewHelperVariableContainer->setView($this->viewHelperVariableContainer->getView());
-        $renderingContext->setViewHelperVariableContainer($viewHelperVariableContainer);
+        $renderingContext->injectViewHelperVariableContainer($viewHelperVariableContainer);
 
         return $renderingContext;
     }
