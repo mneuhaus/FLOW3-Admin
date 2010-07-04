@@ -1,9 +1,0 @@
-/**
- * Adds a drop shadow
- */
-=box-shadow(!blur, !color, !x, !y)
-{
-	-moz-box-shadow:!x !y !blur !color;
-	-webkit-box-shadow:!x !y !blur !color;
-	box-shadow:!x !y !blur !color;
-}
