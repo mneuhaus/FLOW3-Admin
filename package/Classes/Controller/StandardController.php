@@ -225,7 +225,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 					$variant = $tags[$action."view"][0];
 				}
 				$replacements["@package"] = $this->helper->getPackageByClassName($this->being) ? $this->helper->getPackageByClassName($this->being) : "Admin";
-				$replacements["@being"] =$this->helper->getObjectNameByClassName($this->being);
+				$replacements["@being"] =\F3\Admin\Core\Helper::getShortName($this->being);
 				if(array_key_exists("variant-".$action,$tags)){
 					$replacements["@variant"] = ucfirst(current($tags["variant-".$action]));
 				}
@@ -284,7 +284,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 
 #        if(!$cache->has($identifier) && false){
             $actions = array();
-            foreach($this->reflectionService->getAllImplementationClassNamesForInterface('F3\Admin\Actions\ActionInterface') as $actionClassName) {
+            foreach($this->reflectionService->getAllImplementationClassNamesForInterface('F3\Admin\Controller\Actions\ActionInterface') as $actionClassName) {
                 #$a = $this->objectManager->create($actionClassName, $this->getAdapter(), $this->request, $this->view, $this);
                 $a = new $actionClassName($this->getAdapter(), $this->request, $this->view, $this);
                 if($a->canHandle($being, $action, $id)){
@@ -306,7 +306,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 
     public function getActionByShortName($action = null){
         $actions = array();
-        foreach($this->reflectionService->getAllImplementationClassNamesForInterface('F3\Admin\Actions\ActionInterface') as $actionClassName) {
+        foreach($this->reflectionService->getAllImplementationClassNamesForInterface('F3\Admin\Controller\Actions\ActionInterface') as $actionClassName) {
             $actionName = \F3\Admin\Core\Helper::getShortName($actionClassName);
             if($actionName == ucfirst($action)){
                 #return $this->objectManager->create($actionClassName, $this->getAdapter(), $this->request, $this->view, $this);
