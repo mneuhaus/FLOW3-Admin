@@ -42,11 +42,23 @@ class ResourcesViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	}
 
     protected $templates = array(
-        "js"    => '<script src="@file" type="text/javascript" charset="utf-8"></script>\n',
-        "css"   => '<link rel="stylesheet" href="@file" type="text/css" media="screen" charset="utf-8">\n'
+        "js"    => '<script src="@file" type="text/javascript" charset="utf-8"></script>',
+        "css"   => '<link rel="stylesheet" href="@file" type="text/css" media="screen" charset="utf-8">'
     );
 
-    static protected $files = array();
+    static protected $files = array(
+			"js/jquery/jquery.js",
+			"js/jquery/jquery.ui.js",
+			"js/jquery/jquery.livesearch.js",
+			"js/jquery/jquery.hotkeys.js",
+			"js/jquery/jquery.selectbox.js",
+			"js/jquery/jquery.elastic.js",
+			"js/jquery/jquery.keynav.js",
+			"js/main.js",
+        
+            "css/jquery/jquery.ui.css",
+            "css/jquery/jquery.selector.css"
+	);
 	
 	/**
 	 *
@@ -54,21 +66,33 @@ class ResourcesViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
      * @param string $dependencies
 	 * @return string
 	 */
-	public function _render($file = null, $dependencies = null) {
+	public function render($file = null, $dependencies = null) {
 		$package = $this->controllerContext->getRequest()->getControllerPackageKey();
 		$mirrorPath = str_replace("/http://dev.flow3.local/_","",$this->resourcePublisher->getStaticResourcesWebBaseUri());
 		$uri = $mirrorPath . '/Packages/' . $package . '/';
 
         if($file == null && $dependencies == null){
-            
+            $output = "";
+            foreach(self::$files as $key => $file){
+                $parts = explode(".",$file);
+                $extension = array_pop($parts);
+                if(array_key_exists($extension, $this->templates)){
+                    $output.= str_replace("@file",$uri.$file,$this->templates[$extension]);
+                }
+                unset(self::$files[$key]);
+            }
+            return $output;
         }else{
-            
+            $filename = basename($file);
+            if($dependencies == null){
+                self::$files[]= $file;
+            }
         }
 
         return "";
 	}
 
-    public function render(){
+    public function _render(){
 		$package = $this->controllerContext->getRequest()->getControllerPackageKey();
 		$mirrorPath = str_replace("/http://dev.flow3.local/_","",$this->resourcePublisher->getStaticResourcesWebBaseUri());
 		$uri = $mirrorPath . '/Packages/' . $package . '/';
@@ -79,6 +103,7 @@ class ResourcesViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 			"js/jquery/jquery.livesearch.js",
 			"js/jquery/jquery.hotkeys.js",
 			"js/jquery/jquery.selectbox.js",
+			"js/jquery/jquery.elastic.js",
 			"js/jquery/jquery.keynav.js",
 			"js/main.js"
 		);
@@ -93,6 +118,21 @@ class ResourcesViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 			$output .= '<link rel="stylesheet" href="'.$uri.$cssfile.'" type="text/css" media="screen" title="no title" charset="utf-8">'."\n";
 		}
         return $output;
+    }
+
+    public function array_insert($array, $insertion, $position = null){
+        if($position == null)
+            $position = count($position);
+        
+        $before = array_slice($array,0,$position);
+        $after = array_slice($array,$position);
+
+        $array = $before;
+        $array[]= $insertion;
+        foreach($after as $element)
+            $array[]= $element;
+        
+        return $array;
     }
 }
 
