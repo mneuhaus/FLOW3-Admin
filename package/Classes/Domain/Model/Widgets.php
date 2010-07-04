@@ -44,12 +44,12 @@ class Widgets extends \F3\Admin\Domain\Model{
 	/**
 	 * @var integer
 	 */
-	#protected $integer;
+	protected $integer;
 	
 	/**
 	 * @var float
 	 */
-	#protected $float;
+	protected $float;
 	
 	/**
 	 * @var boolean
@@ -59,13 +59,13 @@ class Widgets extends \F3\Admin\Domain\Model{
 	/**
 	 * @var \DateTime
 	 */
-	#protected $datetime;
+	protected $datetime;
 	
 	/**
 	 * @var \F3\FLOW3\Resource\Resource
 	 * validate NotEmpty
 	 */
-#	protected $resource;
+	protected $resource;
 	
 	/**
 	 * @var \F3\Admin\Domain\Model\Tag
@@ -81,23 +81,22 @@ class Widgets extends \F3\Admin\Domain\Model{
 	
 	/**
 	 * @var string
-	 * @widget textarea
+	 * @widget Textarea
 	 */
-#	protected $textarea;
+	protected $textarea;
 	
 	/**
 	 * @var string
-	 * @widget textarea
+	 * @widget Textarea
 	 * @class f-autoexpand
 	 */
-#	protected $autoexpand;
+	protected $autoexpand;
 	
 	/**
 	 * @var string
-	 * @widget textarea
-	 * @class f-fullrte
+	 * @widget RichTextEditor
 	 */
-#	protected $fullrte;
+	protected $fullrte;
 	
 	/**
 	 * @var string
