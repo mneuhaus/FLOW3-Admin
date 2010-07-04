@@ -47,10 +47,11 @@ class PHPCRAdapter extends AbstractAdapter {
     public function createObject($being, $data) {
 		$configuration = $this->getConfiguration($being);
 		$result = $this->transformToObject($being, $data);
-		$repository = $this->objectManager->getObject(str_replace("Domain\\Model", "Domain\\Repository", $being) . "Repository");
-		$repository->add($result["object"]);
-
-		$this->persistenceManager->persistAll();
+        if(empty($result["errors"])){
+            $repository = $this->objectManager->getObject(str_replace("Domain\\Model", "Domain\\Repository", $being) . "Repository");
+            $repository->add($result["object"]);
+            $this->persistenceManager->persistAll();
+        }
 		return $result;
     }
 
@@ -69,7 +70,7 @@ class PHPCRAdapter extends AbstractAdapter {
         $classes = $this->getClassesTaggedWith(array("entity","autoadmin"));
         foreach($classes as $class => $packageName) {
             $tags = $this->reflectionService->getClassTagsValues($class);
-            $repository = $this->helper->getModelRepository($class);
+            $repository = \F3\Admin\Core\Helper::getModelRepository($class);
             if(class_exists($repository)){
                 
                 $group = $packageName;
@@ -117,13 +118,13 @@ class PHPCRAdapter extends AbstractAdapter {
 		$configuration = $this->getConfiguration($being);
         $data["__identity"] = $id;
 		$result = $this->transformToObject($being, $data);
-		$repository = $this->objectManager->getObject(str_replace("Domain\\Model", "Domain\\Repository", $being) . "Repository");
-        #\F3\var_dump($result["object"]);
-		$repository->update($result ["object"]);
-		$this->persistenceManager->persistAll();
+        if(empty($result["errors"])){
+            $repository = $this->objectManager->getObject(str_replace("Domain\\Model", "Domain\\Repository", $being) . "Repository");
+            $repository->add($result["object"]);
+            $this->persistenceManager->persistAll();
+        }
 		return $result;
     }
-
 
 	public function getConfiguration($being) {
         $cache = $this->cacheManager->getCache('Admin_ConfigurationCache');
@@ -157,7 +158,7 @@ class PHPCRAdapter extends AbstractAdapter {
                     }
 
                     if(isset($configuration["properties"][$property]["being"])){
-                        $repository = $this->helper->getModelRepository($configuration["properties"][$property]["being"]);
+                        $repository = \F3\Admin\Core\Helper::getModelRepository($configuration["properties"][$property]["being"]);
                         if(!class_exists($repository)){
                             $configuration["properties"][$property]["inline"] = true;
                         }
