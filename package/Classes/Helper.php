@@ -68,55 +68,6 @@ class Helper{
 	 * @inject
 	 */
 	protected $cacheManager;
-
-	/**
-	 * Removes escapings from a given argument string.
-	 *
-	 * This method is meant as a helper for regular expression results.
-	 *
-	 * @param string &$quotedValue Value to unquote
-	 * @return string Unquoted value
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Karsten Dambekalns <karsten@typo3.org>
-	 */
-	protected function unquoteString(&$quotedValue) {
-		switch ($quotedValue[0]) {
-			case '"':
-				$quotedValue = str_replace('\"', '"', trim($quotedValue, '"'));
-			break;
-			case '\'':
-				$quotedValue = str_replace('\\\'', '\'', trim($quotedValue, '\''));
-			break;
-		}
-		$quotedValue = str_replace('\\\\', '\\', $quotedValue);
-	}
-
-	/**
-	 * Returns the Repository for a Model based on the Class name
-	 *
-	 * @param $model String Name of the Model
-	 * @return $repository String Repository Name
-	 * @author Marc Neuhaus <apocalip@gmail.com>
-	 **/
-    public function getModelRepository($model){
-		$repository = str_replace("Domain\Model","Domain\Repository",$model) . "Repository";
-		if(substr($repository,0,1) == "\\"){
-			$repository = substr($repository,1);
-		}
-		return $repository;
-	}
-
-	/**
-	 * Returns the Name of the Model without Namespace
-	 *
-	 * @param $model String Name of the Model with Namespace
-	 * @return $name String Model Name
-	 * @author Marc Neuhaus <apocalip@gmail.com>
-	 **/
-	public function getObjectNameByClassName($model){
-		$parts = explode("\\",$model);
-		return str_replace("_AOPProxy_Development","",end($parts));
-	}
 	
 	/**
 	 *
