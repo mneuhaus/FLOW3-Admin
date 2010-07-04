@@ -33,8 +33,14 @@ jQuery(document).ready(function(){
        jQuery(".ux-select-row").attr('checked', jQuery(this).attr('checked'));
    });
 
-   jQuery(".f-multiselect").selectbox();
-   jQuery(".f-date").datepicker({dateFormat: "dd.mm.yy"});
+    jQuery(".f-multiselect").selectbox();
+    jQuery(".f-date").datepicker({dateFormat: "dd.mm.yy"});
+   
+    jQuery('.f-autoexpand').elastic();
+
+    if(typeof(jQuery().ckeditor) != "undefined"){
+        jQuery('.f-fullrte').ckeditor();
+    }
 });
 
 
@@ -56,7 +62,6 @@ jQuery(document).ready(function(){
 	jQuery("select.f-autosuggest").autoSuggest();
 	jQuery(".f-filtercombo").sexyCombo();
 	jQuery('.f-multifile').MultiFile();
-	jQuery('.f-autoexpand').elastic();
 	jQuery('.f-datejs').datejs();
 
 	jQuery('.f-fullrte').ckeditor();
