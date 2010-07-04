@@ -1,8 +1,8 @@
 <?php
 
-namespace F3\Admin\Actions;
+namespace F3\Admin\Controller\Actions;
 
-/*                                                                        *
+/* *
  * This script belongs to the FLOW3 framework.                            *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
@@ -29,56 +29,55 @@ namespace F3\Admin\Actions;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 abstract class AbstractAction implements ActionInterface {
-    /**
-     * @var F3\Admin\Adapters\AdapterInterface $adapter
-     * @author Marc Neuhaus <mneuhaus@famelo.com>
-     * */
-    protected $adapter;
 
-    protected $controller;
+	/**
+	 * @var F3\Admin\Adapters\AdapterInterface $adapter
+	 * @author Marc Neuhaus <mneuhaus@famelo.com>
+	 * */
+	protected $adapter;
+	protected $controller;
+	protected $request;
 
-    protected $request;
+	/**
+	 * @param F3\Admin\Adapters\AdapterInterface $adapter
+	 * @author Marc Neuhaus <mneuhaus@famelo.com>
+	 * */
+	public function injectAdapter($adapter) {
+		$this->adapter = $adapter;
+	}
 
-    /**
-     * @param F3\Admin\Adapters\AdapterInterface $adapter
-     * @author Marc Neuhaus <mneuhaus@famelo.com>
-     * */
-    public function injectAdapter($adapter){
-        $this->adapter = $adapter;
-    }
+	public function __construct($adapter=null, $request=null, &$view=null, &$controller=null) {
+		$this->adapter = $adapter;
+		$this->view = $view;
+		$this->request = $request;
+		$this->controller = $controller;
+	}
 
-    public function __construct($adapter=null, $request=null, &$view=null, &$controller=null){
-        $this->adapter = $adapter;
-        $this->view = $view;
-        $this->request = $request;
-        $this->controller = $controller;
-    }
+	public function canHandle($being, $action = null, $id = false) {
+		return false;
+	}
 
-    public function canHandle($being, $action = null, $id = false){
-        return false;
-    }
+	public function getPackage() {
+		return null;
+	}
 
-    public function getPackage(){
-        return null;
-    }
+	public function getController() {
+		return null;
+	}
 
-    public function getController(){
-        return null;
-    }
+	public function getClass() {
+		return "";
+	}
 
-    public function getClass(){
-        return "";
-    }
+	public function __toString() {
+		$action = \F3\Admin\Core\Helper::getShortName($this);
+		$action = str_replace("Action", "", $action);
+		return $action;
+	}
 
-    public function __toString(){
-        $action = \F3\Admin\Core\Helper::getShortName($this);
-        $action = str_replace("Action","",$action);
-        return $action;
-    }
+	public function getAction() {
+		return lcfirst(self::__toString());
+	}
 
-    public function getAction(){
-        return lcfirst(self::__toString());
-    }
 }
-
 ?>

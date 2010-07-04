@@ -1,8 +1,8 @@
 <?php
 
-namespace F3\Admin\Actions;
+namespace F3\Admin\Controller\Actions;
 
-/*                                                                        *
+/* *
  * This script belongs to the FLOW3 framework.                            *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
@@ -23,26 +23,57 @@ namespace F3\Admin\Actions;
  *                                                                        */
 
 /**
+ * Abstract validator
  *
  * @version $Id: AbstractValidator.php 3837 2010-02-22 15:17:24Z robert $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @scope prototype
  */
-class ConfirmAction extends AbstractAction {
+class CreateAction extends AbstractAction {
 
-    public function canHandle($being, $action = null, $id = false){
-        return false;
-    }
+	/**
+	 * Function to Check if this Requested Action is supported
+	 * @author Marc Neuhaus <mneuhaus@famelo.com>
+	 * */
+	public function canHandle($being, $action = null, $id = false) {
+		return!$id;
+	}
 
-    /**
-     *
-     * @param string $being
-     * @param array $ids
-     * @author Marc Neuhaus <mneuhaus@famelo.com>
-     * */
-    public function execute($being, $ids = null){
-		$object = $this->adapter->getBeing($being,$ids);
-		$this->view->assign("object",$object);
-    }
+	/**
+	 * The Name of this Action
+	 * @author Marc Neuhaus <mneuhaus@famelo.com>
+	 * */
+	public function getClass() {
+		return "ui-icon ui-button-w32-round_plus";
+	}
+
+	/**
+	 * Create objects
+	 *
+	 * @param string $being
+	 * @param array $ids
+	 * @author Marc Neuhaus <mneuhaus@famelo.com>
+	 * */
+	public function execute($being, $ids = null) {
+		$object = $this->adapter->getBeing($being);
+
+		if( $this->request->hasArgument("create") ) {
+			$result = $this->adapter->createObject($being, $this->request->getArgument("item"));
+			$errors = $result["errors"];
+			if( empty($errors) ) {
+				$arguments = array(
+					"being" => $being,
+					"adapter" => get_class($this->adapter)
+				);
+				$this->controller->redirect('list', NULL, NULL, $arguments);
+			}else {
+				$object->setErrors($errors);
+				$object->setObject($this->request->getArgument("item"));
+			}
+		}
+
+		$this->view->assign("being", $object);
+	}
+
 }
-
 ?>

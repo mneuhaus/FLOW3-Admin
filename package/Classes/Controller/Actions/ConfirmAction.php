@@ -1,8 +1,8 @@
 <?php
 
-namespace F3\Admin\Actions;
+namespace F3\Admin\Controller\Actions;
 
-/*                                                                        *
+/* *
  * This script belongs to the FLOW3 framework.                            *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
@@ -23,52 +23,26 @@ namespace F3\Admin\Actions;
  *                                                                        */
 
 /**
- * Abstract validator
  *
  * @version $Id: AbstractValidator.php 3837 2010-02-22 15:17:24Z robert $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @scope prototype
  */
-class DeleteAction extends AbstractAction {
-    /**
-     * Function to Check if this Requested Action is supported
-     * @author Marc Neuhaus <mneuhaus@famelo.com>
-     * */
-    public function canHandle($being, $action = null, $id = false){
-        return $id;
-    }
-    
-    public function getClass(){
-        return "ui-icon ui-button-b16-delete";
-    }
+class ConfirmAction extends AbstractAction {
 
-    public function getAction(){
-        return "confirm";
-    }
+	public function canHandle($being, $action = null, $id = false) {
+		return false;
+	}
 
-    /**
-     * Delete objects
-     *
-     * @param string $being
-     * @param array $ids
-     * @author Marc Neuhaus <mneuhaus@famelo.com>
-     * */
-    public function execute($being, $ids = null){
-        if(is_array($ids)){
-            foreach($ids as $id){
-                $this->adapter->deleteObject($being, $id);
-            }
-        }else{
-            if($this->request->hasArgument("confirm")){
-                $this->adapter->deleteObject($being,$ids);
+	/**
+	 *
+	 * @param string $being
+	 * @param array $ids
+	 * @author Marc Neuhaus <mneuhaus@famelo.com>
+	 * */
+	public function execute($being, $ids = null) {
+		$object = $this->adapter->getBeing($being, $ids);
+		$this->view->assign("object", $object);
+	}
 
-                $arguments = array("adapter"=>get_class($this->adapter),"being"=>$being);
-                $this->controller->redirect('list',NULL,NULL,$arguments);
-            }else{
-                $this->controller->redirect('confirm',NULL,NULL,$this->request->getArguments());
-            }
-        }
-    }
 }
-
 ?>
