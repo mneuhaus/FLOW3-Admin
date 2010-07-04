@@ -130,7 +130,9 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 
 	private function prepare($action){
 		$this->start = microtime();
-		\F3\Dump\Dump::getInstance();
+		if(class_exists("\F3\Dump\Dump")){
+			\F3\Dump\Dump::getInstance();
+		}
         $title = array("Admin",ucfirst($action));
 
 		$this->adapters = $this->helper->getAdapters();
