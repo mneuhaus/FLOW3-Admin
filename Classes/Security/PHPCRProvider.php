@@ -113,7 +113,7 @@ class PHPCRProvider implements \F3\FLOW3\Security\Authentication\AuthenticationP
 	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
 	 */
 	public function authenticate(\F3\FLOW3\Security\Authentication\TokenInterface $authenticationToken) {
-		if (!($authenticationToken instanceof \F3\FLOW3\Security\Authentication\Token\UsernamePassword)) throw new \F3\FLOW3\Security\Exception\UnsupportedAuthenticationTokenException('This provider cannot authenticate the given token.', 1217339840);
+		if (!($authenticationToken instanceof \F3\Admin\Security\Token\UsernamePassword)) throw new \F3\FLOW3\Security\Exception\UnsupportedAuthenticationTokenException('This provider cannot authenticate the given token.', 1217339840);
 
 		$user = NULL;
 		$credentials = $authenticationToken->getCredentials();
