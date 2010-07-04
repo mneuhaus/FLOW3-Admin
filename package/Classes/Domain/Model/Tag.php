@@ -35,6 +35,7 @@ class Tag extends \F3\Admin\Domain\Model{
 	/**
 	 * @var string
 	 * @identity
+	 * @validate Alphanumeric, StringLength(minimum = 1, maximum = 20)
 	 */
 	protected $name;
 }

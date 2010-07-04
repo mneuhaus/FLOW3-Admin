@@ -45,6 +45,7 @@ class Property{
     protected $type = "string";
     protected $widget;
     protected $label;
+    protected $class;
     protected $infotext = "";
     protected $options;
     protected $conf;
@@ -290,6 +291,18 @@ class Property{
 
     public function setFilter($filter) {
         $this->filter = $filter;
+    }
+
+    public function getClass() {
+        return $this->class;
+    }
+
+    public function setClass($class) {
+        $this->class = $class;
+    }
+
+    public function getError(){
+        return $this->getParent()->getErrors($this->getName());
     }
 }
 

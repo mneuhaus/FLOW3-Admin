@@ -54,6 +54,21 @@ class Helper {
         
         return $reflection->getShortName();
     }
+
+	/**
+	 * Returns the Repository for a Model based on the Class name
+	 *
+	 * @param $model String Name of the Model
+	 * @return $repository String Repository Name
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 **/
+    static public function getModelRepository($model){
+		$repository = str_replace("Domain\Model","Domain\Repository",$model) . "Repository";
+		if(substr($repository,0,1) == "\\"){
+			$repository = substr($repository,1);
+		}
+		return $repository;
+	}
 }
 
 ?>

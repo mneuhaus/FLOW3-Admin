@@ -43,7 +43,7 @@ class Being{
     protected $adapter;
     protected $name;
     protected $properties;
-    protected $hiddenProperties = array();
+    protected $errors = array();
     protected $sets;
     protected $views;
     protected $selected = false;
@@ -113,14 +113,6 @@ class Being{
         return $sets;
     }
 
-    public function addHiddenProperty($property){
-        $this->hiddenProperties = array_merge($this->hiddenProperties,$property);
-    }
-
-    public function getHiddenProperties(){
-        return $this->hiddenProperties;
-    }
-
     public function _getSets() {
         return $this->sets;
     }
@@ -163,6 +155,17 @@ class Being{
 
     public function setPrefix($prefix) {
         $this->prefix = $prefix;
+    }
+
+    public function getErrors($property = null) {
+        if($property == null)
+            return $this->errors;
+        else
+            return isset($this->errors[$property]) ? $this->errors[$property] : array();
+    }
+
+    public function setErrors($errors) {
+        $this->errors = $errors;
     }
 }
 
