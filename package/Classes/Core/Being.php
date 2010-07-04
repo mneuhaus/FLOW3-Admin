@@ -43,7 +43,8 @@ class Being{
     protected $adapter;
     protected $name;
     protected $properties;
-    protected $errors = array();
+    protected $errors;
+    protected $hiddenProperties = array();
     protected $sets;
     protected $views;
     protected $selected = false;
@@ -111,6 +112,14 @@ class Being{
             }
         }
         return $sets;
+    }
+
+    public function addHiddenProperty($property){
+        $this->hiddenProperties = array_merge($this->hiddenProperties,$property);
+    }
+
+    public function getHiddenProperties(){
+        return $this->hiddenProperties;
     }
 
     public function _getSets() {
