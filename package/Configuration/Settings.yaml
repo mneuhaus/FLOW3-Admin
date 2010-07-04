@@ -71,7 +71,7 @@ PHPCR:
           inline: true
           ignore: list
         content:
-          widget: TextArea
+          widget: RichTextEditor
         tags:
           ignore: true
 #          inline: true

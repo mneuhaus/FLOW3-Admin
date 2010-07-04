@@ -39,7 +39,12 @@ jQuery(document).ready(function(){
     jQuery('.f-autoexpand').elastic();
 
     if(typeof(jQuery().ckeditor) != "undefined"){
-        jQuery('.f-fullrte').ckeditor();
+		var config = {toolbar:[
+			['Bold','Italic','Underline','Strike','-','Subscript','Superscript'],
+			['NumberedList', 'BulletedList', '-', 'Link', 'Unlink'],
+			['Source'],
+		]};
+		$('.f-fullrte').ckeditor(config);
     }
 });
 
