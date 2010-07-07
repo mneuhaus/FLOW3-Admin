@@ -278,9 +278,9 @@ class Helper{
 				return $pattern;
 			}
 		}
-		echo "<pre>";
-		print_r($tried);
-		echo "</pre>";
+		#echo "<pre>";
+		#print_r($tried);
+		#echo "</pre>";
 		
 		throw new \Exception('Could not find any Matching Path.');
 	}

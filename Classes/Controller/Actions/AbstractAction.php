@@ -65,6 +65,10 @@ abstract class AbstractAction implements ActionInterface {
 		return null;
 	}
 
+	public function getTarget() {
+		return "_self";
+	}
+	
 	public function getClass() {
 		return "";
 	}

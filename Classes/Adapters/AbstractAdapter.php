@@ -465,7 +465,7 @@ abstract class AbstractAdapter implements AdapterInterface {
 		$data = $this->convertData($data,$being);
 
 		$arg = $this->objectManager->get("F3\Admin\Core\Argument", "item", $being);
-
+		
         if( $target !== null )
 			$arg->setTarget($target);
 

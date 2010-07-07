@@ -72,6 +72,7 @@ class UpdateAction extends AbstractAction {
 		if( $this->request->hasArgument("update") ) {
 			$result = $this->adapter->updateObject($being, $ids, $this->request->getArgument("item"));
 			$errors = $result["errors"];
+			
 			if( empty($errors) ) {
 				$arguments = array("being" => $being, "adapter" => get_class($this->adapter));
 				$this->controller->redirect('list', NULL, NULL, $arguments);

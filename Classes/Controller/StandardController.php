@@ -236,31 +236,28 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 
         $cache = $this->cacheManager->getCache('Admin_TemplateCache');
         $identifier = implode("-",$replacements);
+		$noTemplate = false;
         if(!$cache->has($identifier)){
-            $template = $this->helper->getPathByPatternFallbacks("Views",$replacements);
-            $cache->set($identifier,$template);
+			try{
+				$template = $this->helper->getPathByPatternFallbacks("Views",$replacements);
+			}catch (\Exception $e){
+				$noTemplate = true;
+			}
+			if(!$noTemplate)
+				$cache->set($identifier,$template);
         }else{
             $template = $cache->get($identifier);
         }
-
-		$this->view->setTemplatePathAndFilename($template);
-
-#		$meta = array();
-		if($this->request->hasArgument("being")){
-			$meta["being"]["identifier"] = $this->request->getArgument("being");
-			$meta["being"]["name"] = $this->getAdapter()->getName($this->request->getArgument("being"));
-			\F3\Admin\Register::set("package",$replacements["@package"]);
+		
+		if(!$noTemplate){
+			$this->view->setTemplatePathAndFilename($template);
+			
+			if($this->request->hasArgument("being")){
+				$meta["being"]["identifier"] = $this->request->getArgument("being");
+				$meta["being"]["name"] = $this->getAdapter()->getName($this->request->getArgument("being"));
+				\F3\Admin\Register::set("package",$replacements["@package"]);
+			}
 		}
-#
-#		if($this->request->hasArgument("adapter")){
-#			$meta["adapter"]["identifier"] = $this->request->getArgument("adapter");
-#		}
-#
-#		if($this->request->hasArgument("id")){
-#			$meta["id"] = $this->request->getArgument("id");
-#		}
-#
-#		$this->view->assign("meta",$meta);
 	}
 
 	private function getAdapter(){
@@ -310,7 +307,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
         $actions = array();
         foreach($this->reflectionService->getAllImplementationClassNamesForInterface('F3\Admin\Controller\Actions\ActionInterface') as $actionClassName) {
             $actionName = \F3\Admin\Core\Helper::getShortName($actionClassName);
-            if($actionName == ucfirst($action)){
+            if(strtolower($actionName) == strtolower($action)){
                 #return $this->objectManager->create($actionClassName, $this->getAdapter(), $this->request, $this->view, $this);
                 return new $actionClassName($this->getAdapter(), $this->request, $this->view, $this);
             }
