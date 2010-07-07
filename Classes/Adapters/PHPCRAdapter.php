@@ -125,52 +125,38 @@ class PHPCRAdapter extends AbstractAdapter {
         }
 		return $result;
     }
+	
+	public function postProcessConfiguration($configuration) {
+		foreach($configuration ["properties"] as $property => $conf) {
+			$type = $configuration["properties"][$property]["var"];
 
-	public function getConfiguration($being) {
-        $cache = $this->cacheManager->getCache('Admin_ConfigurationCache');
-        $identifier = str_replace("\\","_",$being)."-PHPCR-getConfiguration";
+			$configuration ["properties"] [$property] ["type"] = $type;
 
-        if(!$cache->has($identifier)){
-            $configuration = parent::getConfiguration($being);
-            if( ! empty($configuration) ) {
-                // Merge Class Configuration and Yaml Configuration
-                if(isset($this->settings["Beings"]) && isset($this->settings["Beings"][$being])) {
-                    $configuration = array_merge_recursive($configuration,$this->settings["Beings"][$being]);
-                }
+			preg_match("/<(.+)>/", $configuration ["properties"] [$property] ["type"], $matches);
+			if(!empty($matches)){
+				$configuration["properties"][$property]["being"] = ltrim($matches[1],"\\");
+				$configuration["properties"][$property]["mode"] = \F3\Admin\Core\Property::INLINE_MULTIPLE_MODE;
+			}
 
-                foreach($configuration ["properties"] as $property => $conf) {
-                    $type = $configuration["properties"][$property]["var"];
+			if(class_exists($type)){
+				$reflectClass = new \F3\FLOW3\Reflection\ClassReflection($type);
+				if($reflectClass->isTaggedWith("entity")){
+					$configuration ["properties"] [$property] ["being"] = ltrim($type,"\\");
+					$configuration["properties"][$property]["mode"] = \F3\Admin\Core\Property::INLINE_SINGLE_MODE;
+				}
+			}
 
-                    $configuration ["properties"] [$property] ["type"] = $type;
-
-                    preg_match("/<(.+)>/", $configuration ["properties"] [$property] ["type"], $matches);
-                    if(!empty($matches)){
-                        $configuration["properties"][$property]["being"] = ltrim($matches[1],"\\");
-                        $configuration["properties"][$property]["mode"] = \F3\Admin\Core\Property::INLINE_MULTIPLE_MODE;
-                    }
-
-                    if(class_exists($type)){
-                        $reflectClass = new \F3\FLOW3\Reflection\ClassReflection($type);
-                        if($reflectClass->isTaggedWith("entity")){
-                            $configuration ["properties"] [$property] ["being"] = ltrim($type,"\\");
-                            $configuration["properties"][$property]["mode"] = \F3\Admin\Core\Property::INLINE_SINGLE_MODE;
-                        }
-                    }
-
-                    if(isset($configuration["properties"][$property]["being"])){
-                        $repository = \F3\Admin\Core\Helper::getModelRepository($configuration["properties"][$property]["being"]);
-                        if(!class_exists($repository)){
-                            $configuration["properties"][$property]["inline"] = true;
-                        }
-                    }
-                }
-            }
-            $cache->set($identifier,$configuration);
-        }else{
-            $configuration = $cache->get($identifier);
-        }
+			if(isset($configuration["properties"][$property]["being"])){
+				$repository = \F3\Admin\Core\Helper::getModelRepository($configuration["properties"][$property]["being"]);
+				if(!class_exists($repository)){
+					$configuration["properties"][$property]["inline"] = true;
+				}
+			}
+		}
+		$configuration = parent::postProcessConfiguration($configuration);
 		return $configuration;
 	}
+
 }
 
 ?>
