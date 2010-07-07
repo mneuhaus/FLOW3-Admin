@@ -121,12 +121,11 @@ class Property{
     }
 
     public function getOptions() {
+		$options = array();
         if(isset($this->conf["optionsProvider"])){
             $provider = $this->objectManager->get(ltrim($this->conf["optionsProvider"],"\\"));
             $provider->setProperty($this);
             $options = $provider->getOptions();
-        }else{
-            $options = $this->adapter->getOptions($this->being, $this->getIds());
         }
         return $options;
     }

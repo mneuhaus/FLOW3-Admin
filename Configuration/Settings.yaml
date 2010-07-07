@@ -19,7 +19,8 @@ FLOW3:
 
 Admin:
   Defaults:
-    newinlines: 3
+      properties:
+        optionsProvider: F3\Admin\OptionsProvider\RelationOptionsProvider
   Adapters:
     F3\Admin\Adapters\PHPCRAdapter: active
     F3\Admin\Adapters\DummyAdapter: inactive
@@ -85,6 +86,7 @@ PHPCR:
     F3\Blog\Domain\Model\Category:
       autoadmin: true
   ConfigurationProvider:
+    - F3\Admin\Adapters\ConfigurationProvider\DefaultsConfigurationProvider
     - F3\Admin\Adapters\ConfigurationProvider\ReflectionConfigurationProvider
     - F3\Admin\Adapters\ConfigurationProvider\YamlConfigurationProvider
   Widgets:
