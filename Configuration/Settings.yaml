@@ -84,6 +84,9 @@ PHPCR:
           widget: TextArea
     F3\Blog\Domain\Model\Category:
       autoadmin: true
+  ConfigurationProvider:
+    - F3\Admin\Adapters\ConfigurationProvider\ReflectionConfigurationProvider
+    - F3\Admin\Adapters\ConfigurationProvider\YamlConfigurationProvider
   Widgets:
     Mapping:
       string:   Textfield
@@ -99,6 +102,8 @@ PHPCR:
 
 Dummy:
   DataStorage: '%FLOW3_PATH_DATA%Persistent/DummyData'
+  ConfigurationProvider:
+    - F3\Admin\Adapters\ConfigurationProvider\YamlConfigurationProvider
   Widgets:
     Mapping:
       # Pattern (Text or Regex)          Widget

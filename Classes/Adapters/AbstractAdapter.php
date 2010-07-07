@@ -137,86 +137,28 @@ abstract class AbstractAdapter implements AdapterInterface {
 
         if(!$cache->has($identifier)){
             $configuration = array();
+			
+			if(isset($this->settings["ConfigurationProvider"])){
 
-            $configuration = array_merge($configuration,$this->getClassAnnotationConfiguration($being));
-            $configuration = array_merge($configuration,$this->getYamlConfiguration($being));
+				$configurationProviders = $this->settings["ConfigurationProvider"];
+				foreach($configurationProviders as $configurationProviderClass){
+					$configurationProvider = $this->objectManager->get($configurationProviderClass);
+					$configurationProvider->injectAdapter($this);
+					$configuration = array_merge_recursive($configuration,$configurationProvider->get($being));
+				}
+				
+			}
 
+			$configuration = $this->postProcessConfiguration($configuration);
+			
             $cache->set($identifier,$configuration);
         }else{
             $configuration = $cache->get($identifier);
         }
-
+		
 		return $configuration;
 	}
-
-    /**
-     * Tries to get the Configuration from the Class if it Exists
-     *
-     * @param string $being Name of Class of the Being
-     * @author Marc Neuhaus <mneuhaus@famelo.com>
-     * */
-    public function getClassAnnotationConfiguration($being){
-        $cache = $this->cacheManager->getCache('Admin_ConfigurationCache');
-        $identifier = str_replace("\\","_",$being)."-getClassAnnotationConfiguration";
-        
-        if(!$cache->has($identifier)){
-            $configuration = array ();
-            if( class_exists($being) ) {
-                $configuration = array (
-                    "class" => $this->reflectionService->getClassTagsValues($being),
-                    "properties" => $this->helper->getModelProperties($being)
-                );
-
-                foreach($configuration["properties"] as $property => $conf) {
-                    // Injected Properties shouldn't be managed
-                    if( array_key_exists("inject", $conf) || array_key_exists("ignore", $conf) )
-                        $configuration["properties"][$property]["ignore"] = true;
-
-                    foreach($conf as $key => $value){
-                        if(is_array($value) && empty($value)){
-                            $configuration["properties"][$property][$key] = true;
-                        }
-
-                        if(is_array($value) && count($value) == 1){
-                            while(is_array($value))
-                                $value = current($value);
-                            $configuration["properties"][$property][$key] = $value;
-                        }
-                    }
-                }
-            }
-            $cache->set($identifier,$configuration);
-        }else{
-            $configuration = $cache->get($identifier);
-        }
-        return $configuration;
-    }
-
-    /**
-     * Tries to get the Configuration from the Settings.yaml if
-     * it Contains Configuration about the being.
-     *
-     * @param string $being Name of Class of the Being
-     * @author Marc Neuhaus <mneuhaus@famelo.com>
-     * */
-    public function getYamlConfiguration($being){
-        $cache = $this->cacheManager->getCache('Admin_ConfigurationCache');
-        $identifier = str_replace("\\","_",$being)."-getYamlConfiguration";
-
-        if(!$cache->has($identifier)){
-            $configuration = array();
-
-            if(isset($this->settings["Beings"]))
-                $configuration = $this->settings["Beings"];
-        
-            $cache->set($identifier,$configuration);
-        }else{
-            $configuration = $cache->get($identifier);
-        }
-
-        return $configuration;
-    }
-
+	
     /**
      * PostProcesses the Configuration
      * 
