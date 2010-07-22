@@ -26,7 +26,7 @@ namespace F3\Admin\ViewHelpers\F;
  * @api
  * @scope prototype
  */
-class CufViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
+class CufViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
 	/**
 	 * Renders a hidden form field containing the technical identity of the given object.
 	 *
