@@ -284,6 +284,15 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 #        if(!$cache->has($identifier) && false){
             $actions = array();
             foreach($this->reflectionService->getAllImplementationClassNamesForInterface('F3\Admin\Controller\Actions\ActionInterface') as $actionClassName) {
+				$inheritingClasses = $this->reflectionService->getAllSubClassNamesForClass($actionClassName);
+				foreach($inheritingClasses as $inheritingClass){
+					$inheritedObject = new $inheritingClass($this->getAdapter(), $this->request, $this->view, $this);
+					if($inheritedObject->override($actionClassName,$being)){
+						$actionClassName = $inheritedObject;
+					}
+					unset($inheritedObject);
+				}
+				
                 #$a = $this->objectManager->create($actionClassName, $this->getAdapter(), $this->request, $this->view, $this);
                 $a = new $actionClassName($this->getAdapter(), $this->request, $this->view, $this);
                 if($a->canHandle($being, $action, $id)){
