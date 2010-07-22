@@ -83,5 +83,8 @@ abstract class AbstractAction implements ActionInterface {
 		return lcfirst(self::__toString());
 	}
 
+	public function override($class, $being){
+		return false;
+	}
 }
 ?>
