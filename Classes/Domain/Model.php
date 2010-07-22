@@ -228,6 +228,8 @@ class Model {
 			return implode(", ",$identity);
 		if($goodGuess !== null)
 			return $goodGuess;
+		
+		return "";
 	}
 
     public function getPropertyName($property = null){
