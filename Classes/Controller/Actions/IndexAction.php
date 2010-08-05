@@ -29,7 +29,21 @@ namespace F3\Admin\Controller\Actions;
  * @scope prototype
  */
 class IndexAction extends AbstractAction {
+	/**
+	 * Reflection service
+	 * @var F3\FLOW3\Reflection\ReflectionService
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 * @inject
+	 */
+	protected $reflectionService;
 
+	/**
+	 * @var \F3\FLOW3\Object\ObjectManagerInterface
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 * @inject
+	 */
+	protected $objectManager;
+	
 	/**
 	 * Function to Check if this Requested Action is supported
 	 * @author Marc Neuhaus <mneuhaus@famelo.com>
@@ -46,8 +60,12 @@ class IndexAction extends AbstractAction {
 	 * @author Marc Neuhaus <mneuhaus@famelo.com>
 	 * */
 	public function execute($being, $ids = null) {
-		
+		$widgets = array();
+		foreach($this->reflectionService->getAllImplementationClassNamesForInterface('F3\Admin\DashboardWidgets\DashboardWidgetInterface') as $className) {
+			$widgets[] = $this->objectManager->get($className);
+		}
+		$this->view->assign("widgets",$widgets);
 	}
-
+	
 }
 ?>
