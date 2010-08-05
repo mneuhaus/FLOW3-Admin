@@ -26,6 +26,7 @@ namespace F3\Admin\Controller\Actions;
  *
  * @version $Id: AbstractValidator.php 3837 2010-02-22 15:17:24Z robert $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @scope prototype
  */
 class ConfirmAction extends AbstractAction {
 
