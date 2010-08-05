@@ -73,7 +73,7 @@ class RenderViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
                 $replacements = array(
                     "@partial" => $partial,
                     "@package" => \F3\Admin\Register::get("package"),
-                    "@being" => \F3\Admin\Register::get("being"),
+                    "@being" => \F3\Admin\Core\Helper::getShortName(\F3\Admin\Register::get("being")),
                     "@action" => $partial
                 );
 
