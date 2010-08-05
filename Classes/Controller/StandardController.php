@@ -317,8 +317,8 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
         foreach($this->reflectionService->getAllImplementationClassNamesForInterface('F3\Admin\Controller\Actions\ActionInterface') as $actionClassName) {
             $actionName = \F3\Admin\Core\Helper::getShortName($actionClassName);
             if(strtolower($actionName) == strtolower($action)){
-                #return $this->objectManager->create($actionClassName, $this->getAdapter(), $this->request, $this->view, $this);
-                return new $actionClassName($this->getAdapter(), $this->request, $this->view, $this);
+                return $this->objectManager->create($actionClassName, $this->getAdapter(), $this->request, $this->view, $this);
+                #return new $actionClassName($this->getAdapter(), $this->request, $this->view, $this);
             }
 		}
         return null;
