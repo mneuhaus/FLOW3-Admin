@@ -241,6 +241,29 @@ class Model {
         }
         return false;
     }
+
+	public function toArray(){
+		$array = array();
+		$properties = get_class_vars(get_class($this));
+		foreach($properties as $property => $value){
+			$value = \F3\FLOW3\Reflection\ObjectAccess::getProperty($this,$property);
+			#if(is_object($value) && is_callable(array($value,"toArray"))){
+			#	$array[$property] = $value->toArray();
+			#}else
+			if(is_object($value) && is_callable(array($value,"__toString"))){
+				$array[$property] = strval($value);
+			}else{
+				$array[$property] = $value;
+			}
+		}
+		return $array;
+	}
+
+    public function fromArray($array){
+		foreach($array as $property => $value){
+			$this->$property = $value;
+		}
+	}
 }
 
 ?>
