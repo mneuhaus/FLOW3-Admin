@@ -102,3 +102,6 @@ div .fluid {padding:0;}
 .context { margin-top:10px; color:white; margin-right:0px; font-size:12px; }
 
 img.preview {clear:both;display:block;float:left;margin-left:15px;margin-top:10px;max-width:200px;}
+
+.widgets { margin:20px; overflow:hidden; }
+	.widget { width:400px; float:left; background:#efefef; margin-right:20px; margin-bottom:20px; padding:10px;}
