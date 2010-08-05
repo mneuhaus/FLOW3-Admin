@@ -123,6 +123,9 @@ class Property{
     public function getOptions() {
 		$options = array();
         if(isset($this->conf["optionsProvider"])){
+			if(is_array($this->conf["optionsProvider"]))
+					$this->conf["optionsProvider"] = current($this->conf["optionsProvider"]);
+			
             $provider = $this->objectManager->get(ltrim($this->conf["optionsProvider"],"\\"));
             $provider->setProperty($this);
             $options = $provider->getOptions();
