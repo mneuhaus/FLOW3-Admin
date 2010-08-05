@@ -26,11 +26,11 @@
 
 		function setup(select){
 			select.hide();
-			sortItems(select.find("option"));
+			$.fn.selectbox.sortItems(select.find("option"));
 
 			var name = select.attr("name").replace(/]/g,"").replace(/\[$/g,"").replace(/\[/g,"-");
             select.attr("id",name);
-            
+
 			var selectbox = jQuery(o.tpl.wrap);
 
 			var availableWrap = jQuery(o.tpl.availableWrap);
@@ -50,8 +50,8 @@
 				availableSelect.data("name",select.attr("name"));
 				availableWrap.append(availableSelect);
 
-			var selectAll = jQuery(o.tpl.selectAll);
-				availableWrap.append(selectAll);
+//			var selectAll = jQuery(o.tpl.selectAll);
+//				availableWrap.append(selectAll);
 
 			var toolbar = jQuery(o.tpl.toolbar);
 				selectbox.append(toolbar);
@@ -71,54 +71,39 @@
 				selectedSelect.data("name",select.attr("name"));
 				selectedWrap.append(selectedSelect);
 
-			var clearAll = jQuery(o.tpl.clearAll);
-				selectedWrap.append(clearAll);
+//			var clearAll = jQuery(o.tpl.clearAll);
+//				selectedWrap.append(clearAll);
 
 			availableSelect.append(select.find("option").clone());
 			selectedSelect.append(availableSelect.find("option:selected").removeAttr("selected"));
 
-		    jQuery(availableSelect).bind('keydown', 'right', function(){ return selectItem(availableSelect); });
-		    jQuery(selectedSelect).bind('keydown', 'left', function(){ return removeItem(selectedSelect); });
+		    jQuery(availableSelect).bind('keydown', 'right', function(){return $.fn.selectbox.selectItem(availableSelect);});
+		    jQuery(selectedSelect).bind('keydown', 'left', function(){return $.fn.selectbox.removeItem(selectedSelect);});
 
-			selectAll.click(function(){selectAllItems(availableSelect); return false;});
-			clearAll.click(function(){clearAllItems(selectedSelect); return false;});
+//			selectAll.click(function(){selectAllItems(availableSelect);return false;});
+//			clearAll.click(function(){clearAllItems(selectedSelect);return false;});
 
-			toolbar.find(".selectbox-remove").click(function(){removeItem(selectedSelect); return false;});
-			toolbar.find(".selectbox-add").click(function(){selectItem(availableSelect); return false;});
+			toolbar.find(".selectbox-remove").click(function(){$.fn.selectbox.removeItem(selectedSelect);return false;});
+			toolbar.find(".selectbox-add").click(function(){$.fn.selectbox.selectItem(availableSelect);return false;});
 
-			jQuery("#selectbox-available-"+name+" option").live("dblclick",function(){selectItem(availableSelect)});
-			jQuery("#selectbox-selected-"+name+" option").live("dblclick",function(){removeItem(selectedSelect)});
+			jQuery("#selectbox-available-"+name+" option").live("dblclick",function(){$.fn.selectbox.selectItem(availableSelect)});
+			jQuery("#selectbox-selected-"+name+" option").live("dblclick",function(){$.fn.selectbox.removeItem(selectedSelect)});
 
 			optionFilter(search,availableSelect);
 			//jQuery(search).bind('keyup', 'down', function(e){ console.log(e); availableSelect.trigger(e); return false; });
 
 			select.before(selectbox);
+
 		}
 
-		function selectItem(e){
-			var select = jQuery("#"+jQuery(e).data("ref"));
-			var target = jQuery("#selectbox-selected-"+jQuery(e).data("ref"));
-			var items = jQuery(e).find("option:selected").removeAttr("selected");
-			target.append(items);
-			pushSelection(select);
-			return false;
-		}
-
-		function removeItem(e){
-			var select = jQuery("#"+jQuery(e).data("ref"));
-			var target = jQuery("#selectbox-available-"+jQuery(e).data("ref"));
-			var items = jQuery(e).find("option:selected").removeAttr("selected");
-			target.append(items);
-			pushSelection(select);
-			return false;
-		}
 
 		function selectAllItems(e){
 			var select = jQuery("#"+jQuery(e).data("ref"));
 			var target = jQuery("#selectbox-selected-"+jQuery(e).data("ref"));
+			items.change();
 			var items = jQuery(e).find("option");
 			target.append(items);
-			pushSelection(select);
+			$.fn.selectbox.pushSelection(select);
             console.log(select,"select[name="+jQuery(e).data("name")+"]");
 			return false;
 		}
@@ -126,37 +111,11 @@
 		function clearAllItems(e){
 			var select = jQuery("#"+jQuery(e).data("ref"));
 			var target = jQuery("#selectbox-available-"+jQuery(e).data("ref"));
+			items.change();
 			var items = jQuery(e).find("option");
 			target.append(items);
-			pushSelection(select);
+			$.fn.selectbox.pushSelection(select);
 			return false;
-		}
-
-		function pushSelection(select){
-			var name = select.attr("name").replace(/]/g,"").replace(/\[$/g,"").replace(/\[/g,"-");
-			select.empty();
-
-			selectedSelect = jQuery("#selectbox-selected-"+name);
-			availableSelect = jQuery("#selectbox-available-"+name);
-
-			select.append(selectedSelect.find("option").clone().attr("selected","true"));
-
-			sortItems(selectedSelect.find("option"));
-			sortItems(availableSelect.find("option"));
-
-			availableSelect.find("option").dblclick(function(){selectItem(availableSelect)});
-			selectedSelect.find("option").dblclick(function(){removeItem(selectedSelect)});
-		}
-
-		function sortItems(e){
-			var options = e.get();
-			options.sort(function(a, b) {
-			   var compA = $(a).text().toUpperCase();
-			   var compB = $(b).text().toUpperCase();
-			   return (compA < compB) ? -1 : (compA > compB) ? 1 : 0;
-			})
-
-			jQuery.each(options, function(idx, itm) { e.parent().append(itm); });
 		}
 
 		function optionFilter(input, list){
@@ -179,7 +138,7 @@
 				var term = jQuery.trim( jQuery(input).val().toLowerCase() ), scores = [];
 				list.append( clipboard.children("option") );
 				var rows = list.children('option');
-				var cache = rows.map(function(){ return this.innerHTML.toLowerCase(); });
+				var cache = rows.map(function(){return this.innerHTML.toLowerCase();});
 
 				if ( !term ) {
 					list.append( rows );
@@ -188,7 +147,7 @@
 
 					cache.each(function(i){
 						var score = this.score(term);
-						if (score > 0) { scores.push([score, i]); }
+						if (score > 0) {scores.push([score, i]);}
 					});
 
 					jQuery.each(scores.sort(function(a, b){return b[0] - a[0];}), function(){
@@ -199,6 +158,53 @@
 		}
 
 		return this;
+	}
+	$.fn.selectbox.selectItem = function(e){
+		var select = jQuery("#"+jQuery(e).data("ref"));
+		var target = jQuery("#selectbox-selected-"+jQuery(e).data("ref"));
+		var items = jQuery(e).find("option:selected").removeAttr("selected");
+		items.change();
+		target.append(items);
+		$.fn.selectbox.pushSelection(select);
+		return false;
+	}
+
+	$.fn.selectbox.removeItem = function(e){
+		var select = jQuery("#"+jQuery(e).data("ref"));
+		var target = jQuery("#selectbox-available-"+jQuery(e).data("ref"));
+		var items = jQuery(e).find("option:selected").removeAttr("selected");
+		items.change();
+		target.append(items);
+		$.fn.selectbox.pushSelection(select);
+		return false;
+	}
+
+	$.fn.selectbox.pushSelection = function(select){
+		var name = select.attr("name").replace(/]/g,"").replace(/\[$/g,"").replace(/\[/g,"-");
+		select.empty();
+
+		selectedSelect = jQuery("#selectbox-selected-"+name);
+		availableSelect = jQuery("#selectbox-available-"+name);
+
+		select.append(selectedSelect.find("option").clone().attr("selected","true"));
+
+		$.fn.selectbox.sortItems(selectedSelect.find("option"));
+		$.fn.selectbox.sortItems(availableSelect.find("option"));
+
+		availableSelect.find("option").dblclick(function(){$.fn.selectbox.selectItem(availableSelect)});
+		selectedSelect.find("option").dblclick(function(){$.fn.selectbox.removeItem(selectedSelect)});
+	}
+
+
+	$.fn.selectbox.sortItems = function(e){
+		var options = e.get();
+		options.sort(function(a, b) {
+		   var compA = $(a).text().toUpperCase();
+		   var compB = $(b).text().toUpperCase();
+		   return (compA < compB) ? -1 : (compA > compB) ? 1 : 0;
+		})
+
+		jQuery.each(options, function(idx, itm) {e.parent().append(itm);});
 	}
 })(jQuery);
 
@@ -246,19 +252,19 @@ Note:
         override: /keypress|keydown|keyup/g,
         triggersMap: {},
 
-        specialKeys: { 27: 'esc', 9: 'tab', 32:'space', 13: 'return', 8:'backspace', 145: 'scroll',
+        specialKeys: {27: 'esc', 9: 'tab', 32:'space', 13: 'return', 8:'backspace', 145: 'scroll',
             20: 'capslock', 144: 'numlock', 19:'pause', 45:'insert', 36:'home', 46:'del',
             35:'end', 33: 'pageup', 34:'pagedown', 37:'left', 38:'up', 39:'right',40:'down',
             109: '-',
             112:'f1',113:'f2', 114:'f3', 115:'f4', 116:'f5', 117:'f6', 118:'f7', 119:'f8',
             120:'f9', 121:'f10', 122:'f11', 123:'f12', 191: '/',
- 			18: 'alt', 17: 'ctrl', 16: 'shift' },
+ 			18: 'alt', 17: 'ctrl', 16: 'shift'},
 
-        modifKeys: { 18: 'alt', 17: 'ctrl', 16: 'shift' },
+        modifKeys: {18: 'alt', 17: 'ctrl', 16: 'shift'},
 
-        shiftNums: { "`":"~", "1":"!", "2":"@", "3":"#", "4":"$", "5":"%", "6":"^", "7":"&",
+        shiftNums: {"`":"~", "1":"!", "2":"@", "3":"#", "4":"$", "5":"%", "6":"^", "7":"&",
             "8":"*", "9":"(", "0":")", "-":"_", "=":"+", ";":":", "'":"\"", ",":"<",
-            ".":">",  "/":"?",  "\\":"|" },
+            ".":">",  "/":"?",  "\\":"|"},
 
         newTrigger: function (type, combi, callback) {
             // i.e. {'keyup': {'ctrl': {cb: callback, disableInInput: false}}}
@@ -271,7 +277,7 @@ Note:
     // add firefox num pad char codes
     //if (jQuery.browser.mozilla){
     // add num pad char codes
-    hotkeys.specialKeys = jQuery.extend(hotkeys.specialKeys, { 96: '0', 97:'1', 98: '2', 99:
+    hotkeys.specialKeys = jQuery.extend(hotkeys.specialKeys, {96: '0', 97:'1', 98: '2', 99:
         '3', 100: '4', 101: '5', 102: '6', 103: '7', 104: '8', 105: '9', 106: '*',
         107: '+', 109: '-', 110: '.', 111 : '/'
         });
