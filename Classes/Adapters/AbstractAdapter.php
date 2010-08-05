@@ -135,7 +135,7 @@ abstract class AbstractAdapter implements AdapterInterface {
         $cache = $this->cacheManager->getCache('Admin_ConfigurationCache');
         $identifier = str_replace("\\","_",$being)."-getConfiguration";
 
-        if(!$cache->has($identifier)){
+        if(!$cache->has($identifier) || true){
             $configuration = array();
 			
 			if(isset($this->settings["ConfigurationProvider"])){
@@ -146,7 +146,6 @@ abstract class AbstractAdapter implements AdapterInterface {
 					$configurationProvider->injectAdapter($this);
 					$configuration = array_merge_recursive($configuration,$configurationProvider->get($being));
 				}
-				
 			}
 
 			$configuration = $this->postProcessConfiguration($configuration);
@@ -170,6 +169,8 @@ abstract class AbstractAdapter implements AdapterInterface {
                 $configuration["properties"][$property]["widget"] = $c["widget"];
             else
                 $configuration["properties"][$property]["widget"] = $this->getWidget($c["type"],"TextField");
+			if(isset($c["optionsProvider"]) && is_array($c["optionsProvider"]))
+				$configuration["properties"][$property]["optionsProvider"] = array_pop($c["optionsProvider"]);
         }
         return $configuration;
     }
