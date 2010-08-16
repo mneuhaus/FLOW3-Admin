@@ -64,11 +64,6 @@ class UpdateAction extends AbstractAction {
 	 * @author Marc Neuhaus <mneuhaus@famelo.com>
 	 * */
 	public function execute($being, $ids = null) {
-#		if($this->request->hasArgument("delete")){
-#			$arguments = $this->request->getArguments();
-#			$this->redirect('confirm',NULL,NULL,$arguments);
-#		}
-
 		if( $this->request->hasArgument("update") ) {
 			$result = $this->adapter->updateObject($being, $ids, $this->request->getArgument("item"));
 			$errors = $result["errors"];
@@ -86,9 +81,9 @@ class UpdateAction extends AbstractAction {
 #				}
 			}
 		}
-
+		
 		$object = $this->adapter->getBeing($being, $ids);
-
+		
 		$this->view->assign("being", $object);
 	}
 
