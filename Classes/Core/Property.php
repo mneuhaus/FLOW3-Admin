@@ -146,7 +146,7 @@ class Property{
 
         $properties = \get_object_vars($this);
         foreach($conf as $name => $conf){
-            if(array_key_exists($name, $properties)){
+            if(array_key_exists($name, $properties) && $conf != null){
                 $setter = "set".ucfirst($name);
                 if(is_callable(array($this,$setter))){
                     $this->$setter($conf);
