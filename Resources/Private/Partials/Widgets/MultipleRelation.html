@@ -1,0 +1,25 @@
+{namespace a=Admin\ViewHelpers}
+
+<a:widgetResources add="MultipleRelation">
+	<link href="{f:uri.resource(path: 'admin/css/jquery/jquery.selector.css', package: 'Admin')}" rel="stylesheet">
+	<script src="{f:uri.resource(path: 'admin/js/jquery.hotkeys.js', package: 'Admin')}"></script>
+	<script src="{f:uri.resource(path: 'admin/js/jquery.selectbox.js', package: 'Admin')}"></script>
+	<script type="text/javascript" charset="utf-8">
+		jQuery(document).ready(function(){
+			jQuery(".f-multiselect").selectbox();
+		});
+	</script>
+</a:widgetResources>
+
+<select name="{property.inputName}" multiple="true" class="f-multiselect" >
+    <f:for each="{property.options}" as="option">
+        <f:if condition="{option.selected}">
+            <f:then>
+                <option value="{option.id}" selected="selected">{option}</option>
+            </f:then>
+            <f:else>
+                <option value="{option.id}" >{option}</option>
+            </f:else>
+        </f:if>
+    </f:for>
+</select>

@@ -1,0 +1,59 @@
+<f:layout name="bootstrap" />
+{namespace a=Admin\ViewHelpers}
+
+<f:section name="pre-container">
+	<form method="post">
+</f:section>
+
+<f:section name="actionbar-left">
+	<form method="post">
+	<a:render partial="Toolbar" fallbacks="Partials"/>
+</f:section>
+
+<f:section name="actionbar-right">
+	<f:for each="{topBarActions}" as="action">
+		<f:link.action
+			class=" {action.class}"
+			action="{action.action}"
+			controller="{action.controller}"
+			package="{action.package}"
+			target="{action.target}"
+			arguments="{ being: objects.0.class, adapter: objects.0.adapter.class }">
+			{action}
+		</f:link.action>
+	</f:for>
+</f:section>
+
+<f:section name="content">
+		<a:render partial="Table" fallbacks="Partials"/>
+		<!--
+		<div class="dl mts">
+			<f:for each="{limits}" as="active" key="value">
+				<f:if condition="{active}" >
+					<f:then>
+						<button type="submit" name="limit" value="{value}" class="ui-button">{value}</button>
+					</f:then>
+					<f:else>
+						<button type="submit" name="limit" value="{value}" class="ui-button ui-secondary">{value}</button>
+					</f:else>
+				</f:if>
+			</f:for>
+		</div>
+		<div class="dr mts">
+			<f:for each="{pages}" as="page">
+				<f:if condition="{currentpage} == {page}" >
+					<f:then>
+						<button type="submit" name="page" value="{page}" class="ui-button">{page}</button>
+					</f:then>
+					<f:else>
+						<button type="submit" name="page" value="{page}" class="ui-button ui-secondary">{page}</button>
+					</f:else>
+				</f:if>
+			</f:for>
+		</div>
+		-->
+</f:section>
+
+<f:section name="post-container">
+	</form>
+</f:section>

@@ -1,0 +1,42 @@
+<f:layout name="bootstrap" />
+{namespace a=Admin\ViewHelpers}
+<f:section name="actionbar-left"></f:section>
+
+<f:section name="actionbar-right">
+	
+</f:section>
+<f:section name="content">
+	<div class="fluid ui-container">
+		<h3 class="ui-header mb">{meta.being.name}</h3>
+		
+		<div class="fluid mr ml mbs contain">
+			<div class="dr ml mb1">
+				<f:form method="post" action="create" name="create">
+					<f:form.hidden name="adapter" id="adapter" value="{meta.adapter.identifier}"/>
+					<f:form.hidden name="being" id="being" value="{meta.being.identifier}"/>
+					<input type="submit" name="new" value="Add {meta.being.name}" class="submit ui-button hotnav"/>
+				</f:form>
+			</div>
+		</div>
+		<div class="ml blocks">
+            <f:for each="{objects}" as="object">
+                    <div class="block">
+                        <h3 class="ui-header">
+                            {object}
+                            <div class="actions">
+                                <a:render partial="Table" fallbacks="Actions" vars="{being:object}" />
+                            </div>
+                        </h3>
+                    <f:for each="{object.properties}" as="value" key="property">
+                        <f:if condition="{value.value}">
+                        <div class="mr ml row">
+                            <label>{value.label}:</label> {value.string}<br />
+                        </div>
+                        </f:if>
+                    </f:for>
+                    </div>
+            </f:for>
+			<div class="clear mt  mb">&nbsp;</div>
+		</div>
+	</div>
+</f:section>

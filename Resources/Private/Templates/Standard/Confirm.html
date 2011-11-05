@@ -1,0 +1,58 @@
+<f:layout name="bootstrap" />
+{namespace a=Admin\ViewHelpers}
+<f:section name="actionbar-left"></f:section>
+
+<f:section name="actionbar-right">
+    <f:for each="{topBarActions}" as="action">
+        <f:link.action
+            class=" {action.class}"
+            action="{action.action}"
+            controller="{action.controller}"
+            package="{action.package}"
+            arguments="{
+                being : object.class,
+                adapter : object.adapter.class
+            }">
+            {action}
+        </f:link.action>
+    </f:for>
+</f:section>
+<f:section name="content">
+	<div class="box">
+		<h3 class="box-header">Are you sure?</h3>
+		<div>
+			<f:form method="post" action="delete" name="item">
+				<f:form.hidden name="adapter" id="adapter" value="{object.adapter.class}"/>
+				<f:form.hidden name="being" id="being" value="{object.class}"/>
+				<f:form.hidden name="id" value="{object.id}"/>
+				<ul class="ml mt">
+					<li>
+						<b>{object.name}</b>: {object}
+						<ul>
+							<a:render value="{childs}" />
+						</ul>
+					</li>
+				</ul>
+				<h3 class="ui-header mb">{meta.being.name}</h3>
+				<div class="mr ml">
+					<f:for each="{object.being.properties}" as="configuration" key="property">
+						<div class="fluid">
+							<b class="dl15">
+								{a:f.cuf(value: property, funcs: "ucfirst")}: 
+							</b>
+							{configuration.value}
+						</div>
+					</f:for>
+					<div class="clear mb">&nbsp;</div>
+				</div>
+				
+				<div class="actions">
+					<f:link.action action="list" arguments="{adapter:adapter,being:object.being}" class="btn">
+						Cancel
+					</f:link.action>
+					<input type="submit" name="confirm" value="Confirm" class="btn danger" />
+				</div>
+			</f:form>
+		</div>
+	</div>
+</f:section>

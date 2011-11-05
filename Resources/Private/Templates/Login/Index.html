@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	{namespace a=Admin\ViewHelpers}
+	
+	<meta charset="utf-8">
+	<title>{title}</title>
+
+	<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<link href="{f:uri.resource(path: 'bootstrap/bootstrap.css', package: 'Admin')}" rel="stylesheet">
+	<link href="{f:uri.resource(path: 'admin/css/mixins.css', package: 'Admin')}" rel="stylesheet">
+	<link href="{f:uri.resource(path: 'admin/css/style.css', package: 'Admin')}" rel="stylesheet">
+	<link href="{f:uri.resource(path: 'admin/css/images.css', package: 'Admin')}" rel="stylesheet">
+</head>
+
+<body>
+	
+	<div class="topbar">
+		<div class="topbar-inner">
+			<div class="container-fluid">
+				<span class="brand">{settings.PageTitle}</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="container-fluid">
+		<div class="content">
+			<div id="login" class="box">
+				<h3 class="box-header">Login</h3>
+				<f:form actionUri="/admin/login/authenticate" method="post">
+					<div class="clearfix">
+						<label for="username" >Username</label>
+						<div class="input">
+							<f:form.textbox name="TYPO3\FLOW3\Security\Authentication\Token\UsernamePassword::username" tabindex="1" />
+						</div>
+					</div>
+					<div class="clearfix">
+						<label for="password" >Password</label>
+						<div class="input">
+							<f:form.password  name="TYPO3\FLOW3\Security\Authentication\Token\UsernamePassword::password" tabindex="2" />
+						</div>
+					</div>
+					<a:flashMessages class="alert-message" />
+					<f:form.submit value="Login" class="btn"/>
+				</f:form>
+				<div class="clear"></div>
+			</div>
+		</div>
+	</div>
+	
+</body>
+</html>

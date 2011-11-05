@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>Blog, Categories, Post</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Blog, Categories, Post</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/admin/login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>F3\FLOW3\Security\Authentication\Token\UsernamePassword::username</td>
+	<td>admin</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>F3\FLOW3\Security\Authentication\Token\UsernamePassword::password</td>
+	<td>password</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@name='']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Blog</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>item[title]</td>
+	<td>My awesome Blog</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>item[description]</td>
+	<td>some descriptive Text</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>item[blurb]</td>
+	<td>some blurb</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>item-authorPicture</td>
+	<td>/Users/mneuhaus/Box/Ressources/Dummies/Persons/dummyPortrait_03.jpg</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>item[twitterUsername]</td>
+	<td>littletweet</td>
+</tr>
+<tr>
+	<td>captureEntirePageScreenshot</td>
+	<td>/Users/mneuhaus/Downloads/Base-Blog-Create.png</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>create</td>
+	<td></td>
+</tr>
+<tr>
+	<td>captureEntirePageScreenshot</td>
+	<td>/Users/mneuhaus/Downloads/Base-Blog-List.png</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Category</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>item[name]</td>
+	<td>flow3</td>
+</tr>
+<tr>
+	<td>captureEntirePageScreenshot</td>
+	<td>/Users/mneuhaus/Downloads/Base-Category-Create.png</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>create</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Create</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>item[name]</td>
+	<td>php</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>create</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Create</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>item[name]</td>
+	<td>admin</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>create</td>
+	<td></td>
+</tr>
+<tr>
+	<td>captureEntirePageScreenshot</td>
+	<td>/Users/mneuhaus/Downloads/Base-Category-List.png</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Post</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>item[title]</td>
+	<td>My First Blog Post</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>item[linkTitle]</td>
+	<td>first-post</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>item-date</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=14</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>item[author]</td>
+	<td>Marc Neuhaus</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>item[content]</td>
+	<td>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>item[image][title]</td>
+	<td>some kitten</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>item-originalResource</td>
+	<td>/Users/mneuhaus/Box/Ressources/Dummies/Funny/Cat1.JPG</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>item[tags][0][name]</td>
+	<td>flow3</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>item[tags][1][name]</td>
+	<td>php</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>item[tags][2][name]</td>
+	<td>dummy</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>item[category]</td>
+	<td>label=flow3</td>
+</tr>
+<tr>
+	<td>captureEntirePageScreenshot</td>
+	<td>/Users/mneuhaus/Downloads/Base-Post-Create.png</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>create</td>
+	<td></td>
+</tr>
+<tr>
+	<td>captureEntirePageScreenshot</td>
+	<td>/Users/mneuhaus/Downloads/Base-Post-List.png</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=BlogView</td>
+	<td></td>
+</tr>
+<tr>
+	<td>captureEntirePageScreenshot</td>
+	<td>/Users/mneuhaus/Downloads/Base-Blog-View.png</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=My First Blog Post</td>
+	<td></td>
+</tr>
+<tr>
+	<td>captureEntirePageScreenshot</td>
+	<td>/Users/mneuhaus/Downloads/Base-Post-View.png</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

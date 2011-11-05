@@ -1,0 +1,19 @@
+<h5 class="well-header">Recent Actions</h5>
+<table class="zebra-striped condensed-table cozy">
+	<thead>
+	<tr>
+		<th>Type</th>
+		<th>Action</th>
+		<th>User</th>
+	</tr>
+	</thead>
+	<f:for each="{logs}" as="log">
+		<tr>
+			<td>{log.being}</td>
+			<td>
+				<span class="badge">{log.action}</span>
+			</td>
+			<td>{log.user}</td>
+		</tr>
+	</f:for>
+</table>

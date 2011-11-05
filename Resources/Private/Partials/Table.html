@@ -1,0 +1,43 @@
+{namespace a=Admin\ViewHelpers}
+<table class="zebra-striped condensed-table">
+	<thead>
+		<tr>
+			<th class="tiny">
+				<input type="checkbox" class="select-all" />
+			</th>
+			<f:for each="{objects}" as="object" key="id" iteration="loop">
+				<f:if condition="{loop.isFirst}">
+					<f:for each="{object.properties}" as="value" key="property">
+						<th>{value.label}</th>
+					</f:for>
+				</f:if>
+			</f:for>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<f:for each="{objects}" as="object">
+		<tr>
+			<td class="tiny">
+				<input type="checkbox" name="bulkItems[]" value="{object.id}" class="select-row"/>
+			</td>
+			<f:for each="{object.properties}" as="value" key="property">
+				<td>{value.string}</td>
+			</f:for>
+			<td class="table-actions">
+				<f:for each="{listActions}" as="action">
+					<f:link.action
+						class=" tiny {action.class}"
+						action="{action.action}"
+						controller="{action.controller}"
+						package="{action.package}"
+						target="{action.target}"
+						arguments="{object.arguments}">
+						{action}
+					</f:link.action>
+				</f:for>
+			</td>
+		</tr>
+	</f:for>
+</tbody>
+</table>

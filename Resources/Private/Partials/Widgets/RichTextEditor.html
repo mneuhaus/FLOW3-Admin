@@ -1,0 +1,23 @@
+{namespace a=Admin\ViewHelpers}
+
+<a:widgetResources add="MultipleRelation">
+	<script src="{f:uri.resource(path: 'admin/js/ckeditor/ckeditor.js', package: 'Admin')}"></script>
+	<script src="{f:uri.resource(path: 'admin/js/ckeditor/adapters/jquery.js', package: 'Admin')}"></script>
+	<script type="text/javascript" charset="utf-8">
+		jQuery(document).ready(function(){
+			if(typeof(jQuery().ckeditor) != "undefined"){
+				var config = {
+					toolbar:[
+						['Bold','Italic','Underline','Strike','-','Subscript','Superscript'],
+						['NumberedList', 'BulletedList', '-', 'Link', 'Unlink'],
+						['Source'],
+					],
+					width: 600
+				};
+				$('.f-fullrte').ckeditor(config);
+			}
+		});
+	</script>
+</a:widgetResources>
+
+<f:form.textarea name="{property.inputName}" id="item-{property.name}" value="{property.string}" rows="4" cols="40" class="{property.class} f-fullrte"/>

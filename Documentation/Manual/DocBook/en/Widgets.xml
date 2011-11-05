@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="fluid.usermanual"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xl="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:xhtml="http://www.w3.org/1999/xhtml"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:ns="http://docbook.org/ns/docbook"
+         xmlns:mathml="http://www.w3.org/1998/Math/MathML">
+  <title>Widgets</title>
+
+  <sect1>
+    <title>Available Properties in a Widget Template</title>
+
+    <para>Inside the Widget Partial there is one essential Variable available
+    called {property} This Variable Provides the </para>
+
+    <para><table>
+        <title></title>
+
+        <tgroup cols="2">
+          <thead>
+            <row>
+              <entry align="center">Property</entry>
+
+              <entry align="center"></entry>
+            </row>
+          </thead>
+
+          <tbody>
+            <row>
+              <entry>{property.adapter}</entry>
+
+              <entry>Classname of the Current Adapter</entry>
+            </row>
+
+            <row>
+              <entry>{property.widget}</entry>
+
+              <entry>Name of the Widget</entry>
+            </row>
+
+            <row>
+              <entry>{property.value}</entry>
+
+              <entry>Unprocessed Value of the Property, this might be almost
+              Anything depending on the Data in the Object. Handle this with
+              care, because it might cause Rendering errors. In most cases you
+              should simply use the {property.string} option to get an String
+              representation of the Value</entry>
+            </row>
+
+            <row>
+              <entry>{property.infotext}</entry>
+
+              <entry>Informational Text for the Property</entry>
+            </row>
+
+            <row>
+              <entry>{property.label}</entry>
+
+              <entry>label for the Property</entry>
+            </row>
+
+            <row>
+              <entry>{property.string}</entry>
+
+              <entry>String representation of the Propertyvalue</entry>
+            </row>
+
+            <row>
+              <entry>{property.inputName}</entry>
+
+              <entry>Appropriate name for an input name for the Property
+              including prefix ( item[propertyname]</entry>
+            </row>
+
+            <row>
+              <entry>{property.type}</entry>
+
+              <entry>DataType of the Property</entry>
+            </row>
+
+            <row>
+              <entry>{property.name</entry>
+
+              <entry>Name of the Property</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table></para>
+  </sect1>
+
+  <sect1>
+    <title>Replace the Default Widget for a Specific Data Type</title>
+
+    <para>Widgets are assigned to DataTypes by a Fallback System configured in
+    the Settings.yaml</para>
+
+    <para><programlisting>PHPCR:
+  Widgets:
+    Mapping:
+      # Pattern (Text or Regex)          Widget
+
+      string:                            Textfield
+      readonly:                          TextfieldReadonly
+      integer:                           Spinner
+      float:                             Textfield
+      boolean:                           Boolean
+      \F3\FLOW3\Resource\Resource:       Upload
+      \DateTime:                         DateTime
+      ^\\*F3\\[A-Za-z]+\\Domain\\Model\\[A-Za-z]+$: SingleRelation
+      ^\\*\SplObjectStorage\&lt;\\*F3\\[A-Za-z]+\\Domain\\Model\\[A-za-z]+&gt;$: MultipleRelation
+      ^\\*\SplObjectStorage\&lt;\\*F3\\[A-Za-z]+\\Security\\[A-za-z]+&gt;$: MultipleRelation</programlisting>On
+    The Left side you have your Classes or Names of the DataTypes and on the
+    Right Side is the repsonsible Widget to use. You can override any of these
+    Widgets in your Production/Development Settings.yaml. Aside from Classes
+    or DataType Names you can specify an Regular Expression to Match more
+    Complex things, like in this Case Entity Models.</para>
+  </sect1>
+</chapter>

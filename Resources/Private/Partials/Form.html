@@ -1,0 +1,44 @@
+{namespace a=Admin\ViewHelpers}
+
+<f:for each="{being.sets}" as="properties" key="set">
+	<fieldset>
+		<f:if condition="{set}">
+			<legend>{set}</legend>
+		</f:if>
+		<f:for each="{properties}" as="property">
+			<div class="clearfix">
+				<label>{property.label}: </label>
+				
+				<f:if condition="{property.error}">
+					<f:then><div class="input error"></f:then>
+					<f:else><div class="input"></f:else>
+				</f:if>
+					<f:for each="{being.hiddenProperties}" as="value" key="name" >
+						<f:form.hidden name="{name}" value="{value}"/>
+					</f:for>
+					<f:if condition="{property.inline}">
+						<f:then>
+							<f:for each="{property.children}" as="child">
+								<a:render partial="Form" fallbacks="Partials" vars="{being:child}" />
+							</f:for>
+						</f:then>
+						<f:else>
+							<a:render partial="{property.widget}" fallbacks="Widgets" vars="{property:property}"/>
+							
+							<f:if condition="{property.infotext}">
+								<div class="help-block">{property.infotext}</div>
+							</f:if>
+							<f:if condition="{property.error}">
+								<div class="help-block">
+									<f:for each="{property.error}" as="error">
+										<a:render value="{error}" /><br />
+									</f:for>
+								</div>
+							</f:if>
+						</f:else>
+					</f:if>
+				</div>
+			</div>
+		</f:for>
+	</fieldset>
+</f:for>

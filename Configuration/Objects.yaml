@@ -1,0 +1,2 @@
+#TYPO3\FLOW3\MVC\RequestHandlerResolver:
+#  className: Admin\RequestHandlerResolver

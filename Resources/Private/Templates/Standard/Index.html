@@ -1,0 +1,17 @@
+<f:layout name="bootstrap" />
+
+{namespace a=Admin\ViewHelpers}
+<f:section name="actionbar-left"></f:section>
+
+<f:section name="actionbar-right">
+	
+</f:section>
+<f:section name="content">
+	<div class="widgets row">
+		<a:widgets as="widget">
+			<div class="well span4">
+				{widget}
+			</div>
+		</a:widgets>
+	</div>
+</f:section>

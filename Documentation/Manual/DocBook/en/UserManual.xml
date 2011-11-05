@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="fluid.usermanual"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xl="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:xhtml="http://www.w3.org/1999/xhtml"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:ns="http://docbook.org/ns/docbook"
+         xmlns:mathml="http://www.w3.org/1998/Math/MathML">
+  <title>User Manual</title>
+
+  <section>
+    <title>Basic Usage</title>
+
+    <para>There are 2 Ways to Configure the Admin Interface:</para>
+
+    <orderedlist>
+      <listitem>
+        <para>Settings.yaml</para>
+      </listitem>
+
+      <listitem>
+        <para>Class Reflections inside the Models</para>
+      </listitem>
+    </orderedlist>
+
+    <para><note>
+        <para>The Settings.yaml overrules the Class Reflections in order to
+        make it Possible to change the Behaviour of 3rd Party Packages without
+        messing with external Code.</para>
+      </note></para>
+
+    <section>
+      <title>Settings.yaml</title>
+
+      <para><programlisting annotations="hello world">PHPCR:<annotation>
+            <para></para>
+          </annotation>
+  Beings:
+    F3\Blog\Domain\Model\Post:
+      autoadmin: true
+      properties:
+        content:
+          widget: TextArea</programlisting>This Example Activates the Post
+      model of the Blog Example (autoadmin:true) and Changes the Widget for
+      the Content Property from a simple Textfield to a Textarea</para>
+    </section>
+
+    <section>
+      <title>Class Reflections</title>
+
+      <para><programlisting>/**
+ * A blog post
+ * ...
+ * @Admin\Annotations\Active
+ */
+class Post {
+    /**
+     * @var string
+     * @Admin\Annotations\Widget TextArea
+     */
+    protected $content;
+}</programlisting>This Example Does the exact same thing as the Settings.yaml
+      Example but this time inside the Post.php file with the Tag @Admin\Annotations\Active
+      and @Admin\Annotations\Widget TextArea </para>
+    </section>
+  </section>
+</chapter>

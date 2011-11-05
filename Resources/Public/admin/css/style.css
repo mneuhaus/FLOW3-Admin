@@ -1,0 +1,46 @@
+html, body, body>form, .container-fluid { height:100%; }
+body {
+	padding-top: 40px;
+}
+
+.zebra-striped { border-bottom: 1px solid #DDD; }
+
+.actionbar{
+	overflow:hidden;
+	border-top:1px solid #E5E5E5; 
+	border-bottom:1px solid #E5E5E5; 
+	padding:10px 20px;
+	margin:-20px -20px 10px;
+}
+
+
+.condensed-table .table-actions { text-align:right; padding-bottom:0; }
+.table-actions .btn{ margin-bottom:5px; }
+
+.topbar { color:#808080; }
+
+.container-fluid > .sidebar { background:#E6E6E6; position:fixed; top:40px; left:0; padding-left:20px; height:100%; width: 180px; }
+	.sidebar h5{ margin-top:5px; margin-bottom:0px; line-height:32px; }
+	.sidebar ul { border-top:1px solid #D9D9D9; margin:0 0 0 -20px; }
+	.sidebar ul li { border-bottom:1px solid #D9D9D9; list-style-type:none; }
+	.sidebar ul a { color:#000; padding:4px 5px 4px 30px; font-size:14px; display:block; text-decoration:none; }
+
+
+.container-fluid > .content { margin-top:20px; margin-left: 200px; padding-bottom:20px;}
+
+#login { width:340px; position:absolute; left:50%; top:30%; margin-left:-180px; }
+	#login form { margin-top:20px; }
+	#login label { width:80px; }
+	#login .input { margin-left:100px }
+	#login .btn { margin:0 0 18px 260px; }
+	
+.box .actions { margin-bottom:0px; padding:8px 20px 10px 150px; }
+.box form { margin-bottom:0; margin-top:20px; }
+.box .alert-message { margin:0 20px 10px; }
+
+.f-fullrte { width:400px; }
+
+.dump {
+	margin-left:220px !important;
+	margin-right:20px !important;
+}
