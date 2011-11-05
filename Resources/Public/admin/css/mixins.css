@@ -66,3 +66,77 @@
 .tiny { padding: 1px 8px 1px; }
 th.tiny, td.tiny{ width:20px; }
 th.tiny input, td.tiny input{ margin-left:5px; }
+
+.pagination a {
+	
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.37);
+	-moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.37);
+	-webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.37);
+	background: #838A90;
+	background: -webkit-gradient(linear, left top, left bottom, from(#838A90), to(#414549));
+	background: -moz-linear-gradient(-90deg, #838A90, #414549);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#838a90, endColorstr=#414549);
+	-ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#838a90, endColorstr=#414549);
+	-webkit-border-radius: 200px;
+	-moz-border-radius: 200px;
+	border-radius: 200px;
+	text-shadow: black 0 1px 0;
+	text-decoration: none;
+	margin-right: 3px;
+	font-weight: bold;
+	font-size: 1.0em;
+	cursor: pointer;
+	padding: .6em 1.4em .5em 1.3em;
+	border: none;
+	background: #F9F9F9;
+	background: -webkit-gradient(linear, left top, left bottom, from(#F9F9F9), to(#DDDBDB));
+	background: -moz-linear-gradient(-90deg, #F9F9F9, #DDDBDB);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#f9f9f9, endColorstr=#dddbdb);
+	-ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#f9f9f9, endColorstr=#dddbdb);
+	text-shadow: white 0 1px 0;
+	color: #777;
+	
+	-webkit-border-radius: 0px;
+	-moz-border-radius: 0px;
+	border-radius: 0px;
+	margin-right: 0px;
+	padding: 2px 8px;
+	line-height:18px;
+}
+
+.pagination a:hover{
+	color: #333;
+	box-shadow: 0 1px 3px #888888;
+	-moz-box-shadow: 0 1px 3px #888888;
+	-webkit-box-shadow: 0 1px 3px #888888;
+}
+
+.pagination .active a{
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.37);
+	-moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.37);
+	-webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.37);
+	background: #838A90;
+	background: -webkit-gradient(linear, left top, left bottom, from(#838A90), to(#414549));
+	background: -moz-linear-gradient(-90deg, #838A90, #414549);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#838a90, endColorstr=#414549);
+	-ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#838a90, endColorstr=#414549);
+	-webkit-border-radius: 200px;
+	-moz-border-radius: 200px;
+	border-radius: 200px;
+	text-shadow: black 0 1px 0;
+	text-decoration: none;
+	margin-right: 3px;
+	font-weight: bold;
+	font-size: 1.0em;
+	cursor: pointer;
+	padding: .6em 1.4em .5em 1.3em;
+	border: none;
+	color: #EFEFEF;
+	
+	-webkit-border-radius: 0px;
+	-moz-border-radius: 0px;
+	border-radius: 0px;
+	margin-right: 0px;
+	padding: 2px 8px;
+	line-height:18px;
+}
