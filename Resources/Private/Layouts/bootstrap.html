@@ -24,9 +24,9 @@
 	<f:render section='pre-container' optional="true">
 	</f:render>
 	
-	<div class="topbar">
-		<div class="topbar-inner">
-			<div class="container-fluid">
+	<div class="navbar navbar-fixed">
+		<div class="navbar-inner">
+			<div class="fluid-container">
 				<a class="brand" href="/admin/">{settings.PageTitle}</a>
 				<!-- <ul class="nav">
 					<li class="active"><a href="#">Home</a></li>
@@ -40,10 +40,11 @@
 					| <f:link.action action="logout" controller="Login">Logout</f:link.action>
 				</p>
 			</div>
+			<div class="clearfix"></div>
 		</div>
 	</div>
 
-	<div class="container-fluid">
+	<div class="fluid-container">
 		
 		<div class="sidebar">
 			<h5>Overview</h5>

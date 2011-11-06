@@ -1,5 +1,5 @@
 /* ========================================================
- * bootstrap-tabs.js v1.4.0
+ * bootstrap-tabs.js v2.0.0
  * http://twitter.github.com/bootstrap/javascript.html#tabs
  * ========================================================
  * Copyright 2011 Twitter, Inc.
@@ -20,8 +20,6 @@
 
 !function( $ ){
 
-  "use strict"
-
   function activate ( element, container ) {
     container
       .find('> .active')
@@ -41,7 +39,6 @@
       , $ul = $this.closest('ul:not(.dropdown-menu)')
       , href = $this.attr('href')
       , previous
-      , $href
 
     if ( /^#\w+/.test(href) ) {
       e.preventDefault()
@@ -67,14 +64,8 @@
  /* TABS/PILLS PLUGIN DEFINITION
   * ============================ */
 
-  $.fn.tabs = $.fn.pills = function ( selector ) {
-    return this.each(function () {
-      $(this).delegate(selector || '.tabs li > a, .pills > li > a', 'click', tab)
-    })
-  }
-
-  $(document).ready(function () {
-    $('body').tabs('ul[data-tabs] li > a, ul[data-pills] > li > a')
+  $(function () {
+    $('body').delegate('ul[data-tabs] > li > a, ul[data-pills] > li > a', 'click', tab)
   })
 
 }( window.jQuery || window.ender );

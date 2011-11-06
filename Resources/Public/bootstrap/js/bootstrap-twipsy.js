@@ -1,5 +1,5 @@
 /* ==========================================================
- * bootstrap-twipsy.js v1.4.0
+ * bootstrap-twipsy.js v2.0.0
  * http://twitter.github.com/bootstrap/javascript.html#twipsy
  * Adapted from the original jQuery.tipsy by Jason Frame
  * ==========================================================
@@ -21,37 +21,6 @@
 
 !function( $ ) {
 
-  "use strict"
-
- /* CSS TRANSITION SUPPORT (https://gist.github.com/373874)
-  * ======================================================= */
-
-  var transitionEnd
-
-  $(document).ready(function () {
-
-    $.support.transition = (function () {
-      var thisBody = document.body || document.documentElement
-        , thisStyle = thisBody.style
-        , support = thisStyle.transition !== undefined || thisStyle.WebkitTransition !== undefined || thisStyle.MozTransition !== undefined || thisStyle.MsTransition !== undefined || thisStyle.OTransition !== undefined
-      return support
-    })()
-
-    // set CSS transition event type
-    if ( $.support.transition ) {
-      transitionEnd = "TransitionEnd"
-      if ( $.browser.webkit ) {
-      	transitionEnd = "webkitTransitionEnd"
-      } else if ( $.browser.mozilla ) {
-      	transitionEnd = "transitionend"
-      } else if ( $.browser.opera ) {
-      	transitionEnd = "oTransitionEnd"
-      }
-    }
-
-  })
-
-
  /* TWIPSY PUBLIC CLASS DEFINITION
   * ============================== */
 
@@ -72,7 +41,7 @@
         , $tip
         , tp
 
-      if (this.hasContent() && this.enabled) {
+      if (this.getTitle() && this.enabled) {
         $tip = this.tip()
         this.setContent()
 
@@ -92,8 +61,7 @@
 
         actualWidth = $tip[0].offsetWidth
         actualHeight = $tip[0].offsetHeight
-
-        placement = maybeCall(this.options.placement, this, [ $tip[0], this.$element[0] ])
+        placement = _.maybeCall(this.options.placement, this.$element[0])
 
         switch (placement) {
           case 'below':
@@ -134,7 +102,7 @@
       }
 
       $.support.transition && this.$tip.hasClass('fade') ?
-        $tip.bind(transitionEnd, removeElement) :
+        $tip.bind($.support.transition.end, removeElement) :
         removeElement()
     }
 
@@ -143,10 +111,6 @@
       if ($e.attr('title') || typeof($e.attr('data-original-title')) != 'string') {
         $e.attr('data-original-title', $e.attr('title') || '').removeAttr('title')
       }
-    }
-
-  , hasContent: function () {
-      return this.getTitle()
     }
 
   , getTitle: function() {
@@ -169,7 +133,7 @@
 
   , tip: function() {
       if (!this.$tip) {
-        this.$tip = $('<div class="twipsy" />').html(this.options.template)
+        this.$tip = $('<div class="twipsy" />').html('<div class="twipsy-arrow"></div><div class="twipsy-inner"></div>')
       }
       return this.$tip
     }
@@ -200,9 +164,14 @@
  /* TWIPSY PRIVATE METHODS
   * ====================== */
 
-   function maybeCall ( thing, ctx, args ) {
-     return typeof thing == 'function' ? thing.apply(ctx, args) : thing
+   var _ = {
+
+     maybeCall: function ( thing, ctx ) {
+       return (typeof thing == 'function') ? (thing.call(ctx)) : thing
+     }
+
    }
+
 
  /* TWIPSY PLUGIN DEFINITION
   * ======================== */
@@ -300,11 +269,10 @@
   , offset: 0
   , title: 'title'
   , trigger: 'hover'
-  , template: '<div class="twipsy-arrow"></div><div class="twipsy-inner"></div>'
   }
 
   $.fn.twipsy.elementOptions = function(ele, options) {
-    return $.extend({}, options, $(ele).data())
+    return $.metadata ? $.extend({}, options, $(ele).metadata()) : options
   }
 
 }( window.jQuery || window.ender );

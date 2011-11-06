@@ -1,9 +1,3 @@
-.badge { background: #CACACA; color: #404040; text-transform: uppercase; letter-spacing: 0.15em; padding: 3px 5px 2px 5px; font-size: 0.8em; }
-	.badge.error { color: white; background-color: #c43c35; }
-	.badge.warning { color: #404040; background-color: #EEDC94; }
-	.badge.info { color: white; background-color: #339BB9; }
-	.badge.success { color: white; background-color: #57A957; }
-
 .box{
 	background:#fff;
     border:1px solid #C0C0C0;
