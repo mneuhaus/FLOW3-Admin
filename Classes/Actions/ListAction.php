@@ -50,28 +50,20 @@ class ListAction extends \Admin\Core\Actions\AbstractAction {
 	 * @author Marc Neuhaus <mneuhaus@famelo.com>
 	 * */
 	public function execute($being, $ids = null) {
-		$actions = $this->controller->getActions("bulk", $being, true);
-		$this->view->assign("actions", $actions);
+		$this->being = $being;
 		
-		if( $this->request->hasArgument("bulk") ) {
-			$bulkAction = $this->request->getArgument("bulkAction");
-			if( isset($actions[$bulkAction]) ) {
-				$action = $actions[$bulkAction];
-				$items = $this->request->getArgument("bulkItems");
-				$action->execute($being, $items);
-			}
-			$arguments = array("being" => $being, "adapter" => get_class($this->adapter));
-			$this->controller->redirect("list", NULL, NULL, $arguments);
-		}
+		$this->handleBulkActions();
 		
-		if( $this->request->hasArgument("filter") ) {
-			$filters = $this->request->getArgument("filters");
-			$beings = $this->adapter->getBeings($being, $filters);
-			$this->view->assign("filters", $this->adapter->getFilter($being, $filters));
-		}else {
-			$beings = $this->adapter->getBeings($being);
-			$this->view->assign("filters", $this->adapter->getFilter($being));
-		}
+		$this->adapter->initQuery($being);
+		
+		$this->total = $this->adapter->getTotal($being);
+		$this->view->assign("total", $this->total);
+		
+		$this->handleLimits();
+		$this->handlePagination();
+		$this->handleFilters();
+		
+		$beings = $this->adapter->getBeings($this->being);
 		
 		$this->view->assign("objects", $beings);
 		
@@ -84,6 +76,77 @@ class ListAction extends \Admin\Core\Actions\AbstractAction {
 		$listActions = $this->controller->getActions("list", $being, true);
 		$this->view->assign('listActions', $listActions);
 	}
+	
+	public function handleBulkActions(){
+		$actions = $this->controller->getActions("bulk", $this->being, true);
+		$this->view->assign("actions", $actions);
+		
+		if( $this->request->hasArgument("bulk") ) {
+			$bulkAction = $this->request->getArgument("bulkAction");
+			if( isset($actions[$bulkAction]) ) {
+				$action = $actions[$bulkAction];
+				$items = $this->request->getArgument("bulkItems");
+				$action->execute($this->being, $items);
+			}
+			$arguments = array("being" => $this->being, "adapter" => get_class($this->adapter));
+			$this->controller->redirect("list", NULL, NULL, $arguments);
+		}
+	}
 
+	public function handleLimits(){
+		$limits = array("10" => true, "20" => false, "100" => false, "1000" => false, "10000" => false);
+		
+		if($this->request->hasArgument("limit"))
+			$this->limit = $this->request->getArgument("limit");
+		else
+			$this->limit = key($limits);
+		
+		foreach ($limits as $key => $value) {
+			$limits[$key] = ($this->limit == $key);
+			if(intval($key) >= intval($this->total)) unset($limits[$key]);
+		}
+		
+		$this->view->assign("limits", $limits);
+		$this->adapter->applyLimit($this->limit);
+	}
+	
+	public function handlePagination(){
+		$currentPage = 1;
+		
+		if( $this->request->hasArgument("page") )
+			$currentPage = $this->request->getArgument("page");
+		
+		$pages = array();
+		for($i=0; $i < ($this->total / $this->limit); $i++) { 
+			$pages[] = $i + 1;
+		}
+		
+		$offset = ($currentPage - 1) * $this->limit;
+		$this->adapter->applyOffset($offset);
+		$this->view->assign("offset", $offset);
+		
+		
+		if(count($pages) > 1){
+			$this->view->assign("pages", $pages);
+			
+			$this->view->assign("currentpage", $currentPage);
+		
+			if($currentPage < count($pages))
+				$this->view->assign("nextpage", $currentPage + 1);
+			
+			if($currentPage > 1)
+				$this->view->assign("prevpage", $currentPage - 1);
+		}
+	}
+	
+	public function handleFilters(){
+		if( $this->request->hasArgument("filter") ) {
+			$filters = $this->request->getArgument("filters");
+			$this->adapter->applyFilters($filters);
+			$this->view->assign("filters", $this->adapter->getFilter($this->being, $filters));
+		}else {
+			$this->view->assign("filters", $this->adapter->getFilter($this->being));
+		}
+	}
 }
 ?>

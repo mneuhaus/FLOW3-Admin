@@ -39,14 +39,30 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 	 */
 	protected $persistenceManager;
 	
+	public function applyLimit($limit){
+		$this->query->setLimit($limit);
+	}
+	
+	public function applyOffset($offset){
+		$this->query->setOffset($offset);
+	}
+	
+	public function getName($being) {
+		return ucfirst($being);
+	}
+	
 	public function init() {
 		$this->settings = $this->helper->getSettings("Doctrine");
 		parent::init();
 		$this->fmc = $this->objectManager->get('TYPO3\FLOW3\MVC\FlashMessageContainer');
 	}
 	
-	public function getName($being) {
-		return ucfirst($being);
+	public function initQuery($being){
+		$repository = str_replace("Domain\\Model", "Domain\\Repository", $being) . "Repository";
+		if(\class_exists($repository)){
+			$repositoryObject = $this->objectManager->get($repository);
+			$this->query = $repositoryObject->createQuery();
+		}
 	}
 	
 	public function postProcessConfiguration($configuration) {
@@ -110,20 +126,15 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 	}
 
 	public function getObjects($being) {
-		$repository = str_replace("Domain\\Model", "Domain\\Repository", $being) . "Repository";
 		$configuration = $this->getConfiguration($being);
 		$objects = array();
-		if(\class_exists($repository)){
-			$repositoryObject = $this->objectManager->get($repository);
-			$query = $repositoryObject->createQuery();
+		if(isset($this->query)){
 			if(isset($configuration["class"]["admin\annotations\orderby"])){
-				$query->setOrderings(array(
+				$this->query->setOrderings(array(
 					current($configuration["class"]["admin\annotations\orderby"]) => 'ASC'
 				));
 			}
-			$objects = $query->execute();
-		}else{
-			#$objects = array($this->getObject($being));
+			$objects = $this->query->execute();
 		}
 		return $objects;
 	}
@@ -134,6 +145,11 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 		}
 		return null;
 	}
+	
+	public function getTotal($being){
+		return $this->query->count();
+	}
+	
 
 	public function createObject($being, $data) {
 		$configuration = $this->getConfiguration($being);

@@ -6,7 +6,9 @@
 
 
 -
-  name: 'Home'
-  uriPattern: 'admin/'
+  name: 'Admin actions 1'
+  uriPattern: 'admin/{@action}'
   defaults:
-    '@package': 'Admin'
+    '@package':    'Admin'
+    '@controller': 'Standard'
+    '@format':     'html'

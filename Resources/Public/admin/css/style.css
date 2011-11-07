@@ -30,12 +30,12 @@ body {
 
 #login { width:340px; position:absolute; left:50%; top:30%; margin-left:-180px; }
 	#login form { margin-top:20px; }
-	#login label { width:80px; }
-	#login .input { margin-left:100px }
-	#login .btn { margin:0 0 18px 260px; }
+	#login label { width:70px; }
+	#login .controls { margin-left:80px }
+	#login .btn { margin:0 0 18px 240px; }
 	
 .box .actions { margin-bottom:0px; padding:8px 20px 10px 150px; }
-.box form { margin-bottom:0; margin-top:20px; }
+.box form { margin: 20px 20px 0; }
 .box .alert-message { margin:0 20px 10px; }
 
 .f-fullrte { width:400px; }
@@ -43,4 +43,8 @@ body {
 .dump {
 	margin-left:220px !important;
 	margin-right:20px !important;
+}
+
+.pagination{
+	margin: 0 0 10px;
 }

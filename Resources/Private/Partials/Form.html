@@ -4,14 +4,15 @@
 	<fieldset>
 		<f:if condition="{set}">
 			<legend>{set}</legend>
+			<br />
 		</f:if>
 		<f:for each="{properties}" as="property">
-			<div class="clearfix">
-				<label>{property.label}: </label>
+			<div class="control-group">
+				<label class="control-label">{property.label}: </label>
 				
 				<f:if condition="{property.error}">
-					<f:then><div class="input error"></f:then>
-					<f:else><div class="input"></f:else>
+					<f:then><div class="controls error"></f:then>
+					<f:else><div class="controls"></f:else>
 				</f:if>
 					<f:for each="{being.hiddenProperties}" as="value" key="name" >
 						<f:form.hidden name="{name}" value="{value}"/>

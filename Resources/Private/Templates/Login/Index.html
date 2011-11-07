@@ -19,28 +19,28 @@
 
 <body>
 	
-	<div class="topbar">
-		<div class="topbar-inner">
-			<div class="container-fluid">
+	<div class="navbar navbar-fixed">
+		<div class="navbar-inner">
+			<div class="fluid-container">
 				<span class="brand">{settings.PageTitle}</a>
 			</div>
 		</div>
 	</div>
 
-	<div class="container-fluid">
+	<div class="fluid-container">
 		<div class="content">
 			<div id="login" class="box">
 				<h3 class="box-header">Login</h3>
-				<f:form actionUri="/admin/login/authenticate" method="post">
-					<div class="clearfix">
+				<f:form actionUri="/admin/login/authenticate" method="post" class="form-horizontal">
+					<div class="control-group">
 						<label for="username" >Username</label>
-						<div class="input">
+						<div class="controls">
 							<f:form.textbox name="TYPO3\FLOW3\Security\Authentication\Token\UsernamePassword::username" tabindex="1" />
 						</div>
 					</div>
-					<div class="clearfix">
+					<div class="control-group">
 						<label for="password" >Password</label>
-						<div class="input">
+						<div class="controls">
 							<f:form.password  name="TYPO3\FLOW3\Security\Authentication\Token\UsernamePassword::password" tabindex="2" />
 						</div>
 					</div>

@@ -26,32 +26,30 @@
 
 <f:section name="content">
 		<a:render partial="Table" fallbacks="Partials"/>
-		<!--
-		<div class="dl mts">
+		<div class="pagination pull-left">
+			<ul>
 			<f:for each="{limits}" as="active" key="value">
-				<f:if condition="{active}" >
-					<f:then>
-						<button type="submit" name="limit" value="{value}" class="ui-button">{value}</button>
-					</f:then>
-					<f:else>
-						<button type="submit" name="limit" value="{value}" class="ui-button ui-secondary">{value}</button>
-					</f:else>
-				</f:if>
+				<f:if condition="{active}" ><f:then><li class="active"></f:then><f:else><li></f:else></f:if>	
+					<f:link.action action="list" addQueryString="true" arguments="{limit: value}">{value}</f:link.action>
+				</li>
 			</f:for>
+			</ul>
 		</div>
-		<div class="dr mts">
+		<div class="pagination pull-right">
+			<ul>
+			<f:if condition="{prevpage}">
+				<li class="prev"><f:link.action action="list" addQueryString="true" arguments="{page: prevpage}">prev</f:link.action></li>
+			</f:if>
 			<f:for each="{pages}" as="page">
-				<f:if condition="{currentpage} == {page}" >
-					<f:then>
-						<button type="submit" name="page" value="{page}" class="ui-button">{page}</button>
-					</f:then>
-					<f:else>
-						<button type="submit" name="page" value="{page}" class="ui-button ui-secondary">{page}</button>
-					</f:else>
-				</f:if>
+				<f:if condition="{currentpage} == {page}" ><f:then><li class="active"></f:then><f:else><li></f:else></f:if>
+					<f:link.action action="list" addQueryString="true" arguments="{page: page}">{page}</f:link.action>
+				</li>
 			</f:for>
+			<f:if condition="{nextpage}">
+				<li class="next"><f:link.action action="list" addQueryString="true" arguments="{page: nextpage}">next</f:link.action></li>
+			</f:if>
+			</ul>
 		</div>
-		-->
 </f:section>
 
 <f:section name="post-container">

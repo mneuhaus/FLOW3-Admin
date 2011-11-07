@@ -59,7 +59,7 @@ abstract class AbstractConfigurationProvider implements ConfigurationProviderInt
 	 */
 	protected $adapter;
 
-	public function injectAdapter($adapter){
+	public function setAdapter($adapter){
 		$this->adapter = $adapter;
 	}
 }

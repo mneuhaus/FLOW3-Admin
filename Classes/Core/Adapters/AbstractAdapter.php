@@ -116,6 +116,14 @@ abstract class AbstractAdapter implements \Admin\Core\Adapters\AdapterInterface 
 		return $filtered;
 	}
 	
+	public function applyLimit($limit){
+		
+	}
+	
+	public function applyOffset($offset){
+		# code...
+	}
+	
 	/**
 	 * Gets the Processed Being
 	 *
@@ -225,7 +233,7 @@ abstract class AbstractAdapter implements \Admin\Core\Adapters\AdapterInterface 
 				$configurationProviders = $this->settings["ConfigurationProvider"];
 				foreach($configurationProviders as $configurationProviderClass){
 					$configurationProvider = $this->objectManager->get($configurationProviderClass);
-					$configurationProvider->injectAdapter($this);
+					$configurationProvider->setAdapter($this);
 					$configuration = array_merge_recursive($configuration,$configurationProvider->get($being));
 				}
 			}
@@ -340,6 +348,10 @@ abstract class AbstractAdapter implements \Admin\Core\Adapters\AdapterInterface 
 			$sets["General"] = $properties;
 		
 		return $sets;
+	}
+	
+	public function getTotal($being){
+		return count($this->getBeings($being));
 	}
 	
 	/**

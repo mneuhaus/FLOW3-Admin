@@ -38,14 +38,6 @@ abstract class AbstractAction implements ActionInterface {
 	protected $controller;
 	protected $request;
 
-	/**
-	 * @param \Admin\Core\Adapters\AdapterInterface $adapter
-	 * @author Marc Neuhaus <mneuhaus@famelo.com>
-	 * */
-	public function injectAdapter($adapter) {
-		$this->adapter = $adapter;
-	}
-
 	public function __construct($adapter=null, $request=null, $view=null, $controller=null) {
 		$this->adapter = $adapter;
 		$this->request = $request;
