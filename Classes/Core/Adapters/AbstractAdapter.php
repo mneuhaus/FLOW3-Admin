@@ -156,7 +156,7 @@ abstract class AbstractAdapter implements \Admin\Core\Adapters\AdapterInterface 
 		$this->conf = $this->getConfiguration($being);
 		
 		$objects = $this->getObjects($being);
-		$beings = array ();
+		$beings = array();
 		if(!empty($objects)){
 			foreach($objects as $object) {
 				$b = $this->getBeing($being,$this->getId($object));
@@ -185,7 +185,7 @@ abstract class AbstractAdapter implements \Admin\Core\Adapters\AdapterInterface 
 		$cache = $this->cacheManager->getCache('Admin_ImplementationCache');
 		$identifier = "ClassesTaggedWith-".implode("_",$tags);
 		
-		if(!$cache->has($identifier)){
+		if(!$cache->has($identifier) || true){
 			$classes = array();
 			
 			$activePackages = $this->packageManager->getActivePackages();
@@ -393,7 +393,7 @@ abstract class AbstractAdapter implements \Admin\Core\Adapters\AdapterInterface 
 
 			$mappings = \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($this->settings, $path);
 			if( ! empty($mappings) ) {
-				
+#				doh($mappings, $raw);
 				if( $widget === null && isset($mappings[$raw]) ) {
 					$widget = $mappings[$raw];
 				}
@@ -415,7 +415,7 @@ abstract class AbstractAdapter implements \Admin\Core\Adapters\AdapterInterface 
 					}
 				}
 			}
-
+			
 			if( $widget === null && $default !== null )
 				$widget = $default;
 
@@ -466,10 +466,16 @@ abstract class AbstractAdapter implements \Admin\Core\Adapters\AdapterInterface 
 	 * */
 	public function postProcessConfiguration($configuration){
 		foreach($configuration["properties"] as $property => $c){
+			if(array_key_exists("editor",$c)){
+				$c["widget"] = "Textarea";
+				$configuration["properties"][$property]["editor"] = strtolower($c["editor"]);
+			}
+				
 			if(array_key_exists("widget",$c))
 				$configuration["properties"][$property]["widget"] = $c["widget"];
 			else
 				$configuration["properties"][$property]["widget"] = $this->getWidget($c["type"],"TextField");
+			
 			if(isset($c["optionsProvider"]) && is_array($c["optionsProvider"]))
 				$configuration["properties"][$property]["optionsProvider"] = array_pop($c["optionsProvider"]);
 		}

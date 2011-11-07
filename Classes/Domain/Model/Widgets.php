@@ -33,6 +33,7 @@ use Admin\Annotations as Admin;
  * @FLOW3\Scope("prototype")
  * @FLOW3\Entity
  * @Admin\Active
+ * @Admin\Group("Testcases")
  * @Admin\Set(title="Default Types", properties="string,integer,float,boolean,datetime,resource,tag,tags")
  * @Admin\Set(title="Textinput", properties="textarea,autoexpand,fullrte,markdown")
  * @Admin\Set(title="Inline", properties="widget")
@@ -67,9 +68,10 @@ class Widgets extends \Admin\Core\Domain\Model{
 	
 	/**
 	 * @var \TYPO3\FLOW3\Resource\Resource
-	 * validate NotEmpty
+	 * @ORM\OneToOne
+	 * @FLOW3\Validate(type="NotEmpty")
 	 */
-#	protected $resource;
+	protected $resource;
 	
 	/**
 	 * @var \Admin\Domain\Model\Tag
@@ -93,19 +95,13 @@ class Widgets extends \Admin\Core\Domain\Model{
 	
 	/**
 	 * @var string
-	 * @Admin\Widget("Textarea")
-	 */
-	protected $autoexpand;
-	
-	/**
-	 * @var string
-	 * @Admin\Widget("RichTextEditor")
+	 * @Admin\Editor("RichText")
 	 */
 	protected $fullrte;
 	
 	/**
 	 * @var string
-	 * @Admin\Widget("textarea")
+	 * @Admin\Editor("Markdown")
 	 */
 	protected $markdown;
 	

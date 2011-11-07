@@ -53,8 +53,9 @@ class RelationOptionsProvider extends \Admin\Core\OptionsProvider\AbstractOption
 		$selected = $this->property->getIds();
 		
 		$options = array();
-		if( is_string($being) )
+		if( is_string($being) ){
 			$beings = $this->property->getAdapter()->getBeings($being);
+		}
 		
 		if( ! is_array($selected) )
 			$selected = explode(",", $selected);

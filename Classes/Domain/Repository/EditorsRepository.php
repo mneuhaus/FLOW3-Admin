@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\Domain\Model;
+namespace Admin\Domain\Repository;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Contacts".                   *
+ * This script belongs to the FLOW3 package "Blog".                       *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU General Public License as published by the Free   *
@@ -22,61 +22,11 @@ namespace Admin\Domain\Model;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use Doctrine\ORM\Mapping as ORM;
-use TYPO3\FLOW3\Annotations as FLOW3;
-
 /**
- * A Adress
  *
  * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- * @FLOW3\Scope("prototype")
- * @FLOW3\Entity
- * @Admin\Annotations\Active
  */
-class Relation{
-	/**
-	 * @var \Admin\Domain\Model\Tag
-	 * @ORM\ManyToOne(inversedBy="relations_tag")
-	 */
-	protected $tag;
-	
-	/**
-	 * @var \Doctrine\Common\Collections\Collection<\Admin\Domain\Model\Tag>
-	 * @ORM\ManyToMany(inversedBy="relations_tags")
-	 * @Admin\Annotations\Ignore list
-	 */
-	protected $tags;
-
-    /**
-	 * @var \Admin\Core\Model\Widgets
-     * @Admin\Annotations\Inline
-	 */
-#	protected $inlineWidget;
-
-	/**
-	 * @var \SplObjectStorage<Admin\Domain\Model\Widgets>
-     * @Admin\Annotations\Inline
-	 */
-#	protected $inlineWidgets;
-
-    /**
-	 * @var \Admin\Core\Model\Info
-     * @Admin\Annotations\InfoText This Property has no Repository and Belongs to its Parent Object
-	 */
-#	protected $info;
-
-	/**
-	 * @var \SplObjectStorage<Admin\Domain\Model\Info>
-     * @Admin\Annotations\InfoText This Property has no Repository and Belongs to its Parent Object
-	 */
-#	protected $infos;
-	
-	public function __construct() {
-		$this->tags = new \SplObjectStorage();
-		$this->inlineWidgets = new \SplObjectStorage();
-		$this->infos = new \SplObjectStorage();
-	}
+class EditorsRepository extends \TYPO3\FLOW3\Persistence\Repository {
 }
-
 ?>

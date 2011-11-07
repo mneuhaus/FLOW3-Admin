@@ -6,7 +6,7 @@ jQuery(document).ready(function(){
     
 	jQuery("input[type='text']:first").focus();
 	
-	// jQuery(".sortable").sortable();
+	
 	// jQuery(".sortable").each(function(){
 	// 	var container = jQuery(this);
 	// 	container.data("item",container.children("*:last").clone());
@@ -50,13 +50,6 @@ jQuery(document).ready(function(){
 	// 	]};
 	// 	$('.f-fullrte').ckeditor(config);
 	//     }
-	// 
-	// // Toggle the dropdown menu's
-	// jQuery(".dropdown .button, .dropdown button").click(function () {
-	// 	jQuery(this).parent().find('.dropdown-slider').slideToggle('fast');
-	// 	jQuery(this).find('span.toggle').toggleClass('active');
-	// 	return false;
-	// });
 });
 
 

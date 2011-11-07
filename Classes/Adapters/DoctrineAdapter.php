@@ -86,7 +86,7 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 			
 			if(isset($configuration["properties"][$property]["being"])){
 				$repository = \Admin\Core\Helper::getModelRepository($configuration["properties"][$property]["being"]);
-				if(!class_exists($repository)){
+				if(!class_exists($repository) && $configuration["properties"][$property]["being"] !== "TYPO3\FLOW3\Resource\Resource"){
 					$configuration["properties"][$property]["inline"] = true;
 				}
 			}
@@ -128,14 +128,14 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 	public function getObjects($being) {
 		$configuration = $this->getConfiguration($being);
 		$objects = array();
-		if(isset($this->query)){
-			if(isset($configuration["class"]["admin\annotations\orderby"])){
-				$this->query->setOrderings(array(
-					current($configuration["class"]["admin\annotations\orderby"]) => 'ASC'
-				));
-			}
-			$objects = $this->query->execute();
+		if(!isset($this->query))
+			$this->initQuery($being);
+		if(isset($configuration["class"]["admin\annotations\orderby"])){
+			$this->query->setOrderings(array(
+				current($configuration["class"]["admin\annotations\orderby"]) => 'ASC'
+			));
 		}
+		$objects = $this->query->execute();
 		return $objects;
 	}
 
@@ -150,10 +150,10 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 		return $this->query->count();
 	}
 	
-
+	
 	public function createObject($being, $data) {
 		$configuration = $this->getConfiguration($being);
-		$result = $this->propertyMapper->convert($data, $being);
+		$result = $this->propertyMapper->convert($data, $being, \Admin\Core\PropertyMappingConfiguration::getConfiguration());
 		
 		if(is_a($result, $being)){
 			$repository = $this->objectManager->get(str_replace("Domain\\Model", "Domain\\Repository", $being) . "Repository");
@@ -166,7 +166,7 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 	public function updateObject($being, $id, $data) {
 		$configuration = $this->getConfiguration($being);
 		$data["__identity"] = $id;
-		$result = $this->propertyMapper->convert($data, $being);
+		$result = $this->propertyMapper->convert($data, $being, \Admin\Core\PropertyMappingConfiguration::getConfiguration());
 		
 		if(is_a($result, $being)){
 			$repository = $this->objectManager->get(str_replace("Domain\\Model", "Domain\\Repository", $being) . "Repository");

@@ -51,7 +51,7 @@ class PreviewViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper 
 			$file = $this->resourcePublisher->getPersistentResourceWebUri($resource, "");
 			switch ($mime[0]) {
 				case "image":
-						return "<img src='".$file."' class='preview'/>";
+						return "<img src='".$file."' width='300px' class='thumbnail' />";
 					break;
 				
 				default:

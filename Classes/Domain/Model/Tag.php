@@ -33,6 +33,7 @@ use Admin\Annotations as Admin;
  * @FLOW3\Scope("prototype")
  * @FLOW3\Entity
  * @Admin\Active
+ * @Admin\Group("Testcases")
  */
 class Tag extends \Admin\Core\Domain\Model{
 	/**
@@ -44,6 +45,7 @@ class Tag extends \Admin\Core\Domain\Model{
 	/**
 	 * @var \Doctrine\Common\Collections\Collection<\Admin\Domain\Model\Widgets>
 	 * @ORM\OneToMany(mappedBy="tag")
+	 * @Admin\Ignore
 	 * @Admin\Label("OneToMany")
 	 */
 	protected $widgets;
@@ -51,10 +53,24 @@ class Tag extends \Admin\Core\Domain\Model{
 	/**
 	 * @var \Doctrine\Common\Collections\Collection<\Admin\Domain\Model\Widgets>
 	 * @ORM\ManyToMany(inversedBy="tags")
-	 * @Admin\Ignore("list")
+	 * @Admin\Ignore
 	 * @Admin\Label("ManyToMany")
 	 */
 	protected $widgets_manytomany;
+	
+	/**
+	 * @var \Doctrine\Common\Collections\Collection<\Admin\Domain\Model\Inline>
+	 * @ORM\OneToMany(mappedBy="inline_tag")
+	 * @Admin\Ignore
+	 */
+	protected $tag_inline;
+	
+	/**
+	 * @var \Doctrine\Common\Collections\Collection<\Admin\Domain\Model\Inline>
+	 * @ORM\ManyToMany(inversedBy="inlines_tags")
+	 * @Admin\Ignore
+	 */
+	protected $tags_inlines;
 }
 
 ?>

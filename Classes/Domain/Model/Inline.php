@@ -24,6 +24,7 @@ namespace Admin\Domain\Model;
 
 use Doctrine\ORM\Mapping as ORM;
 use TYPO3\FLOW3\Annotations as FLOW3;
+use Admin\Annotations as Admin;
 
 /**
  * A Adress
@@ -32,23 +33,23 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  * @FLOW3\Scope("prototype")
  * @FLOW3\Entity
+ * @Admin\Active
+ * @Admin\Group("Testcases")
  */
 class Inline extends \Admin\Core\Domain\Model{
 	/**
-	 * @var \Admin\Core\Model\Tag
-	 * @Admin\Annotations\Inline
+	 * @var \Admin\Domain\Model\Tag
+	 * @ORM\ManyToOne(inversedBy="tag_inline", cascade={"persist", "remove"})
+	 * @Admin\Inline
 	 */
-	protected $inlinetag;
+	protected $inline_tag;
 	
 	/**
-	 * @var \SplObjectStorage<Admin\Domain\Model\Tag>
-	 * @Admin\Annotations\Inline
+	 * @var \Doctrine\Common\Collections\Collection<Admin\Domain\Model\Tag>
+	 * @ORM\ManyToMany(inversedBy="tags_inlines", cascade={"persist", "remove"})
+	 * @Admin\Inline
 	 */
-	protected $inlinetags;
-	
-	public function __construct() {
-		$this->inlinetags = new \SplObjectStorage();
-	}
+	protected $inlines_tags;
 }
 
 ?>
