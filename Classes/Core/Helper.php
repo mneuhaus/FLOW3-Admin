@@ -91,6 +91,39 @@ class Helper {
 	}
 	
 	/**
+	 * return the Adapter responsible for the being
+	 *
+	 * @return $groups Array
+	 * @author Marc Neuhaus
+	 */
+	public function getAdapterByBeing($being){
+		$this->adapters = $this->getAdapters();
+		
+		$cache = $this->cacheManager->getCache('Admin_Cache');
+		$identifier = "AdaptersByBeing-".sha1($being);
+		
+		if(!$cache->has($identifier)){
+			$adaptersByBeings = array();
+			foreach ($this->adapters as $adapter) {
+				if(class_exists($adapter)){
+					$adapters[$adapter] = $this->objectManager->get($adapter);
+					foreach ($adapters[$adapter]->getGroups() as $group => $beings) {
+						foreach ($beings as $conf) {
+							$adaptersByBeings[$being] = $adapter;
+						}
+					}
+				}
+			}
+			
+			$cache->set($identifier,$adaptersByBeings);
+		}else{
+			$adaptersByBeings = $cache->get($identifier);
+		}
+		
+		return $adaptersByBeings[$being];
+	}
+	
+	/**
 	 * Returns all active adapters
 	 *
 	 * @return $adapters
@@ -164,6 +197,7 @@ class Helper {
 
 		return $groups;
 	}
+	
 	
 	/**
 	 * Returns all Properties of a Specified Model
@@ -248,7 +282,7 @@ class Helper {
 		if(is_object($class))
 			$class = get_class($class);
 		
-		if(class_exists($class)){
+		if(class_exists($class, false)){
 			$reflection = new \ReflectionClass($class);
 			return $reflection->getShortName();
 		}

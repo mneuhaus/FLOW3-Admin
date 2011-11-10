@@ -34,8 +34,11 @@ class Register {
 		self::$container[$name] = $mixed;
 	}
 
-	static function get($name){
-		return isset(self::$container[$name]) ? self::$container[$name] : null;
+	static function get($name, $key = null){
+		if(!is_null($key) && isset(self::$container[$name]) && is_array(self::$container[$name]))
+			return isset(self::$container[$name][$key]) ? self::$container[$name][$key] : null;
+		else
+			return isset(self::$container[$name]) ? self::$container[$name] : null;
 	}
 
 	static function has($name){
