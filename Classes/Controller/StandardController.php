@@ -282,7 +282,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 			"@package" => "Admin",
 		);
 		if(!empty($this->being)){
-			if(class_exists($this->being)){
+			if(class_exists($this->being, false)){
 				$tags = $this->reflectionService->getClassTagsValues($this->being);
 				if(in_array($action."view",array_keys($tags))){
 					$variant = $tags[$action."view"][0];
@@ -324,7 +324,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 	private function getAdapter(){
 		if(isset($this->adapter)){
 			$adapter =  $this->objectManager->get($this->adapter);
-			if(!empty($this->being) && class_exists($this->being)){
+			if(!empty($this->being) && class_exists($this->being, false)){
 				$tags = $this->reflectionService->getClassTagsValues($this->being);
 				if(array_key_exists("adapter",$tags) && class_exists("\\".$tags["adapter"][0])){
 					$adapter = $this->objectManager->get($tags["adapter"][0]);

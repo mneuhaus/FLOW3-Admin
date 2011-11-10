@@ -283,8 +283,8 @@ class Helper {
 			$class = get_class($class);
 		
 		if(class_exists($class, false)){
-			$reflection = new \ReflectionClass($class);
-			return $reflection->getShortName();
+			$parts = explode("\\", $class);
+			return array_pop($parts);
 		}
 		
 		return $class;
