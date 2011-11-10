@@ -69,7 +69,7 @@ class ListAction extends \Admin\Core\Actions\AbstractAction {
 		
 		// Redirect to creating a new Object if there aren't any (Clean Slate)
 		if( count($beings) < 1 ) {
-			$arguments = array("being" => $being, "adapter" => get_class($this->adapter));
+			$arguments = array("being" => \Admin\Core\Register::get("classShortNames", $being), "adapter" => get_class($this->adapter));
 			$this->controller->redirect("create", NULL, NULL, $arguments);
 		}
 		
