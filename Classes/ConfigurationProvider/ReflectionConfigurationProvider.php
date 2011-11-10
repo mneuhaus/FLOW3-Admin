@@ -43,7 +43,7 @@ class ReflectionConfigurationProvider extends \Admin\Core\ConfigurationProvider\
 	public function get($being){
 		$configuration = array();
 		
-		if( class_exists($being) ) {
+		if( class_exists($being, false) ) {
 			$configuration = array(
 				"class" => $this->reflectionService->getClassTagsValues($being),
 				"properties" => $this->helper->getModelProperties($being)

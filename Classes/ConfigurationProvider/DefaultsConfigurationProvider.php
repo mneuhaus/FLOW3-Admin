@@ -40,7 +40,7 @@ class DefaultsConfigurationProvider extends \Admin\Core\ConfigurationProvider\Ab
 			unset($configuration["class"]["properties"]);
 			$propertyDefaults = $settings["Defaults"]["properties"];
 			
-			if( class_exists($being) ) {
+			if( class_exists($being, false) ) {
 				$properties = $this->helper->getModelProperties($being);
 				foreach($properties as $property => $conf){
 					$configuration["properties"][$property] = $propertyDefaults;

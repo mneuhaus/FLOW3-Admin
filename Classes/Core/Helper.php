@@ -105,12 +105,10 @@ class Helper {
 		if(!$cache->has($identifier)){
 			$adaptersByBeings = array();
 			foreach ($this->adapters as $adapter) {
-				if(class_exists($adapter)){
-					$adapters[$adapter] = $this->objectManager->get($adapter);
-					foreach ($adapters[$adapter]->getGroups() as $group => $beings) {
-						foreach ($beings as $conf) {
-							$adaptersByBeings[$being] = $adapter;
-						}
+				$adapters[$adapter] = $this->objectManager->get($adapter);
+				foreach ($adapters[$adapter]->getGroups() as $group => $beings) {
+					foreach ($beings as $conf) {
+						$adaptersByBeings[$being] = $adapter;
 					}
 				}
 			}
@@ -150,7 +148,7 @@ class Helper {
 	public function getGroupByBeing($being){
 		$this->adapters = $this->getAdapters();
 		foreach ($this->adapters as $adapter) {
-			if(class_exists($adapter)){
+			if(class_exists($adapter, false)){
 				$adapters[$adapter] = $this->objectManager->get($adapter);
 				foreach ($adapters[$adapter]->getGroups() as $group => $beings) {
 					foreach ($beings as $beingName => $conf) {
@@ -178,14 +176,12 @@ class Helper {
 			$groups = array();
 			$adapters = array();
 			foreach ($this->adapters as $adapter) {
-				if(class_exists($adapter)){
-					$adapters[$adapter] = $this->objectManager->get($adapter);
-					foreach ($adapters[$adapter]->getGroups() as $group => $beings) {
-						foreach ($beings as $conf) {
-							$being = $conf["being"];
-							$conf["adapter"] = $adapter;
-							$groups[$group]["beings"][$being] = $conf;
-						}
+				$adapters[$adapter] = $this->objectManager->get($adapter);
+				foreach ($adapters[$adapter]->getGroups() as $group => $beings) {
+					foreach ($beings as $conf) {
+						$being = $conf["being"];
+						$conf["adapter"] = $adapter;
+						$groups[$group]["beings"][$being] = $conf;
 					}
 				}
 			}

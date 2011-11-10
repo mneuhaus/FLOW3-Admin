@@ -156,14 +156,12 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		if(!$cache->has($identifier)){
 			$shortNames = array();
 			foreach ($this->adapters as $adapter) {
-				if(class_exists($adapter)){
-					$adapters[$adapter] = $this->objectManager->get($adapter);
-					foreach ($adapters[$adapter]->getGroups() as $group => $beings) {
-						foreach ($beings as $conf) {
-							$being = $conf["being"];
-							$shortNames[$being] = strtolower(str_replace("\\", "_", $being));
-							$shortNames[strtolower(str_replace("\\", "_", $being))] = $being;
-						}
+				$adapters[$adapter] = $this->objectManager->get($adapter);
+				foreach ($adapters[$adapter]->getGroups() as $group => $beings) {
+					foreach ($beings as $conf) {
+						$being = $conf["being"];
+						$shortNames[$being] = strtolower(str_replace("\\", "_", $being));
+						$shortNames[strtolower(str_replace("\\", "_", $being))] = $being;
 					}
 				}
 			}
@@ -193,7 +191,8 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		
 		if($this->request->hasArgument("being")){
 			$this->being = $this->request->getArgument("being");
-			$this->being = \Admin\Core\Register::get("classShortNames", $this->being);
+			if(!stristr($this->being, "\\"))
+				$this->being = \Admin\Core\Register::get("classShortNames", $this->being);
 			\Admin\Core\Register::set("being",$this->being);
 			
 			$this->adapter = $this->helper->getAdapterByBeing($this->being);
@@ -326,7 +325,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 			$adapter =  $this->objectManager->get($this->adapter);
 			if(!empty($this->being) && class_exists($this->being, false)){
 				$tags = $this->reflectionService->getClassTagsValues($this->being);
-				if(array_key_exists("adapter",$tags) && class_exists("\\".$tags["adapter"][0])){
+				if(array_key_exists("adapter",$tags) && class_exists("\\".$tags["adapter"][0], false)){
 					$adapter = $this->objectManager->get($tags["adapter"][0]);
 				}
 			}

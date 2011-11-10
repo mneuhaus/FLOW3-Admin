@@ -17,7 +17,6 @@ TYPO3:
         accessDecisionVoters:
           - Admin\Security\Voter\Policy
           - TYPO3\FLOW3\Security\Authorization\Voter\Policy
-
 Admin:
   PageTitle: Admin
   Logging:
@@ -32,7 +31,6 @@ Admin:
   Adapters:
     Admin\Adapters\DoctrineAdapter: active
 #    Admin\Adapters\DummyAdapter: active
-          
   Fallbacks:
     Views:
       - resource://@package/Private/Templates/@being/@action/@variant.html
@@ -91,7 +89,6 @@ Dummy:
   Widgets:
     Mapping:
       # Pattern (Text or Regex)          Widget
-      
       string:   Textfield
       readonly: TextfieldReadonly
       integer:  Spinner
