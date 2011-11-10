@@ -34,9 +34,11 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  *
  * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- * @FLOW3\Scope("prototype")
+ * 
+ * @FLOW3\Entity
+ * @ORM\InheritanceType("JOINED")
  */
-abstract class Model {
+abstract class Magic {
 	
 	public function getArguments(){
 		return array(

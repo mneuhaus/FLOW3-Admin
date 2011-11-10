@@ -39,7 +39,13 @@ class CreateAction extends \Admin\Core\Actions\AbstractAction {
 	 * @author Marc Neuhaus <mneuhaus@famelo.com>
 	 * */
 	public function canHandle($being, $action = null, $id = false) {
-		return !$id;
+		switch($action) {
+			case "create":
+			case "update":
+				return false;
+			default:
+				return !$id;
+		}
 	}
 
 	/**

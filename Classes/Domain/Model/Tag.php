@@ -35,7 +35,7 @@ use Admin\Annotations as Admin;
  * @Admin\Active
  * @Admin\Group("Testcases")
  */
-class Tag extends \Admin\Core\Domain\Model{
+class Tag extends \Admin\Core\Domain\Magic{
 	/**
 	 * @var string
 	 * @FLOW3\Identity

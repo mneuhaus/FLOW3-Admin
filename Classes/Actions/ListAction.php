@@ -69,7 +69,7 @@ class ListAction extends \Admin\Core\Actions\AbstractAction {
 		
 		// Redirect to creating a new Object if there aren't any (Clean Slate)
 		if( count($beings) < 1 ) {
-			$arguments = array("being" => $being, "adapter" => get_class($this->adapter));
+			$arguments = array("being" => \Admin\Core\Register::get("classShortNames", $being), "adapter" => get_class($this->adapter));
 			$this->controller->redirect("create", NULL, NULL, $arguments);
 		}
 		
@@ -101,9 +101,16 @@ class ListAction extends \Admin\Core\Actions\AbstractAction {
 		else
 			$this->limit = key($limits);
 		
+		$unset = false;
 		foreach ($limits as $key => $value) {
 			$limits[$key] = ($this->limit == $key);
-			if(intval($key) >= intval($this->total)) unset($limits[$key]);
+			
+			if(!$unset && intval($key) >= intval($this->total)){
+				$unset = true;
+				continue;
+			}
+			if($unset)
+				unset($limits[$key]);
 		}
 		
 		$this->view->assign("limits", $limits);
@@ -121,7 +128,11 @@ class ListAction extends \Admin\Core\Actions\AbstractAction {
 			$pages[] = $i + 1;
 		}
 		
+		if($currentPage > count($pages))
+			$currentPage = count($pages);
+		
 		$offset = ($currentPage - 1) * $this->limit;
+		$offset = $offset < 0 ? 0 : $offset;
 		$this->adapter->applyOffset($offset);
 		$this->view->assign("offset", $offset);
 		

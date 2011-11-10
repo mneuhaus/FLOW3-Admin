@@ -69,6 +69,29 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 	protected $being = null;
 	protected $id = null;
 	
+	public function addLog($description = ""){
+		if($this->settings["Logging"]["Active"]){
+			$action = \Admin\Core\Register::get("action");
+			if(!in_array($action, $this->settings["Logging"]["Ignore"])){
+				$log = new \Admin\Domain\Model\Log();
+				$log->setUser($this->user);
+				$log->setAction($action);
+				
+				if(isset($this->adapter))
+					$log->setAdapter($this->adapter);
+					
+				if(isset($this->being))
+					$log->setBeing(\Admin\Core\Helper::getShortName("\\".$this->being));
+					
+				if(isset($this->id))
+					$log->setIdentity($this->id);
+					
+				$this->objectManager->get("\Admin\Domain\Repository\LogRepository")->add($log);
+				$this->persistenceManager->persistAll();
+			}
+		}
+	}
+	
 	/**
 	 * Resolves and checks the current action method name
 	 *
@@ -101,13 +124,8 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 			$preparedArguments[] = $argument->getValue();
 		}
 		
-		#if ($this->argumentsMappingResults->hasErrors()) {
-		#	$actionResult = call_user_func(array($this, $this->errorMethodName));
-		#} else {
-			#$actionResult = call_user_func_array(array($this, $this->actionMethodName), $preparedArguments);
-			$actionResult = $this->__call($this->actionMethodName, $preparedArguments);
-		#}
-
+		$actionResult = $this->__call($this->actionMethodName, $preparedArguments);
+		
 		if ($actionResult === NULL && $this->view instanceof \TYPO3\FLOW3\MVC\View\ViewInterface) {
 			$this->response->appendContent($this->view->render());
 		} elseif (is_string($actionResult) && strlen($actionResult) > 0) {
@@ -125,34 +143,37 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		if($action !== null){
 		   $result = $action->execute($this->being, $this->id);
 			
-			#\var_dump($result);
 			if(is_array($result)){
 				#$this->redirect($result[0],$result[1],$result[1],$result[3]);
 			}
 		}
 	}
 	
-	public function addLog($description = ""){
-		if($this->settings["Logging"]["Active"]){
-			$action = \Admin\Core\Register::get("action");
-			if(!in_array($action, $this->settings["Logging"]["Ignore"])){
-				$log = new \Admin\Domain\Model\Log();
-				$log->setUser($this->user);
-				$log->setAction($action);
-				
-				if(isset($this->adapter))
-					$log->setAdapter($this->adapter);
-					
-				if(isset($this->being))
-					$log->setBeing(\Admin\Core\Helper::getShortName("\\".$this->being));
-					
-				if(isset($this->id))
-					$log->setIdentity($this->id);
-					
-				$this->objectManager->get("\Admin\Domain\Repository\LogRepository")->add($log);
-				$this->persistenceManager->persistAll();
+	public function compileShortNames(){
+		$cache = $this->cacheManager->getCache('Admin_Cache');
+		$identifier = "ClassShortNames-".sha1(implode("-",$this->adapters));
+
+		if(!$cache->has($identifier)){
+			$shortNames = array();
+			foreach ($this->adapters as $adapter) {
+				if(class_exists($adapter)){
+					$adapters[$adapter] = $this->objectManager->get($adapter);
+					foreach ($adapters[$adapter]->getGroups() as $group => $beings) {
+						foreach ($beings as $conf) {
+							$being = $conf["being"];
+							$shortNames[$being] = strtolower(str_replace("\\", "_", $being));
+							$shortNames[strtolower(str_replace("\\", "_", $being))] = $being;
+						}
+					}
+				}
 			}
+			
+			$cache->set($identifier,$shortNames);
+		}else{
+			$shortNames = $cache->get($identifier);
 		}
+		
+		return $shortNames;
 	}
 
 	private function prepare($action){
@@ -162,6 +183,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 
 		$this->adapters = $this->helper->getAdapters();
 		$this->settings = $this->helper->getSettings();
+		\Admin\Core\Register::set("classShortNames", $this->compileShortNames());
 		
 		\Admin\Core\Register::set("objectManager",$this->objectManager);
 		
@@ -169,15 +191,13 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		\Admin\Core\Register::set("session",$this->session);
 		\Admin\Core\Register::set("action",$action);
 		
-		if($this->request->hasArgument("adapter")){
-			$this->adapter = $this->request->getArgument("adapter");
-			\Admin\Core\Register::set("adapter",$this->adapter);
-			#$title[] = \Admin\Core\Helper::getShortName($this->adapter);
-		}
-
 		if($this->request->hasArgument("being")){
 			$this->being = $this->request->getArgument("being");
+			$this->being = \Admin\Core\Register::get("classShortNames", $this->being);
 			\Admin\Core\Register::set("being",$this->being);
+			
+			$this->adapter = $this->helper->getAdapterByBeing($this->being);
+			\Admin\Core\Register::set("adapter",$this->adapter);
 
 			$this->group = $this->helper->getGroupByBeing($this->being);
 			\Admin\Core\Register::set("group",$this->group);
@@ -194,13 +214,16 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		foreach ($activeTokens as $token) {
 			if ( $token->isAuthenticated() && is_callable(array($token,"getUser")) ) {
 				$user = $token->getUser();
-
-				foreach ($user->getRoles() as $role) {
-					foreach ($role->getGrant() as $policy) {
-						$allowedBeings[$policy->getAction()][] = $policy->getBeing();
+				try{
+					foreach ($user->getRoles() as $role) {
+						foreach ($role->getGrant() as $policy) {
+							$allowedBeings[$policy->getAction()][] = $policy->getBeing();
+						}
 					}
+					break;
+				} catch (\Doctrine\ORM\EntityNotFoundException $e){
+					unset($user);
 				}
-				break;
 			}
 		}
 
@@ -259,7 +282,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 			"@package" => "Admin",
 		);
 		if(!empty($this->being)){
-			if(class_exists($this->being)){
+			if(class_exists($this->being, false)){
 				$tags = $this->reflectionService->getClassTagsValues($this->being);
 				if(in_array($action."view",array_keys($tags))){
 					$variant = $tags[$action."view"][0];
@@ -301,7 +324,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 	private function getAdapter(){
 		if(isset($this->adapter)){
 			$adapter =  $this->objectManager->get($this->adapter);
-			if(!empty($this->being) && class_exists($this->being)){
+			if(!empty($this->being) && class_exists($this->being, false)){
 				$tags = $this->reflectionService->getClassTagsValues($this->being);
 				if(array_key_exists("adapter",$tags) && class_exists("\\".$tags["adapter"][0])){
 					$adapter = $this->objectManager->get($tags["adapter"][0]);

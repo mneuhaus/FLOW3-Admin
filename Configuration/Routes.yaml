@@ -4,11 +4,49 @@
 
 # $Id: Routes.yaml 3886 2010-02-28 17:03:50Z robert $
 
-
+# -
+#   name: 'Login'
+#   uriPattern: 'login'
+#   defaults:
+#     '@action':    'index'
+#     '@package':    'Admin'
+#     '@controller': 'Login'
+#     '@format':     'html'
+    
 -
-  name: 'Admin actions 1'
-  uriPattern: 'admin/{@action}'
+  name: 'Logout'
+  uriPattern: 'logout'
   defaults:
+    '@action':    'logout'
     '@package':    'Admin'
-    '@controller': 'Standard'
+    '@controller': 'Login'
     '@format':     'html'
+
+# -
+#   name: 'Admin actions'
+#   uriPattern: '{@action}'
+#   defaults:
+#     '@action':      'index'
+#     '@package':     'Admin'
+#     '@controller':  'Standard'
+#     '@format':      'html'
+    
+# -
+#   name: 'Admin actions'
+#   uriPattern: '{@action}/{being}'
+# #  appendExceedingArguments: true
+#   defaults:
+#     '@action':      'index'
+#     '@package':     'Admin'
+#     '@controller':  'Standard'
+#     '@format':      'html'
+# 
+# -
+#   name: 'Admin actions with id'
+#   uriPattern: '{@action}/{being}/{id}'
+# #  appendExceedingArguments: true
+#   defaults:
+#     '@action':      'index'
+#     '@package':     'Admin'
+#     '@controller':  'Standard'
+#     '@format':      'html'

@@ -35,7 +35,7 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * @Admin\Annotations\Active
  * @Admin\Annotations\Group("System")
  */
-class Role extends \Admin\Core\Domain\Model{
+class Role extends \Admin\Core\Domain\Magic{
     /**
      * @var string
      * @author Marc Neuhaus <mneuhaus@famelo.com>
