@@ -33,7 +33,7 @@ use Admin\Annotations as Admin;
  * @FLOW3\Entity
  * @Admin\Active
  */
-class Info extends \Admin\Core\Domain\Model{
+class Info extends \Admin\Core\Domain\Magic{
 	/**
 	 * @var string
 	 * @FLOW3\Identity

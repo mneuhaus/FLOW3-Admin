@@ -35,7 +35,7 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * @Admin\Annotations\Active
  * @Admin\Annotations\Group("System")
  */
-class User extends \Admin\Core\Domain\Model{
+class User extends \Admin\Core\Domain\Magic{
 	/**
 	 * @var string
 	 * @FLOW3\Identity

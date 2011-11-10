@@ -35,7 +35,7 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * @Admin\Annotations\Group Settings
  * @Admin\Annotations\OrderBy name
  */
-class Policy extends \Admin\Core\Domain\Model{
+class Policy extends \Admin\Core\Domain\Magic{
     /**
      * @var string
 	 * @FLOW3\Identity

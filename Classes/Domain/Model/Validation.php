@@ -35,7 +35,7 @@ use Admin\Annotations as Admin;
  * @Admin\Active
  * @Admin\Group("Testcases")
  */
-class Validation extends \Admin\Core\Domain\Model{
+class Validation extends \Admin\Core\Domain\Magic{
 
 	/**
 	 * @var string

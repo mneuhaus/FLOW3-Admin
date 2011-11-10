@@ -38,7 +38,7 @@ use Admin\Annotations as Admin;
  * @Admin\Set(title="Textinput", properties="textarea,autoexpand,fullrte,markdown")
  * @Admin\Set(title="Inline", properties="widget")
  */
-class Widgets extends \Admin\Core\Domain\Model{
+class Widgets extends \Admin\Core\Domain\Magic{
 	/**
 	 * @var string
 	 * @FLOW3\Identity

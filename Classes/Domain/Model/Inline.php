@@ -36,7 +36,7 @@ use Admin\Annotations as Admin;
  * @Admin\Active
  * @Admin\Group("Testcases")
  */
-class Inline extends \Admin\Core\Domain\Model{
+class Inline extends \Admin\Core\Domain\Magic{
 	/**
 	 * @var \Admin\Domain\Model\Tag
 	 * @ORM\ManyToOne(inversedBy="tag_inline", cascade={"persist", "remove"})
