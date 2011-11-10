@@ -96,7 +96,7 @@ class PolicyOptionsProvider extends \Admin\Core\OptionsProvider\AbstractOptionsP
     public function getActions(){
         $actions = array();
         $blacklist = explode(",","index,list");
-        foreach($this->reflectionService->getAllImplementationClassNamesForInterface('\Admin\Controller\Actions\ActionInterface') as $actionClassName) {
+        foreach($this->reflectionService->getAllImplementationClassNamesForInterface('\Admin\Core\Actions\ActionInterface') as $actionClassName) {
             $a = new $actionClassName();
             if(!in_array($a->getAction(),$blacklist))
                 $actions[$a->getAction()] = $a->__toString();
