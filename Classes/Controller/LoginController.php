@@ -61,15 +61,26 @@ class LoginController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 	public function indexAction() {
 		$users = $this->userRepository->findAll();
 		
+		$tag = $this->objectManager->get("Admin\Domain\Model\Tag");
+		$tag->test();
+		
 		if($users->count() < 1){
 			$user = $this->objectManager->get("Admin\Security\User");
 			$user->setAccountIdentifier("admin");
 			$user->setCredentialsSource("password");
 			$user->setAdmin(true);
 			$this->userRepository->add($user);
-			$message = new \TYPO3\FLOW3\Error\Message('A Default User has been Created. admin:password');
+			$message = new \TYPO3\FLOW3\Error\Message('A User has been Created: admin/password');
 			$this->flashMessageContainer->addMessage($message);
-        }
+			$message = new \TYPO3\FLOW3\Error\Warning('Please Change the Passwort after Login!');
+			$this->flashMessageContainer->addMessage($message);
+			$this->view->assign("username", "admin");
+			$this->view->assign("password", "password");
+		}else{
+			$this->view->assign("username", "");
+			$this->view->assign("password", "");
+		}
+
 	}
 
 	/**
