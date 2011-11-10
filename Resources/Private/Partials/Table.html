@@ -27,15 +27,16 @@
 			</f:for>
 			<td class="table-actions">
 				<f:for each="{listActions}" as="action">
-					<f:link.action
+					<a:link
 						class=" tiny {action.class}"
 						action="{action.action}"
 						controller="{action.controller}"
 						package="{action.package}"
 						target="{action.target}"
-						arguments="{object.arguments}">
+						being="{object.class}"
+						arguments="{id: object.id}">
 						{action}
-					</f:link.action>
+					</a:link>
 				</f:for>
 			</td>
 		</tr>

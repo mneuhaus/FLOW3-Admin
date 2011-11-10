@@ -61,9 +61,9 @@
 						<f:then><li class="active"></f:then>
 						<f:else><li></f:else>
 					</f:if>
-						<f:link.action action="list" controller="Standard" arguments="{being: base_being.being, adapter: base_being.adapter}">
+						<a:link action="list" controller="Standard" being="{base_being.being}">
 							{base_being.name}
-						</f:link.action>
+						</a:link>
 					</li>
 				</f:for>
 				</ul>
