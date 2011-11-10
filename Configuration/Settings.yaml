@@ -30,9 +30,9 @@ Admin:
       properties:
         optionsprovider: Admin\OptionsProvider\RelationOptionsProvider
   Adapters:
-#    Admin\Adapters\PHPCRAdapter: active
     Admin\Adapters\DoctrineAdapter: active
 #    Admin\Adapters\DummyAdapter: active
+          
   Fallbacks:
     Views:
       - resource://@package/Private/Templates/@being/@action/@variant.html
@@ -60,45 +60,6 @@ Admin:
       - resource://@package/Private/Partials/@being/Widgets/@partial.html
       - resource://@package/Private/Partials/Widgets/@partial.html
       - resource://Admin/Private/Partials/Widgets/@partial.html
-
-# PHPCR:
-#   Beings:
-#     Blog\Domain\Model\Blog:
-#       autoadmin: true
-#       properties:
-#         authorPicture:
-#           ignore: list
-#         posts:
-#           ignore: list
-#     Blog\Domain\Model\Post:
-#       autoadmin: true
-#       set:
-#         - Main (title,content)
-#         - Extended Informations (blog,linkTitle,date,author,image)
-#       properties:
-#         blog:
-#           ignore: list
-#         relatedPosts:
-#           ignore: list
-#         linkTitle:
-#           ignore: list
-#         image:
-#           inline: true
-#           ignore: list
-#         content:
-#           widget: RichTextEditor
-#         tags:
-#           ignore: true
-# #          inline: true
-#         comments:
-# #          ignore: true
-# #          inline: true
-#     Blog\Domain\Model\Comment:
-#       properties:
-#         content:
-#           widget: TextArea
-#     Blog\Domain\Model\Category:
-#       autoadmin: true
 
 Doctrine:
   Beings: []
