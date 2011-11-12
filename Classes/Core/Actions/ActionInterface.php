@@ -34,7 +34,7 @@ interface ActionInterface {
 	 * Function to Check if this Requested Action is supported
 	 * @author Marc Neuhaus <mneuhaus@famelo.com>
 	 * */
-	public function canHandle($being, $action = null);
+	public function canHandle($being, $action = null, $id = false);
 
 	/**
 	 * The Name of this Action
@@ -48,5 +48,6 @@ interface ActionInterface {
 	 * @author Marc Neuhaus <mneuhaus@famelo.com>
 	 * */
 	public function execute($being, $ids = null);
+	
 }
 ?>
