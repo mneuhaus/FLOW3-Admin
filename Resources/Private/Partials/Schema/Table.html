@@ -1,0 +1,22 @@
+<table class="zebra-striped condensed-table">
+	<tr>
+		<th class="tiny">
+			<input type="checkbox" class="select-all" />
+		</th>
+		<th>Table</th>
+		<th>Added</th>
+		<th>Changed</th>
+		<th>Removed</th>
+	</tr>
+	<f:for each="{tables}" as="table">
+	<tr>
+		<td class="tiny">
+			<input type="checkbox" name="tables[]" value="{table.name}" class="select-row"/>
+		</td>
+		<td>{table.name}</td>
+		<td><f:render partial="Schema/Column" arguments="{columns: table.addedColumns}" /></td>
+		<td><f:render partial="Schema/Column" arguments="{columns: table.changedColumns}" /></td>
+		<td><f:render partial="Schema/Column" arguments="{columns: table.removedColumns}" /></td>
+	</tr>
+	</f:for>
+</table>

@@ -31,10 +31,11 @@ jQuery(document).ready(function(){
 
 	// Table select all behavior
 	jQuery(".select-all").change(function(){
+		var table = jQuery(this).parents("table");
 		if(jQuery(this).attr('checked') == "checked")
-			jQuery(".select-row").attr('checked', "checked");
+			table.find(".select-row").attr('checked', "checked");
 		else
-			jQuery(".select-row").removeAttr('checked');
+			table.find(".select-row").removeAttr('checked');
 	});
 
 	// jQuery(".f-multiselect").selectbox();

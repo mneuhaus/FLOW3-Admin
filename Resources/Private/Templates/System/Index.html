@@ -1,0 +1,41 @@
+<f:layout name="bootstrap" />
+
+{namespace a=Admin\ViewHelpers}
+<f:section name="sidebar">
+	<h5>System</h5>
+	<ul>
+		<li>
+			<f:link.action action="index">Doctrine</f:link.action>
+		</li>
+	</ul>
+</f:section>
+
+<f:section name="actionbar-left">
+	<form method="post">
+</f:section>
+
+<f:section name="actionbar-right">
+	<select name="package">
+		<option value="">Migration target</option>
+		<f:for each="{packages}" as="package">
+			<option value="{package.packageKey}">{package.packageKey}</option>
+		</f:for>
+	</select>
+	<button name="migrate" value="true" class="btn">Migrate</button>
+</f:section>
+
+<f:section name="content">
+	<f:if condition="{schemaDiff.newTables}">
+		<h3>New Tables</h3>
+		<f:render partial="Schema/Table" arguments="{tables: schemaDiff.newTables}" />
+	</f:if>
+	<f:if condition="{schemaDiff.changedTables}">
+		<h3>Changed Tables</h3>
+		<f:render partial="Schema/Table" arguments="{tables: schemaDiff.changedTables}" />
+	</f:if>
+	<f:if condition="{schemaDiff.removedTables}">
+		<h3>Removed Tables</h3>
+		<f:render partial="Schema/Table" arguments="{tables: schemaDiff.removedTables}" />
+	</f:if>
+</form>
+</f:section>
