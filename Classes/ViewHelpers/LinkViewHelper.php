@@ -75,7 +75,7 @@ class LinkViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHe
 	public function render($action = NULL, $arguments = array(), $being = NULL, $controller = NULL, $package = NULL, $subpackage = NULL, $section = '', $format = '',  array $additionalParams = array(), $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array(), $overrule = array()) {
 		$uriBuilder = $this->controllerContext->getUriBuilder();
 		if($being !== NULL)
-			$arguments["being"] = \Admin\Core\Register::get("classShortNames", $being);
+			$arguments["being"] = \Admin\Core\API::get("classShortNames", $being);
 		try {
 			$uri = $uriBuilder
 				->reset()

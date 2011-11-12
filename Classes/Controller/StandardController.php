@@ -71,7 +71,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 	
 	public function addLog($description = ""){
 		if($this->settings["Logging"]["Active"]){
-			$action = \Admin\Core\Register::get("action");
+			$action = \Admin\Core\API::get("action");
 			if(!in_array($action, $this->settings["Logging"]["Ignore"])){
 				$log = new \Admin\Domain\Model\Log();
 				$log->setUser($this->user);
@@ -181,51 +181,47 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 
 		$this->adapters = $this->helper->getAdapters();
 		$this->settings = $this->helper->getSettings();
-		\Admin\Core\Register::set("classShortNames", $this->compileShortNames());
 		
-		\Admin\Core\Register::set("objectManager",$this->objectManager);
+		\Admin\Core\API::set("classShortNames", $this->compileShortNames());
 		
-		\Admin\Core\Register::set("settings",$this->settings);
-		\Admin\Core\Register::set("session",$this->session);
-		\Admin\Core\Register::set("action",$action);
+		\Admin\Core\API::set("objectManager",$this->objectManager);
+		
+		\Admin\Core\API::set("settings",$this->settings);
+		\Admin\Core\API::set("session",$this->session);
+		\Admin\Core\API::set("action",$action);
 		
 		if($this->request->hasArgument("being")){
 			$this->being = $this->request->getArgument("being");
 			if(!stristr($this->being, "\\"))
-				$this->being = \Admin\Core\Register::get("classShortNames", $this->being);
-			\Admin\Core\Register::set("being",$this->being);
+				$this->being = \Admin\Core\API::get("classShortNames", $this->being);
+			\Admin\Core\API::set("being",$this->being);
 			
 			$this->adapter = $this->helper->getAdapterByBeing($this->being);
-			\Admin\Core\Register::set("adapter",$this->adapter);
+			\Admin\Core\API::set("adapter",$this->adapter);
 
 			$this->group = $this->helper->getGroupByBeing($this->being);
-			\Admin\Core\Register::set("group",$this->group);
+			\Admin\Core\API::set("group",$this->group);
 			$title[] = \Admin\Core\Helper::getShortName($this->being);
 		}
 
 		if($this->request->hasArgument("id")){
 			$this->id = $this->request->getArgument("id");
-			\Admin\Core\Register::set("being_id",$this->id);
+			\Admin\Core\API::set("being_id",$this->id);
 		}
 
-		$activeTokens = $this->securityContext->getAuthenticationTokens();
+		$user = $this->helper->getUser();
+		
 		$allowedBeings = array("view"=>array());
-		foreach ($activeTokens as $token) {
-			if ( $token->isAuthenticated() && is_callable(array($token,"getUser")) ) {
-				$user = $token->getUser();
-				try{
-					foreach ($user->getRoles() as $role) {
-						foreach ($role->getGrant() as $policy) {
-							$allowedBeings[$policy->getAction()][] = $policy->getBeing();
-						}
-					}
-					break;
-				} catch (\Doctrine\ORM\EntityNotFoundException $e){
-					unset($user);
+		try{
+			foreach ($user->getRoles() as $role) {
+				foreach ($role->getGrant() as $policy) {
+					$allowedBeings[$policy->getAction()][] = $policy->getBeing();
 				}
 			}
+		} catch (\Doctrine\ORM\EntityNotFoundException $e){
+			unset($user);
 		}
-
+		
 		if(!isset($user) || !is_object($user)){
 			parent::redirect('index', 'Login');
 			throw new \TYPO3\FLOW3\MVC\Exception\StopActionException();
@@ -237,10 +233,10 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		ksort($groups);
 		foreach($groups as $package => $group){
 			foreach($group["beings"] as $key => $being){
-			   if( !in_array($being["being"],$allowedBeings["view"]) )
-				   if( !$user->isAdmin() )
-					   unset($groups[$package]["beings"][$key]);
-
+				if( !in_array($being["being"],$allowedBeings["view"]) )
+					if( !$user->isAdmin() )
+						unset($groups[$package]["beings"][$key]);
+				
 				if(!empty($this->adapter)){
 					if($being["being"] == $this->being && $being["adapter"] == $this->adapter){
 						$groups[$package]["beings"][$key]["active"] = true;
@@ -255,7 +251,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 
 		$this->view = $this->resolveView();
 		
-		$this->view->assign('user', $user);
+		\Admin\Core\API::set("user", $user);
 			
 		if ($this->view !== NULL) {
 			$this->view->assign('settings', $this->settings);
@@ -271,7 +267,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		$topBarActions = $this->getActions($action, $this->being, false);
 		$this->view->assign('topBarActions',$topBarActions);
 
-		$this->view->assign("title",implode(" - ",array_reverse($title)));
+		$this->view->assign("title", implode(" - ", array_reverse($title)));
 	}
 
 	public function setTemplate($action){
@@ -315,7 +311,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 			if($this->request->hasArgument("being")){
 				$meta["being"]["identifier"] = $this->request->getArgument("being");
 				$meta["being"]["name"] = $this->getAdapter()->getName($this->request->getArgument("being"));
-				\Admin\Core\Register::set("package",$replacements["@package"]);
+				\Admin\Core\API::set("package",$replacements["@package"]);
 			}
 		}
 	}

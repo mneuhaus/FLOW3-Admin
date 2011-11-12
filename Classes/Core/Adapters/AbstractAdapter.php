@@ -507,7 +507,7 @@ abstract class AbstractAdapter implements \Admin\Core\Adapters\AdapterInterface 
 			return true;
 
 		$actions = explode(",",$conf["ignore"]);
-		$action = \Admin\Core\Register::get("action");
+		$action = \Admin\Core\API::get("action");
 		return in_array($action,$actions);
 
 		return false;

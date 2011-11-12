@@ -63,11 +63,13 @@ class RenderViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @param string $partial
 	 * @param string $fallbacks
 	 * @param array $vars
+	 * @param string $section
+	 * @param mixed $optional
 	 * @return string Rendered string
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 * @api
 	 */
-	public function render($value='',$partial='',$fallbacks='',$vars = array()) {
+	public function render($value='',$partial='',$fallbacks='',$vars = array(), $section = null, $optional = false) {
 		if($value !== '')
 			return $value;
 
@@ -103,6 +105,13 @@ class RenderViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 					return $partial->render($renderingContext);
 				}
 			}
+		}
+		
+		if($section !== null){
+ 			$output = $this->viewHelperVariableContainer->getView()->renderSection($section, $vars, $optional);
+			if(strlen($output) < 1)
+				$output = $this->renderChildren();
+			return $output;
 		}
 	}
 	

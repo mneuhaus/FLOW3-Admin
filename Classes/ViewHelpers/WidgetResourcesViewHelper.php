@@ -38,12 +38,12 @@ class WidgetResourcesViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractVie
 	 */
 	public function render($add = null, $render = null) {
 		if($add !== null){
-			\Admin\Core\Register::add("WidgetResources", $add, $this->renderChildren());
+			\Admin\Core\API::add("WidgetResources", $add, $this->renderChildren());
 			return "";
 		}
 		
 		if($render !== null && $render == true){
-			$resources = \Admin\Core\Register::get("WidgetResources");
+			$resources = \Admin\Core\API::get("WidgetResources");
 			if(is_array($resources))
 				return implode("\n", $resources);
 		}

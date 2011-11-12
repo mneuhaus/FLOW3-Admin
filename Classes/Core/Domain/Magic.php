@@ -40,11 +40,18 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  */
 abstract class Magic {
 	
+	/**
+	 * @var \TYPO3\FLOW3\Object\ObjectManagerInterface
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 * @FLOW3\Inject
+	 */
+	protected $objectManager;
+	
 	public function getArguments(){
 		return array(
 			"id" => $this->getIdentity(),
 			"being" => $this->getClassName(),
-			"adapter" => \Admin\Core\Register::get("adapter")
+			"adapter" => \Admin\Core\API::get("adapter")
 		);
 	}
 	
@@ -63,8 +70,8 @@ abstract class Magic {
 	}
 	
 	function getIdentity(){
-		$persistenceManager = \Admin\Core\Register::get("objectManager")->get("TYPO3\FLOW3\Persistence\PersistenceManagerInterface");
-        return $persistenceManager->getIdentifierByObject($this);
+		$persistenceManager = $this->objectManager->get("TYPO3\FLOW3\Persistence\PersistenceManagerInterface");
+		return $persistenceManager->getIdentifierByObject($this);
 	}
 
 	function __call($name,$arguments) {
@@ -202,7 +209,7 @@ abstract class Magic {
 	}
 	
 	public function __toString(){
-		$reflectionService = \Admin\Core\Register::get("objectManager")->get("TYPO3\FLOW3\Reflection\ReflectionService");
+		$reflectionService = $this->objectManager->get("TYPO3\FLOW3\Reflection\ReflectionService");
 		$class = get_parent_class(get_class($this));
 		$properties = $reflectionService->getClassPropertyNames($class);
 		$identity = array();

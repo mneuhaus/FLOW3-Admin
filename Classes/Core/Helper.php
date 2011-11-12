@@ -59,6 +59,12 @@ class Helper {
 	protected $reflectionService;
 	
 	/**
+	 * @var TYPO3\FLOW3\Security\Context
+	 * @FLOW3\Inject
+	 */
+	protected $securityContext;
+	
+	/**
 	 * Checks if the Variable is iteratable
 	 *
 	 * @param mixed $mixed $variable to check
@@ -284,6 +290,17 @@ class Helper {
 		}
 		
 		return $class;
+	}
+	
+	public function getUser(){
+		$activeTokens = $this->securityContext->getAuthenticationTokens();
+		foreach ($activeTokens as $token) {
+			if ( $token->isAuthenticated() && is_callable(array($token,"getUser")) ) {
+				$user = $token->getUser();
+				return $user;
+			}
+		}
+		return false;
 	}
 
 	/**
