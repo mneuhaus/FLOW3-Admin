@@ -184,7 +184,7 @@ class Property{
                 $this->counter++;
             }else{
                 if($this->mode == self::INLINE_MULTIPLE_MODE)
-                    $amountOfInlines = 3;
+                    $amountOfInlines = 1;
                 else
                     $amountOfInlines = 1;
 

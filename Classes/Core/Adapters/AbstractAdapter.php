@@ -244,7 +244,7 @@ abstract class AbstractAdapter implements \Admin\Core\Adapters\AdapterInterface 
 		}else{
 			$configuration = $cache->get($identifier);
 		}
-
+		
 		return $configuration;
 	}
 	
@@ -393,7 +393,6 @@ abstract class AbstractAdapter implements \Admin\Core\Adapters\AdapterInterface 
 
 			$mappings = \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($this->settings, $path);
 			if( ! empty($mappings) ) {
-#				doh($mappings, $raw);
 				if( $widget === null && isset($mappings[$raw]) ) {
 					$widget = $mappings[$raw];
 				}
@@ -409,7 +408,6 @@ abstract class AbstractAdapter implements \Admin\Core\Adapters\AdapterInterface 
 				if( $widget === null){
 					foreach($mappings as $pattern => $widget) {
 						if( preg_match("/" . $pattern . "/", $raw) > 0 ) {
-							$widget = $widget;
 							break;
 						}
 					}
@@ -479,6 +477,7 @@ abstract class AbstractAdapter implements \Admin\Core\Adapters\AdapterInterface 
 			if(isset($c["optionsProvider"]) && is_array($c["optionsProvider"]))
 				$configuration["properties"][$property]["optionsProvider"] = array_pop($c["optionsProvider"]);
 		}
+		
 		return $configuration;
 	}
 	

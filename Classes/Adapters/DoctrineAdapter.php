@@ -59,6 +59,7 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 	
 	public function initQuery($being){
 		$repository = str_replace("Domain\\Model", "Domain\\Repository", $being) . "Repository";
+		$repository = $this->getRepositoryForModel($being);
 		if(\class_exists($repository)){
 			$repositoryObject = $this->objectManager->get($repository);
 			$this->query = $repositoryObject->createQuery();
@@ -98,16 +99,26 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 	public function getGroups() {
 		$this->init();
 		$groups = array();
-		$classes = $this->getClassesTaggedWith(array("entity","active"));
+		$classes = $this->getClassesTaggedWith(array("active"));
+		foreach ($this->settings["Beings"] as $being => $conf) {
+			if(isset($conf["active"]) && $conf["active"] == true){
+				if(isset($conf["group"]))
+					$classes[$being] = $conf["group"];
+				else
+					$classes[$being] = $this->objectManager->getPackageKeyByObjectName($being);
+			}
+		}
+		
 		foreach($classes as $class => $packageName) {
 			$tags = $this->reflectionService->getClassTagsValues($class);
-			$repository = \Admin\Core\Helper::getModelRepository($class);
+			$repository = $this->getRepositoryForModel($class);
+			
 			if(class_exists($repository)){
-
 				$group = $packageName;
+				
 				if(isset($tags["group"]))
 					$group = current($tags["group"]);
-
+				
 				$groups[$group][] = array("being" => $class, "name" => \Admin\Core\Helper::getShortName($class));
 			}
 		}
@@ -146,6 +157,15 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 		return null;
 	}
 	
+	public function getRepositoryForModel($model){
+		if(isset($this->settings["Beings"][$model]) && $this->settings["Beings"][$model]["repository"])
+			$repository = $this->settings["Beings"][$model]["repository"];
+		else
+			$repository = \Admin\Core\Helper::getModelRepository($model);
+		
+		return $repository;
+	}
+	
 	public function getTotal($being){
 		return $this->query->count();
 	}
@@ -156,7 +176,7 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 		$result = $this->propertyMapper->convert($data, $being, \Admin\Core\PropertyMappingConfiguration::getConfiguration());
 		
 		if(is_a($result, $being)){
-			$repository = $this->objectManager->get(str_replace("Domain\\Model", "Domain\\Repository", $being) . "Repository");
+			$repository = $this->objectManager->get($this->getRepositoryForModel($being));
 			$repository->add($result);
 			$this->persistenceManager->persistAll();
 		}
@@ -169,7 +189,7 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 		$result = $this->propertyMapper->convert($data, $being, \Admin\Core\PropertyMappingConfiguration::getConfiguration());
 		
 		if(is_a($result, $being)){
-			$repository = $this->objectManager->get(str_replace("Domain\\Model", "Domain\\Repository", $being) . "Repository");
+			$repository = $this->objectManager->get($this->getRepositoryForModel($being));
 			$repository->add($result);
 			$this->persistenceManager->persistAll();
 		}
@@ -179,8 +199,7 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 	public function deleteObject($being, $id) {
 		$object = $this->persistenceManager->getObjectByIdentifier($id, $being);
 		if( $object == null ) return;
-		$repository = str_replace("Domain\\Model", "Domain\\Repository", $being) . "Repository";
-		$repositoryObject = $this->objectManager->get($repository);
+		$repositoryObject = $this->objectManager->get($this->getRepositoryForModel($being));
 		$repositoryObject->remove($object);
 		$this->persistenceManager->persistAll();
 	}

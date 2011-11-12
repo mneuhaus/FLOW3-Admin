@@ -20,8 +20,11 @@
 					<f:if condition="{property.inline}">
 						<f:then>
 							<f:for each="{property.children}" as="child">
-								<a:render partial="Form" fallbacks="Partials" vars="{being:child}" />
+								<a:render partial="Form" fallbacks="Partials" vars="{being: child}" />
 							</f:for>
+							<!-- <f:for each="{property.children}" as="child"> -->
+								<!-- <a:render partial="TabularForm" fallbacks="Partials" vars="{rows: property.children}" /> -->
+							<!-- </f:for> -->
 						</f:then>
 						<f:else>
 							<a:render partial="{property.widget}" fallbacks="Widgets" vars="{property:property}"/>

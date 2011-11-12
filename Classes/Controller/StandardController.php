@@ -211,21 +211,20 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 
 		$user = $this->helper->getUser();
 		
-		$allowedBeings = array("view"=>array());
-		try{
-			foreach ($user->getRoles() as $role) {
-				foreach ($role->getGrant() as $policy) {
-					$allowedBeings[$policy->getAction()][] = $policy->getBeing();
-				}
-			}
-		} catch (\Doctrine\ORM\EntityNotFoundException $e){
-			unset($user);
-		}
-		
 		if(!isset($user) || !is_object($user)){
 			parent::redirect('index', 'Login');
 			throw new \TYPO3\FLOW3\MVC\Exception\StopActionException();
 		}else{
+			$allowedBeings = array("view"=>array());
+			try{
+				foreach ($user->getRoles() as $role) {
+					foreach ($role->getGrant() as $policy) {
+						$allowedBeings[$policy->getAction()][] = $policy->getBeing();
+					}
+				}
+			} catch (\Doctrine\ORM\EntityNotFoundException $e){
+				unset($user);
+			}
 			$this->user = $user;
 		}
 

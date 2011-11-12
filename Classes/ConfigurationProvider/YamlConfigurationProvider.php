@@ -33,8 +33,8 @@ class YamlConfigurationProvider extends \Admin\Core\ConfigurationProvider\Abstra
 	public function get($being){
 		$configuration = array();
 		
-		if(isset($this->settings["Beings"]) && isset($this->settings["Beings"][$being]))
-			$configuration = $this->settings["Beings"][$being];
+		if(isset($this->adapter->settings["Beings"]) && isset($this->adapter->settings["Beings"][$being]))
+			$configuration = $this->adapter->settings["Beings"][$being];
 		
 		return $configuration;
 	}

@@ -30,6 +30,9 @@ Admin:
     Docs:
       Controller: doc
       Action: index
+    System:
+      Controller: system
+      Action: index
   Logging:
     Active: true
     Ignore: 
@@ -81,10 +84,10 @@ Doctrine:
       boolean:  Boolean
       \TYPO3\FLOW3\Resource\Resource: Upload
       \DateTime: DateTime
-      ^\\[A-Za-z]+\\Domain\\Model\\[A-Za-z]+$: SingleRelation
-      ^\\[A-Za-z]+\\Security\\[A-Za-z]+$: SingleRelation
-      ^\\Doctrine\\Common\\Collections\\Collection\<\\*\[A-Za-z]+\\Domain\\Model\\[A-za-z]+>$: MultipleRelation
-      ^\\Doctrine\\Common\\Collections\\Collection\<\\*\[A-Za-z]+\\Security\\[A-za-z]+>$: MultipleRelation
+      ^\\[A-Za-z0-9\\]+\\Domain\\Model\\[A-Za-z]+$: SingleRelation
+      ^\\[A-Za-z0-9\\]+\\Security\\[A-Za-z]+$: SingleRelation
+      ^\\Doctrine\\Common\\Collections\\Collection\<\\[A-Za-z0-9\\]+\\Domain\\Model\\[A-za-z]+>$: MultipleRelation
+      ^\\Doctrine\\Common\\Collections\\Collection\<\\[A-Za-z0-9\\]+\\Security\\[A-za-z]+>$: MultipleRelation
       
 Dummy:
   DataStorage: '%FLOW3_PATH_DATA%Persistent/DummyData'

@@ -283,13 +283,9 @@ class Helper {
 	static function getShortName($class){
 		if(is_object($class))
 			$class = get_class($class);
-		
-		if(class_exists($class, false)){
-			$parts = explode("\\", $class);
-			return array_pop($parts);
-		}
-		
-		return $class;
+			
+		$parts = explode("\\", $class);
+		return array_pop($parts);
 	}
 	
 	public function getUser(){

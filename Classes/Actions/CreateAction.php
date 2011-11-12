@@ -57,7 +57,7 @@ class CreateAction extends \Admin\Core\Actions\AbstractAction {
 	 * */
 	public function execute($being, $ids = null) {
 		$object = $this->adapter->getBeing($being);
-
+		
 		if( $this->request->hasArgument("create") ) {
 			$result = $this->adapter->createObject($being, $this->request->getArgument("item"));
 			
