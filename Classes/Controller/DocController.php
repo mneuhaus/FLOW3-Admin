@@ -47,6 +47,7 @@ class DocController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 	 * @param string $page 
 	 * @return void
 	 * @author Marc Neuhaus
+	 * @Admin\Annotations\Navigation(title="Documentation", position="top")
 	 */
 	public function indexAction($lang = "en", $doc = "Manual", $page = "1_Index"){
 		

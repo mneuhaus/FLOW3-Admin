@@ -19,20 +19,6 @@ TYPO3:
           - TYPO3\FLOW3\Security\Authorization\Voter\Policy
 Admin:
   PageTitle: Admin
-  NavBar: 
-    Models:
-      Controller: standard
-      Action: index
-      Children:
-        Logout:
-          Controller: login
-          Action: logout
-    Docs:
-      Controller: doc
-      Action: index
-    System:
-      Controller: system
-      Action: index
   Logging:
     Active: true
     Ignore: 

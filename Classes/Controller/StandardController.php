@@ -119,6 +119,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	protected function callActionMethod() {
+		$this->indexAction();
 		$preparedArguments = array();
 		foreach ($this->arguments as $argument) {
 			$preparedArguments[] = $argument->getValue();
@@ -133,6 +134,17 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		} elseif (is_object($actionResult) && method_exists($actionResult, '__toString')) {
 			$this->response->appendContent((string)$actionResult);
 		}
+	}
+	
+	/**
+	 * Dummy function to add this Controller to the Navigation
+	 *
+	 * @return void
+	 * @author Marc Neuhaus
+	 * @Admin\Annotations\Navigation(title="Models", position="top", priority="1000")
+	 */
+	public function indexAction(){
+		
 	}
 
 	public function __call($name, $args){

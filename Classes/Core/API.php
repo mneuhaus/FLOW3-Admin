@@ -58,6 +58,26 @@ class API {
 	static function remove($name){
 		unset(self::$container[$name]);
 	}
+	
+	static function addNavigationItem($name, $position, $arguments, $priority = 100, $parent = null){
+		if(is_null($parent)){
+			self::add("Navigation-".$position, $name, $arguments);
+			self::add("NavigationSorting-".$position, $name, $priority);
+		}else{
+			
+		}
+	}
+	
+	static function getNagigationItems($position){
+		$items = self::get("Navigation-".$position);
+		$sorting = self::get("NavigationSorting-".$position);
+		arsort($sorting);
+		$sortedItems = array();
+		foreach ($sorting as $key => $priority) {
+			$sortedItems[$key] = $items[$key];
+		}
+		return $sortedItems;
+	}
 }
 
 ?>

@@ -43,11 +43,11 @@ class NavBarViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @var array
 	 */
 	protected $defaults = array(
-		"Arguments" => array(),
-		"Controller"=> null,
-		"Package"	=> null,
-		"Subpackage"=> null,
-		"Children"	=> array()
+		"arguments" => array(),
+		"controller"=> null,
+		"package"	=> null,
+		"subpackage"=> null,
+		"children"	=> array()
 	);
 	
 	/**
@@ -61,23 +61,23 @@ class NavBarViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 */
 	public function render($items = false, $namespace = "Admin.NavBar", $as = "navBar") {
 		if($items == false)
-			$items = $this->configurationManager->getConfiguration(\TYPO3\FLOW3\Configuration\ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, $namespace);
+#			$items = $this->configurationManager->getConfiguration(\TYPO3\FLOW3\Configuration\ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, $namespace);
+			$items = \Admin\Core\API::getNagigationItems("top");
 		
 		$content = "";
 		foreach ($items as $name => $arguments) {
 			$arguments = array_merge($this->defaults, $arguments);
 			
-			
 			$variables = array(
-				"link" => $this->getLink($arguments["Action"], $arguments["Arguments"], $arguments["Controller"], $arguments["Package"], $arguments["Subpackage"]),
+				"link" => $this->getLink($arguments["action"], $arguments["arguments"], $arguments["controller"], $arguments["package"], $arguments["subpackage"]),
 				"name" => $name,
 				"hasChildren" => false,
 				"arguments" => $arguments,
 				"children" => array()
 			);
 			
-			if(count($arguments["Children"]) > 0){
-				$variables["children"] = $this->render($arguments["Children"], $namespace, $as);
+			if(count($arguments["children"]) > 0){
+				$variables["children"] = $this->render($arguments["children"], $namespace, $as);
 				$variables["hasChildren"] = true;
 			}
 			

@@ -232,6 +232,18 @@ class Helper {
 	}
 	
 	/**
+	 *
+	 * @param $model String Name of the Model with Namespace
+	 * @return $name String Model Name
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 **/
+	static public function getControllerByClassName($model){
+		preg_match("/\\\\Controller\\\\(.+)Controller/",$model,$match);
+		if(count($match)>0)
+			return $match[1];
+	}
+	
+	/**
 	 * returns a template Path by checking configured fallbacks
 	 *
 	 * @param string $patterns 
