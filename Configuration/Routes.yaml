@@ -50,3 +50,39 @@
 #     '@package':     'Admin'
 #     '@controller':  'Standard'
 #     '@format':      'html'
+
+-
+  name: 'Documentations'
+  uriPattern: 'doc/{@package}/{lang}/{doc}/{page}/{subpage1}'
+  defaults:
+    '@action':      'index'
+    '@package':     'Admin'
+    '@controller':  'Doc'
+    '@format':      'html'
+    '@lang':        'en'
+    '@doc':         'Manual'
+    '@page':        'index'
+
+-
+  name: 'Documentations'
+  uriPattern: 'doc/{@package}/{lang}/{doc}/{page}'
+  defaults:
+    '@action':      'index'
+    '@package':     'Admin'
+    '@controller':  'Doc'
+    '@format':      'html'
+    '@lang':        'en'
+    '@doc':         'Manual'
+    '@page':        'index'
+
+-
+  name: 'Documentations'
+  uriPattern: 'doc/{page}'
+  defaults:
+    '@action':      'index'
+    '@package':     'Admin'
+    '@controller':  'Doc'
+    '@format':      'html'
+    '@lang':        'en'
+    '@doc':         'Manual'
+    '@page':        'index'

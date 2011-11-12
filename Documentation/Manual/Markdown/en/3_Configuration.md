@@ -1,0 +1,5 @@
+#Configuration
+There are Basically 2 Levels of Configurations 
+
+1. Class/Model wide Configuration
+2. Property Configuration

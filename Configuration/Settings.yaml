@@ -19,6 +19,17 @@ TYPO3:
           - TYPO3\FLOW3\Security\Authorization\Voter\Policy
 Admin:
   PageTitle: Admin
+  NavBar: 
+    Models:
+      Controller: standard
+      Action: index
+      Children:
+        Logout:
+          Controller: login
+          Action: logout
+    Docs:
+      Controller: doc
+      Action: index
   Logging:
     Active: true
     Ignore: 
@@ -46,10 +57,6 @@ Admin:
       - resource://@package/Private/Partials/@partial.html
       - resource://Admin/Private/Partials/@action/@partial.html
       - resource://Admin/Private/Partials/@partial.html
-    Actions:
-      - resource://@package/Private/Partials/@being/Actions/@action.html
-      - resource://@package/Private/Partials/Actions/@action.html
-      - resource://Admin/Private/Partials/Actions/@action.html
     DashboardWidgets:
       - resource://@package/Private/Partials/@being/DashboardWidgets/@partial.html
       - resource://@package/Private/Partials/DashboardWidgets/@partial.html

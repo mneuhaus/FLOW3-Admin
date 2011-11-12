@@ -50,6 +50,8 @@ jQuery(document).ready(function(){
 	// 	]};
 	// 	$('.f-fullrte').ckeditor(config);
 	//     }
+	
+	jQuery('.navbar ul.nav').dropdown();
 });
 
 

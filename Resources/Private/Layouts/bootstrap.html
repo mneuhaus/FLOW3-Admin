@@ -7,7 +7,7 @@
 	<meta charset="utf-8">
 	<title>{title}</title>
 	
-	<f:base />
+	<f:render section="header" optional="true" />
 	
 	<!--[if lt IE 9]>
 	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -28,17 +28,40 @@
 		<div class="navbar-inner">
 			<div class="fluid-container">
 				<a class="brand" href="/admin/">{settings.PageTitle}</a>
-				<!-- <ul class="nav">
-					<li class="active"><a href="#">Home</a></li>
-					<li><a href="#about">About</a></li>
-					<li><a href="#contact">Contact</a></li>
-				</ul> -->
+				<ul class="nav" data-dropdown="dropdown">
+				<a:navBar>
+					<f:if condition="{navBar.hasChildren}">
+						<f:then>
+						<li class="dropdown">
+							<a href="{navBar.link}">{navBar.name}</a>
+							<ul class="dropdown-menu"><f:format.raw>{navBar.children}</f:format.raw></ul>
+						</li>
+						</f:then>
+						<f:else>
+							<li class="">
+								<a href="{navBar.link}">{navBar.name}</a>
+							</li>
+						</f:else>
+					</f:if>
+				</a:navBar>
+				</ul>
 				
-				<p class="pull-right">
-					Logged in as 
-					<f:link.action action="update" arguments="{user.arguments}">{user}</f:link.action>
-					| <f:link.action action="logout" controller="Login">Logout</f:link.action>
-				</p>
+				<a:user>
+				<f:if condition="{user}">
+					<f:then>
+					<p class="pull-right">
+						Logged in as 
+						<f:link.action action="update" arguments="{user.arguments}">{user}</f:link.action>
+						| <f:link.action action="logout" controller="Login">Logout</f:link.action>
+					</p>
+					</f:then>
+					<f:else>
+					<p class="pull-right">
+						<f:link.action action="index" controller="Login">Login</f:link.action>
+					</p>
+					</f:else>
+				</f:if>
+				</a:user>
 			</div>
 			<div class="clearfix"></div>
 		</div>
@@ -47,6 +70,7 @@
 	<div class="fluid-container">
 		
 		<div class="sidebar">
+			<a:render section="sidebar" optional="true" >
 			<h5>Overview</h5>
 			<ul>
 				<li>
@@ -68,6 +92,7 @@
 				</f:for>
 				</ul>
 			</f:for>
+			</a:render>
 		</div>
 		
 		<div class="content">
@@ -97,12 +122,14 @@
 	
 	
 	<script src="{f:uri.resource(path: 'admin/js/jquery.1.6.4.min.js', package: 'Admin')}"></script>
-	<script src="{f:uri.resource(path: 'admin/js/main.js', package: 'Admin')}"></script>
 	
 	<script src="{f:uri.resource(path: 'bootstrap/js/bootstrap-alerts.js', package: 'Admin')}"></script>
 	<script src="{f:uri.resource(path: 'bootstrap/js/bootstrap-dropdown.js', package: 'Admin')}"></script>
 	<script src="{f:uri.resource(path: 'bootstrap/js/bootstrap-twipsy.js', package: 'Admin')}"></script>
 	
 	<a:widgetResources render="true" />
+
+	<script src="{f:uri.resource(path: 'admin/js/main.js', package: 'Admin')}"></script>
+
 </body>
 </html>
