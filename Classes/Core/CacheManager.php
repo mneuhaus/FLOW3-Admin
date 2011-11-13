@@ -1,5 +1,5 @@
 <?php
-namespace TYPO3\FLOW3\Cache;
+namespace Admin\Core;
 
 /*                                                                        *
  * This script belongs to the FLOW3 framework.                            *
@@ -19,7 +19,6 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * The Cache Manager
  *
  * @FLOW3\Scope("singleton")
- * @api
  */
 class CacheManager {
 
@@ -34,9 +33,9 @@ class CacheManager {
 	 * @return void
 	 */
 	public function flushCachesByChangedFiles($fileMonitorIdentifier, array $changedFiles) {
-		if ($fileMonitorIdentifier !== 'FLOW3_ClassFiles') {
-			return;
-		}
+		// if ($fileMonitorIdentifier !== 'FLOW3_ClassFiles') {
+		// 	return;
+		// }
 		
 		// $this->flushCachesByTag(self::getClassTag());
 		// foreach ($changedFiles as $pathAndFilename => $status) {
