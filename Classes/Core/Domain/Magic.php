@@ -50,15 +50,9 @@ abstract class Magic {
 	public function getArguments(){
 		return array(
 			"id" => $this->getIdentity(),
-			"being" => $this->getClassName(),
+			"being" => get_class($this),
 			"adapter" => \Admin\Core\API::get("adapter")
 		);
-	}
-	
-	public function getClassName(){
-		$class = get_class($this);
-		$nameParts = explode("_AOPProxy",$class);
-		return array_shift($nameParts);
 	}
 	
 	function getModelName(){
