@@ -85,11 +85,14 @@ class ListAction extends \Admin\Core\Actions\AbstractAction {
 			$bulkAction = $this->request->getArgument("bulkAction");
 			if( isset($actions[$bulkAction]) ) {
 				$action = $actions[$bulkAction];
-				$items = $this->request->getArgument("bulkItems");
-				$action->execute($this->being, $items);
+				
+				$this->controller->setTemplate($action->getAction());
+				
+				if($action->getAction() !== $bulkAction)
+					$action = $this->controller->getActionByShortName($action->getAction() . "Action");
+				
+				$action->execute($this->being, $this->request->getArgument("bulkItems"));
 			}
-			$arguments = array("being" => $this->being, "adapter" => get_class($this->adapter));
-			$this->controller->redirect("list", NULL, NULL, $arguments);
 		}
 	}
 

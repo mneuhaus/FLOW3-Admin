@@ -59,19 +59,18 @@ class DeleteAction extends \Admin\Core\Actions\AbstractAction {
 	 * */
 	public function execute($being, $ids = null) {
 		if( is_array($ids) ) {
-			foreach($ids as $id) {
-				$this->adapter->deleteObject($being, $id);
-			}
-		}else {
 			if( $this->request->hasArgument("confirm") ) {
-				$this->adapter->deleteObject($being, $ids);
-				
+				foreach($ids as $id) {
+					$this->adapter->deleteObject($being, $id);
+				}
 				$this->controller->addLog();
 				
 				$arguments = array("adapter" => get_class($this->adapter), "being" => $being);
 				$this->controller->redirect('list', NULL, NULL, $arguments);
 			}else {
-				$this->controller->redirect('confirm', NULL, NULL, $this->request->getArguments());
+				$arguments = $this->request->getArguments();
+				$arguments["id"] = implode(",", $ids);
+				$this->controller->redirect('confirm', NULL, NULL, $arguments);
 			}
 		}
 	}

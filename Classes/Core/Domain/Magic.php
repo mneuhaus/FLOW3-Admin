@@ -210,7 +210,7 @@ abstract class Magic {
 	
 	public function __toString(){
 		$reflectionService = $this->objectManager->get("TYPO3\FLOW3\Reflection\ReflectionService");
-		$class = get_parent_class(get_class($this));
+		$class = get_class($this);
 		$properties = $reflectionService->getClassPropertyNames($class);
 		$identity = array();
 		$title = array();

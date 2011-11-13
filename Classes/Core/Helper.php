@@ -225,10 +225,8 @@ class Helper {
 	 * @return $name String Model Name
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 **/
-	static public function getPackageByClassName($model){
-		preg_match("/\\\([^\\\\]+)/",$model,$match);
-		if(count($match)>0)
-			return $match[1];
+	public function getPackageByClassName($model){
+		return $this->objectManager->getPackageKeyByObjectName($model);
 	}
 	
 	/**

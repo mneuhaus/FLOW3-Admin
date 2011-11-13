@@ -45,8 +45,13 @@ class ConfirmAction extends \Admin\Core\Actions\AbstractAction {
 	 * @author Marc Neuhaus <mneuhaus@famelo.com>
 	 * */
 	public function execute($being, $ids = null) {
-		$object = $this->adapter->getBeing($being, $ids);
-		$this->view->assign("object", $object);
+		$objects = array();
+		foreach ($ids as $id) {
+			$objects[] = $this->adapter->getBeing($being, $id);
+		}
+		$this->view->assign("objects", $objects);
+		$this->view->assign("ids", implode(",", $ids));
+		$this->view->assign("being", $being);
 	}
 
 }

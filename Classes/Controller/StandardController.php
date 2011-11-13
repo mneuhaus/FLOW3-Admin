@@ -153,11 +153,8 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		$action = $this->getActionByShortName($name);
 		
 		if($action !== null){
-		   $result = $action->execute($this->being, $this->id);
-			
-			if(is_array($result)){
-				#$this->redirect($result[0],$result[1],$result[1],$result[3]);
-			}
+			$ids = explode(",", $this->id);
+			$action->execute($this->being, $ids);
 		}
 	}
 	
@@ -287,6 +284,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 			"@variant" => "Default",
 			"@package" => "Admin",
 		);
+		
 		if(!empty($this->being)){
 			if(class_exists($this->being, false)){
 				$tags = $this->reflectionService->getClassTagsValues($this->being);
@@ -385,7 +383,6 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 			$actionName = \Admin\Core\Helper::getShortName($actionClassName);
 			if(strtolower($actionName) == strtolower($action)){
 				return $this->objectManager->create($actionClassName, $this->getAdapter(), $this->request, $this->view, $this);
-				#return new $actionClassName($this->getAdapter(), $this->request, $this->view, $this);
 			}
 		}
 		return null;
