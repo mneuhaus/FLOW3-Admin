@@ -235,7 +235,7 @@ class Helper {
 	 * @return $name String Model Name
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 **/
-	static public function getControllerByClassName($model){
+	public function getControllerByClassName($model){
 		preg_match("/\\\\Controller\\\\(.+)Controller/",$model,$match);
 		if(count($match)>0)
 			return $match[1];

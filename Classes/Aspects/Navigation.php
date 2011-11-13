@@ -8,6 +8,12 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * @FLOW3\Aspect
  */
 class Navigation {
+	/**
+	 * @var \Admin\Core\Helper
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 * @FLOW3\Inject
+	 */
+	protected $helper;
 	
 	/**
 	 * @var \TYPO3\FLOW3\Reflection\ReflectionService
@@ -42,7 +48,7 @@ class Navigation {
 					$annotation = $this->reflectionService->getMethodAnnotation($className, $methodName, "Admin\Annotations\Navigation");
 
 					$action = str_replace("Action", "", $methodName);
-					$controller = \Admin\Core\Helper::getControllerByClassName($className);
+					$controller = $this->helper->getControllerByClassName($className);
 					$package = $this->objectManager->getPackageKeyByObjectName($className);
 					$arguments = array(
 						"action" => $action,
