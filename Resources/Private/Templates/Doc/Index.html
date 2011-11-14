@@ -12,14 +12,14 @@
 	<ul>
 	<f:for each="{pages}" as="page" key="title">
 		<li>
-			<f:link.action arguments="{page: page.path}" addQueryString="true" argumentsToBeExcludedFromQueryString="{subpage1:'subpage1'}">
+			<f:link.action arguments="{page: page.path, lang: 'en'}" addQueryString="true" argumentsToBeExcludedFromQueryString="{subpage1:'subpage1'}">
 				{title}
 			</f:link.action>
 			<f:if condition="{page.children}">
 				<f:for each="{page.children}" as="subpage1" key="subpage1Title">
 				<ul>
 					<li>
-					<f:link.action arguments="{page: page.path, subpage1: subpage1.path}" addQueryString="true">
+					<f:link.action arguments="{page: page.path, lang: 'en', subpage1: subpage1.path}" addQueryString="true">
 						{subpage1Title}
 					</f:link.action>
 					</li>
