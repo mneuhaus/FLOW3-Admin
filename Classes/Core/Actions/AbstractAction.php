@@ -22,6 +22,8 @@ namespace Admin\Core\Actions;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * abstract base class for the actions
  *
@@ -29,7 +31,13 @@ namespace Admin\Core\Actions;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 abstract class AbstractAction implements ActionInterface {
-
+	/**
+	 * @var \Admin\Core\Helper
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 * @FLOW3\Inject
+	 */
+	protected $helper;
+	
 	/**
 	 * @var \Admin\Core\Adapters\AdapterInterface
 	 * @author Marc Neuhaus <mneuhaus@famelo.com>
@@ -79,6 +87,14 @@ abstract class AbstractAction implements ActionInterface {
 
 	public function override($class, $being){
 		return false;
+	}
+	
+	public function getSettings($path = null){
+		$paths = array("Admin.ViewSettings");
+		$paths[] = ucfirst($this->getAction());
+		if(!is_null($path))
+			$paths[] = $path;
+ 		return $this->helper->getSettings(implode(".", $paths));
 	}
 }
 ?>
