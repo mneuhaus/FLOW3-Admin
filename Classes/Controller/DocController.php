@@ -50,6 +50,8 @@ class DocController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 	 * @Admin\Annotations\Navigation(title="Documentation", position="top")
 	 */
 	public function indexAction($lang = "en", $doc = "Manual", $page = "1_Index"){
+		\Admin\Core\API::addTitleSegment("Documentation");
+		\Admin\Core\API::addTitleSegment($page);
 		
 		if($this->request->hasArgument("subpage1")){
 			$c = 1;
