@@ -22,7 +22,7 @@ body {
 .condensed-table .table-actions { text-align:right; padding-bottom:0; }
 .table-actions .btn{ margin-bottom:5px; }
 
-.topbar { color:#808080; }
+.navbar { color:#808080; }
 
 .fluid-container > .sidebar { background:#E6E6E6; position:fixed; top:40px; left:0; padding-left:20px; height:100%; width: 180px; }
 	.sidebar h5{ margin-top:5px; margin-bottom:0px; line-height:32px; }
