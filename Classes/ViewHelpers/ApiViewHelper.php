@@ -44,8 +44,14 @@ class ApiViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	public function render($get, $as = null) {
 		if($as == null)
 			$as = $get;
-			
-		$this->templateVariableContainer->add($as, \Admin\Core\API::get($get));
+		
+		if(\Admin\Core\API::has($get)){
+			$this->templateVariableContainer->add($as, \Admin\Core\API::get($get));
+		}elseif(is_callable("\Admin\Core\Api::get" . ucfirst($get))){
+			$function = "get" . ucfirst($get);
+			$result = call_user_func("\Admin\Core\Api::get" . ucfirst($get));
+			$this->templateVariableContainer->add($as, $result);
+		}
 		$output = $this->renderChildren();
 		$this->templateVariableContainer->remove($as);
 		

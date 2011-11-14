@@ -5,7 +5,7 @@
 	{namespace a=Admin\ViewHelpers}
 	
 	<meta charset="utf-8">
-	<title>{title}</title>
+	<title><a:api get="title">{title}</a:api></title>
 	
 	<a:render section="header" optional="true">
 		<f:base />
@@ -29,7 +29,7 @@
 	<div class="navbar navbar-fixed">
 		<div class="navbar-inner">
 			<div class="fluid-container">
-				<a class="brand" href="/admin/">{settings.PageTitle}</a>
+				<a class="brand" href="/admin/"><a:settings path="Admin.PageTitle" /></a>
 				<ul class="nav" data-dropdown="dropdown">
 				<a:navBar>
 					<f:if condition="{navBar.hasChildren}">
@@ -53,13 +53,13 @@
 					<f:then>
 					<p class="pull-right">
 						Logged in as 
-						<f:link.action action="update" arguments="{user.arguments}">{user}</f:link.action>
-						| <f:link.action action="logout" controller="Login">Logout</f:link.action>
+						<f:link.action action="update" package="Admin" arguments="{user.arguments}">{user}</f:link.action>
+						| <f:link.action action="logout" controller="Login" package="Admin">Logout</f:link.action>
 					</p>
 					</f:then>
 					<f:else>
 					<p class="pull-right">
-						<f:link.action action="index" controller="Login">Login</f:link.action>
+						<f:link.action action="index" controller="Login" package="Admin">Login</f:link.action>
 					</p>
 					</f:else>
 				</f:if>
