@@ -8,7 +8,14 @@
 			<f:for each="{objects}" as="object" key="id" iteration="loop">
 				<f:if condition="{loop.isFirst}">
 					<f:for each="{object.properties}" as="value" key="property">
-						<th>{value.label}</th>
+						<f:if condition="{sorting} == {property}">
+							<f:then><th class="{sortingClass}"></f:then>
+							<f:else><th></f:else>
+						</f:if>
+							<f:link.action action="list" addQueryString="true" arguments="{sort: property, direction: direction}">
+								{value.label}
+							</f:link.action>
+						</th>
 					</f:for>
 				</f:if>
 			</f:for>

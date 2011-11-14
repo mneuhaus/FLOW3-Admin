@@ -4,6 +4,11 @@ body {
 }
 
 .zebra-striped { border-bottom: 1px solid #DDD; }
+.zebra-striped th a { color:#404040; }
+.zebra-striped .headerSortUp, 
+.zebra-striped .headerSortDown { background-color:white; }
+.zebra-striped .headerSortUp a, 
+.zebra-striped .headerSortDown a { text-decoration:underline; }
 
 .actionbar{
 	overflow:hidden;

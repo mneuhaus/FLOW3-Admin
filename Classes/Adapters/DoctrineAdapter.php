@@ -47,6 +47,16 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 		$this->query->setOffset($offset);
 	}
 	
+	public function applyOrderings($property, $direction = null){
+		if(is_null($direction)){
+			$direction = \TYPO3\FLOW3\Persistence\QueryInterface::ORDER_ASCENDING;
+		}
+		
+		$this->query->setOrderings(array(
+			$property => $direction
+		));
+	}
+	
 	public function getName($being) {
 		return ucfirst($being);
 	}
