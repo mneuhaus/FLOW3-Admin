@@ -77,7 +77,7 @@
 
 -
   name: 'Documentations'
-  uriPattern: 'doc/{page}'
+  uriPattern: 'doc/{lang}/{page}'
   defaults:
     '@action':      'index'
     '@package':     'Admin'
