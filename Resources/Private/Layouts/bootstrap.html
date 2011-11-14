@@ -31,7 +31,7 @@
 			<div class="fluid-container">
 				<a class="brand" href="/admin/"><a:settings path="Admin.PageTitle" /></a>
 				<ul class="nav" data-dropdown="dropdown">
-				<a:navBar>
+				<a:navBar position="top">
 					<f:if condition="{navBar.hasChildren}">
 						<f:then>
 						<li class="dropdown">
@@ -94,6 +94,23 @@
 				</f:for>
 				</ul>
 			</f:for>
+			<ul>
+			<a:navBar position="left">
+				<f:if condition="{navBar.hasChildren}">
+					<f:then>
+					<li>
+						<a href="{navBar.link}">{navBar.name}</a>
+						<ul class="dropdown-menu"><f:format.raw>{navBar.children}</f:format.raw></ul>
+					</li>
+					</f:then>
+					<f:else>
+						<li class="">
+							<a href="{navBar.link}">{navBar.name}</a>
+						</li>
+					</f:else>
+				</f:if>
+			</a:navBar>
+			</ul>
 			</a:render>
 		</div>
 		

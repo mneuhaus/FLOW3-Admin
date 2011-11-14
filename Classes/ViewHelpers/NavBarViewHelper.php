@@ -52,17 +52,17 @@ class NavBarViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	
 	/**
 	 *
+	 * @param string $position
 	 * @param mixed $items
-	 * @param string $namespace
 	 * @param string $as
 	 * @return string Rendered string
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 * @api
 	 */
-	public function render($items = false, $namespace = "Admin.NavBar", $as = "navBar") {
+	public function render($position, $items = false, $as = "navBar") {
 		if($items == false)
 #			$items = $this->configurationManager->getConfiguration(\TYPO3\FLOW3\Configuration\ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, $namespace);
-			$items = \Admin\Core\API::getNagigationItems("top");
+			$items = \Admin\Core\API::getNagigationItems($position);
 		
 		$content = "";
 		foreach ($items as $name => $arguments) {
@@ -77,7 +77,7 @@ class NavBarViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 			);
 			
 			if(count($arguments["children"]) > 0){
-				$variables["children"] = $this->render($arguments["children"], $namespace, $as);
+				$variables["children"] = $this->render($position, $arguments["children"], $as);
 				$variables["hasChildren"] = true;
 			}
 			

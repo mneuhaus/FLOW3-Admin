@@ -71,10 +71,14 @@ class API {
 	static function getNagigationItems($position){
 		$items = self::get("Navigation-".$position);
 		$sorting = self::get("NavigationSorting-".$position);
-		arsort($sorting);
+		
 		$sortedItems = array();
-		foreach ($sorting as $key => $priority) {
-			$sortedItems[$key] = $items[$key];
+		
+		if(!is_null($sorting)){
+			arsort($sorting);
+			foreach ($sorting as $key => $priority) {
+				$sortedItems[$key] = $items[$key];
+			}
 		}
 		return $sortedItems;
 	}
