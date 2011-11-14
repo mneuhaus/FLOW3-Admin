@@ -121,7 +121,6 @@ abstract class AbstractAdapter implements \Admin\Core\Adapters\AdapterInterface 
 	}
 	
 	public function applyOffset($offset){
-		# code...
 	}
 	
 	/**
