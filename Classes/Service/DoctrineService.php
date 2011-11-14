@@ -109,7 +109,7 @@ class DoctrineService extends \TYPO3\FLOW3\Persistence\Doctrine\Service {
 		
 		if(!is_null($package) && $this->packageManager->isPackageActive($package)){
 			$package = $this->packageManager->getPackage($package);
-			$migrationsPath = $package->getPackagePath() . "Migrations/" . $platform->getName() . "/";
+			$migrationsPath = $package->getPackagePath() . "Migrations/" . ucfirst($platform->getName()) . "/";
 			$configuration->setMigrationsDirectory($migrationsPath);
 		}
 		
