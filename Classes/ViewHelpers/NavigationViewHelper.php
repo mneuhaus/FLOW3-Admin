@@ -1,9 +1,9 @@
 <?php
- 
+
 namespace Admin\ViewHelpers;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the FLOW3 framework.                            *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License as published by the *
@@ -32,52 +32,73 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * @FLOW3\Scope("prototype")
  */
 class NavigationViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
-	/**
-	 * @var \Admin\Core\Helper
-	 * @author Marc Neuhaus <apocalip@gmail.com>
-	 * @FLOW3\Inject
-	 */
-	protected $helper;
 	
 	/**
-	 * Iterates through elements of $each and renders child nodes
+	 * @var \TYPO3\FLOW3\Configuration\ConfigurationManager
+	 * @FLOW3\Inject
+	 */
+	protected $configurationManager;
+	
+	/**
+	 * @var array
+	 */
+	protected $defaults = array(
+		"arguments" => array(),
+		"controller"=> null,
+		"package"	=> null,
+		"subpackage"=> null,
+		"children"	=> array()
+	);
+	
+	/**
 	 *
+	 * @param string $position
+	 * @param mixed $items
+	 * @param string $as
 	 * @return string Rendered string
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 * @api
 	 */
-	public function render() {
-		$output = '';
-		$items = array(
-			array(
-				"name"=>"Overview",
-				"controller"=>"standard",
-				"action"=>"index",
-				"active" => true
-			)
-		);
-		$groups = $this->helper->getGroups();
-		foreach ($groups as $group => $beings) {
-			$items[] = array(
-				"name"=>$group,
-				"controller"=>"standard",
-				"action"=>"index",
-				"group"=>$group,
-				"active" => false
+	public function render($position, $items = false, $as = "navBar") {
+		if($items == false)
+#			$items = $this->configurationManager->getConfiguration(\TYPO3\FLOW3\Configuration\ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, $namespace);
+			$items = \Admin\Core\API::getNagigationItems($position);
+		
+		$content = "";
+		foreach ($items as $name => $arguments) {
+			$arguments = array_merge($this->defaults, $arguments);
+			
+			$variables = array(
+				"link" => $this->getLink($arguments["action"], $arguments["arguments"], $arguments["controller"], $arguments["package"], $arguments["subpackage"]),
+				"name" => $name,
+				"hasChildren" => false,
+				"arguments" => $arguments,
+				"children" => array()
 			);
-		}
-		
-		foreach ($items as $item) {
-			foreach ($item as $key => $value) {
-				$this->templateVariableContainer->add($key, $value);
+			
+			if(count($arguments["children"]) > 0){
+				$variables["children"] = $this->render($position, $arguments["children"], $as);
+				$variables["hasChildren"] = true;
 			}
-			$output .= $this->renderChildren();
-			foreach ($item as $key => $value) {
-				$this->templateVariableContainer->remove($key, $value);
-			}
+			
+			$this->templateVariableContainer->add($as, $variables);
+			$content.= $this->renderChildren();
+			$this->templateVariableContainer->remove($as);
 		}
-		
-		return $output;
+		return $content;
+	}
+	
+	public function getLink($action, $arguments=array(), $controller = null, $package = null, $subpackage = null){
+		$uriBuilder = $this->controllerContext->getUriBuilder();
+		try {
+			$uri = $uriBuilder
+				->reset()
+				->setCreateAbsoluteUri(TRUE)
+				->uriFor($action, $arguments, $controller, $package, $subpackage);
+			return $uri;
+		} catch (\TYPO3\FLOW3\Exception $exception) {
+			throw new \TYPO3\Fluid\Core\ViewHelper\Exception($exception->getMessage(), $exception->getCode(), $exception);
+		}
 	}
 }
 
