@@ -64,9 +64,6 @@ class LoginController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		
 		$users = $this->userRepository->findAll();
 		
-		$tag = $this->objectManager->get("Admin\Domain\Model\Tag");
-		$tag->test();
-		
 		if($users->count() < 1){
 			$user = $this->objectManager->get("Admin\Security\User");
 			$user->setAccountIdentifier("admin");
