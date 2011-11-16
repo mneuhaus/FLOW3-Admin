@@ -64,7 +64,7 @@ class UpdateAction extends \Admin\Core\Actions\AbstractAction {
 	 * */
 	public function execute($being, $ids = null) {
 		if( $this->request->hasArgument("update") ) {
-			$result = $this->adapter->updateObject($being, $ids, $this->request->getArgument("item"));
+			$result = $this->adapter->updateObject($being, current($ids), $this->request->getArgument("item"));
 			
 			if( is_a($result, $being) ) {
 				$arguments = array("being" => $being, "adapter" => get_class($this->adapter));
@@ -81,7 +81,7 @@ class UpdateAction extends \Admin\Core\Actions\AbstractAction {
 			}
 		}
 		
-		$object = $this->adapter->getBeing($being, $ids);
+		$object = $this->adapter->getBeing($being, current($ids));
 		
 		$this->view->assign("being", $object);
 	}
