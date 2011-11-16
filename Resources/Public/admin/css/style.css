@@ -57,9 +57,35 @@ body {
 	margin: 0 0 10px;
 }
 
+.sidebar li a:hover,
+.sidebar .active a{ 
+	background-image: linear-gradient(bottom, rgb(110,125,145) 17%, rgb(147,162,176) 80%);
+	background-image: -o-linear-gradient(bottom, rgb(110,125,145) 17%, rgb(147,162,176) 80%);
+	background-image: -moz-linear-gradient(bottom, rgb(110,125,145) 17%, rgb(147,162,176) 80%);
+	background-image: -webkit-linear-gradient(bottom, rgb(110,125,145) 17%, rgb(147,162,176) 80%);
+	background-image: -ms-linear-gradient(bottom, rgb(110,125,145) 17%, rgb(147,162,176) 80%);
+	background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.17, rgb(110,125,145)), color-stop(0.8, rgb(147,162,176)) ); color:white; text-decoration:none; }
 
 .xdebug-var-dump{
 	margin-left:220px;
 	margin-top:20px;
 	margin-right:20px;
 }
+
+
+/*---------------------------Docs-----------------------------*/
+h1, h2, h3, h4, h5 {position:relative; }
+h1 a, h2 a, h3 a, h4 a, h5 a, .headerlink { visibility:hidden; color:#bbb; margin-left:5px; font-size:90%; bottom:0px; position:absolute; padding-top:40px;}
+h1:hover a, h2:hover a, h3:hover a, h4:hover a, h5:hover a, dt:hover .headerlink { visibility:visible; text-decoration:none; }
+.documentwrapper blockquote p { font-size:14px; }
+.documentwrapper .function dt[id] { font-weight:normal; }
+.documentwrapper .function dt[id] tt { font-weight:bold; color: #000; }
+.documentwrapper .function dt[id] big { margin:0px 3px; }
+
+.function dd table .field-name { width:70px; }
+
+.documentation-sidebar { margin-top:15px; }
+	.documentation-sidebar ul { margin-bottom:15px; }
+	.documentation-sidebar ul a { padding-left:20px; }
+	.documentation-sidebar ul ul a { padding-left:30px; font-size:13px; }
+	.documentation-sidebar ul ul ul a { padding-left:35px; font-size: 13px; }
