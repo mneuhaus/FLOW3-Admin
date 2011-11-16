@@ -35,6 +35,13 @@ Admin:
         - 10000
       Default: 20
       MaxPages: 9
+  Navigation:
+    Top:
+      Documentation:
+        Arguments:
+          action: index
+          controller: doc
+          package: admin
   Defaults:
       properties:
         optionsprovider: Admin\OptionsProvider\RelationOptionsProvider

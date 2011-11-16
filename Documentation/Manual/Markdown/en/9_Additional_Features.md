@@ -82,3 +82,23 @@ priority
 		"package" => "AdminDemo"
 	);
 	\Admin\Core\API::addNavigationItem("MySidebarNavigationItem", "left", $arguments, 10);
+
+## Requiring Admin, User or specific roles for your controllers
+Through the Access annotation you have the ability to protect your ControllerActions with the Admin UserAuthorization.
+
+All you need to do is to add this Annotation to the Actions you wish to protect:
+
+	/**
+	 * @Admin\Annotations\Access()
+	 */
+	public function indexAction(){...}
+
+When you don't specifiy any parameters it will just check for a valid user and redirect to the login it no user is logged in.
+
+### Parameters
+
+admin
+:	set this to true in order to require an admin for this action
+
+role
+:	set this to a specific role to require the user to be in this role. (Admin overrules this!)

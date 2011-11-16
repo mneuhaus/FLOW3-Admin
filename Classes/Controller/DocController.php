@@ -47,12 +47,11 @@ class DocController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 	 * @param string $page 
 	 * @return void
 	 * @author Marc Neuhaus
-	 * @Admin\Annotations\Navigation(title="Documentation", position="top")
 	 */
-	public function indexAction($lang = "en", $doc = "Manual", $page = "1_Index"){
+	public function indexAction($lang = "en", $doc = "Manual", $page = "index.html"){
 		\Admin\Core\API::addTitleSegment("Documentation");
 		\Admin\Core\API::addTitleSegment($page);
-		
+			
 		if($this->request->hasArgument("subpage1")){
 			$c = 1;
 			$directories = array($page);
@@ -66,64 +65,26 @@ class DocController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 			$page = implode("/", $directories);
 		}
 		
-		$this->renderMarkdown($lang, $doc, $page);
-	}
-	
-	public function renderMarkdown($lang, $doc, $page){
+		if(!stristr($page, ".html"))
+			$page.= ".html";
+			
+		$page = urldecode($page);
+		
+		if($lang == "index") $lang = "en";
+		
 		$package = $this->packageManager->getPackage("Admin");
-		$docPath = $package->getDocumentationPath() . sprintf("%s/Markdown/%s/%s.md", $doc, $lang, $page);
+		$path = "resource://Admin/Private/Docs/";
 		
-		include_once($package->getResourcesPath() . "/Private/PHP/ElephantMarkdown/markdown.php");
-		$content = \Markdown::parse(file_get_contents($docPath));
+		$template = $path . $doc . "/" . $lang . "/html/" . $page ;
 		
-#		include_once($package->getResourcesPath() . "/Private/PHP/markdown-oo-php/Text.php");
-#		$m = new \Markdown_Text(file_get_contents($docPath));
-#		$content = $m->__toString();
+		$this->view->setTemplatePathAndFilename($template);
 		
-		$content = str_replace('src="img', 'width="100%" src="/_Resources/Static/Packages/Admin/img', $content);
-		$content = str_replace("<code>", "<code class='prettyprint'>", $content);
-		$this->view->assign("content", $content);
+		$this->view->assign("base", "/admin/doc/en/");
 		
-		$docPath = $package->getDocumentationPath() . sprintf("%s/Markdown/%s/", $doc, $lang);
-		$files = \TYPO3\FLOW3\Utility\Files::readDirectoryRecursively($docPath, "md");
-		$pages = array();
-		foreach ($files as $file) {
-			$filename = pathinfo($file, PATHINFO_FILENAME);
-			$pages[ucfirst($filename)] = dirname(str_replace($docPath, "", $file)) . "/" . $filename;
-		}
+		$content = $this->view->render();
+		$content = str_replace('href="#', 'href="/admin/doc/' . $lang . '/' . $page . '#', $content);
 		
-		$pages = $this->getFiles($docPath);
-		$this->view->assign("pages", $pages);
-	}
-	
-	public function getFiles($path, $filetypes="md"){
-		$pages = array();
-		$files = scandir($path);
-
-		if(!is_array($filetypes))
-			$filetypes = explode(",", $filetypes);
-			
-		foreach ($files as $file) {
-			if(substr($file, 0, 1) == ".") continue;
-			if($file == "img") continue;
-			
-			$filePath = $path . $file;
-			$filename = pathinfo($file, PATHINFO_FILENAME);
-			$fileTitle = str_replace("_", ". ", ucfirst($filename));
-			
-			if(!isset($pages[$fileTitle])) 
-				$pages[$fileTitle] = array();
-				
-			if(is_dir($filePath)){
-				$pages[$fileTitle]["children"] = $this->getFiles($path . "/" . $filename, $filetypes);
-			}else{
-				$extension = pathinfo($file, PATHINFO_EXTENSION);
-				if(!in_array($extension, $filetypes)) continue;
-				
-				$pages[$fileTitle]["path"] = $filename;
-			}
-		}
-		return $pages;
+		return $content;
 	}
 }
 
