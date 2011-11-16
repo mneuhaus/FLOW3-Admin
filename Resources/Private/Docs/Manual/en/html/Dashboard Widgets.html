@@ -1,0 +1,103 @@
+
+<f:layout name="bootstrap" />
+{namespace a=Admin\ViewHelpers}
+
+<f:section name="header">
+</f:section>
+	<f:section name="actionbar-left">
+	</f:section>
+	<f:section name="sidebar">
+		<div class="documentation-sidebar">
+		<h3>Documentation</h3>
+		<ul>
+		<li><a href="index.html">Overview</a></li>
+		</ul>
+		<h3>Sections</h3>
+		
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Additional Features.html"
+                        title="previous chapter">Additional Features</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="OptionsProviders.html"
+                        title="next chapter">OptionsProviders</a></p>
+		</div>
+	</f:section>
+	
+	<f:section name="content">
+	<div class="documentwrapper">
+			<div class="body">
+				
+  <div class="section" id="dashboard-widgets">
+<h1>Dashboard Widgets<a class="headerlink" href="#dashboard-widgets" title="Permalink to this headline">¶</a></h1>
+<p>DashboardWidgets are shown on the Admin main page and need to implement the function &#8220;initializeWidget&#8221;.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight-python"><pre>/**
+ *
+ * @version $Id: AbstractValidator.php 3837 2010-02-22 15:17:24Z robert $
+ * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ */
+class LogWidget extends \Admin\Core\DashboardWidgets\AbstractDashboardWidget {
+    public function initializeWidget() {
+        $query = $this-&gt;objectManager-&gt;get("\Admin\Domain\Repository\LogRepository")-&gt;createQuery();
+        $query-&gt;setOrderings(array(
+            "datetime" =&gt; 'ASC'
+        ));
+        $query-&gt;setLimit("10");
+        $logs = $query-&gt;execute();
+        $this-&gt;view-&gt;assign("logs", $logs);
+    }
+}</pre>
+</div>
+<p><strong>Private/Partials/DashboardWidgets/Log.html</strong>:</p>
+<div class="highlight-python"><pre>&lt;h5 class="well-header"&gt;Recent Activity&lt;/h5&gt;
+&lt;f:if condition="{logs.count} &gt; 0" &gt;
+    &lt;f:then&gt;
+        &lt;table class="zebra-striped condensed-table cozy"&gt;
+            &lt;thead&gt;
+            &lt;tr&gt;
+                &lt;th&gt;Type&lt;/th&gt;
+                &lt;th&gt;Action&lt;/th&gt;
+                &lt;th&gt;User&lt;/th&gt;
+            &lt;/tr&gt;
+            &lt;/thead&gt;
+            &lt;f:for each="{logs}" as="log"&gt;
+                &lt;tr&gt;
+                    &lt;td&gt;{log.being}&lt;/td&gt;
+                    &lt;td&gt;
+                        &lt;span class="label"&gt;{log.action}&lt;/span&gt;
+                    &lt;/td&gt;
+                    &lt;td&gt;{log.user}&lt;/td&gt;
+                &lt;/tr&gt;
+            &lt;/f:for&gt;
+        &lt;/table&gt;
+    &lt;/f:then&gt;
+    &lt;f:else&gt;
+        No actions yet.
+    &lt;/f:else&gt;
+&lt;/f:if&gt;</pre>
+</div>
+</div>
+
+
+			</div>
+	</div>
+	
+	<a:widgetResources add="Prettify">
+		<link href="{f:uri.resource(path: 'prettify/prettify.css', package: 'Admin')}" rel="stylesheet">
+		<script src="{f:uri.resource(path: 'prettify/prettify.js', package: 'Admin')}"></script>
+		<script type="text/javascript" charset="utf-8">
+			jQuery(document).ready(function(){
+				prettyPrint();
+				
+				jQuery("div.section[id]").each(function(){ 
+					var i = jQuery(this); 
+					i.find("a.headerlink").attr("id", i.attr("id")); 
+					i.removeAttr("id"); 
+				});
+				var hash = window.location.hash;
+				window.location.hash = hash;
+			});
+		</script>
+	</a:widgetResources>
+	
+	</f:section>

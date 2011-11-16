@@ -1,0 +1,110 @@
+
+  
+	
+	<f:section name="sidebar">
+	<div class="document">
+		<div class="documentwrapper">
+			<div class="bodywrapper">
+				<div class="body">
+					
+  <div class="section" id="basic-usage">
+<h1>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h1>
+<p>There are 2 Ways to Configure the Admin Interface:</p>
+<ol class="arabic">
+<li><p class="first">Settings.yaml</p>
+</li>
+<li><p class="first">Class Reflections inside the Models</p>
+<blockquote>
+<div><p><strong>Note:</strong> The Settings.yaml overrules the Class Reflections in order to make it Possible to change the Behaviour of 3rd Party Packages without messing with external Code.</p>
+</div></blockquote>
+</li>
+</ol>
+<dl class="docutils">
+<dt>###Settings.yaml</dt>
+<dd><dl class="first last docutils">
+<dt>Doctrine:</dt>
+<dd><dl class="first last docutils">
+<dt>Beings:</dt>
+<dd><dl class="first last docutils">
+<dt>TYPO3BlogDomainModelPost:</dt>
+<dd><p class="first">autoadmin: true
+properties:</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt>content:</dt>
+<dd>widget: TextArea</dd>
+</dl>
+</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>This Example Activates the Post model of the Blog Example (autoadmin:true) and Changes the Widget for the Content Property from a simple Textfield to a Textarea</p>
+<dl class="docutils">
+<dt>### Class Reflections</dt>
+<dd><dl class="first docutils">
+<dt>/**</dt>
+<dd><ul class="first simple">
+<li>A blog post</li>
+<li>...</li>
+<li>&#64;AdminAnnotationsActive</li>
+</ul>
+<p class="last"><a href="#id1"><span class="problematic" id="id2">*</span></a>/</p>
+</dd>
+<dt>class Post {</dt>
+<dd><dl class="first docutils">
+<dt>/**</dt>
+<dd><ul class="first simple">
+<li>&#64;var string</li>
+<li>&#64;AdminAnnotationsWidget TextArea</li>
+</ul>
+<p class="last"><a href="#id3"><span class="problematic" id="id4">*</span></a>/</p>
+</dd>
+</dl>
+<p class="last">protected $content;</p>
+</dd>
+</dl>
+<p class="last">}</p>
+</dd>
+</dl>
+<p>This Example Does the exact same thing as the Settings.yaml Example but this time inside the Post.php file with the Tag &#64;AdminAnnotationsActive and &#64;AdminAnnotationsWidget TextArea</p>
+</div>
+
+
+				</div>
+			</div>
+		</div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to the Admin Documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Configuration.html"
+                        title="next chapter">Configuration</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/Basics.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+	</div>
+	</f:section>
