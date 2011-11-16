@@ -47,6 +47,7 @@ class NavigationViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelp
 		"controller"=> null,
 		"package"	=> null,
 		"subpackage"=> null,
+		"action"=> null,
 		"children"	=> array()
 	);
 	
@@ -66,8 +67,8 @@ class NavigationViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelp
 		
 		$content = "";
 		foreach ($items as $name => $arguments) {
+			$arguments["arguments"] = array_merge($this->defaults, $arguments);
 			$arguments = array_merge($this->defaults, $arguments);
-			
 			$variables = array(
 				"link" => $this->getLink($arguments["action"], $arguments["arguments"], $arguments["controller"], $arguments["package"], $arguments["subpackage"]),
 				"name" => $name,

@@ -61,6 +61,14 @@ class Navigation {
 				}
 			}
 		}
+		$settings = $this->helper->getSettings("Admin.Navigation");
+		foreach ($settings as $position => $items) {
+			foreach ($items as $title => $conf) {
+				$priority = isset($conf["priority"]) ? $conf["priority"] : 100;
+				$arguments = $conf["Arguments"];
+				\Admin\Core\API::addNavigationitem($title, strtolower($position), $arguments, $priority);
+			}
+		}
 	}
 
 }

@@ -35,7 +35,12 @@ final class Navigation {
 	 * @var string
 	 */
 	public $parent = null;
-
+	
+	/**
+	 * @var array
+	 */
+	public $arguments = null;
+	
 	/**
 	 * @param string $value
 	 */
@@ -44,6 +49,7 @@ final class Navigation {
 		$this->title = isset($values['title']) ? $values['title'] : $this->title;
 		$this->priority = isset($values['priority']) ? $values['priority'] : $this->priority;
 		$this->parent = isset($values['parent']) ? $values['parent'] : $this->parent;
+		$this->arguments = isset($values['arguments']) ? $values['arguments'] : $this->arguments;
 	}
 
 }
