@@ -27,13 +27,14 @@
 </f:section>
 
 <f:section name="actionbar-right">
+	Select the Package to put the generated Migration into:
 	<select name="package">
 		<option value="">Migration target</option>
 		<f:for each="{packages}" as="package">
 			<option value="{package.packageKey}">{package.packageKey}</option>
 		</f:for>
 	</select>
-	<button name="migrate" value="true" class="btn">Migrate</button>
+	<button name="migrate" value="true" class="btn">Generate & Migrate</button>
 </f:section>
 
 <f:section name="content">
