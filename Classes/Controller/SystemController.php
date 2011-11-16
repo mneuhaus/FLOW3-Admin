@@ -34,18 +34,17 @@ class SystemController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 	 * @param string $package
 	 * @return void
 	 * @author Marc Neuhaus
+	 * @Admin\Annotations\Navigation(title="Overview", position="system:left", priority="10")
 	 * @Admin\Annotations\Navigation(title="System", position="top", priority="10")
+	 * @Admin\Annotations\Access(admin="true")
 	 */
 	public function indexAction($tables = array(), $package = null){
-		if(count($tables) > 0){
-			$this->doctrineService->generateAndExecutePartialMigrationFor($tables, $package);
-		}
+		$status = $this->doctrineService->getMigrationStatus();
+		$this->view->assign("status", $status);
 		
 		$schemaDiff = $this->doctrineService->getDatabaseDiff();
 		$this->view->assign("schemaDiff", $schemaDiff);
-		
-		$packages = $this->packageManager->getActivePackages();
-		$this->view->assign("packages", $packages);
+		var_dump($schemaDiff);
 	}
 	
 	/**
@@ -55,6 +54,7 @@ class SystemController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 	 * @return void
 	 * @author Marc Neuhaus
 	 * @Admin\Annotations\Navigation(title="Schema", position="system:left", priority="10")
+	 * @Admin\Annotations\Access(admin="true")
 	 */
 	public function schemaAction($tables = array(), $package = null){
 		if(count($tables) > 0){

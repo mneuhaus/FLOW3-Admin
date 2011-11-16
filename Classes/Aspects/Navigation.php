@@ -45,19 +45,21 @@ class Navigation {
 			$methods = get_class_methods($className);
 			foreach ($methods as $methodName) {
 				if($this->reflectionService->isMethodAnnotatedWith($className, $methodName, "Admin\Annotations\Navigation")){
-					$annotation = $this->reflectionService->getMethodAnnotation($className, $methodName, "Admin\Annotations\Navigation");
-
-					$action = str_replace("Action", "", $methodName);
-					$controller = $this->helper->getControllerByClassName($className);
-					$package = $this->objectManager->getPackageKeyByObjectName($className);
-					$arguments = array(
-						"action" => $action,
-						"controller" => $controller,
-						"package" => $package
-					);
-					$title = !is_null($annotation->title) ? $annotation->title : sprintf("%s (%s)", $controller, $action);
-
-					\Admin\Core\API::addNavigationitem($title, $annotation->position, $arguments, $annotation->priority, $annotation->parent);
+					$annotations = $this->reflectionService->getMethodAnnotations($className, $methodName, "Admin\Annotations\Navigation");
+					
+					foreach ($annotations as $annotation) {
+						$action = str_replace("Action", "", $methodName);
+						$controller = $this->helper->getControllerByClassName($className);
+						$package = $this->objectManager->getPackageKeyByObjectName($className);
+						$arguments = array(
+							"action" => $action,
+							"controller" => $controller,
+							"package" => $package
+						);
+						$title = !is_null($annotation->title) ? $annotation->title : sprintf("%s (%s)", $controller, $action);
+						
+						\Admin\Core\API::addNavigationitem($title, $annotation->position, $arguments, $annotation->priority, $annotation->parent);
+					}
 				}
 			}
 		}
