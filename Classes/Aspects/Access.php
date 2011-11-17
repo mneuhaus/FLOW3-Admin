@@ -67,36 +67,38 @@ class Access {
 	 */
 	public function checkAccess(\TYPO3\FLOW3\AOP\JoinPointInterface $joinPoint) {
 		$request = $joinPoint->getMethodArgument('request');
-		if(!is_a($request, "\TYPO3\FLOW3\MVC\Web\Request")) return;
+		if(is_a($request, "\TYPO3\FLOW3\MVC\Web\Request")){
 		
-		$className = $request->getControllerObjectName();
-		$methodName = $request->getControllerActionName()  . 'Action';
+			$className = $request->getControllerObjectName();
+			$methodName = $request->getControllerActionName()  . 'Action';
 		
-		try{
-			if(!empty($className) && $this->reflectionService->isMethodAnnotatedWith($className, $methodName, "Admin\Annotations\Access")){
-				$annotation = $this->reflectionService->getMethodAnnotation($className, $methodName, "Admin\Annotations\Access");
+			try{
+				if(!empty($className) && $this->reflectionService->isMethodAnnotatedWith($className, $methodName, "Admin\Annotations\Access")){
+					$annotation = $this->reflectionService->getMethodAnnotation($className, $methodName, "Admin\Annotations\Access");
 			
-				if(!is_object($user = $this->helper->getUser()))
-					return $this->redirectToLogin($joinPoint);
-			
-				if($annotation->admin && !$user->isAdmin())
-					return $this->redirectToLogin($joinPoint);
-				
-				if($annotation->role !== null){
-					$hasRole = false;
-					foreach ($user->getRoles() as $role) {
-						if($role->getName() == $annotation->role)
-							$hasRole = true;
-					}
-					if(!$hasRole){
-						$message = new \TYPO3\FLOW3\Error\Error("You don't have access to this page!");
-						$this->flashMessageContainer->addMessage($message);
+					if(!is_object($user = $this->helper->getUser()))
 						return $this->redirectToLogin($joinPoint);
+			
+					if($annotation->admin && !$user->isAdmin())
+						return $this->redirectToLogin($joinPoint);
+				
+					if($annotation->role !== null){
+						$hasRole = false;
+						foreach ($user->getRoles() as $role) {
+							if($role->getName() == $annotation->role)
+								$hasRole = true;
+						}
+						if(!$hasRole){
+							$message = new \TYPO3\FLOW3\Error\Error("You don't have access to this page!");
+							$this->flashMessageContainer->addMessage($message);
+							return $this->redirectToLogin($joinPoint);
+						}
 					}
 				}
-			}
-		}catch(\ReflectionException $e){
+			}catch(\ReflectionException $e){
 			
+			}
+		
 		}
 			
 		if(is_object($adviceChain = $joinPoint->getAdviceChain())){
