@@ -85,7 +85,7 @@ Doctrine:
       float:    Textfield
       boolean:  Boolean
       \TYPO3\FLOW3\Resource\Resource: Upload
-      \DateTime: DateTime
+      \DateTime: DatePicker
       ^\\[A-Za-z0-9\\]+\\Domain\\Model\\[A-Za-z]+$: SingleRelation
       ^\\[A-Za-z0-9\\]+\\Security\\[A-Za-z]+$: SingleRelation
       ^\\Doctrine\\Common\\Collections\\Collection\<\\[A-Za-z0-9\\]+\\Domain\\Model\\[A-za-z]+>$: MultipleRelation
