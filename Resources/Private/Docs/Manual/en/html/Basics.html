@@ -14,12 +14,21 @@
 		</ul>
 		<h3>Sections</h3>
 		
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Basic Usage</a><ul>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#quick-start">Quick start</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="index.html"
                         title="previous chapter">Welcome to the Admin Documentation!</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="Configuration.html"
-                        title="next chapter">Configuration</a></p>
+  <p class="topless"><a href="Additional Features.html"
+                        title="next chapter">Additional Features</a></p>
 		</div>
 	</f:section>
 	
@@ -29,6 +38,23 @@
 				
   <div class="section" id="basic-usage">
 <h1>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>Installing into an existing FLOW3 Project:</p>
+<div class="highlight-python"><pre>cd %FLOW3-Project-Directory%
+git clone git@github.com:mneuhaus/FLOW3-Admin.git Packages/Framework/Admin
+./flow3 package:activate Admin
+./flow3 doctrine:migrate</pre>
+</div>
+<p>Adding AdminDemo as well:</p>
+<div class="highlight-python"><pre>cd %FLOW3-Project-Directory%
+git clone git@github.com:mneuhaus/FLOW3-AdminDemo.git Packages/Applications/AdminDemo
+./flow3 package:activate AdminDemo
+./flow3 doctrine:migrate</pre>
+</div>
+</div>
+<div class="section" id="quick-start">
+<h2>Quick start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h2>
 <p>There are 2 Ways to Configure the Admin Interface:</p>
 <ol class="arabic">
 <li><p class="first">Settings.yaml</p>
@@ -64,6 +90,7 @@ class Post {
 }</pre>
 </div>
 <p>This Example Does the exact same thing as the Settings.yaml Example but this time inside the Post.php file with the Tag &#64;AdminAnnotationsActive and &#64;AdminAnnotationsWidget TextArea</p>
+</div>
 </div>
 
 

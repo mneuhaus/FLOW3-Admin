@@ -1,5 +1,24 @@
 Basic Usage
-===========
+###########
+
+Installation
+************
+Installing into an existing FLOW3 Project::
+    
+    cd %FLOW3-Project-Directory%
+    git clone git@github.com:mneuhaus/FLOW3-Admin.git Packages/Framework/Admin
+    ./flow3 package:activate Admin
+    ./flow3 doctrine:migrate
+
+Adding AdminDemo as well::
+
+    cd %FLOW3-Project-Directory%
+    git clone git@github.com:mneuhaus/FLOW3-AdminDemo.git Packages/Applications/AdminDemo
+    ./flow3 package:activate AdminDemo
+    ./flow3 doctrine:migrate
+
+Quick start
+***********
 
 There are 2 Ways to Configure the Admin Interface: 
 
