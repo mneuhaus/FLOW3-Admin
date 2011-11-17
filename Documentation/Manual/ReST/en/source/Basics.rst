@@ -3,7 +3,10 @@ Basic Usage
 
 Installation
 ************
-Installing into an existing FLOW3 Project::
+If you don't have a FLOW3 Project set up yet take a look at this:
+http://flow3.typo3.org/documentation/quickstart.html
+
+Installing Admin::
     
     cd %FLOW3-Project-Directory%
     git clone git@github.com:mneuhaus/FLOW3-Admin.git Packages/Framework/Admin
