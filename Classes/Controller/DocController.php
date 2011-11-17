@@ -70,7 +70,9 @@ class DocController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 			
 		$page = urldecode($page);
 		
-		if($lang == "index") $lang = "en";
+		if($lang == "index"){
+			$lang = "en";
+		}
 		
 		$package = $this->packageManager->getPackage("Admin");
 		$path = "resource://Admin/Private/Docs/";
@@ -82,6 +84,7 @@ class DocController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		$this->view->assign("base", "/admin/doc/en/");
 		
 		$content = $this->view->render();
+		$content = preg_replace('/internal" href="([A-Za-z0-9])/', 'internal" href="/admin/doc/' . $lang . '/\\1', $content);
 		$content = str_replace('href="#', 'href="/admin/doc/' . $lang . '/' . $page . '#', $content);
 		
 		return $content;
