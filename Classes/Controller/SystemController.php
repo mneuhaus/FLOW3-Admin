@@ -60,7 +60,7 @@ class SystemController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 			);
 			foreach (get_object_vars($schemaDiff) as $key => $value) {
 				if(!empty($value))
-					$changes[$labels[$key]] = implode(",", array_keys($value));
+					$changes[$labels[$key]] = implode(", ", array_keys($value));
 			}
 		}
 		$this->view->assign("changes", $changes);
