@@ -109,7 +109,7 @@ class DoctrineService extends \TYPO3\FLOW3\Persistence\Doctrine\Service {
 		
 		if(!is_null($package) && $this->packageManager->isPackageActive($package)){
 			$package = $this->packageManager->getPackage($package);
-			$migrationsPath = $package->getPackagePath() . "Migrations/" . $platform->getName() . "/";
+			$migrationsPath = $package->getPackagePath() . "Migrations/" . ucfirst($platform->getName()) . "/";
 			$configuration->setMigrationsDirectory($migrationsPath);
 		}
 		
@@ -132,6 +132,49 @@ class DoctrineService extends \TYPO3\FLOW3\Persistence\Doctrine\Service {
 		}else{
 			return $schema;
 		}
+	}
+	
+	/**
+	 * Returns the current migration status formatted as plain text.
+	 *
+	 * @return string
+	 */
+	public function getMigrationStatus() {
+		$configuration = $this->getMigrationConfiguration();
+
+		$currentVersion = $configuration->getCurrentVersion();
+		if ($currentVersion) {
+			$currentVersionFormatted = $configuration->formatVersion($currentVersion) . ' ('.$currentVersion.')';
+		} else {
+			$currentVersionFormatted = 0;
+		}
+		
+		$migrationsWaiting = $configuration->getMigrationsToExecute("up", $configuration->getLatestVersion());
+		$migrationsWaiting = array_reverse($migrationsWaiting, true);
+		
+		$latestVersion = key($migrationsWaiting);
+		if ($latestVersion) {
+			$latestVersionFormatted = $configuration->formatVersion($latestVersion) . ' ('.$latestVersion.')';
+		} else {
+			$latestVersionFormatted = 0;
+		}
+		
+		$status = array(
+			'migration-current'     => $currentVersionFormatted,
+			'migration-lastest'     => $latestVersionFormatted,
+			'migrations-waiting'    => $migrationsWaiting,
+		);
+		
+		return $status;
+	}
+	
+	public function migrateToLatest(){
+		$configuration = $this->getMigrationConfiguration();
+		$migrationsWaiting = $configuration->getMigrationsToExecute("up", $configuration->getLatestVersion());
+		$migrationsWaiting = array_reverse($migrationsWaiting, true);
+		$latestVersion = key($migrationsWaiting);
+		
+		return $this->executeMigrations($latestVersion);
 	}
 }
 

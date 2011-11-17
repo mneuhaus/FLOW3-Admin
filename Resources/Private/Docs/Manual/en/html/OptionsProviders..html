@@ -1,0 +1,35 @@
+
+<f:layout name="bootstrap" />
+{namespace a=Admin\ViewHelpers}
+
+<f:section name="header">
+</f:section>
+	<f:section name="actionbar-left">
+	</f:section>
+	<f:section name="sidebar">
+		<h3>Documentation</h3>
+		
+	</f:section>
+	
+	<f:section name="content">
+	<div class="documentwrapper">
+			<div class="body">
+				
+  <div class="section" id="optionsproviders">
+<h1>OptionsProviders<a class="headerlink" href="#optionsproviders" title="Permalink to this headline">¶</a></h1>
+<p>An Options Provider creates the List of Options for the SingleRelation and MultipleRelation Widgets. Currently there is just the Default implementation which creates the Options Using the ID and String Representation of the Object. But for Example the PolicyOptionsProvider ensures that there are all needed Options as Policy available when the Roles Object is loaded</p>
+</div>
+
+
+			</div>
+	</div>
+	</f:section>
+	<a:widgetResources add="Prettify">
+		<link href="{f:uri.resource(path: 'prettify/prettify.css', package: 'Admin')}" rel="stylesheet">
+		<script src="{f:uri.resource(path: 'prettify/prettify.js', package: 'Admin')}"></script>
+		<script type="text/javascript" charset="utf-8">
+			jQuery(document).ready(function(){
+				prettyPrint();
+			});
+		</script>
+	</a:widgetResources>

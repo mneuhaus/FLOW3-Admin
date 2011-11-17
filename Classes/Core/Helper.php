@@ -267,7 +267,7 @@ class Helper {
 			}
 		}
 		
-		throw new \Exception('Could not find any Matching Path.');
+		throw new \Exception('Could not find any Matching Path. Tried: '.implode(", ", $tried).'');
 	}
 	
 	/**

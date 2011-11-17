@@ -1,0 +1,74 @@
+
+<f:layout name="bootstrap" />
+{namespace a=Admin\ViewHelpers}
+
+<f:section name="header">
+</f:section>
+	<f:section name="actionbar-left">
+	</f:section>
+	<f:section name="sidebar">
+		<div class="documentation-sidebar">
+		<h3>Documentation</h3>
+		<ul>
+		<li><a href="../index.html">Overview</a></li>
+		</ul>
+		<h3>Sections</h3>
+		
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">OptionsProviders</a><ul>
+<li><a class="reference internal" href="#relationoptionsprovider">RelationOptionsProvider</a></li>
+<li><a class="reference internal" href="#policyoptionsprovider">PolicyOptionsProvider</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Dashboard Widgets.html"
+                        title="previous chapter">Dashboard Widgets</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../Additional Features.html"
+                        title="next chapter">Additional Features</a></p>
+		</div>
+	</f:section>
+	
+	<f:section name="content">
+	<div class="documentwrapper">
+			<div class="body">
+				
+  <div class="section" id="optionsproviders">
+<h1>OptionsProviders<a class="headerlink" href="#optionsproviders" title="Permalink to this headline">¶</a></h1>
+<p>An Options Provider creates the List of Options for the SingleRelation and MultipleRelation Widgets. Currently there is just the Default implementation which creates the Options Using the ID and String Representation of the Object. But for Example the PolicyOptionsProvider ensures that there are all needed Options as Policy available when the Roles Object is loaded</p>
+<div class="section" id="relationoptionsprovider">
+<h2>RelationOptionsProvider<a class="headerlink" href="#relationoptionsprovider" title="Permalink to this headline">¶</a></h2>
+<p>This Optionsprovider gives available options based on the entity&#8217;s relation</p>
+</div>
+<div class="section" id="policyoptionsprovider">
+<h2>PolicyOptionsProvider<a class="headerlink" href="#policyoptionsprovider" title="Permalink to this headline">¶</a></h2>
+<p>Similar to the RelationOptionsProvider with the difference, that it populates the Policy table with policies based on available entities and actions</p>
+</div>
+</div>
+
+
+			</div>
+	</div>
+	
+	<a:widgetResources add="Prettify">
+		<link href="{f:uri.resource(path: 'prettify/prettify.css', package: 'Admin')}" rel="stylesheet">
+		<script src="{f:uri.resource(path: 'prettify/prettify.js', package: 'Admin')}"></script>
+		<script type="text/javascript" charset="utf-8">
+			jQuery(document).ready(function(){
+				prettyPrint();
+				
+				jQuery("div.section[id]").each(function(){ 
+					var i = jQuery(this); 
+					i.find("a.headerlink").attr("id", i.attr("id")); 
+					i.removeAttr("id"); 
+				});
+				var hash = window.location.hash;
+				window.location.hash = hash;
+			});
+		</script>
+	</a:widgetResources>
+	
+	</f:section>

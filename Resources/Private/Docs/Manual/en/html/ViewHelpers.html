@@ -1,0 +1,127 @@
+
+<f:layout name="bootstrap" />
+{namespace a=Admin\ViewHelpers}
+
+<f:section name="header">
+</f:section>
+	<f:section name="actionbar-left">
+	</f:section>
+	<f:section name="sidebar">
+		<div class="documentation-sidebar">
+		<h3>Documentation</h3>
+		<ul>
+		<li><a href="index.html">Overview</a></li>
+		</ul>
+		<h3>Sections</h3>
+		
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">ViewHelpers</a><ul>
+<li><a class="reference internal" href="#apiviewhelper">ApiViewHelper</a></li>
+<li><a class="reference internal" href="#dashboardwidgets">DashboardWidgets</a></li>
+<li><a class="reference internal" href="#layoutviewhelper">LayoutViewHelper</a></li>
+<li><a class="reference internal" href="#navigationviewhelper">NavigationViewHelper</a></li>
+<li><a class="reference internal" href="#renderviewhelper">RenderViewHelper</a></li>
+<li><a class="reference internal" href="#settingsviewhelper">SettingsViewHelper</a></li>
+<li><a class="reference internal" href="#userviewhelper">UserViewHelper</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Additional Features.html"
+                        title="previous chapter">Additional Features</a></p>
+		</div>
+	</f:section>
+	
+	<f:section name="content">
+	<div class="documentwrapper">
+			<div class="body">
+				
+  <div class="section" id="viewhelpers">
+<h1>ViewHelpers<a class="headerlink" href="#viewhelpers" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="apiviewhelper">
+<h2>ApiViewHelper<a class="headerlink" href="#apiviewhelper" title="Permalink to this headline">¶</a></h2>
+<p>This ViewHelper provides access to the AdminCoreAPI:: functions.</p>
+<dl class="docutils">
+<dt>get</dt>
+<dd>specifies the variable or function to trigger on the API</dd>
+<dt>as</dt>
+<dd>specifies the variable which will contain the result</dd>
+</dl>
+</div>
+<div class="section" id="dashboardwidgets">
+<h2>DashboardWidgets<a class="headerlink" href="#dashboardwidgets" title="Permalink to this headline">¶</a></h2>
+<p>This ViewHelper renders the currently active Widgets</p>
+</div>
+<div class="section" id="layoutviewhelper">
+<h2>LayoutViewHelper<a class="headerlink" href="#layoutviewhelper" title="Permalink to this headline">¶</a></h2>
+<p>This ViewHelper extends the regular LayoutViewHelper with the ability to specifiy an package to search for the layout</p>
+<dl class="docutils">
+<dt>name</dt>
+<dd>name of the layout</dd>
+<dt>package</dt>
+<dd>name of the package to look for the layout</dd>
+</dl>
+</div>
+<div class="section" id="navigationviewhelper">
+<h2>NavigationViewHelper<a class="headerlink" href="#navigationviewhelper" title="Permalink to this headline">¶</a></h2>
+<p>Helps by rendering previously registered Navigation Items</p>
+<dl class="docutils">
+<dt>position</dt>
+<dd>specifies the region of this navigation (top, left, ...)</dd>
+<dt>as</dt>
+<dd>specifies the variable which will contain the navigation items</dd>
+</dl>
+</div>
+<div class="section" id="renderviewhelper">
+<h2>RenderViewHelper<a class="headerlink" href="#renderviewhelper" title="Permalink to this headline">¶</a></h2>
+<p>This ViewHelper extends the regular RenderViewHelper with these features:</p>
+<dl class="docutils">
+<dt>optional</dt>
+<dd>you can set the optional parameter to true in conjunction with the section attribute. In contrast to the regular RenderViewHelper this one renders it&#8217;s childs if the section isn&#8217;t overidden instead of an empty string</dd>
+<dt>fallbacks</dt>
+<dd>with this function you can specify an fallback path from the settings to search for the partial in conjunction with the vars parameter</dd>
+</dl>
+</div>
+<div class="section" id="settingsviewhelper">
+<h2>SettingsViewHelper<a class="headerlink" href="#settingsviewhelper" title="Permalink to this headline">¶</a></h2>
+<p>This ViewHelper gives you access to global Settings from the view</p>
+<dl class="docutils">
+<dt>path</dt>
+<dd>specifies the path to the setting</dd>
+</dl>
+</div>
+<div class="section" id="userviewhelper">
+<h2>UserViewHelper<a class="headerlink" href="#userviewhelper" title="Permalink to this headline">¶</a></h2>
+<p>This ViewHelper gives you access to the current user</p>
+<dl class="docutils">
+<dt>as</dt>
+<dd>specifies the variable which will contain the user</dd>
+</dl>
+</div>
+</div>
+
+
+			</div>
+	</div>
+	
+	<a:widgetResources add="Prettify">
+		<link href="{f:uri.resource(path: 'prettify/prettify.css', package: 'Admin')}" rel="stylesheet">
+		<script src="{f:uri.resource(path: 'prettify/prettify.js', package: 'Admin')}"></script>
+		<script type="text/javascript" charset="utf-8">
+			jQuery(document).ready(function(){
+				prettyPrint();
+				
+				jQuery("div.section[id]").each(function(){ 
+					var i = jQuery(this); 
+					i.find("a.headerlink").attr("id", i.attr("id")); 
+					i.removeAttr("id"); 
+				});
+				var hash = window.location.hash;
+				window.location.hash = hash;
+			});
+		</script>
+	</a:widgetResources>
+	
+	</f:section>

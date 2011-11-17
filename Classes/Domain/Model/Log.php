@@ -29,8 +29,6 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  * @FLOW3\Entity
- * @Admin\Annotations\Active
- * @Admin\Annotations\Group("System")
  */
 class Log extends \Admin\Core\Domain\Magic{
 	/**

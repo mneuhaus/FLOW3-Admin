@@ -97,6 +97,15 @@ class Being{
 	public function getName() {
 		return $this->name;
 	}
+	
+	public function getShortName() {
+		$class = $this->name;
+		if(is_object($class))
+			$class = get_class($class);
+
+		$parts = explode("\\", $class);
+		return array_pop($parts);
+	}
 
 	public function setName($name) {
 		$this->name = $name;

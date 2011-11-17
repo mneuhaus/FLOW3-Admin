@@ -11,7 +11,7 @@ TYPO3:
             providerClass: Admin\Security\AdminProvider
             entryPoint:
               WebRedirect:
-                uri: admin/login/
+                uri: admin/login/index
       authorization:
         # An array of access decision voters that should vote when access decisions are made
         accessDecisionVoters:
@@ -25,12 +25,28 @@ Admin:
       - index
       - list
       - view
+  ViewSettings:
+    List:
+      Limits:
+        - 10
+        - 20
+        - 100
+        - 1000
+        - 10000
+      Default: 20
+      MaxPages: 9
+  Navigation:
+    Top:
+      Documentation:
+        Arguments:
+          action: index
+          controller: doc
+          package: admin
   Defaults:
       properties:
         optionsprovider: Admin\OptionsProvider\RelationOptionsProvider
   Adapters:
     Admin\Adapters\DoctrineAdapter: active
-#    Admin\Adapters\DummyAdapter: active
   Fallbacks:
     Views:
       - resource://@package/Private/Templates/@being/@action/@variant.html
@@ -69,89 +85,8 @@ Doctrine:
       float:    Textfield
       boolean:  Boolean
       \TYPO3\FLOW3\Resource\Resource: Upload
-      \DateTime: DateTime
+      \DateTime: DatePicker
       ^\\[A-Za-z0-9\\]+\\Domain\\Model\\[A-Za-z]+$: SingleRelation
       ^\\[A-Za-z0-9\\]+\\Security\\[A-Za-z]+$: SingleRelation
       ^\\Doctrine\\Common\\Collections\\Collection\<\\[A-Za-z0-9\\]+\\Domain\\Model\\[A-za-z]+>$: MultipleRelation
       ^\\Doctrine\\Common\\Collections\\Collection\<\\[A-Za-z0-9\\]+\\Security\\[A-za-z]+>$: MultipleRelation
-      
-Dummy:
-  DataStorage: '%FLOW3_PATH_DATA%Persistent/DummyData'
-  ConfigurationProvider:
-    - Admin\ConfigurationProvider\YamlConfigurationProvider
-  Defaults:
-      properties:
-        optionsProvider: Admin\OptionsProvider\RelationOptionsProvider
-  Widgets:
-    Mapping:
-      # Pattern (Text or Regex)          Widget
-      string:   Textfield
-      readonly: TextfieldReadonly
-      integer:  Spinner
-      float:    Textfield
-      boolean:  Boolean
-      resource: Upload
-      ^\\*Being\\([A-Za-z]+)$: SingleRelation
-      ^\\*Beings\\([A-za-z]+)$: MultipleRelation
-  Beings:
-    Relation:
-      properties:
-        singleRelation:
-          type: \Being\Tag
-        multipleRelation:
-          type: \Beings\Tag
-    Tag:
-      properties:
-        title:
-          type: string 
-    Widgets:
-      properties:
-        string:
-          type: string
-        integer:
-          type: integer
-        float:
-          type: float
-        boolean:
-          type: boolean
-#        resource:
-#          type:resource
-        singleRelation:
-          type: \Being\Tag
-        multipleRelation:
-          type: \Beings\Tag
-    Options:
-      properties:
-        ingoredField:
-          type: string
-          ignore: true
-          infotext: This field will be ignored by autoadmin
-        specificWidget:
-          type: string
-          widget: TextArea
-          infotext: This field has a Textarea specified as Widget
-        specificLabel:
-          type: string
-          label: Specific Label
-          infotext: This field has a label set to override the internal name
-    Sets:
-      set:
-        - First Set (string,integer,float,boolean)
-        - Second Set (string2,integer2,float2,boolean2)
-      properties:
-        string:
-          type:string
-        integer:
-          type:integer
-        float:
-          type:float
-        boolean:
-          type:boolean
-        string2:
-          type:string
-        integer2:
-          type:integer
-        float2:
-          type:float
-        boolean2:
-          type:boolean

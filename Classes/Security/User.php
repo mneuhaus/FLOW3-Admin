@@ -64,7 +64,7 @@ class User extends \Admin\Core\Domain\Magic{
 	 * @var string
      * @Admin\Annotations\Widget Password
      * @Admin\Annotations\Label Password
-     * @Admin\Annotations\Ignore list,view
+     * @Admin\Annotations\Ignore("list,view")
 	 */
 	protected $credentialsSource;
 
@@ -76,7 +76,7 @@ class User extends \Admin\Core\Domain\Magic{
 	/**
 	 * @var \Doctrine\Common\Collections\ArrayCollection<\Admin\Security\Role>
 	 * @ORM\ManyToMany(inversedBy="users")
-	 * @Admin\Annotations\Ignore list
+	 * @Admin\Annotations\Ignore("list")
 	 *
 	 * @author Marc Neuhaus <mneuhaus@famelo.com>
 	 * */
@@ -85,6 +85,7 @@ class User extends \Admin\Core\Domain\Magic{
 	/**
 	 * @var \Doctrine\Common\Collections\Collection<\Admin\Domain\Model\Log>
 	 * @ORM\OneToMany(mappedBy="user")
+     * @Admin\Annotations\Ignore("list,view")
 	 */
 	protected $logs;
 

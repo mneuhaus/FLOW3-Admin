@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	{namespace a=Admin\ViewHelpers}
+	
+	<meta charset="utf-8">
+	<title><a:api get="title">{title}</a:api></title>
+	
+	<a:render section="header" optional="true">
+		<f:base />
+	</a:render>
+	
+	<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<link href="{f:uri.resource(path: 'bootstrap/bootstrap.css', package: 'Admin')}" rel="stylesheet">
+	<link href="{f:uri.resource(path: 'admin/css/mixins.css', package: 'Admin')}" rel="stylesheet">
+	<link href="{f:uri.resource(path: 'admin/css/style.css', package: 'Admin')}" rel="stylesheet">
+	<link href="{f:uri.resource(path: 'admin/css/images.css', package: 'Admin')}" rel="stylesheet">
+</head>
+
+<body>
+	
+	<f:render section='pre-container' optional="true">
+	</f:render>
+	
+	<div class="navbar navbar-fixed">
+		<div class="navbar-inner">
+			<div class="fluid-container">
+				<a class="brand" href="/admin/"><a:settings path="Admin.PageTitle" /></a>
+				<ul class="nav" data-dropdown="dropdown">
+				<a:navigation position="top">
+					<f:if condition="{navBar.hasChildren}">
+						<f:then>
+						<li class="dropdown">
+							<a href="{navBar.link}">{navBar.name}</a>
+							<ul class="dropdown-menu"><f:format.raw>{navBar.children}</f:format.raw></ul>
+						</li>
+						</f:then>
+						<f:else>
+							<li class="">
+								<a href="{navBar.link}">{navBar.name}</a>
+							</li>
+						</f:else>
+					</f:if>
+				</a:navigation>
+				</ul>
+				
+				<a:user>
+				<f:if condition="{user}">
+					<f:then>
+					<p class="pull-right">
+						Logged in as 
+						<f:link.action action="update" package="Admin" arguments="{user.arguments}">{user}</f:link.action>
+						| <f:link.action action="logout" controller="Login" package="Admin">Logout</f:link.action>
+					</p>
+					</f:then>
+					<f:else>
+					<p class="pull-right">
+						<f:link.action action="index" controller="Login" package="Admin">Login</f:link.action>
+					</p>
+					</f:else>
+				</f:if>
+				</a:user>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+	</div>
+	
+<a:render section='container' optional="true">
+	<div class="fluid-container">
+		
+		<div class="sidebar">
+			<a:render section="sidebar" optional="true" >
+			<h5>Overview</h5>
+			<ul>
+				<li>
+					<f:link.action action="index" controller="Standard">Dashboard</f:link.action>
+				</li>
+			</ul>
+			<f:for each="{groups}" as="beings" key="group">
+				<h5>{group}</h5>
+				<ul>
+				<f:for each="{beings.beings}" as="base_being">
+					<f:if condition="{base_being.active}">
+						<f:then><li class="active"></f:then>
+						<f:else><li></f:else>
+					</f:if>
+						<a:link action="list" controller="Standard" being="{base_being.being}">
+							{base_being.name}
+						</a:link>
+					</li>
+				</f:for>
+				</ul>
+			</f:for>
+			<ul>
+			<a:navigation position="left">
+				<f:if condition="{navBar.hasChildren}">
+					<f:then>
+					<li>
+						<a href="{navBar.link}">{navBar.name}</a>
+						<ul class="dropdown-menu"><f:format.raw>{navBar.children}</f:format.raw></ul>
+					</li>
+					</f:then>
+					<f:else>
+						<li class="">
+							<a href="{navBar.link}">{navBar.name}</a>
+						</li>
+					</f:else>
+				</f:if>
+			</a:navigation>
+			</ul>
+			</a:render>
+		</div>
+		
+		<div class="content">
+			
+			<div class="actionbar">
+				<div class="pull-left">
+					<a:render section='actionbar-left' optional="true">
+					</a:render>
+				</div>
+				<div class="pull-right">
+					<a:render section='actionbar-right' optional="true">
+					</a:render>
+				</div>
+				<div class="clear"></div>
+			</div>
+			
+			<a:flashMessages />
+			
+			<f:render section='content' />
+			
+		</div>
+		
+	</div>
+</a:render>
+	<f:render section='post-container' optional="true">
+	</f:render>
+	
+	
+	<script src="{f:uri.resource(path: 'admin/js/jquery.1.6.4.min.js', package: 'Admin')}"></script>
+	
+	<script src="{f:uri.resource(path: 'bootstrap/js/bootstrap-alerts.js', package: 'Admin')}"></script>
+	<script src="{f:uri.resource(path: 'bootstrap/js/bootstrap-dropdown.js', package: 'Admin')}"></script>
+	<script src="{f:uri.resource(path: 'bootstrap/js/bootstrap-twipsy.js', package: 'Admin')}"></script>
+	
+	<a:widgetResources render="true" />
+
+	<script src="{f:uri.resource(path: 'admin/js/main.js', package: 'Admin')}"></script>
+
+</body>
+</html>

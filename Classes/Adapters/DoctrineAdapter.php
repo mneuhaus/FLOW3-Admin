@@ -39,12 +39,28 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 	 */
 	protected $persistenceManager;
 	
+	/**
+	 * @FLOW3\Inject
+	 * @var \TYPO3\FLOW3\Validation\ValidatorResolver
+	 */
+	protected $validatorResolver;
+	
 	public function applyLimit($limit){
 		$this->query->setLimit($limit);
 	}
 	
 	public function applyOffset($offset){
 		$this->query->setOffset($offset);
+	}
+	
+	public function applyOrderings($property, $direction = null){
+		if(is_null($direction)){
+			$direction = \TYPO3\FLOW3\Persistence\QueryInterface::ORDER_ASCENDING;
+		}
+		
+		$this->query->setOrderings(array(
+			$property => $direction
+		));
 	}
 	
 	public function getName($being) {
@@ -173,7 +189,7 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 	
 	public function createObject($being, $data) {
 		$configuration = $this->getConfiguration($being);
-		$result = $this->propertyMapper->convert($data, $being, \Admin\Core\PropertyMappingConfiguration::getConfiguration());
+		$result = $this->transform($data, $being);
 		
 		if(is_a($result, $being)){
 			$repository = $this->objectManager->get($this->getRepositoryForModel($being));
@@ -186,7 +202,7 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 	public function updateObject($being, $id, $data) {
 		$configuration = $this->getConfiguration($being);
 		$data["__identity"] = $id;
-		$result = $this->propertyMapper->convert($data, $being, \Admin\Core\PropertyMappingConfiguration::getConfiguration());
+		$result = $this->transform($data, $being);
 		
 		if(is_a($result, $being)){
 			$repository = $this->objectManager->get($this->getRepositoryForModel($being));
@@ -206,6 +222,22 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 	
 	## Conversion Functions
 	
+	
+	public function transform($data, $target){
+		$value = $this->propertyMapper->convert($data, $target, \Admin\Core\PropertyMappingConfiguration::getConfiguration());
+		
+		$this->validationResults = $this->propertyMapper->getMessages();
+		
+		$validator = $this->validatorResolver->getBaseValidatorConjunction($target);
+		$validationMessages = $validator->validate($value);
+		$this->validationResults->merge($validationMessages);
+		$errors = $this->validationResults->getFlattenedErrors();
+		
+		if(empty($errors))
+			return $value;
+		else
+			return $errors;
+	}
 
 	public function beingsToIdentifiers($beings) {
 		$identifiers = array();

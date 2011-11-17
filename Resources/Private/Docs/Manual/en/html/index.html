@@ -1,0 +1,157 @@
+
+<f:layout name="bootstrap" />
+{namespace a=Admin\ViewHelpers}
+
+<f:section name="header">
+</f:section>
+	<f:section name="actionbar-left">
+	</f:section>
+	<f:section name="sidebar">
+		<div class="documentation-sidebar">
+		<h3>Documentation</h3>
+		<ul>
+		<li><a href="#">Overview</a></li>
+		</ul>
+		<h3>Sections</h3>
+		
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Welcome to the Admin Documentation!</a><ul>
+<li><a class="reference internal" href="#general">General</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#configuration">Configuration</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#extending">Extending</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Basics.html"
+                        title="next chapter">Basic Usage</a></p>
+		</div>
+	</f:section>
+	
+	<f:section name="content">
+	<div class="documentwrapper">
+			<div class="body">
+				
+  <div class="section" id="welcome-to-the-admin-documentation">
+<h1>Welcome to the Admin Documentation!<a class="headerlink" href="#welcome-to-the-admin-documentation" title="Permalink to this headline">¶</a></h1>
+<p>This Packages tries to provide a Base to have basic CRUD Operations with a good User  Interface and Experience with the least effort and code as Possible, because i believe, that, the DRY principle should be Used for the GUI of your application as much as Possible as Well. In Principle you only need to specify one Tag called &#64;AdminAnnotationsActive in your Model&#8217;s
+class and this Admin package will take care of the rest. Every other Option is optional to optimize the Experience of the GUI. For Maximum Flexibility and Versatility a System of Fallback Mechanisms is in place to override the Default Template.</p>
+<div class="section" id="general">
+<h2>General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Basics.html">Basic Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Basics.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Basics.html#quick-start">Quick start</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Additional Features.html">Additional Features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Additional Features.html#magicmodel">MagicModel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Additional Features.html#navigation">Navigation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Additional Features.html#access-control">Access Control</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Configuration/Model.html">Model Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Configuration/Model.html#active">Active</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Configuration/Model.html#group">Group</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Configuration/Model.html#set">Set</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Configuration/Property.html">Property Configurations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Configuration/Property.html#label">Label</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Configuration/Property.html#widget">Widget</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Configuration/Property.html#ignore">Ignore</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Configuration/Property.html#infotext">Infotext</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Configuration/Property.html#class">Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Configuration/Property.html#validate">Validate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Configuration/Property.html#title">Title</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Configuration/Property.html#filter">Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Configuration/Property.html#optionsprovider">OptionsProvider</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Configuration/Templates.html">Templates</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Configuration/Templates.html#views">Views</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Configuration/Templates.html#partials">Partials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Configuration/Templates.html#widgets">Widgets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Configuration/Templates.html#dashboardwidgets">DashboardWidgets</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="extending">
+<h2>Extending<a class="headerlink" href="#extending" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Extending/Actions.html">Actions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Extending/Actions.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Extending/Actions.html#rendering-a-view-for-the-action">Rendering a view for the action</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Extending/Widgets.html">Widgets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Extending/Widgets.html#available-properties-in-a-widget-template">Available Properties in a Widget Template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Extending/Widgets.html#replace-the-default-widget-for-a-specific-datatype">Replace the default Widget for a specific datatype</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Extending/Dashboard Widgets.html">Dashboard Widgets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Extending/Dashboard Widgets.html#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Extending/OptionsProviders.html">OptionsProviders</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Extending/OptionsProviders.html#relationoptionsprovider">RelationOptionsProvider</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Extending/OptionsProviders.html#policyoptionsprovider">PolicyOptionsProvider</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ViewHelpers.html">ViewHelpers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ViewHelpers.html#apiviewhelper">ApiViewHelper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ViewHelpers.html#dashboardwidgets">DashboardWidgets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ViewHelpers.html#layoutviewhelper">LayoutViewHelper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ViewHelpers.html#navigationviewhelper">NavigationViewHelper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ViewHelpers.html#renderviewhelper">RenderViewHelper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ViewHelpers.html#settingsviewhelper">SettingsViewHelper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ViewHelpers.html#userviewhelper">UserViewHelper</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+			</div>
+	</div>
+	
+	<a:widgetResources add="Prettify">
+		<link href="{f:uri.resource(path: 'prettify/prettify.css', package: 'Admin')}" rel="stylesheet">
+		<script src="{f:uri.resource(path: 'prettify/prettify.js', package: 'Admin')}"></script>
+		<script type="text/javascript" charset="utf-8">
+			jQuery(document).ready(function(){
+				prettyPrint();
+				
+				jQuery("div.section[id]").each(function(){ 
+					var i = jQuery(this); 
+					i.find("a.headerlink").attr("id", i.attr("id")); 
+					i.removeAttr("id"); 
+				});
+				var hash = window.location.hash;
+				window.location.hash = hash;
+			});
+		</script>
+	</a:widgetResources>
+	
+	</f:section>

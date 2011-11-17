@@ -59,10 +59,10 @@ class LoginController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 	 * @return string
 	 */
 	public function indexAction() {
-		$users = $this->userRepository->findAll();
+		\Admin\Core\API::addTitleSegment("Admin");
+		\Admin\Core\API::addTitleSegment("Login");
 		
-		$tag = $this->objectManager->get("Admin\Domain\Model\Tag");
-		$tag->test();
+		$users = $this->userRepository->findAll();
 		
 		if($users->count() < 1){
 			$user = $this->objectManager->get("Admin\Security\User");

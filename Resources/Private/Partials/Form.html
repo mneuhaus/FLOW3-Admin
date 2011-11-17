@@ -7,13 +7,13 @@
 			<br />
 		</f:if>
 		<f:for each="{properties}" as="property">
-			<div class="control-group">
+			<f:if condition="{property.error}">
+				<f:then><div class="control-group has-error"></f:then>
+				<f:else><div class="control-group"></f:else>
+			</f:if>
 				<label class="control-label">{property.label}: </label>
 				
-				<f:if condition="{property.error}">
-					<f:then><div class="controls error"></f:then>
-					<f:else><div class="controls"></f:else>
-				</f:if>
+				<div class="controls">
 					<f:for each="{being.hiddenProperties}" as="value" key="name" >
 						<f:form.hidden name="{name}" value="{value}"/>
 					</f:for>
@@ -30,14 +30,14 @@
 							<a:render partial="{property.widget}" fallbacks="Widgets" vars="{property:property}"/>
 							
 							<f:if condition="{property.infotext}">
-								<div class="help-block">{property.infotext}</div>
+								<span class="help-block help-text">{property.infotext}</span>
 							</f:if>
 							<f:if condition="{property.error}">
-								<div class="help-block">
+								<span class="help-block help-text">
 									<f:for each="{property.error}" as="error">
 										<a:render value="{error}" /><br />
 									</f:for>
-								</div>
+								</span>
 							</f:if>
 						</f:else>
 					</f:if>

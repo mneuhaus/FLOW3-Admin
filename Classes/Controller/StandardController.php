@@ -152,6 +152,11 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		$this->prepare($actionName);
 		$action = $this->getActionByShortName($name);
 		
+		\Admin\Core\API::addTitleSegment("Admin");
+		\Admin\Core\API::addTitleSegment($action->__toString());
+		if(isset($this->being))
+			\Admin\Core\API::addTitleSegment(\Admin\Core\Helper::getShortName($this->being));
+		
 		if($action !== null){
 			$ids = explode(",", $this->id);
 			$action->execute($this->being, $ids);
@@ -185,8 +190,6 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 
 	private function prepare($action){
 		$this->start = microtime();
-		
-		$title = array("Admin",ucfirst($action));
 
 		$this->adapters = $this->helper->getAdapters();
 		$this->settings = $this->helper->getSettings();
@@ -210,11 +213,12 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 
 			$this->group = $this->helper->getGroupByBeing($this->being);
 			\Admin\Core\API::set("group",$this->group);
-			$title[] = \Admin\Core\Helper::getShortName($this->being);
 		}
 
 		if($this->request->hasArgument("id")){
 			$this->id = $this->request->getArgument("id");
+			if(is_array($this->id))
+				$this->id = implode(",", $this->id);
 			\Admin\Core\API::set("being_id",$this->id);
 		}
 
@@ -271,11 +275,10 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		$this->setTemplate($action);
 		$context = getenv("FLOW3_CONTEXT") ? getenv("FLOW3_CONTEXT") : "Production";
 		$this->view->assign("context",$context);
-
-		$topBarActions = $this->getActions($action, $this->being, false);
+		
+		$hasId = isset($this->id) ? true : false;
+		$topBarActions = $this->getActions($action, $this->being, $hasId);
 		$this->view->assign('topBarActions',$topBarActions);
-
-		$this->view->assign("title", implode(" - ", array_reverse($title)));
 	}
 
 	public function setTemplate($action){

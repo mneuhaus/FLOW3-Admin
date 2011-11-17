@@ -49,8 +49,8 @@ class API {
 		if(isset(self::$container[$name]) && !is_array(self::$container[$name])){
 			self::$container[$name] = array();
 		}
-		if($key === null)
-			self::$container[$name][] = $value;
+		if($value === null)
+			self::$container[$name][] = $key;
 		else
 			self::$container[$name][$key] = $value;
 	}
@@ -71,12 +71,33 @@ class API {
 	static function getNagigationItems($position){
 		$items = self::get("Navigation-".$position);
 		$sorting = self::get("NavigationSorting-".$position);
-		arsort($sorting);
+		
 		$sortedItems = array();
-		foreach ($sorting as $key => $priority) {
-			$sortedItems[$key] = $items[$key];
+		
+		if(!is_null($sorting)){
+			arsort($sorting);
+			foreach ($sorting as $key => $priority) {
+				$sortedItems[$key] = $items[$key];
+			}
 		}
 		return $sortedItems;
+	}
+	
+	static function addTitleSegment($segment){
+		self::add("pageTitleSegments", $segment);
+	}
+	
+	static function setTitle($title){
+		self::set("pageTitle", $title);
+	}
+	
+	static function getTitle(){
+		if(self::has("pageTitle")){
+			return self::get("pageTitle");
+		}else if(self::has("pageTitleSegments")){
+			$segments = array_reverse(self::get("pageTitleSegments"));
+			return implode(" - ", $segments);
+		}
 	}
 }
 

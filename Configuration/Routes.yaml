@@ -51,33 +51,32 @@
 #     '@controller':  'Standard'
 #     '@format':      'html'
 
--
-  name: 'Documentations'
-  uriPattern: 'doc/{@package}/{lang}/{doc}/{page}/{subpage1}'
-  defaults:
-    '@action':      'index'
-    '@package':     'Admin'
-    '@controller':  'Doc'
-    '@format':      'html'
-    '@lang':        'en'
-    '@doc':         'Manual'
-    '@page':        'index'
+# -
+#   name: 'Documentations'
+#   uriPattern: 'doc/{@package}/{lang}/{doc}/{page}/{subpage1}'
+#   defaults:
+#     '@action':      'index'
+#     '@package':     'Admin'
+#     '@controller':  'Doc'
+#     '@format':      'html'
+#     '@lang':        'en'
+#     '@doc':         'Manual'
+#     '@page':        'index'
 
+# -
+#   name: 'Documentations'
+#   uriPattern: 'doc/{@package}/{lang}/{doc}/{page}'
+#   defaults:
+#     '@action':      'index'
+#     '@package':     'Admin'
+#     '@controller':  'Doc'
+#     '@format':      'html'
+#     '@lang':        'en'
+#     '@doc':         'Manual'
+#     '@page':        'index'
 -
   name: 'Documentations'
-  uriPattern: 'doc/{@package}/{lang}/{doc}/{page}'
-  defaults:
-    '@action':      'index'
-    '@package':     'Admin'
-    '@controller':  'Doc'
-    '@format':      'html'
-    '@lang':        'en'
-    '@doc':         'Manual'
-    '@page':        'index'
-
--
-  name: 'Documentations'
-  uriPattern: 'doc/{page}'
+  uriPattern: 'doc/{lang}/{page}/{subpage1}'
   defaults:
     '@action':      'index'
     '@package':     'Admin'
@@ -86,3 +85,27 @@
     '@lang':        'en'
     '@doc':         'Manual'
     '@page':        '1_Index'
+
+-
+  name: 'Documentations'
+  uriPattern: 'doc/{lang}/{page}'
+  defaults:
+    '@action':      'index'
+    '@package':     'Admin'
+    '@controller':  'Doc'
+    '@format':      'html'
+    '@lang':        'en'
+    '@doc':         'Manual'
+    '@page':        '1_Index'
+
+-
+  name: 'Documentations'
+  uriPattern: 'doc/{lang}'
+  defaults:
+    '@action':      'index'
+    '@package':     'Admin'
+    '@controller':  'Doc'
+    '@format':      'html'
+    '@lang':        'en'
+    '@doc':         'Manual'
+    '@page':        'index.html'

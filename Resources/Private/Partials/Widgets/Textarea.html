@@ -60,7 +60,7 @@
 						['NumberedList', 'BulletedList', '-', 'Link', 'Unlink'],
 						['Source'],
 					],
-					width: 710
+					width: 500
 				};
 				jQuery('[data-editor=richtext]').ckeditor(config);
 			});
@@ -68,6 +68,4 @@
 	</a:widgetResources>
 </f:if>
 
-<textarea name="{property.inputName}" id="item-{property.name}" rows="4" cols="40" class="{property.class}" data-editor="{property.conf.editor}">
-	{property.string}
-</textarea>
+<textarea name="{property.inputName}" id="item-{property.name}" rows="4" cols="40" class="{property.class}" data-editor="{property.conf.editor}">{property.string}</textarea>

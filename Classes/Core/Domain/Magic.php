@@ -50,15 +50,9 @@ abstract class Magic {
 	public function getArguments(){
 		return array(
 			"id" => $this->getIdentity(),
-			"being" => $this->getClassName(),
+			"being" => get_class($this),
 			"adapter" => \Admin\Core\API::get("adapter")
 		);
-	}
-	
-	public function getClassName(){
-		$class = get_class($this);
-		$nameParts = explode("_AOPProxy",$class);
-		return array_shift($nameParts);
 	}
 	
 	function getModelName(){
@@ -209,6 +203,16 @@ abstract class Magic {
 	}
 	
 	public function __toString(){
+		if(!is_object($this->objectManager)){
+			$myProperties = get_object_vars($this);
+			$strings = array();
+			foreach ($myProperties as $key => $value) {
+				if(is_string($value) && $key !== "FLOW3_Persistence_Identifier"){
+					$strings[] = $value;
+				}
+			}
+			return implode(", ", $strings);
+		}
 		$reflectionService = $this->objectManager->get("TYPO3\FLOW3\Reflection\ReflectionService");
 		$class = get_class($this);
 		$properties = $reflectionService->getClassPropertyNames($class);
@@ -240,7 +244,7 @@ abstract class Magic {
 		if(count($identity)>0)
 			return implode(", ",$identity);
 		if($goodGuess !== null)
-			return $goodGuess;
+			return implode(",", $goodGuess);
 		
 		return "";
 	}

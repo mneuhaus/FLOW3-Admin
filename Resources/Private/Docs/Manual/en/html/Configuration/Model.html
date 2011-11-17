@@ -1,0 +1,125 @@
+
+<f:layout name="bootstrap" />
+{namespace a=Admin\ViewHelpers}
+
+<f:section name="header">
+</f:section>
+	<f:section name="actionbar-left">
+	</f:section>
+	<f:section name="sidebar">
+		<div class="documentation-sidebar">
+		<h3>Documentation</h3>
+		<ul>
+		<li><a href="../index.html">Overview</a></li>
+		</ul>
+		<h3>Sections</h3>
+		
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Model Configuration</a><ul>
+<li><a class="reference internal" href="#active">Active</a></li>
+<li><a class="reference internal" href="#group">Group</a></li>
+<li><a class="reference internal" href="#set">Set</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../Basics.html"
+                        title="previous chapter">Basic Usage</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Property.html"
+                        title="next chapter">&lt;no title&gt;</a></p>
+		</div>
+	</f:section>
+	
+	<f:section name="content">
+	<div class="documentwrapper">
+			<div class="body">
+				
+  <div class="section" id="model-configuration">
+<h1>Model Configuration<a class="headerlink" href="#model-configuration" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="active">
+<h2>Active<a class="headerlink" href="#active" title="Permalink to this headline">¶</a></h2>
+<p>Enable the Admin Interface for a Model</p>
+<p><strong>Class Reflection</strong>:</p>
+<div class="highlight-python"><pre>use Admin\Annotations as Admin;
+/** A Blog post
+  * ...
+  * @Admin\Active
+  */
+class Post {...</pre>
+</div>
+<p><strong>YAML</strong>:</p>
+<div class="highlight-python"><pre>TYPO3\Blog\Domain\Model\Post:
+    Active: true</pre>
+</div>
+</div>
+<div class="section" id="group">
+<h2>Group<a class="headerlink" href="#group" title="Permalink to this headline">¶</a></h2>
+<p>Specifiy a Group in which the Model will be Listed in the Menu. By Default the Models will be Sorted in Categories based on the Package name.</p>
+<p><strong>Class Reflection</strong>:</p>
+<div class="highlight-python"><pre>use Admin\Annotations as Admin;
+/** A Blog post
+  * ...
+  * @Admin\Active
+  * @Admin\Group("MyBlog")
+  */
+class Post {...</pre>
+</div>
+<p><strong>YAML</strong>:</p>
+<div class="highlight-python"><pre>TYPO3\Blog\Domain\Model\Post:
+    Active: true
+    Group: MyBlog</pre>
+</div>
+</div>
+<div class="section" id="set">
+<h2>Set<a class="headerlink" href="#set" title="Permalink to this headline">¶</a></h2>
+<p>By Default all [Properties](property) will be in a General Fieldset called General in the Order in which they are listed in the Models class. You can override this by specifiying specific Sets of fields.</p>
+<p><strong>Class Reflection</strong>:</p>
+<div class="highlight-python"><pre>use Admin\Annotations as Admin;
+/** A Blog post
+  * ...
+  * @Admin\Active
+  * @Admin\Annotations\Set(title="Main", properties="title,content")
+  * @Admin\Annotations\Set(title="Extended Informations", properties="linkTitle,date,author,image")
+  */
+class Post {...</pre>
+</div>
+<p><strong>YAML</strong>:</p>
+<div class="highlight-python"><pre>TYPO3\Blog\Domain\Model\Post:
+    Active: true
+    Set:
+        -
+            Title: Main
+            Properties: title, content
+        -
+            Title: Extended Informations
+            Properties: linkTitle, date, author, image</pre>
+</div>
+</div>
+</div>
+
+
+			</div>
+	</div>
+	
+	<a:widgetResources add="Prettify">
+		<link href="{f:uri.resource(path: 'prettify/prettify.css', package: 'Admin')}" rel="stylesheet">
+		<script src="{f:uri.resource(path: 'prettify/prettify.js', package: 'Admin')}"></script>
+		<script type="text/javascript" charset="utf-8">
+			jQuery(document).ready(function(){
+				prettyPrint();
+				
+				jQuery("div.section[id]").each(function(){ 
+					var i = jQuery(this); 
+					i.find("a.headerlink").attr("id", i.attr("id")); 
+					i.removeAttr("id"); 
+				});
+				var hash = window.location.hash;
+				window.location.hash = hash;
+			});
+		</script>
+	</a:widgetResources>
+	
+	</f:section>

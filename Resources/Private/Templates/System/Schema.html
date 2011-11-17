@@ -1,0 +1,54 @@
+<f:layout name="bootstrap" />
+
+{namespace a=Admin\ViewHelpers}
+<f:section name="sidebar">
+	<h5>System</h5>
+	<ul>
+	<a:navigation position="system:left">
+		<f:if condition="{navBar.hasChildren}">
+			<f:then>
+			<li>
+				<a href="{navBar.link}">{navBar.name}</a>
+				<ul class="dropdown-menu"><f:format.raw>{navBar.children}</f:format.raw></ul>
+			</li>
+			</f:then>
+			<f:else>
+				<li class="">
+					<a href="{navBar.link}">{navBar.name}</a>
+				</li>
+			</f:else>
+		</f:if>
+	</a:navigation>
+	</ul>
+</f:section>
+
+<f:section name="actionbar-left">
+	<form method="post">
+</f:section>
+
+<f:section name="actionbar-right">
+	Select the Package to put the generated Migration into:
+	<select name="package">
+		<option value="">Migration target</option>
+		<f:for each="{packages}" as="package">
+			<option value="{package.packageKey}">{package.packageKey}</option>
+		</f:for>
+	</select>
+	<button name="migrate" value="true" class="btn">Generate & Migrate</button>
+</f:section>
+
+<f:section name="content">
+	<f:if condition="{schemaDiff.newTables}">
+		<h3>New Tables</h3>
+		<f:render partial="Schema/Table" arguments="{tables: schemaDiff.newTables}" />
+	</f:if>
+	<f:if condition="{schemaDiff.changedTables}">
+		<h3>Changed Tables</h3>
+		<f:render partial="Schema/Table" arguments="{tables: schemaDiff.changedTables}" />
+	</f:if>
+	<f:if condition="{schemaDiff.removedTables}">
+		<h3>Removed Tables</h3>
+		<f:render partial="Schema/Table" arguments="{tables: schemaDiff.removedTables}" />
+	</f:if>
+</form>
+</f:section>

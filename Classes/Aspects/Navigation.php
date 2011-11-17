@@ -43,22 +43,34 @@ class Navigation {
 		$controllers = $this->reflectionService->getAllSubClassNamesForClass("\TYPO3\FLOW3\MVC\Controller\ActionController");
 		foreach ($controllers as $className) {
 			$methods = get_class_methods($className);
-			foreach ($methods as $methodName) {
-				if($this->reflectionService->isMethodAnnotatedWith($className, $methodName, "Admin\Annotations\Navigation")){
-					$annotation = $this->reflectionService->getMethodAnnotation($className, $methodName, "Admin\Annotations\Navigation");
-
-					$action = str_replace("Action", "", $methodName);
-					$controller = $this->helper->getControllerByClassName($className);
-					$package = $this->objectManager->getPackageKeyByObjectName($className);
-					$arguments = array(
-						"action" => $action,
-						"controller" => $controller,
-						"package" => $package
-					);
-					$title = !is_null($annotation->title) ? $annotation->title : sprintf("%s (%s)", $controller, $action);
-
-					\Admin\Core\API::addNavigationitem($title, $annotation->position, $arguments, $annotation->priority, $annotation->parent);
+			if(is_array($methods)){
+				foreach ($methods as $methodName) {
+					if($this->reflectionService->isMethodAnnotatedWith($className, $methodName, "Admin\Annotations\Navigation")){
+						$annotations = $this->reflectionService->getMethodAnnotations($className, $methodName, "Admin\Annotations\Navigation");
+					
+						foreach ($annotations as $annotation) {
+							$action = str_replace("Action", "", $methodName);
+							$controller = $this->helper->getControllerByClassName($className);
+							$package = $this->objectManager->getPackageKeyByObjectName($className);
+							$arguments = array(
+								"action" => $action,
+								"controller" => $controller,
+								"package" => $package
+							);
+							$title = !is_null($annotation->title) ? $annotation->title : sprintf("%s (%s)", $controller, $action);
+						
+							\Admin\Core\API::addNavigationitem($title, $annotation->position, $arguments, $annotation->priority, $annotation->parent);
+						}
+					}
 				}
+			}
+		}
+		$settings = $this->helper->getSettings("Admin.Navigation");
+		foreach ($settings as $position => $items) {
+			foreach ($items as $title => $conf) {
+				$priority = isset($conf["priority"]) ? $conf["priority"] : 100;
+				$arguments = $conf["Arguments"];
+				\Admin\Core\API::addNavigationitem($title, strtolower($position), $arguments, $priority);
 			}
 		}
 	}

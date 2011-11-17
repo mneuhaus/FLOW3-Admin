@@ -52,6 +52,8 @@ class ListAction extends \Admin\Core\Actions\AbstractAction {
 	public function execute($being, $ids = null) {
 		$this->being = $being;
 		
+		$this->settings = $this->getSettings();
+		
 		$this->handleBulkActions();
 		
 		$this->adapter->initQuery($being);
@@ -59,6 +61,7 @@ class ListAction extends \Admin\Core\Actions\AbstractAction {
 		$this->total = $this->adapter->getTotal($being);
 		$this->view->assign("total", $this->total);
 		
+		$this->handleSorting();
 		$this->handleLimits();
 		$this->handlePagination();
 		$this->handleFilters();
@@ -97,12 +100,16 @@ class ListAction extends \Admin\Core\Actions\AbstractAction {
 	}
 
 	public function handleLimits(){
-		$limits = array("10" => true, "20" => false, "100" => false, "1000" => false, "10000" => false);
+		
+		$limits = array();
+		foreach ($this->settings["Limits"] as $limit) {
+			$limits[$limit] = false;
+		}
 		
 		if($this->request->hasArgument("limit"))
 			$this->limit = $this->request->getArgument("limit");
 		else
-			$this->limit = key($limits);
+			$this->limit = $this->settings["Default"];
 		
 		$unset = false;
 		foreach ($limits as $key => $value) {
@@ -115,6 +122,9 @@ class ListAction extends \Admin\Core\Actions\AbstractAction {
 			if($unset)
 				unset($limits[$key]);
 		}
+		
+		if(count($limits) == 1)
+			$limits = array();
 		
 		$this->view->assign("limits", $limits);
 		$this->adapter->applyLimit($this->limit);
@@ -139,10 +149,7 @@ class ListAction extends \Admin\Core\Actions\AbstractAction {
 		$this->adapter->applyOffset($offset);
 		$this->view->assign("offset", $offset);
 		
-		
 		if(count($pages) > 1){
-			$this->view->assign("pages", $pages);
-			
 			$this->view->assign("currentpage", $currentPage);
 		
 			if($currentPage < count($pages))
@@ -150,6 +157,34 @@ class ListAction extends \Admin\Core\Actions\AbstractAction {
 			
 			if($currentPage > 1)
 				$this->view->assign("prevpage", $currentPage - 1);
+			
+			if(count($pages) > $this->settings["MaxPages"]){
+				$max = $this->settings["MaxPages"];
+				$start = $currentPage - ( ($max + ($max % 2) ) / 2);
+				$start = $start > 0 ? $start : 0;
+				$start = $start > 0 ? $start : 0;
+				$start = $start + $max > count($pages) ? count($pages) - $max : $start;
+				$pages = array_slice($pages, $start, $max);
+			}
+			
+			$this->view->assign("pages", $pages);
+		}
+	}
+	
+	public function handleSorting(){
+		if( $this->request->hasArgument("sort") ){
+			$sortProperty = $this->request->getArgument("sort");
+			
+			if( $this->request->hasArgument("direction") )
+				$direction = $this->request->getArgument("direction");
+			else
+				$direction = "ASC";
+					
+			$this->adapter->applyOrderings($sortProperty, $direction);
+			
+			$this->view->assign("sorting", $sortProperty);
+			$this->view->assign("direction", $direction == "ASC" ? "DESC" : "ASC");
+			$this->view->assign("sortingClass", $direction == "ASC" ? "headerSortDown" : "headerSortUp");
 		}
 	}
 	

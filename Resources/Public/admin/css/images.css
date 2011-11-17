@@ -1,7 +1,3 @@
-.sidebar li a:hover,
-.sidebar .active a{ background: url(../img/controls.png) 0 -4214px; color:white; text-decoration:none; }
-/*table.ui-table th{ background: url(../img/controls.png) 0 -4507px #FFFFFF; }*/
-
 .ui-button-b16-2x2_grid{ background: url(../img/cc/blacks/16x16/2x2_grid.png) no-repeat; width:16px; height:16px;}
 .ui-button-b16-3x3_grid{ background: url(../img/cc/blacks/16x16/3x3_grid.png) no-repeat; width:16px; height:16px;}
 .ui-button-b16-3x3_grid_2{ background: url(../img/cc/blacks/16x16/3x3_grid_2.png) no-repeat; width:16px; height:16px;}

@@ -1,0 +1,165 @@
+
+<f:layout name="bootstrap" />
+{namespace a=Admin\ViewHelpers}
+<f:section name="actionbar-left"></f:section>
+<f:section name="actionbar-right"></f:section>
+	<f:section name="sidebar">
+		
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Welcome to the Admin Documentation!</a><ul>
+<li><a class="reference internal" href="#contents">Contents</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#features">Features</a><ul>
+<li><a class="reference internal" href="#test">Test</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Basics.html"
+                        title="next chapter">Basic Usage</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+	</f:section>
+	
+	<f:section name="content">
+	<div class="documentwrapper">
+		<div class="bodywrapper">
+			<div class="body">
+				
+  <div class="section" id="welcome-to-the-admin-documentation">
+<h1>Welcome to the Admin Documentation!<a class="headerlink" href="#welcome-to-the-admin-documentation" title="Permalink to this headline">¶</a></h1>
+<p>This Packages tries to provide a Base to have basic CRUD Operations with a good User  Interface and Experience with the least effort and code as Possible, because i believe, that, the DRY principle should be Used for the GUI of your application as much as Possible as Well. In Principle you only need to specify one Tag called &#64;AdminAnnotationsActive in your Model&#8217;s
+class and this Admin package will take care of the rest. Every other Option is optional to optimize the Experience of the GUI. For Maximum Flexibility and Versatility a System of Fallback Mechanisms is in place to override the Default Template.</p>
+<div class="section" id="contents">
+<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Basics.html">Basic Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Configuration.html">Configuration</a></li>
+</ul>
+</div>
+<p>![overview](img/overview.png)</p>
+</div>
+<div class="section" id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><dl class="first docutils">
+<dt>Create and Update Items</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>Appropriate Widgets for Various Data Types</dt>
+<dd><ul class="first last simple">
+<li>String, Integer, Float -&gt; Textfield</li>
+<li>Boolean -&gt; True/False Selector</li>
+<li>Single Relation -&gt; Selectbox</li>
+<li>Multiple Selection -&gt; Special Selectbox with multiple Selection Support</li>
+<li>DateTime -&gt; Textfield with DatePicker enhanced</li>
+<li>Ressource -&gt; Upload Input</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">Delete Items</p>
+</li>
+<li><dl class="first docutils">
+<dt>List View</dt>
+<dd><ul class="first last">
+<li><p class="first">Basic List in tabular form</p>
+</li>
+<li><p class="first">Simple Filter Mechanism using a Selectbox</p>
+</li>
+<li><dl class="first docutils">
+<dt>Bulk Actions</dt>
+<dd><ul class="first last simple">
+<li>Delete included</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Single View</dt>
+<dd><ul class="first last simple">
+<li>Dummy View to show an Models Data on a seperate Page</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Security</dt>
+<dd><ul class="first last simple">
+<li>User and Roles Management</li>
+<li>Finely grained Rights Management</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="section" id="test">
+<h3>Test<a class="headerlink" href="#test" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt>
+<tt class="descname">test</tt><big>(</big><em>$index</em>, <em>$type</em>, <em>$foo</em><big>)</big></dt>
+<dd><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>$index</strong> &#8211; der indes</li>
+<li><strong>$type</strong> &#8211; der type</li>
+<li><strong>$foo</strong> &#8211; wer kennt foo nicht?</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">opcode</tt></dt>
+<dd><p>Describes a Python bytecode instruction.</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+			</div>
+		</div>
+	</div>
+	</f:section>

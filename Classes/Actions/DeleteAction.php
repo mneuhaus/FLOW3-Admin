@@ -39,9 +39,17 @@ class DeleteAction extends \Admin\Core\Actions\AbstractAction {
 	 * @author Marc Neuhaus <mneuhaus@famelo.com>
 	 * */
 	public function canHandle($being, $action = null, $id = false) {
-		return $id;
+		switch($action) {
+			case "view":
+			case "update":
+			case "confirm":
+			case "create":
+				return false;
+			default:
+				return $id;
+		}
 	}
-
+	
 	public function getClass() {
 		return "btn danger";
 	}

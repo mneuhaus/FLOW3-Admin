@@ -1,0 +1,71 @@
+<f:layout name="bootstrap" />
+{namespace a=Admin\ViewHelpers}
+
+<f:section name="header">
+</f:section>
+
+{%- macro sidebar() %}
+	{%- if sidebars != None %}
+		{%- for sidebartemplate in sidebars %}
+		{%- include sidebartemplate %}
+		{%- endfor %}
+	{%- else %}
+		{%- block sidebartoc %}
+			{%- include "localtoc.html" %}
+		{%- endblock %}
+		{%- block sidebarrel %}
+			{%- include "relations.html" %}
+		{%- endblock %}
+	{%- endif %}
+{%- endmacro %}
+
+{%- block content %}
+	<f:section name="actionbar-left">
+	</f:section>
+	{%- block sidebar2 %}
+	<f:section name="sidebar">
+		<div class="documentation-sidebar">
+		<h3>Documentation</h3>
+		<ul>
+		<li><a href="{{ pathto(master_doc) }}">Overview</a></li>
+		</ul>
+		<h3>Sections</h3>
+		{{ sidebar() }}
+		</div>
+	</f:section>
+	{% endblock %}
+	{%- block document %}
+	<f:section name="content">
+	<div class="documentwrapper">
+		{%- if render_sidebar %}
+		<div class="bodywrapper">
+		{%- endif %}
+			<div class="body">
+				{% block body %} {% endblock %}
+			</div>
+		{%- if render_sidebar %}
+		</div>
+		{%- endif %}
+	</div>
+	
+	<a:widgetResources add="Prettify">
+		<link href="{f:uri.resource(path: 'prettify/prettify.css', package: 'Admin')}" rel="stylesheet">
+		<script src="{f:uri.resource(path: 'prettify/prettify.js', package: 'Admin')}"></script>
+		<script type="text/javascript" charset="utf-8">
+			jQuery(document).ready(function(){
+				prettyPrint();
+				
+				jQuery("div.section[id]").each(function(){ 
+					var i = jQuery(this); 
+					i.find("a.headerlink").attr("id", i.attr("id")); 
+					i.removeAttr("id"); 
+				});
+				var hash = window.location.hash;
+				window.location.hash = hash;
+			});
+		</script>
+	</a:widgetResources>
+	
+	</f:section>
+	{%- endblock %}
+{%- endblock %}

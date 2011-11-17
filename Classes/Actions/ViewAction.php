@@ -40,7 +40,11 @@ class ViewAction extends \Admin\Core\Actions\AbstractAction {
 	 * */
 	public function canHandle($being, $action = null, $id = false) {
 		switch($action) {
+			case "view":
 			case "bulk":
+			case "update":
+			case "confirm":
+			case "create":
 				return false;
 			default:
 				return $id;

@@ -78,7 +78,7 @@ abstract class AbstractDashboardWidget implements DashboardWidgetInterface {
 	
 		$replacements = array(
 			"@partial" => $partial,
-			"@package" => \Admin\Core\API::get("package"),
+			"@package" => $this->helper->getPackageByClassName(get_class($this)),
 			"@being" => \Admin\Core\Helper::getShortName(\Admin\Core\API::get("being")),
 			"@action" => $partial
 		);
