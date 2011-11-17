@@ -122,7 +122,7 @@ class ListAction extends \Admin\Core\Actions\AbstractAction {
 			if($unset)
 				unset($limits[$key]);
 		}
-		var_dump($limits);
+		
 		if(count($limits) == 1)
 			$limits = array();
 		

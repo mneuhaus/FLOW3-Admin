@@ -234,7 +234,7 @@ abstract class Magic {
 		if(count($identity)>0)
 			return implode(", ",$identity);
 		if($goodGuess !== null)
-			return $goodGuess;
+			return implode(",", $goodGuess);
 		
 		return "";
 	}

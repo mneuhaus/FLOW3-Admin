@@ -41,6 +41,9 @@ class UpdateAction extends \Admin\Core\Actions\AbstractAction {
 	public function canHandle($being, $action = null, $id = false) {
 		switch($action) {
 			case "bulk":
+			case "update":
+			case "confirm":
+			case "create":
 				return false;
 			default:
 				return $id;

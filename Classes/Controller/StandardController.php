@@ -217,6 +217,8 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 
 		if($this->request->hasArgument("id")){
 			$this->id = $this->request->getArgument("id");
+			if(is_array($this->id))
+				$this->id = implode(",", $this->id);
 			\Admin\Core\API::set("being_id",$this->id);
 		}
 
@@ -273,8 +275,9 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		$this->setTemplate($action);
 		$context = getenv("FLOW3_CONTEXT") ? getenv("FLOW3_CONTEXT") : "Production";
 		$this->view->assign("context",$context);
-
-		$topBarActions = $this->getActions($action, $this->being, false);
+		
+		$hasId = isset($this->id) ? true : false;
+		$topBarActions = $this->getActions($action, $this->being, $hasId);
 		$this->view->assign('topBarActions',$topBarActions);
 	}
 

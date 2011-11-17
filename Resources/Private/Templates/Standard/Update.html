@@ -10,8 +10,9 @@
 			controller="{action.controller}"
 			package="{action.package}"
 			arguments="{
-				being : object.class,
-				adapter : object.adapter.class
+				being : being.class,
+				adapter : being.adapter.class,
+				id : being.id
 			}">
 			{action}
 		</f:link.action>
@@ -19,7 +20,7 @@
 </f:section>
 <f:section name="content">
 	<div class="box">
-		<h3 class="box-header">Edit {beingName}</h3>
+		<h3 class="box-header">Edit this {bein.shortName}</h3>
 		<div>
 			<f:form method="post" action="update" name="item" object="{being}" enctype="multipart/form-data" class="form-horizontal">
 				<f:form.hidden name="adapter" id="adapter" value="{being.adapter.class}"/>

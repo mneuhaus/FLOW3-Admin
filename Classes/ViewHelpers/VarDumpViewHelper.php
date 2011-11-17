@@ -31,18 +31,16 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * @api
  * @FLOW3\Scope("prototype")
  */
-class DohViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class VarDumpViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	/**
 	 *
 	 * @param mixed $mixed
-	 * @param string $name
-	 * @param boolean $return
 	 * @return string Rendered string
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 * @api
 	 */
-	public function render($mixed = null,$name='',$return = false) {
-		return doh($mixed,$name,$return);
+	public function render($mixed = null) {
+		return var_dump($mixed);
 	}
 }
 
