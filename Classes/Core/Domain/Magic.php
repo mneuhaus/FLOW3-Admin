@@ -203,6 +203,16 @@ abstract class Magic {
 	}
 	
 	public function __toString(){
+		if(!is_object($this->objectManager)){
+			$myProperties = get_object_vars($this);
+			$strings = array();
+			foreach ($myProperties as $key => $value) {
+				if(is_string($value) && $key !== "FLOW3_Persistence_Identifier"){
+					$strings[] = $value;
+				}
+			}
+			return implode(", ", $strings);
+		}
 		$reflectionService = $this->objectManager->get("TYPO3\FLOW3\Reflection\ReflectionService");
 		$class = get_class($this);
 		$properties = $reflectionService->getClassPropertyNames($class);
