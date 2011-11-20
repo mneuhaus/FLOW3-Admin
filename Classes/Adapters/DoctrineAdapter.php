@@ -30,6 +30,7 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * @version $Id: AbstractValidator.php 3837 2010-02-22 15:17:24Z robert $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * 
+ * @FLOW3\Scope("singleton")
  */
 class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 	/**
@@ -67,12 +68,6 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 		return ucfirst($being);
 	}
 	
-	public function init() {
-		$this->settings = $this->helper->getSettings("Doctrine");
-		parent::init();
-		$this->fmc = $this->objectManager->get('TYPO3\FLOW3\MVC\FlashMessageContainer');
-	}
-	
 	public function initQuery($being){
 		$repository = str_replace("Domain\\Model", "Domain\\Repository", $being) . "Repository";
 		$repository = $this->getRepositoryForModel($being);
@@ -82,35 +77,35 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 		}
 	}
 	
-	public function postProcessConfiguration($configuration) {
-		foreach($configuration ["properties"] as $property => $conf) {
-			$type = $configuration["properties"][$property]["var"];
-			
-			$configuration["properties"][$property]["type"] = $type;
-			preg_match("/<(.+)>/", $configuration ["properties"] [$property] ["type"], $matches);
-			if(!empty($matches)){
-				$configuration["properties"][$property]["being"] = ltrim($matches[1],"\\");
-				$configuration["properties"][$property]["mode"] = \Admin\Core\Property::INLINE_MULTIPLE_MODE;
-			}
-			
-			if(class_exists($type)){
-				$reflectClass = new \TYPO3\FLOW3\Reflection\ClassReflection($type);
-				if($reflectClass->isTaggedWith("entity")){
-					$configuration ["properties"] [$property] ["being"] = ltrim($type,"\\");
-					$configuration["properties"][$property]["mode"] = \Admin\Core\Property::INLINE_SINGLE_MODE;
-				}
-			}
-			
-			if(isset($configuration["properties"][$property]["being"])){
-				$repository = \Admin\Core\Helper::getModelRepository($configuration["properties"][$property]["being"]);
-				if(!class_exists($repository) && $configuration["properties"][$property]["being"] !== "TYPO3\FLOW3\Resource\Resource"){
-					$configuration["properties"][$property]["inline"] = true;
-				}
-			}
-		}
-		$configuration = parent::postProcessConfiguration($configuration);
-		return $configuration;
-	}
+	// public function postProcessConfiguration($configuration) {
+	// 	foreach($configuration ["properties"] as $property => $conf) {
+	// 		$type = $configuration["properties"][$property]["var"];
+	// 		
+	// 		$configuration["properties"][$property]["type"] = $type;
+	// 		preg_match("/<(.+)>/", $configuration ["properties"] [$property] ["type"], $matches);
+	// 		if(!empty($matches)){
+	// 			$configuration["properties"][$property]["being"] = ltrim($matches[1],"\\");
+	// 			$configuration["properties"][$property]["mode"] = \Admin\Core\Property::INLINE_MULTIPLE_MODE;
+	// 		}
+	// 		
+	// 		if(class_exists($type)){
+	// 			$reflectClass = new \TYPO3\FLOW3\Reflection\ClassReflection($type);
+	// 			if($reflectClass->isTaggedWith("entity")){
+	// 				$configuration ["properties"] [$property] ["being"] = ltrim($type,"\\");
+	// 				$configuration["properties"][$property]["mode"] = \Admin\Core\Property::INLINE_SINGLE_MODE;
+	// 			}
+	// 		}
+	// 		
+	// 		if(isset($configuration["properties"][$property]["being"])){
+	// 			$repository = \Admin\Core\Helper::getModelRepository($configuration["properties"][$property]["being"]);
+	// 			if(!class_exists($repository) && $configuration["properties"][$property]["being"] !== "TYPO3\FLOW3\Resource\Resource"){
+	// 				$configuration["properties"][$property]["inline"] = true;
+	// 			}
+	// 		}
+	// 	}
+	// 	$configuration = parent::postProcessConfiguration($configuration);
+	// 	return $configuration;
+	// }
 
 	public function getGroups() {
 		$this->init();

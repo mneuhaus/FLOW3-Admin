@@ -34,14 +34,7 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * @FLOW3\Scope("prototype")
  */
 class Option{
-    /**
-	 * @var \TYPO3\FLOW3\Object\ObjectManagerInterface
-	 * @api
-	 * @author Marc Neuhaus <apocalip@gmail.com>
-	 * @FLOW3\Inject
-	 */
-	protected $objectManager;
-
+	
     protected $name;
     protected $value;
     protected $id;

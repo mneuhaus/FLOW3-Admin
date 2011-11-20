@@ -167,7 +167,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		$cache = $this->cacheManager->getCache('Admin_Cache');
 		$identifier = "ClassShortNames-".sha1(implode("-",$this->adapters));
 
-		if(!$cache->has($identifier)){
+		if(!$cache->has($identifier) || true){
 			$shortNames = array();
 			foreach ($this->adapters as $adapter) {
 				$adapters[$adapter] = $this->objectManager->get($adapter);

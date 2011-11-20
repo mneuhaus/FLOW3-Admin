@@ -18,6 +18,7 @@ TYPO3:
           - Admin\Security\Voter\Policy
           - TYPO3\FLOW3\Security\Authorization\Voter\Policy
 Admin:
+  Beings: []
   PageTitle: Admin
   Logging:
     Active: true
@@ -47,6 +48,10 @@ Admin:
         optionsprovider: Admin\OptionsProvider\RelationOptionsProvider
   Adapters:
     Admin\Adapters\DoctrineAdapter: active
+  ConfigurationProvider:
+    - Admin\ConfigurationProvider\DefaultsConfigurationProvider
+    - Admin\ConfigurationProvider\AnnotationConfigurationProvider
+    - Admin\ConfigurationProvider\YamlConfigurationProvider
   Fallbacks:
     Views:
       - resource://@package/Private/Templates/@being/@action/@variant.html
@@ -70,15 +75,8 @@ Admin:
       - resource://@package/Private/Partials/@being/Widgets/@partial.html
       - resource://@package/Private/Partials/Widgets/@partial.html
       - resource://Admin/Private/Partials/Widgets/@partial.html
-
-Doctrine:
-  Beings: []
-  ConfigurationProvider:
-    - Admin\ConfigurationProvider\DefaultsConfigurationProvider
-    - Admin\ConfigurationProvider\ReflectionConfigurationProvider
-    - Admin\ConfigurationProvider\YamlConfigurationProvider
-  Widgets:
-    Mapping:
+  Mapping:
+    Widgets:
       string:   Textfield
       readonly:   TextfieldReadonly
       integer:  Spinner

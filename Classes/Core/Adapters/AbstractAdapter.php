@@ -39,6 +39,12 @@ abstract class AbstractAdapter implements \Admin\Core\Adapters\AdapterInterface 
 	protected $cacheManager;
 	
 	/**
+	 * @var \Admin\Core\ConfigurationManager
+	 * @FLOW3\Inject
+	 */
+	protected $configurationManager;
+	
+	/**
 	 * @var \Admin\Core\Helper
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 * @FLOW3\Inject
@@ -89,6 +95,7 @@ abstract class AbstractAdapter implements \Admin\Core\Adapters\AdapterInterface 
 	 * @author Marc Neuhaus <mneuhaus@famelo.com>
 	 * */
 	public function init() {
+		$this->settings = $this->helper->getSettings("Admin");
 		$this->initializeConverters();
 	}
 	
@@ -133,15 +140,14 @@ abstract class AbstractAdapter implements \Admin\Core\Adapters\AdapterInterface 
 	public function getBeing($being, $id = null) {
 		$this->conf = $this->getConfiguration($being);
 		
-		$b = $this->objectManager->create("Admin\Core\Being",$this);
+		$b = $this->objectManager->create("Admin\Core\Being", $this);
 		$b->setClass($being);
 		if($id !== null){
 			$b->setObject($this->getObject($being, $id));
-			$b->setId($id);
 		}
-		$properties = $this->getProperties($being);
-		$b->setProperties($properties);
-		$b->setSets($this->getSets(array_keys($properties)));
+#		$properties = $this->getProperties($being);
+#		$b->setProperties($properties);
+#		$b->setSets($this->getSets(array_keys($properties)));
 		return $b;
 	}
 	
@@ -221,6 +227,7 @@ abstract class AbstractAdapter implements \Admin\Core\Adapters\AdapterInterface 
 	 * @author Marc Neuhaus <mneuhaus@famelo.com>
 	 * */
 	public function getConfiguration($being) {
+		return array();
 		$cache = $this->cacheManager->getCache('Admin_ConfigurationCache');
 		$identifier = str_replace("\\","_",$being)."-getConfiguration";
 		
@@ -237,7 +244,7 @@ abstract class AbstractAdapter implements \Admin\Core\Adapters\AdapterInterface 
 				}
 			}
 			
-			$configuration = $this->postProcessConfiguration($configuration);
+#			$configuration = $this->postProcessConfiguration($configuration);
 			
 			$cache->set($identifier,$configuration);
 		}else{
@@ -251,7 +258,7 @@ abstract class AbstractAdapter implements \Admin\Core\Adapters\AdapterInterface 
 		$beings = $this->getBeings($being);
 		$filters = array();
 		foreach($beings as $being){
-			$properties = $being->getProperties();
+			$properties = $being->properties;
 			foreach($properties as $property){
 				if($property->isFilter()){
 					if(!isset($filters[$property->getName()]))
@@ -456,29 +463,29 @@ abstract class AbstractAdapter implements \Admin\Core\Adapters\AdapterInterface 
 		$this->objectConverters = $objectConverters;
 	}
 	
-	/**
-	 * PostProcesses the Configuration
-	 * 
-	 * @author Marc Neuhaus <mneuhaus@famelo.com>
-	 * */
-	public function postProcessConfiguration($configuration){
-		foreach($configuration["properties"] as $property => $c){
-			if(array_key_exists("editor",$c)){
-				$c["widget"] = "Textarea";
-				$configuration["properties"][$property]["editor"] = strtolower($c["editor"]);
-			}
-				
-			if(array_key_exists("widget",$c))
-				$configuration["properties"][$property]["widget"] = $c["widget"];
-			else
-				$configuration["properties"][$property]["widget"] = $this->getWidget($c["type"],"TextField");
-			
-			if(isset($c["optionsProvider"]) && is_array($c["optionsProvider"]))
-				$configuration["properties"][$property]["optionsProvider"] = array_pop($c["optionsProvider"]);
-		}
-		
-		return $configuration;
-	}
+	// /**
+	//  * PostProcesses the Configuration
+	//  * 
+	//  * @author Marc Neuhaus <mneuhaus@famelo.com>
+	//  * */
+	// public function postProcessConfiguration($configuration){
+	// 	foreach($configuration["properties"] as $property => $c){
+	// 		if(array_key_exists("editor",$c)){
+	// 			$c["widget"] = "Textarea";
+	// 			$configuration["properties"][$property]["editor"] = strtolower($c["editor"]);
+	// 		}
+	// 			
+	// 		if(array_key_exists("widget",$c))
+	// 			$configuration["properties"][$property]["widget"] = $c["widget"];
+	// 		else
+	// 			$configuration["properties"][$property]["widget"] = $this->getWidget($c["type"],"TextField");
+	// 		
+	// 		if(isset($c["optionsProvider"]) && is_array($c["optionsProvider"]))
+	// 			$configuration["properties"][$property]["optionsProvider"] = array_pop($c["optionsProvider"]);
+	// 	}
+	// 	
+	// 	return $configuration;
+	// }
 	
 	/**
 	 * set filters

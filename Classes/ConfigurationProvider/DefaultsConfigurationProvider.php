@@ -31,25 +31,25 @@ namespace Admin\ConfigurationProvider;
 class DefaultsConfigurationProvider extends \Admin\Core\ConfigurationProvider\AbstractConfigurationProvider {
 
 	public function get($being){
-		$configuration = array();
+		$c = array();
 
 		$settings = $this->helper->getSettings("Admin");
 		
 		if(isset($settings["Defaults"])){
-			$configuration["class"] = $settings["Defaults"];
-			unset($configuration["class"]["properties"]);
+			$c = $settings["Defaults"];
+			unset($c["properties"]);
 			$propertyDefaults = $settings["Defaults"]["properties"];
 			
 			if( class_exists($being, false) ) {
 				$properties = $this->helper->getModelProperties($being);
 				foreach($properties as $property => $conf){
-					$configuration["properties"][$property] = $propertyDefaults;
+					$c["properties"][$property] = $propertyDefaults;
 				}
 			}
 			
 		}
 
-		return $configuration;
+		return $c;
 	}
 
 }

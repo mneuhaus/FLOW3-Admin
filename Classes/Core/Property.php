@@ -36,25 +36,37 @@ use TYPO3\FLOW3\Annotations as FLOW3;
 class Property{
 	const INLINE_SINGLE_MODE = 1;
 	const INLINE_MULTIPLE_MODE = 2;
-
+	
 	/**
-	 * @var \TYPO3\FLOW3\Object\ObjectManagerInterface
-	 * @api
-	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 * @var \Admin\Core\Helper
 	 * @FLOW3\Inject
 	 */
-	protected $objectManager;
+	protected $helper;
 
-    protected $adapter;
-    protected $name;
+	
+    public $adapter;
+
+	public $being = null;
+	
+	/**
+	 * Label for the Property
+	 *
+	 * @var string
+	 */
+	public $label;
+	
+	/**
+	 * Name of this Property
+	 *
+	 * @var string
+	 */
+    public $name;
+	
     protected $type = "string";
     protected $widget;
-    protected $label;
-    protected $infotext = "";
     protected $options;
-    protected $conf;
+    protected $configuration;
     protected $parent;
-    protected $being = null;
     protected $inline = false;
     protected $mode = 0;
     protected $children = array();
@@ -63,106 +75,150 @@ class Property{
     protected $filter = false;
     protected $selected = false;
 
-    public function  __construct($adapter) {
-        $this->adapter = $adapter;
-    }
-
-    public function getName() {
-        return $this->name;
-    }
-
-    public function getInputName(){
-        if($this->mode == self::INLINE_MULTIPLE_MODE){
-            return $this->parent->getPrefix()."[".$this->getName()."][]";
-        }else{
-            return $this->parent->getPrefix()."[".$this->getName()."]";
-        }
-    }
-
-    public function getPrefix(){
-        if($this->mode == self::INLINE_MULTIPLE_MODE){
-            return $this->parent->getPrefix()."[".$this->getName()."][".$this->counter."]";
-        }else{
-            return $this->parent->getPrefix()."[".$this->getName()."]";
-        }
-    }
-
-    public function setName($name) {
-        if(empty($this->label)){
-            $this->setLabel(ucfirst($name));
-        }
-        $this->name = $name;
-    }
-
-    public function getType() {
-        return $this->type;
-    }
-
-    public function setType($type) {
-        $this->type = $type;
-        if(isset($this->conf["widget"])){
-            $this->widget = $this->conf["widget"];
-        }else{
-            $this->widget = $this->adapter->getWidget($this->type, "Textfield");
-        }
-    }
-
-    public function getWidget() {
-        return $this->widget;
-    }
-
-    public function setWidget($widget) {
-        if($widget == "MultipleRelation")
-            $this->mode = \Admin\Core\Property::INLINE_MULTIPLE_MODE;
-        $this->widget = $widget;
-    }
-
-    public function getLabel() {
-        return $this->label;
-    }
-
-    public function setLabel($label) {
-        $this->label = $label;
-    }
-
-    public function getOptions() {
-		$options = array();
-		if(isset($this->conf["optionsprovider"])){
-			if(is_array($this->conf["optionsprovider"]))
-					$this->conf["optionsprovider"] = end($this->conf["optionsprovider"]);
+	public function  __construct($name, $being) {
+		$this->name = $name;
+		$this->adapter = $being->adapter;
+	}
+	
+	public function getInputName(){
+		if($this->mode == self::INLINE_MULTIPLE_MODE)
+			return $this->parent->prefix."[".$this->name."][]";
+		
+		return $this->parent->prefix."[".$this->name."]";
+	}
+	
+	public function getPrefix(){
+		if($this->mode == self::INLINE_MULTIPLE_MODE)
+			return $this->parent->prefix."[".$this->name."][".$this->counter."]";
+		
+		return $this->parent->prefix."[".$this->name."]";
+	}
+	
+	public function getString(){
+		return $this->value->__toString();
+	}
+	
+	public function getValue(){
+		return $this->parent->getValue($this->name);
+	}
+	
+	public function getWidget() {
+		$raw = $this->type;
+		
+		$widget = null;
+		$default = "Textfield";
+		
+		$mappings = $this->helper->getSettings("Admin.Mapping.Widgets");
+		
+		if( ! empty($mappings) ) {
+			if( $widget === null && isset($mappings[$raw]) ) {
+				$widget = $mappings[$raw];
+			}
 			
-			$provider = $this->objectManager->get($this->conf["optionsprovider"]);
+			if( $widget === null && isset($mappings[strtolower($raw)]) ) {
+				$widget = $mappings[$raw];
+			}
+			
+			if( $widget === null && isset($mappings[ucfirst($raw)]) ) {
+				$widget = $mappings[$raw];
+			}
+			
+			if( $widget === null){
+				foreach($mappings as $pattern => $widget) {
+					if( preg_match("/" . $pattern . "/", $raw) > 0 ) {
+						break;
+					}
+				}
+			}
+		}
+		
+		if( $widget === null && $default !== null )
+			$widget = $default;
+		
+		if($widget === null)
+			$widget = $raw;
+		
+		return $widget;
+	}
+	
+	public function setConfiguration($configuration){
+		$this->configuration = $configuration;
+		
+		$this->value = new \Admin\Core\Value($this, $this->adapter);
+		
+		$this->label = ucfirst($this->name);
+		
+		foreach ($configuration as $key => $values) {
+			switch ($key) {
+				case 'var':
+					$this->$key = current($values);
+					$this->type = current($values);
+					
+					preg_match("/<(.+)>/", $this->$key, $matches);
+					if(!empty($matches)){
+						$this->type = ltrim($matches[1],"\\");
+						$this->being = ltrim($matches[1],"\\");
+					}else{
+						$this->type = current($values);
+						$this->being = current($values);
+					}
+					
+					break;
+					
+				case 'infotext':
+				case 'label':
+					if(is_array($values)){
+						$this->$key = current($values);
+						break;
+					}
+					
+				default:
+					$this->$key = $values;
+					break;
+			}
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public function getOptions() {
+		$options = array();
+		
+		if(isset($this->optionsprovider)){
+			$provider = new $this->optionsprovider;
 			$provider->setProperty($this);
 			$options = $provider->getOptions();
 		}
-        return $options;
+		return $options;
+	}
+
+    public function getConfiguration() {
+        return $this->configuration;
     }
 
-    public function setOptions($options) {
-        $this->options = $options;
-    }
-
-    public function getConf() {
-        return $this->conf;
-    }
-
-    public function setConf($conf) {
-        $this->conf = $conf;
-
-        $properties = \get_object_vars($this);
-        foreach($conf as $name => $conf){
-            if(array_key_exists($name, $properties) && $conf != null){
-                $setter = "set".ucfirst($name);
-                if(is_callable(array($this,$setter))){
-                    $this->$setter($conf);
-                }else{
-                    $this->$name = $conf;
-                }
-            }
-        }
-        
-        $this->value = $this->objectManager->get("Admin\Core\Value", $this,$this->adapter);
-    }
+    // public function setConf($conf) {
+    //     $this->conf = $conf;
+    // 
+    //     $properties = \get_object_vars($this);
+    //     foreach($conf as $name => $conf){
+    //         if(array_key_exists($name, $properties) && $conf != null){
+    //             $setter = "set".ucfirst($name);
+    //             if(is_callable(array($this,$setter))){
+    //                 $this->$setter($conf);
+    //             }else{
+    //                 $this->$name = $conf;
+    //             }
+    //         }
+    //     }
+    //     
+    //     $this->value = $this->objectManager->get("Admin\Core\Value", $this,$this->adapter);
+    // }
 
     public function getChildren() {
         if($this->inline && empty($this->children)){
@@ -211,10 +267,6 @@ class Property{
         return $b;
     }
 
-    public function setChildren($children) {
-        $this->children = $children;
-    }
-
     public function setParent($parent){
         $this->parent = $parent;
     }
@@ -223,84 +275,77 @@ class Property{
         return $this->parent;
     }
 
-    public function setValue($value){
-        $this->value = $value;
-    }
+    // public function setValue($value){
+    //     $this->value = $value;
+    // }
 
-    public function getValue(){
-        return $this->parent->getValue($this->name);
-    }
-
-    public function getString(){
-        return $this->value->__toString();
-    }
-
-    public function getIds(){
-        return $this->value->getIds();
-    }
-
-    public function getBeing() {
-        return $this->being;
-    }
-
-    public function setBeing($being) {
-        $this->being = $being;
-    }
-
-    public function getInline() {
-        return $this->inline;
-    }
-
-    public function setInline($inline) {
-        $this->inline = $inline;
-    }
-
-    public function getInfotext() {
-        return $this->infotext;
-    }
-
-    public function setInfotext($infotext) {
-        $this->infotext = $infotext;
-    }
-
+	public function getIds(){
+		return $this->value->getIds();
+	}
+    // 
+    // public function getBeing() {
+    //     return $this->being;
+    // }
+    // 
+    // public function setBeing($being) {
+    //     $this->being = $being;
+    // }
+    // 
+    // public function getInline() {
+    //     return $this->inline;
+    // }
+    // 
+    // public function setInline($inline) {
+    //     $this->inline = $inline;
+    // }
+    // 
+    // public function getInfotext() {
+    //     return $this->infotext;
+    // }
+    // 
+    // public function setInfotext($infotext) {
+    //     $this->infotext = $infotext;
+    // }
+    
     public function isFilter(){
-        return $this->filter;
+        return false;
     }
-
-    public function getSelected() {
-        return $this->selected;
-    }
-
-    public function setSelected($selected) {
-        $this->selected = $selected;
-    }
-
-    public function getAdapter() {
-        return $this->adapter;
-    }
-
-    public function setAdapter($adapter) {
-        $this->adapter = $adapter;
-    }
-
-    public function getMode() {
-        return $this->mode;
-    }
-
-    public function setMode($mode) {
-        $this->mode = $mode;
-    }
-
-    public function getFilter() {
-        return $this->filter;
-    }
-
-    public function setFilter($filter) {
-        $this->filter = $filter;
-    }
+    
+    // public function getSelected() {
+    //     return $this->selected;
+    // }
+    // 
+    // public function setSelected($selected) {
+    //     $this->selected = $selected;
+    // }
+    // 
+    // public function getAdapter() {
+    //     return $this->adapter;
+    // }
+    // 
+    // public function setAdapter($adapter) {
+    //     $this->adapter = $adapter;
+    // }
+    // 
+    // public function getMode() {
+    //     return $this->mode;
+    // }
+    // 
+    // public function setMode($mode) {
+    //     $this->mode = $mode;
+    // }
+    // 
+    // public function getFilter() {
+    //     return $this->filter;
+    // }
+    // 
+    // public function setFilter($filter) {
+    //     $this->filter = $filter;
+    // }
 	
     public function getError(){
-        return $this->getParent()->getErrors($this->getName());
+		if(is_object($this->getParent()))
+			return $this->getParent()->getErrors($this->name);
     }
 }
 

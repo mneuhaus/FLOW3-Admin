@@ -31,12 +31,12 @@ namespace Admin\ConfigurationProvider;
 class YamlConfigurationProvider extends \Admin\Core\ConfigurationProvider\AbstractConfigurationProvider {
 	
 	public function get($being){
-		$configuration = array();
+		$c = array();
 		
-		if(isset($this->adapter->settings["Beings"]) && isset($this->adapter->settings["Beings"][$being]))
-			$configuration = $this->adapter->settings["Beings"][$being];
+		if(isset($this->settings["Beings"]) && isset($this->settings["Beings"][$being]))
+			$c = $this->settings["Beings"][$being];
 		
-		return $configuration;
+		return $c;
 	}
 	
 }

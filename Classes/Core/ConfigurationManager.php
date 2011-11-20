@@ -26,14 +26,18 @@ use Doctrine\ORM\Mapping as ORM;
 use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
- * represents a properties value
  * 
  * @version $Id: ForViewHelper.php 3346 2009-10-22 17:26:10Z k-fish $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
- * @FLOW3\Scope("prototype")
+ * @FLOW3\Scope("singleton")
  */
-class Value{
+class ConfigurationManager{
+	/**
+	 * @var array
+	 */
+	protected $configurationProviders;
+	
 	/**
 	 * @var \TYPO3\FLOW3\Object\ObjectManagerInterface
 	 * @api
@@ -41,52 +45,43 @@ class Value{
 	 * @FLOW3\Inject
 	 */
 	protected $objectManager;
-
+	
 	/**
-	 * @var \TYPO3\FLOW3\Reflection\ReflectionService
-	 * @api
-	 * @author Marc Neuhaus <apocalip@gmail.com>
-	 * @FLOW3\Inject
+	 * @var array
 	 */
-	protected $reflectionService;
-
-	/**
-	 * @var \Admin\Core\Converter
-	 * @api
-	 * @author Marc Neuhaus <apocalip@gmail.com>
-	 * @FLOW3\Inject
-	 */
-	protected $converter;
-
-	protected $parent;
-	protected $adapter;
-
-	public function  __construct($parent, $adapter) {
-		$this->parent = $parent;
-		$this->adapter = $adapter;
+	protected $settings;
+	
+	public function __construct(\Admin\Core\Helper $helper){
+		$this->settings = $helper->getSettings();
 	}
-
-	public function  __toString() {
-		$value = $this->parent->getValue();
-		return $this->converter->toString($value, $this->parent->getConfiguration());
-	}
-
-	public function getValue() {
-		return $this->parent->getValue();
-	}
-
-	public function getIds(){
-		$value = $this->getValue();
-		$ids = array();
-		if( \Admin\Core\Helper::isIteratable($value) ){
-			foreach($value as $object){
-				$ids[] = $this->adapter->getId($object);
+	
+	public function getClassConfiguration($class){
+		$configuration = array();
+		
+		if(isset($this->settings["ConfigurationProvider"])){
+			
+			$configurationProviders = $this->settings["ConfigurationProvider"];
+			foreach($configurationProviders as $configurationProviderClass){
+				$configurationProvider = $this->objectManager->get($configurationProviderClass);
+				$configurationProvider->setSettings($this->settings);
+				$configuration = array_merge_recursive($configuration,$configurationProvider->get($class));
 			}
-		}else if (is_object($value)){
-			$ids[] = $this->adapter->getId($value);
 		}
-		#\dump($ids,$this->parent->getName());
-		return $ids;
+		
+#		$configuration = $this->postProcessConfiguration($configuration);
+		
+		return $configuration;
+	}
+	
+	public function getPropertyConfiguration($property){
+	}
+	
+	public function setConfigurationProviders($configurationProviders){
+		$this->configurationProviders = $configurationProviders;
+	}
+	
+	public function setSettings($settings){
+		$this->settings = $settings;
 	}
 }
 
