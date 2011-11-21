@@ -85,7 +85,6 @@ class Value{
 		}else if (is_object($value)){
 			$ids[] = $this->adapter->getId($value);
 		}
-		#\dump($ids,$this->parent->getName());
 		return $ids;
 	}
 }

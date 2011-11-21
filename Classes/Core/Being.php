@@ -178,7 +178,7 @@ class Being{
 	}
 	
 	public function getValue($property){
-		return $this->adapter->getValue($property,$this->object);
+		return $this->adapter->getValue($property, $this->object);
 	}
 	
 	public function setClass($class){
@@ -192,8 +192,8 @@ class Being{
 					foreach ($values as $property => $value) {
 						if($this->shouldBeIgnored($value)) continue;
 						$p = new \Admin\Core\Property($property, $this);
-						$p->setConfiguration($value);
 						$p->setParent($this);
+						$p->setConfiguration($value);
 						$this->properties[$property] = $p;
 					}
 					break;
@@ -207,6 +207,7 @@ class Being{
 	
 	public function setObject($object) {
 		$this->object = $object;
+		$this->id = $this->adapter->getId($object);
 	}
 	
 	/**

@@ -46,6 +46,17 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 	 */
 	protected $validatorResolver;
 	
+	/**
+	 * apply filters
+	 *
+	 * @param string $beings 
+	 * @param string $filters 
+	 * @return void
+	 * @author Marc Neuhaus
+	 */
+	public function applyFilters($beings, $filters){
+	}
+	
 	public function applyLimit($limit){
 		$this->query->setLimit($limit);
 	}
@@ -76,41 +87,11 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 			$this->query = $repositoryObject->createQuery();
 		}
 	}
-	
-	// public function postProcessConfiguration($configuration) {
-	// 	foreach($configuration ["properties"] as $property => $conf) {
-	// 		$type = $configuration["properties"][$property]["var"];
-	// 		
-	// 		$configuration["properties"][$property]["type"] = $type;
-	// 		preg_match("/<(.+)>/", $configuration ["properties"] [$property] ["type"], $matches);
-	// 		if(!empty($matches)){
-	// 			$configuration["properties"][$property]["being"] = ltrim($matches[1],"\\");
-	// 			$configuration["properties"][$property]["mode"] = \Admin\Core\Property::INLINE_MULTIPLE_MODE;
-	// 		}
-	// 		
-	// 		if(class_exists($type)){
-	// 			$reflectClass = new \TYPO3\FLOW3\Reflection\ClassReflection($type);
-	// 			if($reflectClass->isTaggedWith("entity")){
-	// 				$configuration ["properties"] [$property] ["being"] = ltrim($type,"\\");
-	// 				$configuration["properties"][$property]["mode"] = \Admin\Core\Property::INLINE_SINGLE_MODE;
-	// 			}
-	// 		}
-	// 		
-	// 		if(isset($configuration["properties"][$property]["being"])){
-	// 			$repository = \Admin\Core\Helper::getModelRepository($configuration["properties"][$property]["being"]);
-	// 			if(!class_exists($repository) && $configuration["properties"][$property]["being"] !== "TYPO3\FLOW3\Resource\Resource"){
-	// 				$configuration["properties"][$property]["inline"] = true;
-	// 			}
-	// 		}
-	// 	}
-	// 	$configuration = parent::postProcessConfiguration($configuration);
-	// 	return $configuration;
-	// }
 
 	public function getGroups() {
 		$this->init();
 		$groups = array();
-		$classes = $this->getClassesTaggedWith(array("active"));
+		$classes = $this->configurationManager->getClassesTaggedWith(array("active"));
 		foreach ($this->settings["Beings"] as $being => $conf) {
 			if(isset($conf["active"]) && $conf["active"] == true){
 				if(isset($conf["group"]))
@@ -148,7 +129,7 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 	}
 
 	public function getObjects($being) {
-		$configuration = $this->getConfiguration($being);
+		$configuration = $this->configurationManager->getClassConfiguration($being);
 		$objects = array();
 		if(!isset($this->query))
 			$this->initQuery($being);
@@ -183,7 +164,7 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 	
 	
 	public function createObject($being, $data) {
-		$configuration = $this->getConfiguration($being);
+		$configuration = $this->configurationManager->getClassConfiguration($being);
 		$result = $this->transform($data, $being);
 		
 		if(is_a($result, $being)){
@@ -195,7 +176,7 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 	}
 
 	public function updateObject($being, $id, $data) {
-		$configuration = $this->getConfiguration($being);
+		$configuration = $this->configurationManager->getClassConfiguration($being);
 		$data["__identity"] = $id;
 		$result = $this->transform($data, $being);
 		

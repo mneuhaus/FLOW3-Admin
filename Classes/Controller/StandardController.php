@@ -322,7 +322,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 			
 			if($this->request->hasArgument("being")){
 				$meta["being"]["identifier"] = $this->request->getArgument("being");
-				$meta["being"]["name"] = $this->getAdapter()->getName($this->request->getArgument("being"));
+				$meta["being"]["name"] = $this->request->getArgument("being");
 				\Admin\Core\API::set("package",$replacements["@package"]);
 			}
 		}

@@ -33,6 +33,13 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * @FLOW3\Scope("singleton")
  */
 class ConfigurationManager{
+	
+	/**
+	 * @var TYPO3\FLOW3\Cache\CacheManager
+	 * @FLOW3\Inject
+	 */
+	protected $cacheManager;
+	
 	/**
 	 * @var array
 	 */
@@ -71,6 +78,46 @@ class ConfigurationManager{
 #		$configuration = $this->postProcessConfiguration($configuration);
 		
 		return $configuration;
+	}
+	
+	/**
+	 * returns classes that are taged with all of the specified tags
+	 *
+	 * @param string $tags 
+	 * @return void
+	 * @author Marc Neuhaus
+	 */
+	public function getClassesTaggedWith($tags){
+		$cache = $this->cacheManager->getCache('Admin_ImplementationCache');
+		$identifier = "ClassesTaggedWith-".implode("_",$tags);
+		
+		if(!$cache->has($identifier)){
+			$classes = array();
+			
+			$activePackages = $this->packageManager->getActivePackages();
+			foreach($activePackages as $packageName => $package) {
+				if($packageName == "Doctrine") continue;
+				foreach($package->getClassFiles() as $class => $file) {
+					$classTags = $this->reflectionService->getClassTagsValues($class);
+					
+					if(isset($this->settings["Beings"][$class]))
+						$classTags = array_merge($classTags,$this->settings["Beings"][$class]);
+					$tagged = true;
+					
+					foreach($tags as $tag){
+						if(!isset($classTags[$tag])) $tagged = false;
+					}
+					
+					if($tagged)
+						$classes[$class] = $packageName;
+				}
+			}
+			
+			$cache->set($identifier,$classes);
+		}else{
+			$classes = $cache->get($identifier);
+		}
+		return $classes;
 	}
 	
 	public function getPropertyConfiguration($property){

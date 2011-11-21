@@ -6,12 +6,12 @@
 	<script src="{f:uri.resource(path: 'admin/js/jquery.selectbox.js', package: 'Admin')}"></script>
 	<script type="text/javascript" charset="utf-8">
 		jQuery(document).ready(function(){
-			jQuery(".f-multiselect").selectbox();
+			jQuery("select[data-widget='MultiSelect']").selectbox();
 		});
 	</script>
 </a:widgetResources>
 
-<select name="{property.inputName}" multiple="true" class="f-multiselect" >
+<select name="{property.inputName}" multiple="true" data-widget="MultiSelect">
     <f:for each="{property.options}" as="option">
         <f:if condition="{option.selected}">
             <f:then>
