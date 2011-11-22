@@ -9,14 +9,14 @@ http://flow3.typo3.org/documentation/quickstart.html
 Installing Admin::
     
     cd %FLOW3-Project-Directory%
-    git clone git@github.com:mneuhaus/FLOW3-Admin.git Packages/Framework/Admin
+    git clone git@github.com:mneuhaus/FLOW3-Admin.git Packages/Application/Admin
     ./flow3 package:activate Admin
     ./flow3 doctrine:migrate
 
 Adding AdminDemo as well::
 
     cd %FLOW3-Project-Directory%
-    git clone git@github.com:mneuhaus/FLOW3-AdminDemo.git Packages/Applications/AdminDemo
+    git clone git@github.com:mneuhaus/FLOW3-AdminDemo.git Packages/Application/AdminDemo
     ./flow3 package:activate AdminDemo
     ./flow3 doctrine:migrate
 
