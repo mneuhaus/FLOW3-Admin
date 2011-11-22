@@ -91,7 +91,7 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 	public function getGroups() {
 		$this->init();
 		$groups = array();
-		$classes = $this->configurationManager->getClassesTaggedWith(array("active"));
+		$classes = $this->configurationManager->getClassesAnnotatedWith(array("active"));
 		foreach ($this->settings["Beings"] as $being => $conf) {
 			if(isset($conf["active"]) && $conf["active"] == true){
 				if(isset($conf["group"]))
@@ -152,7 +152,7 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 	}
 	
 	public function getRepositoryForModel($model){
-		if(isset($this->settings["Beings"][$model]) && $this->settings["Beings"][$model]["repository"])
+		if(isset($this->settings["Beings"][$model]) && isset($this->settings["Beings"][$model]["repository"]))
 			$repository = $this->settings["Beings"][$model]["repository"];
 		else
 			$repository = \Admin\Core\Helper::getModelRepository($model);

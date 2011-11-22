@@ -44,8 +44,9 @@ Admin:
           controller: doc
           package: admin
   Defaults:
-      properties:
-        optionsprovider: Admin\OptionsProvider\RelationOptionsProvider
+    Variant: Default
+    properties:
+      optionsprovider: Admin\OptionsProvider\RelationOptionsProvider
   Adapters:
     Admin\Adapters\DoctrineAdapter: active
   ConfigurationProvider:

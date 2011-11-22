@@ -81,7 +81,6 @@ class ConfigurationManager{
 		$configuration = array();
 		
 		if(isset($this->settings["ConfigurationProvider"])){
-			
 			$configurationProviders = $this->settings["ConfigurationProvider"];
 			foreach($configurationProviders as $configurationProviderClass){
 				$configurationProvider = $this->objectManager->get($configurationProviderClass);
@@ -89,8 +88,6 @@ class ConfigurationManager{
 				$configuration = array_merge_recursive($configuration,$configurationProvider->get($class));
 			}
 		}
-		
-#		$configuration = $this->postProcessConfiguration($configuration);
 		
 		return $configuration;
 	}
@@ -102,25 +99,27 @@ class ConfigurationManager{
 	 * @return void
 	 * @author Marc Neuhaus
 	 */
-	public function getClassesTaggedWith($tags){
+	public function getClassesAnnotatedWith($tags){
 		$cache = $this->cacheManager->getCache('Admin_ImplementationCache');
 		$identifier = "ClassesTaggedWith-".implode("_",$tags);
 		
-		if(!$cache->has($identifier)){
+		if(!$cache->has($identifier) || true){
 			$classes = array();
 			
 			$activePackages = $this->packageManager->getActivePackages();
 			foreach($activePackages as $packageName => $package) {
 				if($packageName == "Doctrine") continue;
 				foreach($package->getClassFiles() as $class => $file) {
-					$classTags = $this->reflectionService->getClassTagsValues($class);
+					$annotations = $this->getClassConfiguration($class);
 					
-					if(isset($this->settings["Beings"][$class]))
-						$classTags = array_merge($classTags,$this->settings["Beings"][$class]);
+#					$classTags = $this->reflectionService->getClassTagsValues($class);
+					
+#					if(isset($this->settings["Beings"][$class]))
+#						$classTags = array_merge($classTags,$this->settings["Beings"][$class]);
+					
 					$tagged = true;
-					
 					foreach($tags as $tag){
-						if(!isset($classTags[$tag])) $tagged = false;
+						if(!isset($annotations[$tag])) $tagged = false;
 					}
 					
 					if($tagged)
@@ -133,9 +132,6 @@ class ConfigurationManager{
 			$classes = $cache->get($identifier);
 		}
 		return $classes;
-	}
-	
-	public function getPropertyConfiguration($property){
 	}
 	
 	public function setConfigurationProviders($configurationProviders){

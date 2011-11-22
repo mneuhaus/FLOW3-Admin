@@ -303,7 +303,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		}
 
 		$cache = $this->cacheManager->getCache('Admin_TemplateCache');
-		$identifier = implode("-",$replacements);
+		$identifier = str_replace(".", "_", implode("-",$replacements));
 		$noTemplate = false;
 		if(!$cache->has($identifier)){
 			try{
