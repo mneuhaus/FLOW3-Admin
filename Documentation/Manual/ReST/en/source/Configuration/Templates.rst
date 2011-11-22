@@ -29,12 +29,19 @@ Partials
 ********
 Partials are Subparts which can be Reused in more than one View (Form, Table, Toolbar,...)::
 
-    resource://@package/Private/Partials/@being/@action/@partial.html
-    resource://@package/Private/Partials/@being/@partial.html
-    resource://@package/Private/Partials/@action/@partial.html
-    resource://@package/Private/Partials/@partial.html
-    resource://Admin/Private/Partials/@action/@partial.html
-    resource://Admin/Private/Partials/@partial.html
+	resource://@package/Private/Partials/@being/@action/@partial/@variant.html
+	resource://@package/Private/Partials/@being/@action/@partial.html
+	resource://@package/Private/Partials/@being/@partial/@variant.html
+	resource://@package/Private/Partials/@being/@partial.html
+	resource://@package/Private/Partials/@action/@partial/@variant.html
+	resource://@package/Private/Partials/@action/@partial.html
+	resource://@package/Private/Partials/@partial/@variant.html
+	resource://@package/Private/Partials/@partial.html
+	resource://Admin/Private/Partials/@action/@partial.html
+	resource://Admin/Private/Partials/@action/@partial/@variant.html
+	resource://Admin/Private/Partials/@partial/@variant.html
+	resource://Admin/Private/Partials/@partial.html
+	resource://Admin/Private/Partials/@partial/Default.html
 
 @package
     Name of the Package which Contains the Model to be Rendered
