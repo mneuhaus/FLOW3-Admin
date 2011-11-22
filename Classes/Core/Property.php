@@ -241,7 +241,8 @@ class Property{
 			
 			for ($index = 0; $index < $amountOfInlines; $index++) {
 				$being = $this->createBeing($this->being);
-				$being->unusedClass = "inline-unused";
+				if($this->mode == self::INLINE_MULTIPLE_MODE)
+					$being->unusedClass = "inline-unused";
 				$beings[] = $being;
 				$this->counter++;
 			}
