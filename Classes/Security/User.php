@@ -92,6 +92,14 @@ class User extends \Admin\Core\Domain\Magic{
     public function __construct(){
     }
 
+	public function getArguments(){
+		return array(
+			"id" => $this->getIdentity(),
+			"being" => "Admin\Security\User",
+			"adapter" => \Admin\Core\API::get("adapter")
+		);
+	}
+
     /**
 	 *
 	 * @param string $credentialsSource
