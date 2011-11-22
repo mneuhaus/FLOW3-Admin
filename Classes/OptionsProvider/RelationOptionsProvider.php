@@ -62,7 +62,7 @@ class RelationOptionsProvider extends \Admin\Core\OptionsProvider\AbstractOption
 		
 		if( empty($beings) )
 			return array ();
-		
+			
 		foreach($beings as $being) {
 			$being->selected = in_array($being->id, $selected);
 			$options [] = $being;

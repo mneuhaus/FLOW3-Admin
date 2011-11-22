@@ -61,12 +61,19 @@ Admin:
       - resource://Admin/Private/Templates/Standard/@action/@variant.html
       - resource://Admin/Private/Templates/Standard/@action.html
     Partials:
+      - resource://@package/Private/Partials/@being/@action/@partial/@variant.html
       - resource://@package/Private/Partials/@being/@action/@partial.html
+      - resource://@package/Private/Partials/@being/@partial/@variant.html
       - resource://@package/Private/Partials/@being/@partial.html
+      - resource://@package/Private/Partials/@action/@partial/@variant.html
       - resource://@package/Private/Partials/@action/@partial.html
+      - resource://@package/Private/Partials/@partial/@variant.html
       - resource://@package/Private/Partials/@partial.html
       - resource://Admin/Private/Partials/@action/@partial.html
+      - resource://Admin/Private/Partials/@action/@partial/@variant.html
+      - resource://Admin/Private/Partials/@partial/@variant.html
       - resource://Admin/Private/Partials/@partial.html
+      - resource://Admin/Private/Partials/@partial/Default.html
     DashboardWidgets:
       - resource://@package/Private/Partials/@being/DashboardWidgets/@partial.html
       - resource://@package/Private/Partials/DashboardWidgets/@partial.html

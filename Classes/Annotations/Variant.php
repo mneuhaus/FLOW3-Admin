@@ -14,18 +14,23 @@ namespace Admin\Annotations;
 /**
  * @Annotation
  */
-final class Inline {
+final class Variant {
 	
 	/**
-	 * @var integer
+	 * @var string
 	 */
-	public $amount = 3;
+	public $variant = "Default";
 	
 	/**
 	 * @param string $value
 	 */
 	public function __construct(array $values = array()) {
-		$this->amount = isset($values['amount']) ? $values['amount'] : $this->amount;
+		$this->variant = isset($values['value']) ? $values['value'] : $this->variant;
+		$this->variant = isset($values['variant']) ? $values['variant'] : $this->variant;
+	}
+	
+	public function getDefault(){
+		return $this->variant == "Default";
 	}
 }
 

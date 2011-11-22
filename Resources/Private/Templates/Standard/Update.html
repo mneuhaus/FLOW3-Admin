@@ -19,7 +19,7 @@
 	</f:for>
 </f:section>
 <f:section name="content">
-	<div class="box">
+	<div class="box centered">
 		<h3 class="box-header">Edit this {bein.shortName}</h3>
 		<div>
 			<f:form method="post" action="update" name="item" object="{being}" enctype="multipart/form-data" class="form-horizontal">
@@ -29,7 +29,12 @@
 				
 				<a:render partial="Form" fallbacks="Partials"/>
 				
-				<div class="actions">
+				<div class="actions pull-left">
+					<f:link.action action="list" arguments="{being: being.class}" class="btn">
+						Cancel
+					</f:link.action>
+				</div>
+				<div class="actions pull-right">
 					<input type="submit" name="update" value="Save" class="btn primary"/>
 				</div>
 			</f:form>

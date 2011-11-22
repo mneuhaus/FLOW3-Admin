@@ -83,8 +83,8 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 		$repository = str_replace("Domain\\Model", "Domain\\Repository", $being) . "Repository";
 		$repository = $this->getRepositoryForModel($being);
 		if(\class_exists($repository)){
-			$repositoryObject = $this->objectManager->get($repository);
-			$this->query = $repositoryObject->createQuery();
+			$this->repository = $this->objectManager->get($repository);
+			$this->query = $this->repository->createQuery();
 		}
 	}
 
@@ -131,8 +131,10 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 	public function getObjects($being) {
 		$configuration = $this->configurationManager->getClassConfiguration($being);
 		$objects = array();
-		if(!isset($this->query))
+		
+		if(!isset($this->query) || !is_subclass_of($being, $this->repository->getEntityClassName()))
 			$this->initQuery($being);
+			
 		if(isset($configuration["class"]["admin\annotations\orderby"])){
 			$this->query->setOrderings(array(
 				current($configuration["class"]["admin\annotations\orderby"]) => 'ASC'
@@ -200,6 +202,8 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 	
 	
 	public function transform($data, $target){
+		$data = $this->cleanUpBlanks($data);
+		
 		$value = $this->propertyMapper->convert($data, $target, \Admin\Core\PropertyMappingConfiguration::getConfiguration());
 		
 		$this->validationResults = $this->propertyMapper->getMessages();
@@ -213,6 +217,26 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 			return $value;
 		else
 			return $errors;
+	}
+	
+	public function cleanUpBlanks($data, $removeEmptyArrays = false){
+		foreach($data as $key => $value) {
+			if( is_array($value) ) {
+				$data[$key] = $this->cleanUpBlanks($value, true);
+			}
+			if( is_object($value) && ! empty($value->FLOW3_Persistence_Entity_UUID) ) {
+				$data[$key] = $value->FLOW3_Persistence_Entity_UUID;
+			}
+			if( empty($data[$key]) && $data[$key] !== false && $data[$key] !== 0 ) {
+				if(is_array($data[$key])){
+					if($removeEmptyArrays)
+						unset($data[$key]);
+				}else{
+					unset($data[$key]);
+				}
+			}
+		}
+		return $data;
 	}
 
 	public function beingsToIdentifiers($beings) {

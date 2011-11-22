@@ -99,7 +99,7 @@ abstract class AbstractAdapter implements \Admin\Core\Adapters\AdapterInterface 
 	 * @author Marc Neuhaus <mneuhaus@famelo.com>
 	 * */
 	public function getBeing($being, $id = null) {
-		$this->conf = $this->configurationManager->getClassConfiguration($being);
+		$being = ltrim($being, "\\");
 		
 		$b = new \Admin\Core\Being($this);
 		if($id !== null){
@@ -117,7 +117,6 @@ abstract class AbstractAdapter implements \Admin\Core\Adapters\AdapterInterface 
 	 * @author Marc Neuhaus <mneuhaus@famelo.com>
 	 * */
 	public function getBeings($being, $filters = null) {
-		$this->conf = $this->configurationManager->getClassConfiguration($being);
 		
 		$objects = $this->getObjects($being);
 		$beings = array();

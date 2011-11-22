@@ -102,7 +102,7 @@ class Being{
 	 *
 	 * @var string
 	 */
-	protected $hiddenProperties = array();
+	public $hiddenProperties = array();
 	
 	/**
 	 * Configured Sets for this Being
@@ -126,11 +126,10 @@ class Being{
 		if(is_object($this->object) && is_callable(array($this->object,"__toString")))
 			return strval($this->object->__toString());
 		return get_class($this->object);
-		return "";
 	}
 	
-	public function addHiddenProperty($property){
-		$this->hiddenProperties = array_merge($this->hiddenProperties,$property);
+	public function addHiddenProperty($name, $value){
+		$this->hiddenProperties = array_merge($this->hiddenProperties, array($name => $value));
 	}
 	
 	public function getArguments(){
@@ -162,7 +161,7 @@ class Being{
 			}
 		}else{
 			foreach ($this->properties as $key => $value) {
-				$sets["General"][$key] = $value;
+				$sets[""][$key] = $value;
 			}
 		}
 		return $sets;
@@ -175,6 +174,12 @@ class Being{
 	
 		$parts = explode("\\", $class);
 		return array_pop($parts);
+	}
+	
+	public function getTemplate(){
+		$b = $this->adapter->getBeing($this->class);
+		$b->prefix = $this->parentProperty->getPrefix("{counter}");
+		return $b;
 	}
 	
 	public function getValue($property){

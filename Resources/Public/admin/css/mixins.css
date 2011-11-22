@@ -19,8 +19,10 @@ form .clearfix:after {
     -webkit-box-shadow:#CCC 0px 3px 5px;
     box-shadow:#CCC 0px 3px 5px;
 	margin:0;
+	overflow:hidden;
 }
 
+	.box-section,
 	.box-header{
 		background:#EFF5F8;
 		border-bottom:1px solid #CCC;
@@ -28,6 +30,44 @@ form .clearfix:after {
 		padding:0.5em 20px;
 		text-shadow: white 0px 1px;
 	}
+	
+	.box-section{
+		padding:5px 20px;
+		font-size:13px;
+	}
+	
+	.box .box{
+		-moz-box-shadow:#CCC 0px 2px 3px;
+		-webkit-box-shadow:#CCC 0px 2px 3px;
+		box-shadow:#CCC 0px 2px 3px;
+		width:100%;
+		margin:20px 20px 0;
+	}
+	
+	.box .box .box-header{
+		background:whiteSmoke;
+	}
+
+.whitespace{
+	margin:0 20px;
+	width:auto;
+}
+
+.scrollable { overflow: auto; width: 100%; }
+
+
+@media (min-width: 300px) and (max-width:800px) {
+	.centered { width: 600px; }
+	.box .box { width: 560px; }
+}
+
+.centered { width: 770px; margin:0 auto; }
+.box .box { width: 730px; }
+
+@media (min-width: 1230px) {
+	.centered { width: 1000px; }
+	.box .box { width: 960px; }
+}
 
 .well {
 	
@@ -132,4 +172,17 @@ th.tiny input, td.tiny input{ margin-left:5px; }
 
 .thumbnail{
 	display:block;
+}
+
+.legend { 
+	display: block;
+	width: 100%;
+	margin: 0 0 20px;
+	font-size: 19.5px;
+	font-weight: normal;
+	font-style: normal;
+	line-height: 36px;
+	color: #404040;
+	border-bottom: 1px solid #EEE;
+	padding: 0 20px;
 }

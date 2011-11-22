@@ -34,8 +34,8 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * @FLOW3\Scope("prototype")
  */
 class Property{
-	const INLINE_SINGLE_MODE = 1;
-	const INLINE_MULTIPLE_MODE = 2;
+	const INLINE_SINGLE_MODE = "single";
+	const INLINE_MULTIPLE_MODE = "multiple";
 	
 	/**
 	 * @var \Admin\Core\Helper
@@ -67,8 +67,7 @@ class Property{
 	protected $options;
 	protected $configuration;
 	protected $parent;
-	protected $inline = false;
-	protected $mode = 0;
+	public $mode = "single";
 	protected $children = array();
 	protected $counter = 0;
 	protected $value = null;
@@ -87,9 +86,10 @@ class Property{
 		return $this->parent->prefix."[".$this->name."]";
 	}
 	
-	public function getPrefix(){
+	public function getPrefix($counter = null){
+		$counter = is_null($counter) ? $this->counter : $counter;
 		if($this->mode == self::INLINE_MULTIPLE_MODE)
-			return $this->parent->prefix."[".$this->name."][".$this->counter."]";
+			return $this->parent->prefix."[".$this->name."][".$counter."]";
 		
 		return $this->parent->prefix."[".$this->name."]";
 	}
@@ -147,6 +147,7 @@ class Property{
 		$this->value = new \Admin\Core\Value($this, $this->adapter);
 		
 		$this->label = ucfirst($this->name);
+		$this->variant = new \Admin\Annotations\Variant();
 		
 		foreach ($configuration as $key => $values) {
 			switch ($key) {
@@ -165,20 +166,9 @@ class Property{
 					
 					break;
 					
-				case 'infotext':
-				case 'label':
-					if(is_array($values)){
-						$this->$key = current($values);
-						break;
-					}
-					
 				case 'onetomany':
 				case 'manytomany':
-					$objects = $this->adapter->getValue($this->name, $this->parent->object);
-#					var_dump($this->parent->object->getAddresses());
-#					foreach ($objects as $object) {
-#						
-#					}
+					#$objects = $this->adapter->getValue($this->name, $this->parent->object);
 					$this->mode = self::INLINE_MULTIPLE_MODE;
 					$this->$key = $values;
 					break;
@@ -190,7 +180,11 @@ class Property{
 					break;
 					
 				default:
-					$this->$key = $values;
+					if(is_array($values) && count($values) == 1){
+						$this->$key = current($values);
+					}else{
+						$this->$key = $values;
+					}
 					break;
 			}
 		}
@@ -223,6 +217,7 @@ class Property{
 		if($this->inline && empty($this->children)){
 			$values = $this->getValue();
 			$beings = array();
+			$amountOfInlines = 0;
 			if(\Admin\Core\Helper::isIteratable($values)){
 				foreach($values as $value){
 					if(is_object($value)){
@@ -238,29 +233,39 @@ class Property{
 				$beings[] = $being;
 				$this->counter++;
 			}else{
-				if($this->mode == self::INLINE_MULTIPLE_MODE)
-					$amountOfInlines = 1;
-				else
-					$amountOfInlines = 1;
-
-				for ($index = 0; $index < $amountOfInlines; $index++) {
-					$being = $this->createBeing($this->being);
-					$beings[] = $being;
-					$this->counter++;
-				}
+				$amountOfInlines = 1;
 			}
+			
+			if($this->mode == self::INLINE_MULTIPLE_MODE)
+				$amountOfInlines = 1;
+			
+			for ($index = 0; $index < $amountOfInlines; $index++) {
+				$being = $this->createBeing($this->being);
+				$being->unusedClass = "inline-unused";
+				$beings[] = $being;
+				$this->counter++;
+			}
+			
+			foreach ($beings as $key => $being) {
+				$beings[$key]->parentProperty = $this;
+			}
+			
 			$this->children = $beings;
 		}
 		return $this->children;
 	}
+	
+	public function getChild(){
+		return current($this->getChildren());
+	}
 
 	public function createBeing($being, $id = null){
-		$b = $this->adapter->getBeing($this->being,$id);
-		$b->setPrefix($this->getPrefix());
+		$b = $this->adapter->getBeing($this->being, $id);
+		$b->prefix = $this->getPrefix();
 		
 		if(!empty($id)){
-			$identity = array( $this->getPrefix() . "[__identity]" => $id );
-			$b->addHiddenProperty($identity);
+#			$identity = array( $this->getPrefix() . "[__identity]" => $id );
+			$b->addHiddenProperty($this->getPrefix() . "[__identity]",  $id);
 		}
 
 		return $b;

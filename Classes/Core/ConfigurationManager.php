@@ -54,6 +54,21 @@ class ConfigurationManager{
 	protected $objectManager;
 	
 	/**
+	 * @var \TYPO3\FLOW3\Package\PackageManagerInterface
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 * @FLOW3\Inject
+	 */
+	protected $packageManager;
+	
+	/**
+	 * @var \TYPO3\FLOW3\Reflection\ReflectionService
+	 * @api
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 * @FLOW3\Inject
+	 */
+	protected $reflectionService;
+	
+	/**
 	 * @var array
 	 */
 	protected $settings;
