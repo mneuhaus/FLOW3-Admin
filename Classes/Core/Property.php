@@ -207,8 +207,8 @@ class Property{
 	public function getOptions() {
 		$options = array();
 		
-		if(isset($this->optionsprovider)){
-			$provider = new $this->optionsprovider;
+		if(isset($this->optionsProvider)){
+			$provider = new $this->optionsProvider->name;
 			$provider->setProperty($this);
 			$options = $provider->getOptions();
 		}
@@ -297,6 +297,10 @@ class Property{
 	public function getError(){
 		if(is_object($this->getParent()))
 			return $this->getParent()->getErrors($this->name);
+	}
+	
+	public function isMultiple(){
+		return $this->mode == self::INLINE_MULTIPLE_MODE;
 	}
 }
 

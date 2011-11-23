@@ -47,7 +47,7 @@ Admin:
   Defaults:
     Variant: Default
     properties:
-      optionsprovider: Admin\OptionsProvider\RelationOptionsProvider
+      optionsProvider: Admin\OptionsProvider\RelationOptionsProvider
   Adapters:
     Admin\Adapters\DoctrineAdapter: active
   ConfigurationProvider:
@@ -93,7 +93,7 @@ Admin:
       boolean:  Boolean
       \TYPO3\FLOW3\Resource\Resource: Upload
       \DateTime: DatePicker
-      ^\\[A-Za-z0-9\\]+\\Domain\\Model\\[A-Za-z]+$: SingleRelation
-      ^\\[A-Za-z0-9\\]+\\Security\\[A-Za-z]+$: SingleRelation
+      ^\\[A-Za-z0-9\\]+\\Domain\\Model\\[A-Za-z]+$: Chosen
+      ^\\[A-Za-z0-9\\]+\\Security\\[A-Za-z]+$: Chosen
       ^\\Doctrine\\Common\\Collections\\Collection\<\\[A-Za-z0-9\\]+\\Domain\\Model\\[A-za-z]+>$: MultipleRelation
       ^\\Doctrine\\Common\\Collections\\Collection\<\\[A-Za-z0-9\\]+\\Security\\[A-za-z]+>$: MultipleRelation

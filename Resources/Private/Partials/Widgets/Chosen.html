@@ -1,0 +1,25 @@
+{namespace a=Admin\ViewHelpers}
+
+<a:widgetResources add="Chosen">
+	<link href="{f:uri.resource(path: 'chosen/chosen.css', package: 'Admin')}" rel="stylesheet">
+	<script src="{f:uri.resource(path: 'chosen/chosen.jquery.min.js', package: 'Admin')}"></script>
+	<script type="text/javascript" charset="utf-8">
+		jQuery(document).ready(function(){
+			jQuery("select[data-widget='Chosen'] .placeholder").remove();
+			jQuery("select[data-widget='Chosen']").chosen();
+		});
+	</script>
+</a:widgetResources>
+
+<f:if condition="{property.multiple}">
+<f:then><select name="{property.inputName}" data-placeholder="Please select..." data-widget="Chosen" multiple="true" ></f:then>
+<f:else><select name="{property.inputName}" data-placeholder="Please select..." data-widget="Chosen" ></f:else>
+</f:if>
+	<option value="" class="placeholder">Please select...</option>
+    <f:for each="{property.options}" as="option">
+        <f:if condition="{option.selected}">
+            <f:then><option value="{option.id}" selected="selected">{option}</option></f:then>
+            <f:else><option value="{option.id}" >{option}</option></f:else>
+        </f:if>
+    </f:for>
+</select>
