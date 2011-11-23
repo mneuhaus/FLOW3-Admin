@@ -304,6 +304,10 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 				$replacements["@variant"] = $being->variant->getVariant($action);
 			}
 		}
+		
+		if($this->request->hasArgument("variant")){
+			$replacements["@variant"] = $this->request->getArgument("variant");
+		}
 
 		$cache = $this->cacheManager->getCache('Admin_TemplateCache');
 		$identifier = str_replace(".", "_", implode("-",$replacements));
