@@ -32,7 +32,13 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
 class LoginController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
-
+	/**
+	 * @var \Admin\Core\Helper
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 * @FLOW3\Inject
+	 */
+	protected $helper;
+	
 	/**
 	 * @var \Admin\Security\UserRepository
      * @FLOW3\Inject
@@ -64,23 +70,25 @@ class LoginController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		
 		$users = $this->userRepository->findAll();
 		
-#		if($users->count() < 1){
+		if($users->count() < 1 || $this->helper->getSettings("Admin.DemoMode")){
 			$user = $this->objectManager->get("Admin\Security\User");
-			$username = "admin" . ($users->count() + 1);
+			$username = "admin";
+			if($users->count() > 0)
+				$username.= ($users->count() + 1);
 			$user->setAccountIdentifier($username);
 			$user->setCredentialsSource("password");
 			$user->setAdmin(true);
 			$this->userRepository->add($user);
-			$message = new \TYPO3\FLOW3\Error\Message('A User has been Created: admin/password');
+			$message = new \TYPO3\FLOW3\Error\Message('A User has been Created: '.$username.'/password');
 			$this->flashMessageContainer->addMessage($message);
 			$message = new \TYPO3\FLOW3\Error\Warning('Please Change the Passwort after Login!');
 			$this->flashMessageContainer->addMessage($message);
 			$this->view->assign("username", $username);
 			$this->view->assign("password", "password");
-#		}else{
-#			$this->view->assign("username", "");
-#			$this->view->assign("password", "");
-#		}
+		}else{
+			$this->view->assign("username", "");
+			$this->view->assign("password", "");
+		}
 
 	}
 
