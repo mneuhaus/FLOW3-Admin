@@ -1,6 +1,6 @@
 {namespace a=Admin\ViewHelpers}
 
-<f:if condition="{property.conf.editor} == 'markdown">
+<f:if condition="{property.editor.name} == 'Markdown">
 	<a:widgetResources add="MarkItUp">
 		<script src="{f:uri.resource(path: 'admin/js/markitup/jquery.markitup.pack.js', package: 'Admin')}"></script>
 		<link rel="stylesheet" type="text/css" href="{f:uri.resource(path: 'admin/js/markitup/skins/markitup/style.css', package: 'Admin')}" />
@@ -8,11 +8,11 @@
 	<a:widgetResources add="MarkDown">
 		<script src="{f:uri.resource(path: 'admin/js/markitup/sets/markdown/set.js', package: 'Admin')}"></script>
 		<link rel="stylesheet" type="text/css" href="{f:uri.resource(path: 'admin/js/markitup/sets/markdown/style.css', package: 'Admin')}" />
-		<script type="text/javascript" charset="utf-8"> jQuery(document).ready(function(){ jQuery('[data-editor=markdown]').markItUp(markdownSettings); }); </script>
+		<script type="text/javascript" charset="utf-8"> jQuery(document).ready(function(){ jQuery('[data-editor=Markdown]').markItUp(markdownSettings); }); </script>
 	</a:widgetResources>
 </f:if>
 
-<f:if condition="{property.conf.editor} == 'textile">
+<f:if condition="{property.editor.name} == 'textile">
 	<a:widgetResources add="MarkItUp">
 		<script src="{f:uri.resource(path: 'admin/js/markitup/jquery.markitup.pack.js', package: 'Admin')}"></script>
 		<link rel="stylesheet" type="text/css" href="{f:uri.resource(path: 'admin/js/markitup/skins/markitup/style.css', package: 'Admin')}" />
@@ -24,7 +24,7 @@
 	</a:widgetResources>
 </f:if>
 
-<f:if condition="{property.conf.editor} == 'wiki">
+<f:if condition="{property.editor.name} == 'wiki">
 	<a:widgetResources add="MarkItUp">
 		<script src="{f:uri.resource(path: 'admin/js/markitup/jquery.markitup.pack.js', package: 'Admin')}"></script>
 		<link rel="stylesheet" type="text/css" href="{f:uri.resource(path: 'admin/js/markitup/skins/markitup/style.css', package: 'Admin')}" />
@@ -36,7 +36,7 @@
 	</a:widgetResources>
 </f:if>
 
-<f:if condition="{property.conf.editor} == 'bbcode">
+<f:if condition="{property.editor.name} == 'bbcode">
 	<a:widgetResources add="MarkItUp">
 		<script src="{f:uri.resource(path: 'admin/js/markitup/jquery.markitup.pack.js', package: 'Admin')}"></script>
 		<link rel="stylesheet" type="text/css" href="{f:uri.resource(path: 'admin/js/markitup/skins/markitup/style.css', package: 'Admin')}" />
@@ -48,7 +48,7 @@
 	</a:widgetResources>
 </f:if>
 
-<f:if condition="{property.conf.editor} == 'RichText">
+<f:if condition="{property.editor.name} == 'RichText">
 	<a:widgetResources add="RichtTextEditor">
 		<script src="{f:uri.resource(path: 'admin/js/ckeditor/ckeditor.js', package: 'Admin')}"></script>
 		<script src="{f:uri.resource(path: 'admin/js/ckeditor/adapters/jquery.js', package: 'Admin')}"></script>
@@ -62,10 +62,10 @@
 					],
 					width: 500
 				};
-				jQuery('[data-editor=richtext]').ckeditor(config);
+				jQuery('[data-editor=RichText]').ckeditor(config);
 			});
 		</script>
 	</a:widgetResources>
 </f:if>
 
-<textarea name="{property.inputName}" id="item-{property.name}" rows="4" cols="40" class="{property.class}" data-editor="{property.conf.editor}">{property.string}</textarea>
+<textarea name="{property.inputName}" id="item-{property.name}" rows="4" cols="40" class="{property.class}" data-editor="{property.editor}">{property.string}</textarea>
