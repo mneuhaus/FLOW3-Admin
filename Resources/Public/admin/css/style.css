@@ -99,8 +99,8 @@ h1:hover a, h2:hover a, h3:hover a, h4:hover a, h5:hover a, dt:hover .headerlink
 /*--------------------------Inline----------------------------*/
 
 .box table { width:100%; margin:0; }
-.box tr th:first-child, .box tr td:first-child{ padding-left:20px; }
-.box tr th:last-child, .box tr td:last-child{ padding-right:20px; }
+.box .inline tr th:first-child, .box .inline tr td:first-child{ padding-left:20px; }
+.box .inline tr th:last-child, .box .inline tr td:last-child{ padding-right:20px; }
 .box table input, .box table select, .box table textarea { width:9em; }
 .box th { border-top:none; padding: 4px 10px; }
 .box .box .legend { font-size:14px; }
