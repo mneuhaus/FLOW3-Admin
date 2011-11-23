@@ -15,6 +15,10 @@ namespace Admin\Annotations;
  * @Annotation
  */
 final class Set {
+	/**
+	 * @var boolean
+	 */
+	protected $multiple = true;
 
 	/**
 	 * @var string

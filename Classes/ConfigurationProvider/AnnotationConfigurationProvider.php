@@ -83,47 +83,5 @@ class AnnotationConfigurationProvider extends \Admin\Core\ConfigurationProvider\
  		return $name;
 	}
 	
-	// public function get_($being){
-	// 	$configuration = array();
-	// 	
-	// 	if( class_exists($being) ) {
-	// 		$configuration = array(
-	// 			"class" => $this->reflectionService->getClassTagsValues($being),
-	// 			"properties" => $this->helper->getModelProperties($being)
-	// 		);
-	// 		$annotations = array();
-	// 		foreach ($this->reflectionService->getClassAnnotations($being) as $key => $object) {
-	// 			$class = get_class($object);
-	// 			if(!stristr($class, "Admin\Annotations\\")) continue;
-	// 			$annotation = strtolower(str_replace("Admin\Annotations\\", "", $class));
-	// 			if(!isset($annotations[$annotation])) $annotations[$annotation] = array();
-	// 			$annotations[$annotation][] = get_object_vars($object);
-	// 		}
-	// 		$configuration["class"]["annotations"] = $annotations;
-	// 		
-	// 		foreach($configuration["properties"] as $property => $conf) {
-	// 			// Injected or ignored Properties shouldn't be managed
-	// 			if( array_key_exists("inject", $conf) || array_key_exists("ignore", $conf) )
-	// 				$configuration["properties"][$property]["ignore"] = true;
-	// 			
-	// 			foreach($conf as $key => $value){
-	// 				unset($configuration["properties"][$property][$key]);
-	// 				$key = str_replace("admin\annotations\\", "", $key);
-	// 				$configuration["properties"][$property][$key] = $value;
-	// 				
-	// 				if(is_array($value) && empty($value)){
-	// 					$configuration["properties"][$property][$key] = true;
-	// 				}
-	// 				
-	// 				if(is_array($value) && count($value) == 1){
-	// 					while(is_array($value))
-	// 						$value = current($value);
-	// 					$configuration["properties"][$property][$key] = $value;
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-	// 	return $configuration;
-	// }
 }
 ?>

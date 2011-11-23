@@ -85,10 +85,23 @@ class ConfigurationManager{
 			foreach($configurationProviders as $configurationProviderClass){
 				$configurationProvider = $this->objectManager->get($configurationProviderClass);
 				$configurationProvider->setSettings($this->settings);
-				$configuration = array_merge_recursive($configuration,$configurationProvider->get($class));
+				$configuration = $this->merge($configuration, $configurationProvider->get($class));
+#				$configuration = array_merge_recursive($configuration,$configurationProvider->get($class));
 			}
 		}
 		
+		return $configuration;
+	}
+	
+	public function merge($configuration, $override){
+		foreach ($override as $annotation => $objects) {
+			foreach ($objects as $key => $object) {
+				if(isset($object->multiple) && $object->multiple)
+					$configuration[$annotation][] = $object;
+				else
+					$configuration[$annotation][$key] = $object;
+			}
+		}
 		return $configuration;
 	}
 	
