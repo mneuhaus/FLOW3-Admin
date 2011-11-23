@@ -137,8 +137,6 @@ class Being{
 	}
 	
 	public function getErrors($property = null) {
-		return array();
-		
 		if($property == null)
 			return $this->errors;
 		else
