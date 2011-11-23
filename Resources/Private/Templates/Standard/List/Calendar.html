@@ -23,7 +23,6 @@
 </f:section>
 
 <f:section name="content">
-	<div id='calendar'></div>
 	<a:widgetResources add="jQueryUi">
 		<link href="{f:uri.resource(path: 'jquery-ui/css/smoothness/jquery-ui-1.8.16.custom.css', package: 'Admin')}" rel="stylesheet">
 		<script src="{f:uri.resource(path: 'jquery-ui/js/jquery-ui-1.8.16.custom.min.js', package: 'Admin')}"></script>
@@ -43,35 +42,35 @@
 
 				$('#calendar').fullCalendar({
 					header: {
-						left: 'prev,next today',
-						center: 'title',
-						right: 'month,agendaWeek,agendaDay'
+					    left: 'prev,next today',
+					    center: 'title',
+					    right: 'month,agendaWeek,agendaDay'
 					},
 					editable: true,
 					events: [
-						<f:for each="{objects}" as="being" iteration="iterator">
-						{
-							title: '<f:format.raw value="{being.variantMapping.title}" />',
-							
-							<f:if condition="{being.variantMapping.end}">
-								<f:then>
-									start: new Date('<f:format.date format="F d, Y" date="{being.variantMapping.start}" />'),
-									end: new Date('<f:format.date format="F d, Y" date="{being.variantMapping.end}" />'),
-									allday: false,
-								</f:then>
-								<f:else>
-									start: new Date('<f:format.date format="F d, Y" date="{being.variantMapping.start}" />'),
-									allday: false,
-								</f:else>
-							</f:if>
-							
-							url: '<f:uri.action action="update" arguments="{being.arguments}"/>'
-							
-							<f:if condition="{iterator.isLast}">
-								<f:then>}</f:then>
-								<f:else>},</f:else>
-							</f:if>
-						</f:for>
+					    <f:for each="{objects}" as="being" iteration="iterator">
+					    {
+					    	title: '<f:format.raw value="{being.variantMapping.title}" />',
+					    	
+					    	<f:if condition="{being.variantMapping.end}">
+					    		<f:then>
+					    			start: new Date('<f:format.date format="F d, Y" date="{being.variantMapping.start}" />'),
+					    			end: new Date('<f:format.date format="F d, Y" date="{being.variantMapping.end}" />'),
+					    			allday: false,
+					    		</f:then>
+					    		<f:else>
+					    			start: new Date('<f:format.date format="F d, Y" date="{being.variantMapping.start}" />'),
+					    			allday: false,
+					    		</f:else>
+					    	</f:if>
+					    	
+					    	url: '<f:uri.action action="update" arguments="{being.arguments}"/>'
+					    	
+					    	<f:if condition="{iterator.isLast}">
+					    		<f:then>}</f:then>
+					    		<f:else>},</f:else>
+					    	</f:if>
+					    </f:for>
 					]
 				});
 
@@ -82,6 +81,10 @@
 			.fc-header td { border-top:none; }
 		</style>
 	</a:widgetResources>
+	<div id='calendar'></div>
+	<div class="pagination pull-left">
+		<a:render partial="VariantsSelector" fallbacks="Partials" vars="{variant: objects.0.variant, current: 'Calendar'}"/>
+	</div>
 </f:section>
 
 <f:section name="post-container">

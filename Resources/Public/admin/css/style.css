@@ -18,6 +18,10 @@ body {
 	margin:-20px -20px 10px;
 }
 
+.actionbar select{ width:auto; }
+.actionbar .pull-left{ width:50%; text-align:left; }
+.actionbar .pull-right{ width:50%; text-align:right; }
+
 
 .condensed-table .table-actions { text-align:right; padding-bottom:0; }
 .table-actions .btn{ margin-bottom:5px; }

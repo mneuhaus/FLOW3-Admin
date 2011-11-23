@@ -27,11 +27,19 @@ final class Variant {
  	public $values = array();
 	
 	/**
+	 * @var array
+	 */
+	public $options = array();
+	
+	/**
 	 * @param string $value
 	 */
 	public function __construct(array $values = array()) {
 		$this->variant = isset($values['value']) ? $values['value'] : $this->variant;
 		$this->variant = isset($values['variant']) ? $values['variant'] : $this->variant;
+		$this->options = isset($values['options']) ? $values['options'] : $this->options;
+		if(isset($this->options) && !is_array($this->options)) 
+			$this->options = explode(",", str_replace(" ", "", $this->options));
 		$this->values = $values;
 	}
 	
