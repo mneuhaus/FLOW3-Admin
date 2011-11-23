@@ -22,11 +22,17 @@ final class Variant {
 	public $variant = "Default";
 	
 	/**
+	 * @var array
+	 */
+ 	public $values = array();
+	
+	/**
 	 * @param string $value
 	 */
 	public function __construct(array $values = array()) {
 		$this->variant = isset($values['value']) ? $values['value'] : $this->variant;
 		$this->variant = isset($values['variant']) ? $values['variant'] : $this->variant;
+		$this->values = $values;
 	}
 	
 	public function getDefault(){

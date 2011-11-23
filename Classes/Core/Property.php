@@ -111,6 +111,12 @@ class Property{
 		$mappings = $this->helper->getSettings("Admin.Mapping.Widgets");
 		
 		if( ! empty($mappings) ) {
+			if(isset($this->widget))
+				$widget = $this->widget->name;
+				
+			if(isset($this->editor))
+				$widget = "Textarea";
+			
 			if( $widget === null && isset($mappings[$raw]) ) {
 				$widget = $mappings[$raw];
 			}
