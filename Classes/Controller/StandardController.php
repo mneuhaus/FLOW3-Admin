@@ -167,7 +167,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		$cache = $this->cacheManager->getCache('Admin_Cache');
 		$identifier = "ClassShortNames-".sha1(implode("-",$this->adapters));
 
-		if(!$cache->has($identifier)){
+		if(!$cache->has($identifier) || true){
 			$shortNames = array();
 			foreach ($this->adapters as $adapter) {
 				$adapters[$adapter] = $this->objectManager->get($adapter);
@@ -303,7 +303,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		}
 
 		$cache = $this->cacheManager->getCache('Admin_TemplateCache');
-		$identifier = implode("-",$replacements);
+		$identifier = str_replace(".", "_", implode("-",$replacements));
 		$noTemplate = false;
 		if(!$cache->has($identifier)){
 			try{
@@ -322,7 +322,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 			
 			if($this->request->hasArgument("being")){
 				$meta["being"]["identifier"] = $this->request->getArgument("being");
-				$meta["being"]["name"] = $this->getAdapter()->getName($this->request->getArgument("being"));
+				$meta["being"]["name"] = $this->request->getArgument("being");
 				\Admin\Core\API::set("package",$replacements["@package"]);
 			}
 		}

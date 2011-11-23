@@ -2,25 +2,25 @@
 
 namespace Admin\Core;
 
-/*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
- *                                                                        *
- * It is free software; you can redistribute it and/or modify it under    *
+/*																		*
+ * This script belongs to the FLOW3 package "Fluid".					  *
+ *																		*
+ * It is free software; you can redistribute it and/or modify it under	*
  * the terms of the GNU Lesser General Public License as published by the *
  * Free Software Foundation, either version 3 of the License, or (at your *
- * option) any later version.                                             *
- *                                                                        *
- * This script is distributed in the hope that it will be useful, but     *
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHAN-    *
- * TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser       *
- * General Public License for more details.                               *
- *                                                                        *
- * You should have received a copy of the GNU Lesser General Public       *
- * License along with the script.                                         *
- * If not, see http://www.gnu.org/licenses/lgpl.html                      *
- *                                                                        *
- * The TYPO3 project - inspiring people to share!                         *
- *                                                                        */
+ * option) any later version.											 *
+ *																		*
+ * This script is distributed in the hope that it will be useful, but	 *
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHAN-	*
+ * TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser	   *
+ * General Public License for more details.							   *
+ *																		*
+ * You should have received a copy of the GNU Lesser General Public	   *
+ * License along with the script.										 *
+ * If not, see http://www.gnu.org/licenses/lgpl.html					  *
+ *																		*
+ * The TYPO3 project - inspiring people to share!						 *
+ *																		*/
 
 use Doctrine\ORM\Mapping as ORM;
 use TYPO3\FLOW3\Annotations as FLOW3;
@@ -34,274 +34,264 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * @FLOW3\Scope("prototype")
  */
 class Property{
-	const INLINE_SINGLE_MODE = 1;
-	const INLINE_MULTIPLE_MODE = 2;
-
+	const INLINE_SINGLE_MODE = "single";
+	const INLINE_MULTIPLE_MODE = "multiple";
+	
 	/**
-	 * @var \TYPO3\FLOW3\Object\ObjectManagerInterface
-	 * @api
-	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 * @var \Admin\Core\Helper
 	 * @FLOW3\Inject
 	 */
-	protected $objectManager;
+	protected $helper;
 
-    protected $adapter;
-    protected $name;
-    protected $type = "string";
-    protected $widget;
-    protected $label;
-    protected $infotext = "";
-    protected $options;
-    protected $conf;
-    protected $parent;
-    protected $being = null;
-    protected $inline = false;
-    protected $mode = 0;
-    protected $children = array();
-    protected $counter = 0;
-    protected $value = null;
-    protected $filter = false;
-    protected $selected = false;
+	
+	public $adapter;
 
-    public function  __construct($adapter) {
-        $this->adapter = $adapter;
-    }
+	public $being = null;
+	
+	/**
+	 * Label for the Property
+	 *
+	 * @var string
+	 */
+	public $label;
+	
+	/**
+	 * Name of this Property
+	 *
+	 * @var string
+	 */
+	public $name;
+	
+	protected $type = "string";
+	protected $widget;
+	protected $options;
+	protected $configuration;
+	protected $parent;
+	public $mode = "single";
+	protected $children = array();
+	protected $counter = 0;
+	protected $value = null;
+	protected $filter = false;
+	protected $selected = false;
 
-    public function getName() {
-        return $this->name;
-    }
-
-    public function getInputName(){
-        if($this->mode == self::INLINE_MULTIPLE_MODE){
-            return $this->parent->getPrefix()."[".$this->getName()."][]";
-        }else{
-            return $this->parent->getPrefix()."[".$this->getName()."]";
-        }
-    }
-
-    public function getPrefix(){
-        if($this->mode == self::INLINE_MULTIPLE_MODE){
-            return $this->parent->getPrefix()."[".$this->getName()."][".$this->counter."]";
-        }else{
-            return $this->parent->getPrefix()."[".$this->getName()."]";
-        }
-    }
-
-    public function setName($name) {
-        if(empty($this->label)){
-            $this->setLabel(ucfirst($name));
-        }
-        $this->name = $name;
-    }
-
-    public function getType() {
-        return $this->type;
-    }
-
-    public function setType($type) {
-        $this->type = $type;
-        if(isset($this->conf["widget"])){
-            $this->widget = $this->conf["widget"];
-        }else{
-            $this->widget = $this->adapter->getWidget($this->type, "Textfield");
-        }
-    }
-
-    public function getWidget() {
-        return $this->widget;
-    }
-
-    public function setWidget($widget) {
-        if($widget == "MultipleRelation")
-            $this->mode = \Admin\Core\Property::INLINE_MULTIPLE_MODE;
-        $this->widget = $widget;
-    }
-
-    public function getLabel() {
-        return $this->label;
-    }
-
-    public function setLabel($label) {
-        $this->label = $label;
-    }
-
-    public function getOptions() {
-		$options = array();
-		if(isset($this->conf["optionsprovider"])){
-			if(is_array($this->conf["optionsprovider"]))
-					$this->conf["optionsprovider"] = end($this->conf["optionsprovider"]);
+	public function  __construct($name, $being) {
+		$this->name = $name;
+		$this->adapter = $being->adapter;
+	}
+	
+	public function getInputName(){
+		if($this->mode == self::INLINE_MULTIPLE_MODE)
+			return $this->parent->prefix."[".$this->name."][]";
+		
+		return $this->parent->prefix."[".$this->name."]";
+	}
+	
+	public function getPrefix($counter = null){
+		$counter = is_null($counter) ? $this->counter : $counter;
+		if($this->mode == self::INLINE_MULTIPLE_MODE)
+			return $this->parent->prefix."[".$this->name."][".$counter."]";
+		
+		return $this->parent->prefix."[".$this->name."]";
+	}
+	
+	public function getString(){
+		return $this->value->__toString();
+	}
+	
+	public function getValue(){
+		return $this->parent->getValue($this->name);
+	}
+	
+	public function getWidget() {
+		$raw = $this->type;
+		
+		$widget = null;
+		$default = "Textfield";
+		
+		$mappings = $this->helper->getSettings("Admin.Mapping.Widgets");
+		
+		if( ! empty($mappings) ) {
+			if( $widget === null && isset($mappings[$raw]) ) {
+				$widget = $mappings[$raw];
+			}
 			
-			$provider = $this->objectManager->get($this->conf["optionsprovider"]);
+			if( $widget === null && isset($mappings[strtolower($raw)]) ) {
+				$widget = $mappings[$raw];
+			}
+			
+			if( $widget === null && isset($mappings[ucfirst($raw)]) ) {
+				$widget = $mappings[$raw];
+			}
+			
+			if( $widget === null){
+				foreach($mappings as $pattern => $widget) {
+					if( preg_match("/" . $pattern . "/", $raw) > 0 ) {
+						break;
+					}
+				}
+			}
+		}
+		
+		if( $widget === null && $default !== null )
+			$widget = $default;
+		
+		if($widget === null)
+			$widget = $raw;
+		
+		return $widget;
+	}
+	
+	public function setConfiguration($configuration){
+		$this->configuration = $configuration;
+		
+		$this->value = new \Admin\Core\Value($this, $this->adapter);
+		
+		$this->label = ucfirst($this->name);
+		$this->variant = new \Admin\Annotations\Variant();
+		
+		foreach ($configuration as $key => $values) {
+			switch ($key) {
+				case 'var':
+					$this->$key = current($values);
+					$this->type = current($values);
+					
+					preg_match("/<(.+)>/", $this->$key, $matches);
+					if(!empty($matches)){
+						$this->type = ltrim($matches[1],"\\");
+						$this->being = ltrim($matches[1],"\\");
+					}else{
+						$this->type = current($values);
+						$this->being = current($values);
+					}
+					
+					break;
+					
+				case 'onetomany':
+				case 'manytomany':
+					#$objects = $this->adapter->getValue($this->name, $this->parent->object);
+					$this->mode = self::INLINE_MULTIPLE_MODE;
+					$this->$key = $values;
+					break;
+				
+				case 'manytoone':
+				case 'onetoone':
+					$this->mode = self::INLINE_SINGLE_MODE;
+					$this->$key = $values;
+					break;
+					
+				default:
+					if(is_array($values) && count($values) == 1){
+						$this->$key = current($values);
+					}else{
+						$this->$key = $values;
+					}
+					break;
+			}
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public function getOptions() {
+		$options = array();
+		
+		if(isset($this->optionsprovider)){
+			$provider = new $this->optionsprovider;
 			$provider->setProperty($this);
 			$options = $provider->getOptions();
 		}
-        return $options;
-    }
+		return $options;
+	}
 
-    public function setOptions($options) {
-        $this->options = $options;
-    }
+	public function getConfiguration() {
+		return $this->configuration;
+	}
 
-    public function getConf() {
-        return $this->conf;
-    }
-
-    public function setConf($conf) {
-        $this->conf = $conf;
-
-        $properties = \get_object_vars($this);
-        foreach($conf as $name => $conf){
-            if(array_key_exists($name, $properties) && $conf != null){
-                $setter = "set".ucfirst($name);
-                if(is_callable(array($this,$setter))){
-                    $this->$setter($conf);
-                }else{
-                    $this->$name = $conf;
-                }
-            }
-        }
-        
-        $this->value = $this->objectManager->get("Admin\Core\Value", $this,$this->adapter);
-    }
-
-    public function getChildren() {
-        if($this->inline && empty($this->children)){
-            $values = $this->getValue();
-            $beings = array();
-            if(\Admin\Core\Helper::isIteratable($values)){
-                foreach($values as $value){
-                    if(is_object($value)){
-                        $id = $this->adapter->getId($value);
-                        $being = $this->createBeing($this->being, $id);
-                        $beings[] = $being;
-                    }
-                    $this->counter++;
-                }
-            }elseif(!empty($values) && is_object($values)){
-                $id = $this->adapter->getId($values);
-                $being = $this->createBeing($this->being, $id);
-                $beings[] = $being;
-                $this->counter++;
-            }else{
-                if($this->mode == self::INLINE_MULTIPLE_MODE)
-                    $amountOfInlines = 1;
-                else
-                    $amountOfInlines = 1;
-
-                for ($index = 0; $index < $amountOfInlines; $index++) {
-                    $being = $this->createBeing($this->being);
-                    $beings[] = $being;
-                    $this->counter++;
-                }
-            }
-            $this->children = $beings;
-        }
-        return $this->children;
-    }
-
-    public function createBeing($being, $id = null){
-        $b = $this->adapter->getBeing($this->being,$id);
-        $b->setPrefix($this->getPrefix());
-        
-        if(!empty($id)){
-            $identity = array( $this->getPrefix() . "[__identity]" => $id );
-            $b->addHiddenProperty($identity);
-        }
-
-        return $b;
-    }
-
-    public function setChildren($children) {
-        $this->children = $children;
-    }
-
-    public function setParent($parent){
-        $this->parent = $parent;
-    }
-
-    protected function getParent(){
-        return $this->parent;
-    }
-
-    public function setValue($value){
-        $this->value = $value;
-    }
-
-    public function getValue(){
-        return $this->parent->getValue($this->name);
-    }
-
-    public function getString(){
-        return $this->value->__toString();
-    }
-
-    public function getIds(){
-        return $this->value->getIds();
-    }
-
-    public function getBeing() {
-        return $this->being;
-    }
-
-    public function setBeing($being) {
-        $this->being = $being;
-    }
-
-    public function getInline() {
-        return $this->inline;
-    }
-
-    public function setInline($inline) {
-        $this->inline = $inline;
-    }
-
-    public function getInfotext() {
-        return $this->infotext;
-    }
-
-    public function setInfotext($infotext) {
-        $this->infotext = $infotext;
-    }
-
-    public function isFilter(){
-        return $this->filter;
-    }
-
-    public function getSelected() {
-        return $this->selected;
-    }
-
-    public function setSelected($selected) {
-        $this->selected = $selected;
-    }
-
-    public function getAdapter() {
-        return $this->adapter;
-    }
-
-    public function setAdapter($adapter) {
-        $this->adapter = $adapter;
-    }
-
-    public function getMode() {
-        return $this->mode;
-    }
-
-    public function setMode($mode) {
-        $this->mode = $mode;
-    }
-
-    public function getFilter() {
-        return $this->filter;
-    }
-
-    public function setFilter($filter) {
-        $this->filter = $filter;
-    }
+	public function getChildren() {
+		if($this->inline && empty($this->children)){
+			$values = $this->getValue();
+			$beings = array();
+			$amountOfInlines = 0;
+			if(\Admin\Core\Helper::isIteratable($values)){
+				foreach($values as $value){
+					if(is_object($value)){
+						$id = $this->adapter->getId($value);
+						$being = $this->createBeing($this->being, $id);
+						$beings[] = $being;
+					}
+					$this->counter++;
+				}
+			}elseif(!empty($values) && is_object($values)){
+				$id = $this->adapter->getId($values);
+				$being = $this->createBeing($this->being, $id);
+				$beings[] = $being;
+				$this->counter++;
+			}else{
+				$amountOfInlines = 1;
+			}
+			
+			if($this->mode == self::INLINE_MULTIPLE_MODE)
+				$amountOfInlines = 1;
+			
+			for ($index = 0; $index < $amountOfInlines; $index++) {
+				$being = $this->createBeing($this->being);
+				if($this->mode == self::INLINE_MULTIPLE_MODE)
+					$being->unusedClass = "inline-unused";
+				$beings[] = $being;
+				$this->counter++;
+			}
+			
+			foreach ($beings as $key => $being) {
+				$beings[$key]->parentProperty = $this;
+			}
+			
+			$this->children = $beings;
+		}
+		return $this->children;
+	}
 	
-    public function getError(){
-        return $this->getParent()->getErrors($this->getName());
-    }
+	public function getChild(){
+		return current($this->getChildren());
+	}
+
+	public function createBeing($being, $id = null){
+		$b = $this->adapter->getBeing($this->being, $id);
+		$b->prefix = $this->getPrefix();
+		
+		if(!empty($id)){
+#			$identity = array( $this->getPrefix() . "[__identity]" => $id );
+			$b->addHiddenProperty($this->getPrefix() . "[__identity]",  $id);
+		}
+
+		return $b;
+	}
+
+	public function setParent($parent){
+		$this->parent = $parent;
+	}
+
+	protected function getParent(){
+		return $this->parent;
+	}
+
+	public function getIds(){
+		return $this->value->getIds();
+	}
+	
+	public function isFilter(){
+		return false;
+	}
+	
+	public function getError(){
+		if(is_object($this->getParent()))
+			return $this->getParent()->getErrors($this->name);
+	}
 }
 
 ?>

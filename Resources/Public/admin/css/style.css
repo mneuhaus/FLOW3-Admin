@@ -42,8 +42,9 @@ body {
 	#login .btn { margin:0 0 18px 240px; }
 	#login .password-group { margin-bottom:10px; }
 	
-.box .actions { margin-bottom:0px; padding:8px 20px 20px 150px; }
-.box form { margin: 20px 20px 0; }
+.box .actions { margin-bottom:0px; padding:8px 20px 20px 20px; }
+.box form legend, .box form .control-group { margin: 20px 20px 0; }
+.box form .properties { margin-bottom:20px; }
 .box .alert-message { margin:0 0px 10px; }
 
 .dump {
@@ -70,6 +71,8 @@ body {
 	margin-right:20px;
 }
 
+.close { line-height:22px; }
+
 
 /*---------------------------Docs-----------------------------*/
 h1, h2, h3, h4, h5 {position:relative; }
@@ -87,3 +90,23 @@ h1:hover a, h2:hover a, h3:hover a, h4:hover a, h5:hover a, dt:hover .headerlink
 	.documentation-sidebar ul a { padding-left:20px; }
 	.documentation-sidebar ul ul a { padding-left:30px; font-size:13px; }
 	.documentation-sidebar ul ul ul a { padding-left:35px; font-size: 13px; }
+	
+
+/*--------------------------Inline----------------------------*/
+
+.box table { width:100%; margin:0; }
+.box tr th:first-child, .box tr td:first-child{ padding-left:20px; }
+.box tr th:last-child, .box tr td:last-child{ padding-right:20px; }
+.box table input, .box table select, .box table textarea { width:9em; }
+.box th { border-top:none; padding: 4px 10px; }
+.box .box .legend { font-size:14px; }
+.box .form-inline .control-group { margin: 10px 10px 0; }
+.box .inline-template,
+.box .inline-template input,
+.box .inline-template select,
+.box .inline-template textarea { display:none; }
+.box div.inline-item {border-bottom: 1px solid #DDD;overflow:hidden;}
+.box div.inline-item .close { margin-right:20px; margin-top: 10px; display:none; }
+.box tr.inline-item .close { margin-right:20px; margin-top: 8px; display:none; }
+.box tr.inline-item td.tiny { width:20px; padding:1px 0; }
+.box .inline-unused { background:#FAFAFA; }

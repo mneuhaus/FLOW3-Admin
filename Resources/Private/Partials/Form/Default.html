@@ -1,0 +1,69 @@
+{namespace a=Admin\ViewHelpers}
+
+<f:for each="{being.sets}" as="properties" key="set">
+	<fieldset>
+		<f:for each="{being.hiddenProperties}" as="value" key="name" >
+			<f:form.hidden name="{name}" value="{value}"/>
+		</f:for>
+		
+		<f:if condition="{set}">
+			<h3 class="legend">{set}</h3>
+		</f:if>
+		<div class="properties">
+		<f:for each="{properties}" as="property">
+			<f:if condition="{property.inline}">
+				<f:then>
+					<div class="box inline" data-mode="{property.mode}" data-counter="100">
+						<h5 class="box-header">{property.label}: </h5>
+						<f:if condition="{property.variant.default}">
+							<f:then>
+								<div class="inline-template">
+									<a class="close">x</a>
+									<a:render partial="Form" variant="{property.variant.variant}" fallbacks="Partials" vars="{being: property.child.template}" />
+								</div>
+								<f:for each="{property.children}" as="child">
+									<div class="inline-item  {child.unusedClass}">
+										<a class="close">x</a>
+										<a:render partial="Form" variant="{property.variant.variant}" fallbacks="Partials" vars="{being: child}" />
+									</div>
+								</f:for>
+							</f:then>
+							<f:else>
+								<a:render partial="Form" variant="{property.variant.variant}" fallbacks="Partials" vars="{rows: property.children}" />
+							</f:else>
+						</f:if>
+					</div>
+				</f:then>
+				<f:else>
+				
+					<f:if condition="{property.error}">
+						<f:then><div class="control-group has-error"></f:then>
+						<f:else><div class="control-group"></f:else>
+					</f:if>
+						<label class="control-label">{property.label}: </label>
+						
+						<div class="controls">
+							
+							<a:render partial="{property.widget}" fallbacks="Widgets" vars="{property:property}"/>
+							
+							<f:if condition="{property.infotext}">
+								<span class="help-block help-text">{property.infotext}</span>
+							</f:if>
+							<f:if condition="{property.error}">
+								<span class="help-block help-text">
+									<f:for each="{property.error}" as="error">
+										<a:render value="{error}" /><br />
+									</f:for>
+								</span>
+							</f:if>
+							
+						</div>
+					</div>
+					
+				</f:else>
+			</f:if>
+		</f:for>
+		</div>
+	</fieldset>
+	
+</f:for>

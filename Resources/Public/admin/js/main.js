@@ -10,5 +10,7 @@ jQuery(document).ready(function(){
 			table.find(".select-row").removeAttr('checked');
 	});
 	
-	jQuery('.navbar ul.nav').dropdown();
+	//jQuery('.navbar ul.nav').dropdown();
+	
+	jQuery(".inline[data-mode='multiple']").inlineHelper();
 });

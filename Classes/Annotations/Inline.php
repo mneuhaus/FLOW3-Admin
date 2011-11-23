@@ -14,6 +14,19 @@ namespace Admin\Annotations;
 /**
  * @Annotation
  */
-final class Inline {}
+final class Inline {
+	
+	/**
+	 * @var integer
+	 */
+	public $amount = 3;
+	
+	/**
+	 * @param string $value
+	 */
+	public function __construct(array $values = array()) {
+		$this->amount = isset($values['amount']) ? $values['amount'] : $this->amount;
+	}
+}
 
 ?>

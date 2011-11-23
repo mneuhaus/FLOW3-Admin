@@ -29,6 +29,21 @@ namespace Admin\Core\Adapters;
  * @author Marc Neuhaus <marc@mneuhaus.com>
  */
 interface AdapterInterface {
+	
+	/**
+	 * apply filters
+	 *
+	 * @param string $beings 
+	 * @param string $filters 
+	 * @return void
+	 * @author Marc Neuhaus
+	 */
+	public function applyFilters($beings, $filters);
+	
+	public function applyLimit($limit);
+	
+	public function applyOffset($offset);
+	
     /**
      * Returns a Representational String for a being
      *

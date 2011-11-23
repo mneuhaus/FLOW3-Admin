@@ -31,13 +31,59 @@ namespace Admin\ConfigurationProvider;
 class YamlConfigurationProvider extends \Admin\Core\ConfigurationProvider\AbstractConfigurationProvider {
 	
 	public function get($being){
-		$configuration = array();
+		$c = array();
 		
-		if(isset($this->adapter->settings["Beings"]) && isset($this->adapter->settings["Beings"][$being]))
-			$configuration = $this->adapter->settings["Beings"][$being];
+		if(isset($this->settings["Beings"]) && isset($this->settings["Beings"][$being])){
+			$rawConfigurations = $this->settings["Beings"][$being];
+			$c = $this->convert($rawConfigurations);
+		}
 		
-		return $configuration;
+		return $c;
 	}
 	
+	public function convert($rawConfigurations){
+		$c = array();
+		foreach ($rawConfigurations as $key => $value) {
+			$annotation = sprintf("\Admin\Annotations\%s", $key);
+			$name = lcfirst($key);
+			
+			switch (true) {
+				case is_array($value) && isset($value[0]) && is_array($value[0]):
+					foreach ($value as $subValue) {
+						$subValue = $this->lcfirstArray($subValue);
+						if(!isset($c[$name]))
+							$c[$name] = array();
+						$c[$name][] = new $annotation($subValue);
+					}
+					break;
+
+				case $key == "Properties":
+					$c[$name] = array();
+					foreach ($value as $property => $raw) {
+						$c[$name][$property] = $this->convert($raw);
+					}
+					break;
+
+				case !is_array($value):
+					$value = array("value" => $value);
+
+				default:	
+					$value = $this->lcfirstArray($value);
+					if(!isset($c[$name]))
+						$c[$name] = array();
+					$c[$name][] = new $annotation($value);
+					break;
+			}
+		}
+		return $c;
+	}
+	
+	public function lcfirstArray($array){
+		$newArray = array();
+		foreach ($array as $key => $value) {
+			$newArray[lcfirst($key)] = $value;
+		}
+		return $newArray;
+	}
 }
 ?>

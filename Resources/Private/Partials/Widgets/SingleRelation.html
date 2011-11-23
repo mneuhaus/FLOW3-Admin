@@ -1,5 +1,6 @@
 {namespace a=Admin\ViewHelpers}
 <select name="{property.inputName}">
+   	<option value="">Please select...</option>
     <f:for each="{property.options}" as="option">
         <f:if condition="{option.selected}">
             <f:then><option value="{option.id}" selected="selected">{option}</option></f:then>

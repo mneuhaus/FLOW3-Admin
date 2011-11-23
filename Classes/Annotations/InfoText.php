@@ -28,6 +28,10 @@ final class InfoText {
 			$this->text = $values['value'];
 		}
 	}
+
+	public function __toString(){
+		return $this->text;
+	}
 }
 
 ?>

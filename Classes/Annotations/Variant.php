@@ -14,23 +14,23 @@ namespace Admin\Annotations;
 /**
  * @Annotation
  */
-final class Label {
+final class Variant {
+	
 	/**
 	 * @var string
 	 */
-	public $name = '';
-
+	public $variant = "Default";
+	
 	/**
 	 * @param string $value
 	 */
-	public function __construct(array $values) {
-		if (isset($values['value'])) {
-			$this->name = $values['value'];
-		}
+	public function __construct(array $values = array()) {
+		$this->variant = isset($values['value']) ? $values['value'] : $this->variant;
+		$this->variant = isset($values['variant']) ? $values['variant'] : $this->variant;
 	}
 	
-	public function __toString(){
-		return $this->name;
+	public function getDefault(){
+		return $this->variant == "Default";
 	}
 }
 

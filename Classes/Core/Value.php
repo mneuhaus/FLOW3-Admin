@@ -68,7 +68,7 @@ class Value{
 
 	public function  __toString() {
 		$value = $this->parent->getValue();
-		return $this->converter->toString($value, $this->parent->getConf());
+		return $this->converter->toString($value, $this->parent->getConfiguration());
 	}
 
 	public function getValue() {
@@ -85,7 +85,6 @@ class Value{
 		}else if (is_object($value)){
 			$ids[] = $this->adapter->getId($value);
 		}
-		#\dump($ids,$this->parent->getName());
 		return $ids;
 	}
 }

@@ -65,11 +65,12 @@ class RenderViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @param array $vars
 	 * @param string $section
 	 * @param mixed $optional
+	 * @param string $variant
 	 * @return string Rendered string
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 * @api
 	 */
-	public function render($value='',$partial='',$fallbacks='',$vars = array(), $section = null, $optional = false) {
+	public function render($value='',$partial='',$fallbacks='',$vars = array(), $section = null, $optional = false, $variant = "Default") {
 		if($value !== '')
 			return $value;
 
@@ -79,7 +80,8 @@ class RenderViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 					"@partial" => $partial,
 					"@package" => \Admin\Core\Register::get("package"),
 					"@being" => \Admin\Core\Helper::getShortName(\Admin\Core\Register::get("being")),
-					"@action" => $partial
+					"@action" => $partial,
+					"@variant" => $variant
 				);
 
 				$cache = $this->cacheManager->getCache('Admin_TemplateCache');

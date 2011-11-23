@@ -98,6 +98,28 @@ For more Information about a Property aside from the Title you can provide an In
 			Author:
 				Infotext: Please tell us who you are
 
+Inline
+********
+Through this annotation you can make the Child Entities of relations editable directly on the editing page of the parent entity
+There are 2 different variants included for this: Default and Tabular. See Variants for more informations.
+Make sure to add "cascade={"all"}" to your ORM relation, because otherwise you'll get an error when trying to save
+
+**Class Reflection**::
+
+	/**
+	 * @var \AdminDemo\Domain\Model\Address
+	 * @ORM\ManyToOne(cascade={"all"})
+	 * @Admin\Inline()
+	 */
+	protected $address;
+
+**YAML**::
+
+	TYPO3\Blog\Domain\Model\Post: 
+		Properties:
+			Address:
+				Inline: True
+
 Class
 *****
 Adds one or more Classes to the Input Widget
@@ -122,6 +144,34 @@ Validate
 Please Check the FLOW3 Documentation for the Validation rule: 
 http://flow3.typo3.org/documentation/guide/partii/validation.html
 
+Variant
+********
+Variants are different Variations for a similar use-case.
+Included are Variants for the InlineEditing:
+
+Default
+	The default Stacked Form-View
+
+Tabular
+	In this variant the inputs are aligned in a table to take up less space.
+
+**Class Reflection**::
+
+	/**
+	 * @var \AdminDemo\Domain\Model\Address
+	 * @ORM\ManyToOne(cascade={"all"})
+	 * @Admin\Inline()
+	 * @Admin\Variant("Tabular")
+	 */
+	protected $address;
+
+**YAML**::
+
+	TYPO3\Blog\Domain\Model\Post: 
+		Properties:
+			Address:
+				Inline: True
+				Variant: Tabular
 
 Title
 *****

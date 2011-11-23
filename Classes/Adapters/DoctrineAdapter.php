@@ -30,6 +30,7 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * @version $Id: AbstractValidator.php 3837 2010-02-22 15:17:24Z robert $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * 
+ * @FLOW3\Scope("singleton")
  */
 class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 	/**
@@ -44,6 +45,17 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 	 * @var \TYPO3\FLOW3\Validation\ValidatorResolver
 	 */
 	protected $validatorResolver;
+	
+	/**
+	 * apply filters
+	 *
+	 * @param string $beings 
+	 * @param string $filters 
+	 * @return void
+	 * @author Marc Neuhaus
+	 */
+	public function applyFilters($beings, $filters){
+	}
 	
 	public function applyLimit($limit){
 		$this->query->setLimit($limit);
@@ -67,55 +79,19 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 		return ucfirst($being);
 	}
 	
-	public function init() {
-		$this->settings = $this->helper->getSettings("Doctrine");
-		parent::init();
-		$this->fmc = $this->objectManager->get('TYPO3\FLOW3\MVC\FlashMessageContainer');
-	}
-	
 	public function initQuery($being){
 		$repository = str_replace("Domain\\Model", "Domain\\Repository", $being) . "Repository";
 		$repository = $this->getRepositoryForModel($being);
 		if(\class_exists($repository)){
-			$repositoryObject = $this->objectManager->get($repository);
-			$this->query = $repositoryObject->createQuery();
+			$this->repository = $this->objectManager->get($repository);
+			$this->query = $this->repository->createQuery();
 		}
-	}
-	
-	public function postProcessConfiguration($configuration) {
-		foreach($configuration ["properties"] as $property => $conf) {
-			$type = $configuration["properties"][$property]["var"];
-			
-			$configuration["properties"][$property]["type"] = $type;
-			preg_match("/<(.+)>/", $configuration ["properties"] [$property] ["type"], $matches);
-			if(!empty($matches)){
-				$configuration["properties"][$property]["being"] = ltrim($matches[1],"\\");
-				$configuration["properties"][$property]["mode"] = \Admin\Core\Property::INLINE_MULTIPLE_MODE;
-			}
-			
-			if(class_exists($type)){
-				$reflectClass = new \TYPO3\FLOW3\Reflection\ClassReflection($type);
-				if($reflectClass->isTaggedWith("entity")){
-					$configuration ["properties"] [$property] ["being"] = ltrim($type,"\\");
-					$configuration["properties"][$property]["mode"] = \Admin\Core\Property::INLINE_SINGLE_MODE;
-				}
-			}
-			
-			if(isset($configuration["properties"][$property]["being"])){
-				$repository = \Admin\Core\Helper::getModelRepository($configuration["properties"][$property]["being"]);
-				if(!class_exists($repository) && $configuration["properties"][$property]["being"] !== "TYPO3\FLOW3\Resource\Resource"){
-					$configuration["properties"][$property]["inline"] = true;
-				}
-			}
-		}
-		$configuration = parent::postProcessConfiguration($configuration);
-		return $configuration;
 	}
 
 	public function getGroups() {
 		$this->init();
 		$groups = array();
-		$classes = $this->getClassesTaggedWith(array("active"));
+		$classes = $this->configurationManager->getClassesAnnotatedWith(array("active"));
 		foreach ($this->settings["Beings"] as $being => $conf) {
 			if(isset($conf["active"]) && $conf["active"] == true){
 				if(isset($conf["group"]))
@@ -153,10 +129,12 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 	}
 
 	public function getObjects($being) {
-		$configuration = $this->getConfiguration($being);
+		$configuration = $this->configurationManager->getClassConfiguration($being);
 		$objects = array();
-		if(!isset($this->query))
+		
+		if(!isset($this->query) || !is_subclass_of($being, $this->repository->getEntityClassName()))
 			$this->initQuery($being);
+			
 		if(isset($configuration["class"]["admin\annotations\orderby"])){
 			$this->query->setOrderings(array(
 				current($configuration["class"]["admin\annotations\orderby"]) => 'ASC'
@@ -174,7 +152,7 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 	}
 	
 	public function getRepositoryForModel($model){
-		if(isset($this->settings["Beings"][$model]) && $this->settings["Beings"][$model]["repository"])
+		if(isset($this->settings["Beings"][$model]) && isset($this->settings["Beings"][$model]["repository"]))
 			$repository = $this->settings["Beings"][$model]["repository"];
 		else
 			$repository = \Admin\Core\Helper::getModelRepository($model);
@@ -188,7 +166,7 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 	
 	
 	public function createObject($being, $data) {
-		$configuration = $this->getConfiguration($being);
+		$configuration = $this->configurationManager->getClassConfiguration($being);
 		$result = $this->transform($data, $being);
 		
 		if(is_a($result, $being)){
@@ -200,7 +178,7 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 	}
 
 	public function updateObject($being, $id, $data) {
-		$configuration = $this->getConfiguration($being);
+		$configuration = $this->configurationManager->getClassConfiguration($being);
 		$data["__identity"] = $id;
 		$result = $this->transform($data, $being);
 		
@@ -224,6 +202,8 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 	
 	
 	public function transform($data, $target){
+		$data = $this->cleanUpBlanks($data);
+		
 		$value = $this->propertyMapper->convert($data, $target, \Admin\Core\PropertyMappingConfiguration::getConfiguration());
 		
 		$this->validationResults = $this->propertyMapper->getMessages();
@@ -237,6 +217,26 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 			return $value;
 		else
 			return $errors;
+	}
+	
+	public function cleanUpBlanks($data, $removeEmptyArrays = false){
+		foreach($data as $key => $value) {
+			if( is_array($value) ) {
+				$data[$key] = $this->cleanUpBlanks($value, true);
+			}
+			if( is_object($value) && ! empty($value->FLOW3_Persistence_Entity_UUID) ) {
+				$data[$key] = $value->FLOW3_Persistence_Entity_UUID;
+			}
+			if( empty($data[$key]) && $data[$key] !== false && $data[$key] !== 0 ) {
+				if(is_array($data[$key])){
+					if($removeEmptyArrays)
+						unset($data[$key]);
+				}else{
+					unset($data[$key]);
+				}
+			}
+		}
+		return $data;
 	}
 
 	public function beingsToIdentifiers($beings) {

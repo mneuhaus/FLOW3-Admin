@@ -95,7 +95,7 @@ class Access {
 						}
 					}
 				}
-			}catch(\ReflectionException $e){
+			}catch(\Exception $e){
 			
 			}
 		

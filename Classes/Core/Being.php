@@ -34,26 +34,89 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * @FLOW3\Scope("prototype")
  */
 class Being{
+	
 	/**
-	 * @var \TYPO3\FLOW3\Object\ObjectManagerInterface
-	 * @api
-	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 * @var \Admin\Core\ConfigurationManager
 	 * @FLOW3\Inject
 	 */
-	protected $objectManager;
+	protected $configurationManager;
 
-	protected $id = null;
-	protected $object;
-	protected $class;
-	protected $adapter;
-	protected $name;
-	protected $properties;
+	/**
+	 * This Beings ID
+	 *
+	 * @var string
+	 */
+	public $id = null;
+	
+	/**
+	 * The raw Object of this Being
+	 *
+	 * @var mixed
+	 */
+	public $object;
+	
+	/**
+	 * ClassName of this Being
+	 *
+	 * @var string
+	 */
+	public $class;
+	
+	/**
+	 * Responsible Adapter
+	 *
+	 * @var mixed
+	 */
+	public $adapter;
+	
+	/**
+	 * Name of this Being
+	 *
+	 * @var string
+	 */
+	public $name;
+	
+	/**
+	 * Documents if this Being is selected in an relation Widget
+	 *
+	 * @var boolean
+	 */
+	public $selected = false;
+	
+	/**
+	 * Beings Properties
+	 *
+	 * @var array()
+	 */
+	public $properties = array();
+	
+	/**
+	 * Errors of this Being
+	 *
+	 * @var array
+	 */
 	protected $errors;
-	protected $hiddenProperties = array();
-	protected $sets;
-	protected $views;
-	protected $selected = false;
-	protected $prefix = "item";
+	
+	/**
+	 * Hidden Properties to be rendered
+	 *
+	 * @var string
+	 */
+	public $hiddenProperties = array();
+	
+	/**
+	 * Configured Sets for this Being
+	 *
+	 * @var string
+	 */
+	protected $set = null;
+	
+	/**
+	 * current Prefix for an input name
+	 *
+	 * @var string
+	 */
+	public $prefix = "item";
 
 	public function __construct($adapter){
 		$this->adapter = $adapter;
@@ -62,138 +125,120 @@ class Being{
 	public function __toString(){
 		if(is_object($this->object) && is_callable(array($this->object,"__toString")))
 			return strval($this->object->__toString());
-		return "";
+		return get_class($this->object);
+	}
+	
+	public function addHiddenProperty($name, $value){
+		$this->hiddenProperties = array_merge($this->hiddenProperties, array($name => $value));
 	}
 	
 	public function getArguments(){
 		return $this->object->getArguments();
 	}
 	
-	public function getId() {
-		return $this->id;
+	public function getErrors($property = null) {
+		return array();
+		
+		if($property == null)
+			return $this->errors;
+		else
+			return isset($this->errors[$property]) ? $this->errors[$property] : array();
 	}
-
-	public function setId($id) {
-		$this->id = $id;
+	
+	public function setErrors($errors) {
+		$this->errors = $errors;
 	}
-
-	public function getClass() {
-		return $this->class;
-	}
-
-	public function setClass($class) {
-		$this->name = $this->adapter->getName($class);
-		$this->class = $class;
-	}
-
-	public function getAdapter() {
-		return $this->adapter;
-	}
-
-	public function setAdapter($adapter) {
-		$this->adapter = $adapter;
-	}
-
-	public function getName() {
-		return $this->name;
+	
+	public function getSets(){
+		$sets = array();
+		if(is_array($this->set)){
+			foreach($this->set as $set){
+				$properties = explode(",", str_replace(", ",  ",", $set->properties));
+				foreach($properties as $property){
+					if(!isset($this->properties[$property])) continue;
+					$sets[$set->title][$property] = $this->properties[$property];
+				}
+			}
+		}else{
+			foreach ($this->properties as $key => $value) {
+				$sets[""][$key] = $value;
+			}
+		}
+		return $sets;
 	}
 	
 	public function getShortName() {
 		$class = $this->name;
 		if(is_object($class))
 			$class = get_class($class);
-
+	
 		$parts = explode("\\", $class);
 		return array_pop($parts);
 	}
-
-	public function setName($name) {
-		$this->name = $name;
+	
+	public function getTemplate(){
+		$b = $this->adapter->getBeing($this->class);
+		$b->prefix = $this->parentProperty->getPrefix("{counter}");
+		return $b;
 	}
-
-	public function getProperties() {
-		return $this->properties;
+	
+	public function getValue($property){
+		return $this->adapter->getValue($property, $this->object);
 	}
-
-	public function setProperties($properties) {
-		foreach($properties as $property){
-			$property->setParent($this);
-		}
-		$this->properties = $properties;
-	}
-
-	public function getSets(){
-		$sets = array();
-		foreach($this->sets as $name => $set){
-			foreach($set as $property){
-				if(!isset($this->properties[$property])) continue;
-				$sets[$name][$property] = $this->properties[$property];
+	
+	public function setClass($class){
+		$this->class = $class;
+		
+		$configuration = $this->configurationManager->getClassConfiguration($class);
+		
+		foreach ($configuration as $key => $values) {
+			switch ($key) {
+				case 'properties':
+					foreach ($values as $property => $value) {
+						if($this->shouldBeIgnored($value)) continue;
+						$p = new \Admin\Core\Property($property, $this);
+						$p->setParent($this);
+						$p->setConfiguration($value);
+						$this->properties[$property] = $p;
+					}
+					break;
+				
+				default:
+					$this->$key = $values;
+					break;
 			}
 		}
-		return $sets;
 	}
-
-	public function addHiddenProperty($property){
-		$this->hiddenProperties = array_merge($this->hiddenProperties,$property);
-	}
-
-	public function getHiddenProperties(){
-		return $this->hiddenProperties;
-	}
-
-	public function _getSets() {
-		return $this->sets;
-	}
-
-	public function setSets($sets) {
-		$this->sets = $sets;
-	}
-
-	public function getViews() {
-		return $this->views;
-	}
-
-	public function setViews($views) {
-		$this->views = $views;
-	}
-
-	public function getObject() {
-		return $this->object;
-	}
-
+	
 	public function setObject($object) {
 		$this->object = $object;
+		$this->id = $this->adapter->getId($object);
 	}
-
-	public function getValue($property){
-		return $this->adapter->getValue($property,$this->object);
-	}
-
-	public function getSelected() {
-		return $this->selected;
-	}
-
-	public function setSelected($selected) {
-		$this->selected = $selected;
-	}
-
-	public function getPrefix() {
-		return $this->prefix;
-	}
-
-	public function setPrefix($prefix) {
-		$this->prefix = $prefix;
-	}
-
-	public function getErrors($property = null) {
-		if($property == null)
-			return $this->errors;
-		else
-			return isset($this->errors[$property]) ? $this->errors[$property] : array();
-	}
-
-	public function setErrors($errors) {
-		$this->errors = $errors;
+	
+	/**
+	 * checks the conf if the element should be ignored
+	 *
+	 * @param string $conf 
+	 * @return void
+	 * @author Marc Neuhaus
+	 */
+	public function shouldBeIgnored($annotations){
+		if(isset($annotations["inject"])) return true;
+		
+		if(!isset($annotations["ignore"])){
+			return false;
+		}else{
+			$ignore = current($annotations["ignore"]);
+			if(empty($ignore->views)){
+				return true;
+			}else{
+				$actions = explode(",", $ignore->views);
+				$action = \Admin\Core\API::get("action");
+				return in_array($action, $actions);
+			}
+		}
+		
+		return false;
 	}
 }
 

@@ -25,8 +25,10 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#infotext">Infotext</a></li>
+<li><a class="reference internal" href="#inline">Inline</a></li>
 <li><a class="reference internal" href="#class">Class</a></li>
 <li><a class="reference internal" href="#validate">Validate</a></li>
+<li><a class="reference internal" href="#variant">Variant</a></li>
 <li><a class="reference internal" href="#title">Title</a></li>
 <li><a class="reference internal" href="#filter">Filter</a></li>
 <li><a class="reference internal" href="#optionsprovider">OptionsProvider</a></li>
@@ -39,7 +41,7 @@
                         title="previous chapter">Model Configuration</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="Templates.html"
-                        title="next chapter">&lt;no title&gt;</a></p>
+                        title="next chapter">Templates</a></p>
 		</div>
 	</f:section>
 	
@@ -135,6 +137,26 @@ protexted $author;</pre>
                         Infotext: Please tell us who you are</pre>
 </div>
 </div>
+<div class="section" id="inline">
+<h2>Inline<a class="headerlink" href="#inline" title="Permalink to this headline">¶</a></h2>
+<p>Through this annotation you can make the Child Entities of relations editable directly on the editing page of the parent entity
+There are 2 different variants included for this: Default and Tabular. See Variants for more informations.
+Make sure to add &#8220;cascade={&#8220;all&#8221;}&#8221; to your ORM relation, because otherwise you&#8217;ll get an error when trying to save</p>
+<p><strong>Class Reflection</strong>:</p>
+<div class="highlight-python"><pre>/**
+ * @var \AdminDemo\Domain\Model\Address
+ * @ORM\ManyToOne(cascade={"all"})
+ * @Admin\Inline()
+ */
+protected $address;</pre>
+</div>
+<p><strong>YAML</strong>:</p>
+<div class="highlight-python"><pre>TYPO3\Blog\Domain\Model\Post:
+        Properties:
+                Address:
+                        Inline: True</pre>
+</div>
+</div>
 <div class="section" id="class">
 <h2>Class<a class="headerlink" href="#class" title="Permalink to this headline">¶</a></h2>
 <p>Adds one or more Classes to the Input Widget</p>
@@ -156,6 +178,33 @@ protected $content;</pre>
 <h2>Validate<a class="headerlink" href="#validate" title="Permalink to this headline">¶</a></h2>
 <p>Please Check the FLOW3 Documentation for the Validation rule:
 <a class="reference external" href="http://flow3.typo3.org/documentation/guide/partii/validation.html">http://flow3.typo3.org/documentation/guide/partii/validation.html</a></p>
+</div>
+<div class="section" id="variant">
+<h2>Variant<a class="headerlink" href="#variant" title="Permalink to this headline">¶</a></h2>
+<p>Variants are different Variations for a similar use-case.
+Included are Variants for the InlineEditing:</p>
+<dl class="docutils">
+<dt>Default</dt>
+<dd>The default Stacked Form-View</dd>
+<dt>Tabular</dt>
+<dd>In this variant the inputs are aligned in a table to take up less space.</dd>
+</dl>
+<p><strong>Class Reflection</strong>:</p>
+<div class="highlight-python"><pre>/**
+ * @var \AdminDemo\Domain\Model\Address
+ * @ORM\ManyToOne(cascade={"all"})
+ * @Admin\Inline()
+ * @Admin\Variant("Tabular")
+ */
+protected $address;</pre>
+</div>
+<p><strong>YAML</strong>:</p>
+<div class="highlight-python"><pre>TYPO3\Blog\Domain\Model\Post:
+        Properties:
+                Address:
+                        Inline: True
+                        Variant: Tabular</pre>
+</div>
 </div>
 <div class="section" id="title">
 <h2>Title<a class="headerlink" href="#title" title="Permalink to this headline">¶</a></h2>

@@ -113,6 +113,9 @@
 			</a:navigation>
 			</ul>
 			</a:render>
+			<div style="position:fixed; bottom:20px; left:20px;">
+				<a href="https://github.com/mneuhaus/FLOW3-Admin/issues/new" class="btn">Report Issue</a>
+			</div>
 		</div>
 		
 		<div class="content">
@@ -147,9 +150,24 @@
 	<script src="{f:uri.resource(path: 'bootstrap/js/bootstrap-dropdown.js', package: 'Admin')}"></script>
 	<script src="{f:uri.resource(path: 'bootstrap/js/bootstrap-twipsy.js', package: 'Admin')}"></script>
 	
+	<script src="{f:uri.resource(path: 'admin/js/jquery.inlineHelper.js', package: 'Admin')}"></script>
+	
 	<a:widgetResources render="true" />
 
 	<script src="{f:uri.resource(path: 'admin/js/main.js', package: 'Admin')}"></script>
+	
+	<script type="text/javascript">
 
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-27105965-1']);
+	  _gaq.push(['_trackPageview']);
+
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+
+	</script>
 </body>
 </html>

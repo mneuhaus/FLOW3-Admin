@@ -49,12 +49,12 @@ class RelationOptionsProvider extends \Admin\Core\OptionsProvider\AbstractOption
 	private $reflectionService;
 	
 	public function getOptions(){
-		$being = $this->property->getBeing();
+		$being = $this->property->being;
 		$selected = $this->property->getIds();
 		
 		$options = array();
 		if( is_string($being) ){
-			$beings = $this->property->getAdapter()->getBeings($being);
+			$beings = $this->property->adapter->getBeings($being);
 		}
 		
 		if( ! is_array($selected) )
@@ -62,9 +62,9 @@ class RelationOptionsProvider extends \Admin\Core\OptionsProvider\AbstractOption
 		
 		if( empty($beings) )
 			return array ();
-		
+			
 		foreach($beings as $being) {
-			$being->setSelected(in_array($being->getId(), $selected));
+			$being->selected = in_array($being->id, $selected);
 			$options [] = $being;
 		}
 		

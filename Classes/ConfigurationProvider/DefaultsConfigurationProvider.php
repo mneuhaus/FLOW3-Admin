@@ -28,28 +28,26 @@ namespace Admin\ConfigurationProvider;
  * @version $Id: YamlConfigurationProvider.php 3837 2010-02-22 15:17:24Z robert $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class DefaultsConfigurationProvider extends \Admin\Core\ConfigurationProvider\AbstractConfigurationProvider {
+class DefaultsConfigurationProvider extends \Admin\ConfigurationProvider\YamlConfigurationProvider {
 
 	public function get($being){
-		$configuration = array();
-
-		$settings = $this->helper->getSettings("Admin");
+		$c = array();
 		
-		if(isset($settings["Defaults"])){
-			$configuration["class"] = $settings["Defaults"];
-			unset($configuration["class"]["properties"]);
-			$propertyDefaults = $settings["Defaults"]["properties"];
-			
+		if(isset($this->settings["Defaults"])){
+			$classRaw = $this->settings["Defaults"];
+			$propertyRaw = $classRaw["properties"];
+			unset($classRaw["properties"]);
+			$c = $this->convert($classRaw);
 			if( class_exists($being, false) ) {
-				$properties = $this->helper->getModelProperties($being);
+				$propertyDefaults = $this->convert($propertyRaw);
+				$properties = get_class_vars($being);
 				foreach($properties as $property => $conf){
-					$configuration["properties"][$property] = $propertyDefaults;
+					$c["properties"][$property] = $propertyDefaults;
 				}
 			}
-			
 		}
 
-		return $configuration;
+		return $c;
 	}
 
 }

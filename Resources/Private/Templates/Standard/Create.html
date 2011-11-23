@@ -21,7 +21,7 @@
 </f:section>
 
 <f:section name="content">
-	<div class="box">
+	<div class="box centered">
 		<h3 class="box-header">Create a new {being.shortName}</h3>
 		<div>
 			<f:form method="post" action="create" name="item" object="{object}" enctype="multipart/form-data" class="form-horizontal">
@@ -30,7 +30,12 @@
 			
 				<a:render partial="Form" fallbacks="Partials"/>
 			
-				<div class="actions">
+				<div class="actions pull-left">
+					<f:link.action action="list" arguments="{being: being.class}" class="btn">
+						Cancel
+					</f:link.action>
+				</div>
+				<div class="actions pull-right">
 					<input type="submit" name="create" value="Create" class="btn primary"/>
 				</div>
 			</f:form>

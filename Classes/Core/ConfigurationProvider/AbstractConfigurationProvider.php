@@ -54,13 +54,13 @@ abstract class AbstractConfigurationProvider implements ConfigurationProviderInt
 	protected $helper;
 
 	/**
-	 * @var \Admin\Core\Adapters\AdapterInterface
+	 * @var array
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
-	protected $adapter;
+	protected $settings = array();
 
-	public function setAdapter($adapter){
-		$this->adapter = $adapter;
+	public function setSettings($settings){
+		$this->settings = $settings;
 	}
 }
 ?>

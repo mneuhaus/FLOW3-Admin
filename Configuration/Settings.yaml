@@ -18,6 +18,7 @@ TYPO3:
           - Admin\Security\Voter\Policy
           - TYPO3\FLOW3\Security\Authorization\Voter\Policy
 Admin:
+  Beings: []
   PageTitle: Admin
   Logging:
     Active: true
@@ -43,10 +44,15 @@ Admin:
           controller: doc
           package: admin
   Defaults:
-      properties:
-        optionsprovider: Admin\OptionsProvider\RelationOptionsProvider
+    Variant: Default
+    properties:
+      optionsprovider: Admin\OptionsProvider\RelationOptionsProvider
   Adapters:
     Admin\Adapters\DoctrineAdapter: active
+  ConfigurationProvider:
+    - Admin\ConfigurationProvider\DefaultsConfigurationProvider
+    - Admin\ConfigurationProvider\AnnotationConfigurationProvider
+    - Admin\ConfigurationProvider\YamlConfigurationProvider
   Fallbacks:
     Views:
       - resource://@package/Private/Templates/@being/@action/@variant.html
@@ -56,12 +62,19 @@ Admin:
       - resource://Admin/Private/Templates/Standard/@action/@variant.html
       - resource://Admin/Private/Templates/Standard/@action.html
     Partials:
+      - resource://@package/Private/Partials/@being/@action/@partial/@variant.html
       - resource://@package/Private/Partials/@being/@action/@partial.html
+      - resource://@package/Private/Partials/@being/@partial/@variant.html
       - resource://@package/Private/Partials/@being/@partial.html
+      - resource://@package/Private/Partials/@action/@partial/@variant.html
       - resource://@package/Private/Partials/@action/@partial.html
+      - resource://@package/Private/Partials/@partial/@variant.html
       - resource://@package/Private/Partials/@partial.html
       - resource://Admin/Private/Partials/@action/@partial.html
+      - resource://Admin/Private/Partials/@action/@partial/@variant.html
+      - resource://Admin/Private/Partials/@partial/@variant.html
       - resource://Admin/Private/Partials/@partial.html
+      - resource://Admin/Private/Partials/@partial/Default.html
     DashboardWidgets:
       - resource://@package/Private/Partials/@being/DashboardWidgets/@partial.html
       - resource://@package/Private/Partials/DashboardWidgets/@partial.html
@@ -70,15 +83,8 @@ Admin:
       - resource://@package/Private/Partials/@being/Widgets/@partial.html
       - resource://@package/Private/Partials/Widgets/@partial.html
       - resource://Admin/Private/Partials/Widgets/@partial.html
-
-Doctrine:
-  Beings: []
-  ConfigurationProvider:
-    - Admin\ConfigurationProvider\DefaultsConfigurationProvider
-    - Admin\ConfigurationProvider\ReflectionConfigurationProvider
-    - Admin\ConfigurationProvider\YamlConfigurationProvider
-  Widgets:
-    Mapping:
+  Mapping:
+    Widgets:
       string:   Textfield
       readonly:   TextfieldReadonly
       integer:  Spinner
