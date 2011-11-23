@@ -94,7 +94,6 @@ h1:hover a, h2:hover a, h3:hover a, h4:hover a, h5:hover a, dt:hover .headerlink
 	.documentation-sidebar ul a { padding-left:20px; }
 	.documentation-sidebar ul ul a { padding-left:30px; font-size:13px; }
 	.documentation-sidebar ul ul ul a { padding-left:35px; font-size: 13px; }
-	
 
 /*--------------------------Inline----------------------------*/
 
@@ -114,3 +113,9 @@ h1:hover a, h2:hover a, h3:hover a, h4:hover a, h5:hover a, dt:hover .headerlink
 .box tr.inline-item .close { margin-right:20px; margin-top: 8px; display:none; }
 .box tr.inline-item td.tiny { width:20px; padding:1px 0; }
 .box .inline-unused { background:#FAFAFA; }
+
+/*--------------------------Chosen----------------------------*/
+.box .chzn-container .chzn-results li { line-height:16px; }
+
+/*--------------------------Forms-----------------------------*/
+input, textarea, select, .uneditable-input { width:340px; }
