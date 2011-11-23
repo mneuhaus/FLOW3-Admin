@@ -14,6 +14,24 @@ namespace Admin\Annotations;
 /**
  * @Annotation
  */
-final class OptionsProvider {}
+final class OptionsProvider {
+	
+	/**
+	 * @var integer
+	 */
+	public $name = "";
+	
+	/**
+	 * @param string $value
+	 */
+	public function __construct(array $values = array()) {
+		$this->name = isset($values['value']) ? $values['value'] : $this->name;
+		$this->name = isset($name['amount']) ? $name['amount'] : $this->name;
+	}
+	
+	public function __toString(){
+		return $this->name;
+	}
+}
 
 ?>
