@@ -32,6 +32,13 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
+	
+	/**
+	 * @var \Admin\Core\ConfigurationManager
+	 * @FLOW3\Inject
+	 */
+	protected $configurationManager;
+	
 	/**
 	 * @var \Admin\Core\Helper
 	 * @author Marc Neuhaus <apocalip@gmail.com>
@@ -290,15 +297,11 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		
 		if(!empty($this->being)){
 			if(class_exists($this->being, false)){
-				$tags = $this->reflectionService->getClassTagsValues($this->being);
-				if(in_array($action."view",array_keys($tags))){
-					$variant = $tags[$action."view"][0];
-				}
 				$replacements["@package"] = $this->helper->getPackageByClassName($this->being) ? $this->helper->getPackageByClassName($this->being) : "Admin";
 				$replacements["@being"] =\Admin\Core\Helper::getShortName($this->being);
-				if(array_key_exists("variant-".$action,$tags)){
-					$replacements["@variant"] = ucfirst(current($tags["variant-".$action]));
-				}
+				
+				$being = $this->helper->getBeing($this->being);
+				$replacements["@variant"] = $being->variant->getVariant($action);
 			}
 		}
 

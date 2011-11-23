@@ -144,6 +144,12 @@ class Helper {
 		return $adapters;
 	}
 	
+	public function getBeing($class){
+		$being = new \Admin\Core\Being($this->getAdapterByBeing($class));
+		$being->setClass($class);
+		return $being;
+	}
+	
 	/**
 	 * get the group which the being belongs to
 	 *
