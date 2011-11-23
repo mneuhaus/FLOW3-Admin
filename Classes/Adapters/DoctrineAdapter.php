@@ -238,33 +238,6 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 		}
 		return $data;
 	}
-
-	public function beingsToIdentifiers($beings) {
-		$identifiers = array();
-		if( is_array($beings) ) {
-			foreach($beings as $key => $being) {
-				$identifiers [] = $this->getId($being);
-			}
-		}
-		return implode(",", $identifiers);
-	}
-
-	public function identifiersToBeings($identifiers, $conf, $property) {
-		preg_match("/\\\\Beings\\\\([A-Za-z]+)$/", $conf ["type"], $matches);
-		$being = $matches [1];
-		$identifiers = explode(",", $identifiers);
-		$beings = array();
-		foreach($identifiers as $identifier) {
-			$beings [] = $this->getObject($being, $identifier);
-		}
-		return $beings;
-	}
-
-	public function identifierToBeing($identifier, $conf, $property) {
-		preg_match("/\\\\Being\\\\([A-Za-z]+)$/", $conf ["type"], $matches);
-		$being = $matches [1];
-		return $this->getObject($being, $identifier);
-	}
 }
 
 ?>
