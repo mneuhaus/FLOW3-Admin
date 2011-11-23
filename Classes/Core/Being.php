@@ -119,6 +119,10 @@ class Being{
 	public $prefix = "item";
 
 	public function __construct($adapter){
+		if(!is_object($adapter)){
+			$adapter = new $adapter();
+			$adapter->init();
+		}
 		$this->adapter = $adapter;
 	}
 
@@ -133,7 +137,11 @@ class Being{
 	}
 	
 	public function getArguments(){
-		return $this->object->getArguments();
+		return array(
+			"id" => $this->id,
+			"being" => $this->class,
+			"adapter" => \Admin\Core\API::get("adapter")
+		);
 	}
 	
 	public function getErrors($property = null) {
@@ -202,7 +210,11 @@ class Being{
 					break;
 				
 				default:
-					$this->$key = $values;
+					if(is_array($values) && count($values) == 1){
+						$this->$key = current($values);
+					}else{
+						$this->$key = $values;
+					}
 					break;
 			}
 		}
@@ -237,6 +249,13 @@ class Being{
 		}
 		
 		return false;
+	}
+	
+	public function __get($property){
+		if(isset($this->properties[$property]))
+			return $this->properties[$property];
+		
+		return null;
 	}
 }
 
