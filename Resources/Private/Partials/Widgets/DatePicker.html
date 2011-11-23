@@ -1,8 +1,10 @@
 {namespace a=Admin\ViewHelpers}
 
-<a:widgetResources add="DatePicker">
+<a:widgetResources add="jQueryUi">
 	<link href="{f:uri.resource(path: 'jquery-ui/css/smoothness/jquery-ui-1.8.16.custom.css', package: 'Admin')}" rel="stylesheet">
 	<script src="{f:uri.resource(path: 'jquery-ui/js/jquery-ui-1.8.16.custom.min.js', package: 'Admin')}"></script>
+</a:widgetResources>
+<a:widgetResources add="DatePicker">
 	<script type="text/javascript" charset="utf-8">
 		jQuery.datepicker.setDefaults();
 		jQuery(document).ready(function () {
