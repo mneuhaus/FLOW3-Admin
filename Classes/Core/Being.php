@@ -192,6 +192,14 @@ class Being{
 		return $this->adapter->getValue($property, $this->object);
 	}
 	
+	public function getVariantMapping(){
+		if(isset($this->variantMapping)){
+			$this->variantMapping->setObject($this);
+			return $this->variantMapping;
+		}
+		return null;
+	}
+	
 	public function setClass($class){
 		$this->class = $class;
 		
@@ -249,13 +257,6 @@ class Being{
 		}
 		
 		return false;
-	}
-	
-	public function __get($property){
-		if(isset($this->properties[$property]))
-			return $this->properties[$property];
-		
-		return null;
 	}
 }
 
