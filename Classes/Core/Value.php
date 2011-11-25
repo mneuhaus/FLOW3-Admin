@@ -35,22 +35,6 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  */
 class Value{
 	/**
-	 * @var \TYPO3\FLOW3\Object\ObjectManagerInterface
-	 * @api
-	 * @author Marc Neuhaus <apocalip@gmail.com>
-	 * @FLOW3\Inject
-	 */
-	protected $objectManager;
-
-	/**
-	 * @var \TYPO3\FLOW3\Reflection\ReflectionService
-	 * @api
-	 * @author Marc Neuhaus <apocalip@gmail.com>
-	 * @FLOW3\Inject
-	 */
-	protected $reflectionService;
-
-	/**
 	 * @var \Admin\Core\Converter
 	 * @api
 	 * @author Marc Neuhaus <apocalip@gmail.com>
