@@ -47,7 +47,7 @@ final class Variant {
 		return $this->variant == "Default";
 	}
 	
-	public function getVariant($action){
+	public function getVariant($action = null){
 		if(isset($this->values[$action]))
 			return $this->values[$action];
 		
