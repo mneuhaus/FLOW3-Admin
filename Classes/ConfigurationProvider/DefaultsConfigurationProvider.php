@@ -22,6 +22,8 @@ namespace Admin\ConfigurationProvider;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * ConfigurationProvider to add default configurations from yaml
  *
@@ -29,7 +31,15 @@ namespace Admin\ConfigurationProvider;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class DefaultsConfigurationProvider extends \Admin\ConfigurationProvider\YamlConfigurationProvider {
-
+	
+	/**
+	 * @var \TYPO3\FLOW3\Reflection\ReflectionService
+	 * @api
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 * @FLOW3\Inject
+	 */
+	protected $reflectionService;
+	
 	public function get($being){
 		$c = array();
 		
@@ -40,8 +50,8 @@ class DefaultsConfigurationProvider extends \Admin\ConfigurationProvider\YamlCon
 			$c = $this->convert($classRaw);
 			if( class_exists($being, false) ) {
 				$propertyDefaults = $this->convert($propertyRaw);
-				$properties = get_class_vars($being);
-				foreach($properties as $property => $conf){
+				$properties = $this->reflectionService->getClassPropertyNames($being);
+				foreach($properties as $key => $property){
 					$c["properties"][$property] = $propertyDefaults;
 				}
 			}
