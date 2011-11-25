@@ -152,10 +152,13 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 	}
 	
 	public function getRepositoryForModel($model){
-		if(isset($this->settings["Beings"][$model]) && isset($this->settings["Beings"][$model]["repository"]))
-			$repository = $this->settings["Beings"][$model]["repository"];
-		else
+		$configuration = $this->configurationManager->getClassConfiguration($model);
+		if(isset($configuration["repository"])){
+			$annotation = current($configuration["repository"]);
+			$repository = $annotation->class;
+		}else{
 			$repository = \Admin\Core\Helper::getModelRepository($model);
+		}
 		
 		return $repository;
 	}

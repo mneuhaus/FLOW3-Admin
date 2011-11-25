@@ -53,25 +53,42 @@ class AnnotationConfigurationProvider extends \Admin\Core\ConfigurationProvider\
 				$c[$shortName][] = $object;
 			}
 			
-			foreach($this->reflectionService->getClassPropertyNames($class) as $property){
-				$c["properties"][$property] = array();
+			$schema = $this->reflectionService->getClassSchema($class);
+			if(is_object($schema)){
+				if(!isset($c["repository"]))
+					$c["repository"] = array(new \Admin\Annotations\Repository(array("class" => $schema->getRepositoryClassName())));
 				
-				// Load legacy Annotations like @var,...
-				foreach ($this->reflectionService->getPropertyTagsValues($class, $property) as $shortName => $tags) {
-					if(!isset($c["properties"][$property])) $c["properties"][$property] = array();
+				foreach($schema->getProperties() as $property => $meta){
+					if($property == "FLOW3_Persistence_Identifier") continue;
+					$c["properties"][$property] = array();
 					
-					$c["properties"][$property][$shortName] = $tags;
-				}
-				
-				// Load Annotations and override legacy Annotations
-				$annotations = $this->reflectionService->getPropertyAnnotations($class, $property);
-				foreach ($annotations as $key => $objects) {
-					$shortName = $this->convertAnnotationName($key);
-					if(!isset($c["properties"][$property])) $c["properties"][$property] = array();
+						
+					// Load legacy Annotations like @var,...
+					foreach ($this->reflectionService->getPropertyTagsValues($class, $property) as $shortName => $tags) {
+						if(!isset($c["properties"][$property])) $c["properties"][$property] = array();
+						
+						$c["properties"][$property][$shortName] = $tags;
+					}
 					
-					$c["properties"][$property][$shortName] = $objects;
-				}
-			};
+					
+					// $c["properties"][$property]["type"] = array(
+					// 	new \Admin\Annotations\Type(array(
+					// 		"name" => $meta["type"],
+					// 		"subtype" => $meta["elementType"],
+					// 	))
+					// );
+					
+					
+					// Load Annotations and override legacy Annotations
+					$annotations = $this->reflectionService->getPropertyAnnotations($class, $property);
+					foreach ($annotations as $key => $objects) {
+						$shortName = $this->convertAnnotationName($key);
+						if(!isset($c["properties"][$property])) $c["properties"][$property] = array();
+					
+						$c["properties"][$property][$shortName] = $objects;
+					}
+				};
+			}
 		}
 		
 		return $c;
@@ -82,6 +99,5 @@ class AnnotationConfigurationProvider extends \Admin\Core\ConfigurationProvider\
 		$name = lcfirst($name);
  		return $name;
 	}
-	
 }
 ?>

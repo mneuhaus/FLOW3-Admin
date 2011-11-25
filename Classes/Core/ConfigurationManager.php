@@ -73,34 +73,51 @@ class ConfigurationManager{
 	 */
 	protected $settings;
 	
+	/**
+	 * @var array
+	 */
+	protected $runtimeCache = array();
+	
 	public function __construct(\Admin\Core\Helper $helper){
 		$this->settings = $helper->getSettings();
 	}
 	
 	public function getClassConfiguration($class){
-		$configuration = array();
-		
-		if(isset($this->settings["ConfigurationProvider"])){
+		$this->class = $class;
+		if(isset($this->settings["ConfigurationProvider"]) && !isset($this->runtimeCache[$class])){
+			$configuration = array();
 			$configurationProviders = $this->settings["ConfigurationProvider"];
 			foreach($configurationProviders as $configurationProviderClass){
 				$configurationProvider = $this->objectManager->get($configurationProviderClass);
 				$configurationProvider->setSettings($this->settings);
 				$configuration = $this->merge($configuration, $configurationProvider->get($class));
+
 			}
+			$this->runtimeCache[$class] = $configuration;
 		}
 		
-		return $configuration;
+		return $this->runtimeCache[$class];
 	}
 	
 	public function merge($configuration, $override){
 		foreach ($override as $annotation => $objects) {
-			foreach ($objects as $key => $object) {
-				try{
-					if(isset($object->multiple) && $object->multiple)
-						$configuration[$annotation][] = $object;
-					else
-						$configuration[$annotation][$key] = $object;
-				}catch(\TYPO3\FLOW3\Error\Exception $e){}
+			if($annotation == "properties"){
+				
+				if(!isset($configuration[$annotation]))
+					$configuration[$annotation] = array();
+				$configuration[$annotation] = $this->merge($configuration[$annotation], $objects);
+				
+			}else{
+				
+				foreach ($objects as $key => $object) {
+					try{if(isset($object->multiple) && $object->multiple){
+							$configuration[$annotation][] = $object;
+						}else{
+							$configuration[$annotation][$key] = $object;
+						}
+					}catch(\TYPO3\FLOW3\Error\Exception $e){}
+				}
+				
 			}
 		}
 		return $configuration;
@@ -117,7 +134,7 @@ class ConfigurationManager{
 		$cache = $this->cacheManager->getCache('Admin_ImplementationCache');
 		$identifier = "ClassesTaggedWith-".implode("_",$tags);
 		
-		if(!$cache->has($identifier) || true){
+		if(!$cache->has($identifier)){
 			$classes = array();
 			
 			$activePackages = $this->packageManager->getActivePackages();
@@ -125,11 +142,6 @@ class ConfigurationManager{
 				if($packageName == "Doctrine") continue;
 				foreach($package->getClassFiles() as $class => $file) {
 					$annotations = $this->getClassConfiguration($class);
-					
-#					$classTags = $this->reflectionService->getClassTagsValues($class);
-					
-#					if(isset($this->settings["Beings"][$class]))
-#						$classTags = array_merge($classTags,$this->settings["Beings"][$class]);
 					
 					$tagged = true;
 					foreach($tags as $tag){
@@ -142,8 +154,10 @@ class ConfigurationManager{
 			}
 			
 			$cache->set($identifier,$classes);
+		}elseif(isset($this->runtimeCache[$identifier])){
+			$classes = $this->runtimeCache[$identifier];
 		}else{
-			$classes = $cache->get($identifier);
+			$this->runtimeCache[$identifier] = $classes = $cache->get($identifier);
 		}
 		return $classes;
 	}
