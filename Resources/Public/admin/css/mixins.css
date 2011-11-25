@@ -189,3 +189,8 @@ th.tiny input, td.tiny input{ margin-left:5px; }
 
 .help-inline.important { color:#C43C35; }
 .help-inline.success { color:#46A546; }
+
+.box .help-block table { width:auto; margin-top:8px;}
+.help-block table td { border-top:none; padding:2px 10px 5px 0; }
+
+.help-text { margin-top:10px; }
