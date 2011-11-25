@@ -96,10 +96,12 @@ class ConfigurationManager{
 	public function merge($configuration, $override){
 		foreach ($override as $annotation => $objects) {
 			foreach ($objects as $key => $object) {
-				if(isset($object->multiple) && $object->multiple)
-					$configuration[$annotation][] = $object;
-				else
-					$configuration[$annotation][$key] = $object;
+				try{
+					if(isset($object->multiple) && $object->multiple)
+						$configuration[$annotation][] = $object;
+					else
+						$configuration[$annotation][$key] = $object;
+				}catch(\TYPO3\FLOW3\Error\Exception $e){}
 			}
 		}
 		return $configuration;
