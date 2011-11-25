@@ -117,7 +117,7 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 		return $groups;
 	}
 
-	public function getObject($being, $id) {
+	public function getObject($being, $id = null) {
 		if( class_exists($being) ) {
 			if( $id == null ){
 				return $this->objectManager->create($being);

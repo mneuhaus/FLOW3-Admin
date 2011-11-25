@@ -35,12 +35,18 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  */
 class Option{
 	
-    protected $name;
-    protected $value;
     protected $id;
+    protected $value;
+    protected $selected;
+
+	public function __construct($id, $value, $selected = false){
+		$this->id = $id;
+		$this->value = $value;
+		$this->selected = $selected;
+	}
 
     public function __toString(){
-        return $this->getName();
+        return $this->getValue();
     }
 
     public function getValue() {
@@ -51,12 +57,12 @@ class Option{
         $this->value = $value;
     }
 
-    public function getName() {
-        return $this->name;
+    public function getSelected() {
+        return $this->selected;
     }
 
-    public function setName($name) {
-        $this->name = $name;
+    public function setSelected($selected) {
+        $this->selected = $selected;
     }
 
     public function getId(){

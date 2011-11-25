@@ -66,7 +66,7 @@ class Property{
 	protected $widget;
 	protected $options;
 	protected $configuration;
-	protected $parent;
+	public $parent;
 	public $mode = "single";
 	protected $children = array();
 	protected $counter = 0;
@@ -195,11 +195,6 @@ class Property{
 			}
 		}
 	}
-	
-	
-	
-	
-	
 	
 	
 	
