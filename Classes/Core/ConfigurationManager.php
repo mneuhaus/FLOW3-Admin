@@ -73,33 +73,46 @@ class ConfigurationManager{
 	 */
 	protected $settings;
 	
+	/**
+	 * @var array
+	 */
+	protected $cache = array();
+	
 	public function __construct(\Admin\Core\Helper $helper){
 		$this->settings = $helper->getSettings();
 	}
 	
 	public function getClassConfiguration($class){
-		$configuration = array();
-		
-		if(isset($this->settings["ConfigurationProvider"])){
-			$configurationProviders = $this->settings["ConfigurationProvider"];
-			foreach($configurationProviders as $configurationProviderClass){
-				$configurationProvider = $this->objectManager->get($configurationProviderClass);
-				$configurationProvider->setSettings($this->settings);
-				$configuration = $this->merge($configuration, $configurationProvider->get($class));
-#				$configuration = array_merge_recursive($configuration,$configurationProvider->get($class));
+		if(!isset($this->cache[$class])){
+			$configuration = array();
+			if(isset($this->settings["ConfigurationProvider"])){
+				$configurationProviders = $this->settings["ConfigurationProvider"];
+				foreach($configurationProviders as $configurationProviderClass){
+					$configurationProvider = $this->objectManager->get($configurationProviderClass);
+					$configurationProvider->setSettings($this->settings);
+					$configuration = $this->merge($configuration, $configurationProvider->get($class));
+	#				$configuration = array_merge_recursive($configuration,$configurationProvider->get($class));
+				}
 			}
+			$this->cache[$class] = $configuration;
 		}
 		
-		return $configuration;
+		return $this->cache[$class];
 	}
 	
 	public function merge($configuration, $override){
 		foreach ($override as $annotation => $objects) {
-			foreach ($objects as $key => $object) {
-				if(isset($object->multiple) && $object->multiple)
-					$configuration[$annotation][] = $object;
-				else
-					$configuration[$annotation][$key] = $object;
+			if($annotation == "properties"){
+				if(!isset($configuration[$annotation]))
+					$configuration[$annotation] = array();
+				$configuration[$annotation] = $this->merge($configuration[$annotation], $objects);
+			}else{
+				foreach ($objects as $key => $object) {
+					if(isset($object->multiple) && $object->multiple)
+						$configuration[$annotation][] = $object;
+					else
+						$configuration[$annotation][$key] = $object;
+				}
 			}
 		}
 		return $configuration;
