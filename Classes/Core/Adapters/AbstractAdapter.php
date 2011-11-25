@@ -102,9 +102,7 @@ abstract class AbstractAdapter implements \Admin\Core\Adapters\AdapterInterface 
 		$being = ltrim($being, "\\");
 		
 		$b = new \Admin\Core\Being($this);
-		if($id !== null){
-			$b->setObject($this->getObject($being, $id));
-		}
+		$b->setObject($this->getObject($being, $id));
 		$b->setClass($being);
 		
 		return $b;

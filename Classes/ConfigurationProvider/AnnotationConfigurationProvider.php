@@ -79,7 +79,7 @@ class AnnotationConfigurationProvider extends \Admin\Core\ConfigurationProvider\
 	
 	public function convertAnnotationName($annotation){
 		$name = $this->helper->getShortName($annotation);
-		$name = strtolower($name);
+		$name = lcfirst($name);
  		return $name;
 	}
 	

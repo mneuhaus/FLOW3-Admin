@@ -14,6 +14,29 @@ namespace Admin\Annotations;
 /**
  * @Annotation
  */
-final class OptionsProvider {}
+final class OptionsProvider {
+	
+	/**
+	 * @var integer
+	 */
+	public $name = "";
+	
+	/**
+	 * @param string $value
+	 */
+	public function __construct(array $values = array()) {
+		foreach ($values as $key => $value) {
+			$this->$key = $value;
+		}
+		$this->name = isset($values['value']) ? $values['value'] : $this->name;
+		$this->name = isset($values['name']) ? $values['name'] : $this->name;
+		if(class_exists(sprintf("\\Admin\\OptionsProvider\\%sOptionsProvider", $this->name)))
+			$this->name = sprintf("\\Admin\\OptionsProvider\\%sOptionsProvider", $this->name);
+	}
+	
+	public function __toString(){
+		return $this->name;
+	}
+}
 
 ?>

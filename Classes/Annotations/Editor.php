@@ -19,6 +19,11 @@ final class Editor {
 	 * @var string
 	 */
 	public $name = '';
+	
+	/**
+	 * @var integer
+	 */
+	public $width = 500;
 
 	/**
 	 * @param string $value
@@ -27,6 +32,7 @@ final class Editor {
 		if (isset($values['value'])) {
 			$this->name = $values['value'];
 		}
+		$this->width = isset($values['width']) ? $values['width'] : $this->width;
 	}
 	
 	public function __toString(){

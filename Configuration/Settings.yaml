@@ -47,7 +47,11 @@ Admin:
   Defaults:
     Variant: Default
     properties:
-      optionsprovider: Admin\OptionsProvider\RelationOptionsProvider
+      OptionsProvider: Admin\OptionsProvider\RelationOptionsProvider
+      Representation:
+        DateFormat: Y-m-d
+        DateJsFormat: yyyy-MM-dd
+        DateTimeFormat: Y-m-d
   Adapters:
     Admin\Adapters\DoctrineAdapter: active
   ConfigurationProvider:
@@ -92,8 +96,8 @@ Admin:
       float:    Textfield
       boolean:  Boolean
       \TYPO3\FLOW3\Resource\Resource: Upload
-      \DateTime: DatePicker
-      ^\\[A-Za-z0-9\\]+\\Domain\\Model\\[A-Za-z]+$: SingleRelation
-      ^\\[A-Za-z0-9\\]+\\Security\\[A-Za-z]+$: SingleRelation
+      \DateTime: DateJs
+      ^\\[A-Za-z0-9\\]+\\Domain\\Model\\[A-Za-z]+$: Chosen
+      ^\\[A-Za-z0-9\\]+\\Security\\[A-Za-z]+$: Chosen
       ^\\Doctrine\\Common\\Collections\\Collection\<\\[A-Za-z0-9\\]+\\Domain\\Model\\[A-za-z]+>$: MultipleRelation
       ^\\Doctrine\\Common\\Collections\\Collection\<\\[A-Za-z0-9\\]+\\Security\\[A-za-z]+>$: MultipleRelation

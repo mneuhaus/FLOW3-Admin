@@ -6,8 +6,6 @@
 </f:section>
 
 <f:section name="actionbar-left">
-	<form method="post">
-	<a:render partial="Toolbar" fallbacks="Partials"/>
 </f:section>
 
 <f:section name="actionbar-right">
@@ -25,14 +23,14 @@
 </f:section>
 
 <f:section name="content">
-	<div id='calendar'></div>
-	
+	<a:widgetResources add="jQueryUi">
+		<link href="{f:uri.resource(path: 'jquery-ui/css/smoothness/jquery-ui-1.8.16.custom.css', package: 'Admin')}" rel="stylesheet">
+		<script src="{f:uri.resource(path: 'jquery-ui/js/jquery-ui-1.8.16.custom.min.js', package: 'Admin')}"></script>
+	</a:widgetResources>
 	<a:widgetResources add="List:Calendar">
-		<link rel='stylesheet' type='text/css' href='../fullcalendar/fullcalendar.css' />
-		<link rel='stylesheet' type='text/css' href='../fullcalendar/fullcalendar.print.css' media='print' />
-		<script type='text/javascript' src='../jquery/jquery-1.5.2.min.js'></script>
-		<script type='text/javascript' src='../jquery/jquery-ui-1.8.11.custom.min.js'></script>
-		<script type='text/javascript' src='../fullcalendar/fullcalendar.min.js'></script>
+		<link rel='stylesheet' type='text/css' href="{f:uri.resource(path: 'fullcalendar/fullcalendar.css', package: 'Admin')}" />
+		<link rel='stylesheet' type='text/css' href="{f:uri.resource(path: 'fullcalendar/fullcalendar.print.css', package: 'Admin')}" media='print' />
+		<script type='text/javascript' src="{f:uri.resource(path: 'fullcalendar/fullcalendar.min.js', package: 'Admin')}"></script>
 		<script type='text/javascript'>
 
 			$(document).ready(function() {
@@ -44,29 +42,49 @@
 
 				$('#calendar').fullCalendar({
 					header: {
-						left: 'prev,next today',
-						center: 'title',
-						right: 'month,agendaWeek,agendaDay'
+					    left: 'prev,next today',
+					    center: 'title',
+					    right: 'month,agendaWeek,agendaDay'
 					},
 					editable: true,
 					events: [
-						{
-							title: 'All Day Event',
-							start: new Date(y, m, 1)
-						},
-						{
-							title: 'Click for Google',
-							start: new Date(y, m, 28),
-							end: new Date(y, m, 29),
-							url: 'http://google.com/'
-						}
+					    <f:for each="{objects}" as="being" iteration="iterator">
+					    {
+					    	title: '<f:format.raw value="{being.variantMapping.title}" />',
+					    	
+					    	<f:if condition="{being.variantMapping.end}">
+					    		<f:then>
+					    			start: new Date('<f:format.date format="F d, Y" date="{being.variantMapping.start}" />'),
+					    			end: new Date('<f:format.date format="F d, Y" date="{being.variantMapping.end}" />'),
+					    			allday: false,
+					    		</f:then>
+					    		<f:else>
+					    			start: new Date('<f:format.date format="F d, Y" date="{being.variantMapping.start}" />'),
+					    			allday: false,
+					    		</f:else>
+					    	</f:if>
+					    	
+					    	url: '<f:uri.action action="update" arguments="{being.arguments}"/>'
+					    	
+					    	<f:if condition="{iterator.isLast}">
+					    		<f:then>}</f:then>
+					    		<f:else>},</f:else>
+					    	</f:if>
+					    </f:for>
 					]
 				});
 
 			});
 
 		</script>
+		<style type="text/css" media="screen">
+			.fc-header td { border-top:none; }
+		</style>
 	</a:widgetResources>
+	<div id='calendar'></div>
+	<div class="pagination pull-left">
+		<a:render partial="VariantsSelector" fallbacks="Partials" vars="{variant: objects.0.variant, current: 'Calendar'}"/>
+	</div>
 </f:section>
 
 <f:section name="post-container">

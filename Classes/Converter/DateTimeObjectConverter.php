@@ -58,8 +58,8 @@ class DateTimeObjectConverter implements ConverterInterface {
 	}
 
 	public function toString($object, $conf = null){
-		$format = "d.m.Y";
-		$format = \DateTime::W3C;
+		$format = "Y-m-d";
+#		$format = \DateTime::W3C;
 		if(isset($conf["format"]))
 			$format = $conf["format"];
 		

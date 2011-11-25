@@ -53,7 +53,7 @@ form .clearfix:after {
 	width:auto;
 }
 
-.scrollable { overflow: auto; width: 100%; }
+.scrollable { overflow: visible; width: 100%; }
 
 
 @media (min-width: 300px) and (max-width:800px) {
@@ -186,3 +186,11 @@ th.tiny input, td.tiny input{ margin-left:5px; }
 	border-bottom: 1px solid #EEE;
 	padding: 0 20px;
 }
+
+.help-inline.important { color:#C43C35; }
+.help-inline.success { color:#46A546; }
+
+.box .help-block table { width:auto; margin-top:8px;}
+.help-block table td { border-top:none; padding:2px 10px 5px 0; }
+
+.help-text { margin-top:10px; }

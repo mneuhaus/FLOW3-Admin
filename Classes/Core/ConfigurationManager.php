@@ -86,7 +86,6 @@ class ConfigurationManager{
 				$configurationProvider = $this->objectManager->get($configurationProviderClass);
 				$configurationProvider->setSettings($this->settings);
 				$configuration = $this->merge($configuration, $configurationProvider->get($class));
-#				$configuration = array_merge_recursive($configuration,$configurationProvider->get($class));
 			}
 		}
 		
