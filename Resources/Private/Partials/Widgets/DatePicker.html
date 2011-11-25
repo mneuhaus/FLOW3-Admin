@@ -12,7 +12,7 @@
 				var e = jQuery(this);
 				var v = e.val();
 				e.datepicker();
-				e.datepicker("option", 'dateFormat', 'yy-mm-dd\T00:00:00+00:00' );
+				e.datepicker("option", 'dateFormat', 'yy-mm-dd' );
 				e.datepicker("setDate", v);
 			});
 		});
@@ -20,4 +20,3 @@
 </a:widgetResources>
 
 <input type="text" name="{property.inputName}" id="item-{property.name}" value="{property.string}" class="{property.class}" data-widget="DatePicker" />
-<div id="your_date" class="empty"></div>
