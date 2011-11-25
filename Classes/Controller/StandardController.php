@@ -125,6 +125,8 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	protected function callActionMethod() {
+		$start = microtime(true);
+		
 		if($this->objectManager->getContext() == "Development" && $this->helper->getSettings("Admin.FlushCacheInDevelopment")){
 			$this->cacheManager->flushAdminCaches();
 		}
@@ -136,6 +138,13 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		}
 		
 		$actionResult = $this->__call($this->actionMethodName, $preparedArguments);
+		
+		$debugInfo = array();
+		if($this->objectManager->getContext() == "Development"){
+			$debugInfo[] = "exectime: " . number_format(microtime(true) - $start, 4) . "s";
+		}
+		$debugInfo[] = "";
+		$this->view->assign("admin-debug-info", implode(" | ", $debugInfo));
 		
 		if ($actionResult === NULL && $this->view instanceof \TYPO3\FLOW3\MVC\View\ViewInterface) {
 			$this->response->appendContent($this->view->render());

@@ -52,6 +52,7 @@
 				<f:if condition="{user}">
 					<f:then>
 					<p class="pull-right">
+						{admin-debug-info}
 						Logged in as 
 						<f:link.action action="update" package="Admin" arguments="{user.arguments}">{user}</f:link.action>
 						| <f:link.action action="logout" controller="Login" package="Admin">Logout</f:link.action>
