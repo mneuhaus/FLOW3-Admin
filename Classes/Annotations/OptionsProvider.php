@@ -22,6 +22,11 @@ final class OptionsProvider {
 	public $name = "";
 	
 	/**
+	 * @var array
+	 */
+	public $options = array();
+	
+	/**
 	 * @param string $value
 	 */
 	public function __construct(array $values = array()) {
@@ -30,6 +35,9 @@ final class OptionsProvider {
 		}
 		$this->name = isset($values['value']) ? $values['value'] : $this->name;
 		$this->name = isset($values['name']) ? $values['name'] : $this->name;
+		
+		$this->options = isset($values['options']) ? $values['options'] : $this->options;
+		
 		if(class_exists(sprintf("\\Admin\\OptionsProvider\\%sOptionsProvider", $this->name)))
 			$this->name = sprintf("\\Admin\\OptionsProvider\\%sOptionsProvider", $this->name);
 	}

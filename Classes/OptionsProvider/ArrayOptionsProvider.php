@@ -42,7 +42,11 @@ class ArrayOptionsProvider extends \Admin\Core\OptionsProvider\AbstractOptionsPr
 		else
 			$optionsProperty = "_" . $this->property->name;
 		
-		$rawOptions = $being->getValue($optionsProperty);
+		if(isset($this->property->optionsProvider->options))
+			$rawOptions = $this->property->optionsProvider->options;
+		else
+			$rawOptions = $being->getValue($optionsProperty);
+		
 		if(is_array($rawOptions)){
 			foreach($rawOptions as $key => $value) {
 				$options[] = new \Admin\Core\Option($key, $value, $key == $this->property->getValue());
