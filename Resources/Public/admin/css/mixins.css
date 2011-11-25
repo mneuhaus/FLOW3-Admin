@@ -186,3 +186,6 @@ th.tiny input, td.tiny input{ margin-left:5px; }
 	border-bottom: 1px solid #EEE;
 	padding: 0 20px;
 }
+
+.help-inline.important { color:#C43C35; }
+.help-inline.success { color:#46A546; }

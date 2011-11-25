@@ -43,8 +43,9 @@ body {
 	#login form { margin-top:20px; }
 	#login label { width:70px; }
 	#login .controls { margin-left:80px }
-	#login .btn { margin:0 0 18px 240px; }
-	#login .password-group { margin-bottom:10px; }
+	#login input { width:210px; }
+	#login .btn { margin:0 0 18px 240px; width:auto; }
+	#login .password-group { margin-bottom:10px; }x
 	
 .box .actions { margin-bottom:0px; padding:8px 20px 20px 20px; }
 .box form legend, .box form .control-group { margin: 20px 20px 0; }
