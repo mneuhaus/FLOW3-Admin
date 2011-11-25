@@ -184,7 +184,7 @@ class Helper {
 		$cache = $this->cacheManager->getCache('Admin_Cache');
 		$identifier = "Groups-".sha1(implode("-",$this->adapters));
 
-		if(!$cache->has($identifier) || true){
+		if(!$cache->has($identifier)){
 			$groups = array();
 			$adapters = array();
 			foreach ($this->adapters as $adapter) {

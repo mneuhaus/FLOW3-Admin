@@ -32,7 +32,12 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
-	
+	/**
+	 * @var \Admin\Core\CacheManager
+	 * @FLOW3\Inject
+	 */
+	protected $cacheManager;
+		
 	/**
 	 * @var \Admin\Core\ConfigurationManager
 	 * @FLOW3\Inject
@@ -65,12 +70,6 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 	 * @FLOW3\Inject
 	 */
 	protected $securityContext;
-	
-	/**
-	 * @var TYPO3\FLOW3\Cache\CacheManager
-	 * @FLOW3\Inject
-	 */
-	protected $cacheManager;
 
 	protected $model = "";
 	protected $being = null;
@@ -126,6 +125,10 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	protected function callActionMethod() {
+		if($this->objectManager->getContext() == "Development" && $this->helper->getSettings("Admin.FlushCacheInDevelopment")){
+			$this->cacheManager->flushAdminCaches();
+		}
+		
 		$this->indexAction();
 		$preparedArguments = array();
 		foreach ($this->arguments as $argument) {
