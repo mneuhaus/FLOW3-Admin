@@ -247,7 +247,7 @@ class Being{
 			return false;
 		}else{
 			$ignore = current($annotations["ignore"]);
-			if(empty($ignore->views)){
+			if(empty($ignore->views) || $ignore->views == true){
 				return true;
 			}else{
 				$actions = explode(",", $ignore->views);

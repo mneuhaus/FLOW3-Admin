@@ -91,7 +91,7 @@ class ConfigurationManager{
 				$configurationProvider = $this->objectManager->get($configurationProviderClass);
 				$configurationProvider->setSettings($this->settings);
 				$configuration = $this->merge($configuration, $configurationProvider->get($class));
-
+				
 			}
 			$this->runtimeCache[$class] = $configuration;
 		}
