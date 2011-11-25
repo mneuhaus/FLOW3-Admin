@@ -47,7 +47,7 @@ body {
 	#login .btn { margin:0 0 18px 240px; width:auto; }
 	#login .password-group { margin-bottom:10px; }
 	
-.box .actions { margin:0 20px; padding:8px 20px 20px 20px; }
+.box .actions { margin:0; padding:8px 20px 20px 20px; }
 .box form legend, .box form .control-group { margin: 20px 20px 0; }
 .box form .properties { margin-bottom:20px; }
 .box .alert-message { margin:0 0px 10px; }
