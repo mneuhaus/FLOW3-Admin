@@ -53,7 +53,7 @@ form .clearfix:after {
 	width:auto;
 }
 
-.scrollable { overflow: auto; width: 100%; }
+.scrollable { overflow: visible; width: 100%; }
 
 
 @media (min-width: 300px) and (max-width:800px) {
