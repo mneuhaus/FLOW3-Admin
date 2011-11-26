@@ -110,7 +110,7 @@ h1:hover a, h2:hover a, h3:hover a, h4:hover a, h5:hover a, dt:hover .headerlink
 .box .inline-template textarea { display:none; }
 .box div.inline-item {border-bottom: 1px solid #DDD; overflow:hidden;}
 .box div.inline-item .close { margin-right:20px; margin-top: 10px; display:none; }
-.box tr.inline-item .close { margin-right:20px; margin-top: 8px; display:none; }
+.box tr.inline-item .close { margin-right:20px; margin-top: 8px; margin-left:10px; display:none; }
 .box tr.inline-item td.tiny { width:20px; padding:1px 0; }
 .box .inline-unused { background:#FAFAFA; }
 
