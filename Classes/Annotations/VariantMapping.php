@@ -43,8 +43,17 @@ final class VariantMapping {
 	public function getMapping($key){
 		if(isset($this->mappings[$key])){
 			$property = $this->mappings[$key];
-			return $this->object->getValue($property);
+			if(isset($this->object->properties[$property]))
+				return $this->object->properties[$property]->value;
+			
+			return \TYPO3\FLOW3\Reflection\ObjectAccess::getProperty($this->object->object, $property);
 		}
+		if(isset($this->object->properties[$key]))
+			return $this->object->properties[$key]->value;
+			
+#		$getter = "get" . ucfirst($key);
+#		if(method_exists($this->object->object, $getter))
+#			return call_user_func(array($this->object->object, $getter));
 		
 		return false;
 	}
