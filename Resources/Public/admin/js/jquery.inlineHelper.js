@@ -31,7 +31,8 @@
 	
 	Plugin.prototype.init = function () {
 		// Create new row after the last one is used
-		this.element.find("input, select, textarea").live("change", function(){
+		this.element.find("input, select, textarea").live("keyup", function(){
+			if(jQuery(this).val() == undefined || jQuery(this).val() == "") return;
 			var container = jQuery(this).parents(".inline");
 			var row = jQuery(this).parents(".inline-item").first();
 			if(row.next(".inline-item").length == 0 && container.attr("data-mode") == "multiple"){
@@ -65,9 +66,9 @@
 		
 		newRow.find("input:hidden, select:hidden, textarea:hidden").removeAttr("disabled");
 		newRow.html(newRow.html().replace(/\{counter}/g, counter));
-		newRow.hide().addClass("inline-unused");
+		newRow.addClass("inline-unused").hide();
 		jQuery(tpl).parent().append(newRow);
-		newRow.slideDown();
+		newRow.fadeIn("slow");
 		container.attr("data-counter", counter+1);
 	}
 
