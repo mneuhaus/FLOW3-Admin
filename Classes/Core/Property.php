@@ -70,13 +70,17 @@ class Property{
 	public $mode = "single";
 	protected $children = array();
 	protected $counter = 0;
-	protected $value = null;
+	public $value = null;
 	protected $filter = false;
 	protected $selected = false;
 
 	public function  __construct($name, $being) {
 		$this->name = $name;
 		$this->adapter = $being->adapter;
+	}
+	
+	public function __toString(){
+		return $this->getString();
 	}
 	
 	public function getInputName(){
@@ -219,6 +223,8 @@ class Property{
 			$values = $this->getValue();
 			$beings = array();
 			$amountOfInlines = 0;
+			$realAction = \Admin\Core\API::get("action");
+			\Admin\Core\API::set("action", "inline");
 			if(\Admin\Core\Helper::isIteratable($values)){
 				foreach($values as $value){
 					if(is_object($value)){
@@ -252,6 +258,7 @@ class Property{
 				$beings[$key]->parentProperty = $this;
 			}
 			
+			\Admin\Core\API::set("action", $realAction);
 			$this->children = $beings;
 		}
 		return $this->children;
@@ -262,7 +269,10 @@ class Property{
 	}
 
 	public function createBeing($being, $id = null){
+		$realAction = \Admin\Core\API::get("action");
+		\Admin\Core\API::set("action", "inline");
 		$b = $this->adapter->getBeing($this->being, $id);
+		\Admin\Core\API::set("action", $realAction);
 		$b->prefix = $this->getPrefix();
 		
 		if(!empty($id)){
