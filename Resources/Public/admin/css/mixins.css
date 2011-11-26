@@ -19,7 +19,13 @@ form .clearfix:after {
     -webkit-box-shadow:#CCC 0px 3px 5px;
     box-shadow:#CCC 0px 3px 5px;
 	margin:0;
-	overflow:hidden;
+}
+.box:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
 }
 
 	.box-section,
