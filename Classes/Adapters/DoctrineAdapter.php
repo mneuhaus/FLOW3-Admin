@@ -102,16 +102,20 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 		}
 		
 		foreach($classes as $class => $packageName) {
-			$tags = $this->reflectionService->getClassTagsValues($class);
+			$configuration = $this->configurationManager->getClassConfiguration($class);
 			$repository = $this->getRepositoryForModel($class);
 			
 			if(class_exists($repository)){
 				$group = $packageName;
+				$name = \Admin\Core\Helper::getShortName($class);
 				
-				if(isset($tags["group"]))
-					$group = current($tags["group"]);
+				if(isset($configuration["group"]))
+					$group = strval(current($configuration["group"]));
 				
-				$groups[$group][] = array("being" => $class, "name" => \Admin\Core\Helper::getShortName($class));
+				if(isset($configuration["label"]))
+					$name = strval(current($configuration["label"]));
+					
+				$groups[$group][] = array("being" => $class, "name" => $name);
 			}
 		}
 		return $groups;
