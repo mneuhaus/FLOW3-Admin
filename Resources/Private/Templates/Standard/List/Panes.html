@@ -1,0 +1,51 @@
+<f:layout name="bootstrap" />
+{namespace a=Admin\ViewHelpers}
+<f:section name="actionbar-left"></f:section>
+
+<f:section name="actionbar-right">
+	<f:for each="{topBarActions}" as="action">
+		<a:link
+			class=" {action.class}"
+			action="{action.action}"
+			controller="{action.controller}"
+			package="{action.package}"
+			target="{action.target}"
+			being="{objects.0.class}">
+			{action}
+		</a:link>
+	</f:for>
+</f:section>
+
+<f:section name="content">
+	<div class="left-pane" data-height="fixed">
+		<f:for each="{objects}" as="being" iteration="iterator">
+		<div class="pane-item">
+			<img src="{being.variantMapping.image}" width="40px"/>
+			<h3><f:format.crop maxCharacters="26">{being.variantMapping.title}</f:format.crop></h3>
+			<h5>{being.variantMapping.subtitle}</h5>
+			<small><f:format.crop maxCharacters="80">{being.variantMapping.content}</f:format.crop></small>
+			<div class="content">
+				<a:render partial="PaneContent" fallbacks="Partials" vars="{being: being}"/>
+			</div>
+		</div>
+		</f:for>
+	</div>
+	<div class="right-pane">
+	</div>
+	<a:widgetResources add="Panes">
+		<script type="text/javascript" charset="utf-8">
+			jQuery(document).ready(function(){
+				jQuery(".right-pane").html("").append(jQuery(".pane-item").first().addClass("active").find(".content").clone());
+				jQuery(".left-pane .pane-item").click(function(){
+					var e = jQuery(this);
+					jQuery(".pane-item.active").removeClass("active");
+					e.addClass("active");
+					jQuery(".right-pane").html("").append(e.find(".content").first().clone().hide().fadeIn());
+				});
+			});
+		</script>
+		<style type="text/css" media="screen">
+			.xdebug-var-dump { margin-left: 520px;}
+		</style>
+	</a:widgetResources>
+</f:section>

@@ -116,7 +116,21 @@ h1:hover a, h2:hover a, h3:hover a, h4:hover a, h5:hover a, dt:hover .headerlink
 
 /*--------------------------Chosen----------------------------*/
 .box .chzn-container .chzn-results li { line-height:16px; }
+.box .chzn-container-multi .chzn-choices .search-choice { margin: 5px 0 3px 5px; }
 
 /*--------------------------Forms-----------------------------*/
 input, textarea, select, .uneditable-input { width:340px; }
 table input, table textarea, table select, table .uneditable-input { width:100%; }
+
+/*--------------------------Panes-----------------------------*/
+.left-pane { height: 100%; background:#F9F9F9; position:fixed; left:220px; top:40px; width:300px; margin-left:-20px; border-right: 1px solid #CECECE; border-top: 1px solid #CCCCCC; overflow-y: scroll; }
+.left-pane .pane-item { padding:10px; overflow:hidden; border-bottom: 1px solid #CCCCCC; }
+.left-pane .active { background:#E6E6E6; }
+.left-pane .pane-item img { float:left; margin-right:10px; }
+.left-pane .pane-item h3 { line-height:20px; font-size:14px; }
+.left-pane .pane-item h5 { line-height:18px; font-size:13px; font-weight:normal; margin-bottom:5px; }
+.left-pane .pane-item small { color: #7D8792; font-size:12px; }
+.left-pane .pane-item div.content { position:absolute; left:-9999px; }
+
+.right-pane { margin-left: 300px; margin-top:20px; }
+.right-pane img { float:left; margin-right:10px; }
