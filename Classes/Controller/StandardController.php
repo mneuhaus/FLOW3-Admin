@@ -256,6 +256,8 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 				}
 			} catch (\Doctrine\ORM\EntityNotFoundException $e){
 				unset($user);
+				parent::redirect('index', 'Login');
+				throw new \TYPO3\FLOW3\MVC\Exception\StopActionException();
 			}
 			$this->user = $user;
 		}
