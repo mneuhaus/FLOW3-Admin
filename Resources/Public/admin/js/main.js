@@ -13,4 +13,12 @@ jQuery(document).ready(function(){
 	//jQuery('.navbar ul.nav').dropdown();
 	
 	jQuery(".inline[data-mode='multiple']").inlineHelper();
+	
+	
+	jQuery("[data-height=fixed]").each(function(){
+		var e = jQuery(this);
+		e.height(jQuery("body").height() - Number(e.css("top").replace("px", "")));
+	});
+	
+	jQuery("body").height(jQuery("body").height() - 40);
 });
