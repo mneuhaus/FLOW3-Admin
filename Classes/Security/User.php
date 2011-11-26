@@ -47,7 +47,6 @@ class User extends \Admin\Core\Domain\Magic{
 	
 	/**
 	 * @var string
-	 * @FLOW3\Validate(type="NotEmpty")
      * @Admin\Annotations\Label("E-Mail")
 	 */
 	protected $email;
