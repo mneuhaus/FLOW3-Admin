@@ -174,7 +174,7 @@ class Being{
 	}
 	
 	public function getShortName() {
-		$class = $this->name;
+		$class = $this->class;
 		if(is_object($class))
 			$class = get_class($class);
 	
@@ -183,7 +183,10 @@ class Being{
 	}
 	
 	public function getTemplate(){
+		$realAction = \Admin\Core\API::get("action");
+		\Admin\Core\API::set("action", "inline");
 		$b = $this->adapter->getBeing($this->class);
+		\Admin\Core\API::set("action", $realAction);
 		$b->prefix = $this->parentProperty->getPrefix("{counter}");
 		return $b;
 	}
@@ -214,6 +217,7 @@ class Being{
 						$p->setParent($this);
 						$p->setConfiguration($value);
 						$this->properties[$property] = $p;
+						$this->$property = $p;
 					}
 					break;
 				
@@ -247,7 +251,7 @@ class Being{
 			return false;
 		}else{
 			$ignore = current($annotations["ignore"]);
-			if(empty($ignore->views) || $ignore->views == true){
+			if(empty($ignore->views) || $ignore->views === true){
 				return true;
 			}else{
 				$actions = explode(",", $ignore->views);
