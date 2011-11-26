@@ -120,13 +120,20 @@ abstract class Magic {
 	}
 	
 	public function _get($name){
-        $property = $this->getPropertyName(substr($name,3));
-		if($property === false)
-			throw new \Exception('The Property '.$property.' you are trying to get isn\'t defined in this class.');
-		if ($this->$property instanceof \TYPO3\FLOW3\Persistence\LazyLoadingProxy) {
-			$this->$property->_loadRealInstance();
+		if(stristr($name, ".")){
+			$parts = explode(".", substr($name,3));
+			$name = lcfirst(array_shift($parts));
+			$path = implode(".", $parts) ;
+			return \TYPO3\FLOW3\Reflection\ObjectAccess::getProperty($this->$name, $path);
+		}else{
+			$property = $this->getPropertyName(substr($name,3));
+			if($property === false)
+				throw new \Exception('The Property '.$property.' you are trying to get isn\'t defined in this class.');
+			if ($this->$property instanceof \TYPO3\FLOW3\Persistence\LazyLoadingProxy) {
+				$this->$property->_loadRealInstance();
+			}
+			return $this->$property;
 		}
-		return $this->$property;
 	}
 	
 	public function _add($name,$value){
@@ -203,18 +210,22 @@ abstract class Magic {
 	}
 	
 	public function __toString(){
-		if(!is_object($this->objectManager)){
-			$myProperties = get_object_vars($this);
-			$strings = array();
-			foreach ($myProperties as $key => $value) {
-				if(is_string($value) && $key !== "FLOW3_Persistence_Identifier"){
-					$strings[] = $value;
-				}
+		$myProperties = get_object_vars($this);
+		$strings = array();
+		foreach ($myProperties as $key => $value) {
+			if(is_string($value) && $key !== "FLOW3_Persistence_Identifier"){
+				$strings[] = $value;
 			}
+		}
+		if(!is_object($this->objectManager)){
 			return implode(", ", $strings);
 		}
+		
 		$reflectionService = $this->objectManager->get("TYPO3\FLOW3\Reflection\ReflectionService");
 		$class = get_class($this);
+		if($this instanceof \Doctrine\ORM\Proxy\Proxy)
+			$class = get_parent_class($this);
+		
 		$properties = $reflectionService->getClassPropertyNames($class);
 		$identity = array();
 		$title = array();
@@ -246,7 +257,7 @@ abstract class Magic {
 		if($goodGuess !== null)
 			return implode(",", $goodGuess);
 		
-		return "";
+		return "please implement __toString()!";
 	}
 
 	public function getPropertyName($property = null){
