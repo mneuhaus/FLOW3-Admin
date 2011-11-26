@@ -28,6 +28,10 @@ final class Group {
 			$this->name = $values['value'];
 		}
 	}
+	
+	public function __toString(){
+		return $this->name;
+	}
 }
 
 ?>
