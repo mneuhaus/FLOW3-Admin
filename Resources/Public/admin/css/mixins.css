@@ -190,7 +190,7 @@ th.tiny input, td.tiny input{ margin-left:5px; }
 	line-height: 36px;
 	color: #404040;
 	border-bottom: 1px solid #EEE;
-	padding: 0 20px;
+	text-indent:20px;
 }
 
 .help-inline.important { color:#C43C35; }
