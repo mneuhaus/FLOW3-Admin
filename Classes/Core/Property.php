@@ -154,7 +154,7 @@ class Property{
 	public function setConfiguration($configuration){
 		$this->configuration = $configuration;
 		
-		$this->value = new \Admin\Core\Value($this, $this->adapter);
+		$this->value = new \Admin\Core\Value($this, $this);
 		
 		$this->label = ucfirst($this->name);
 		$this->variant = new \Admin\Annotations\Variant();

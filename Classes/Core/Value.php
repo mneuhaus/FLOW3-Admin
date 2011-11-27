@@ -35,12 +35,12 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  */
 class Value{
 	/**
-	 * @var \Admin\Core\Converter
+	 * @var \Admin\Core\PropertyMapper
 	 * @api
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 * @FLOW3\Inject
 	 */
-	protected $converter;
+	protected $propertyMapper;
 
 	protected $parent;
 	protected $adapter;
@@ -52,7 +52,7 @@ class Value{
 
 	public function  __toString() {
 		$value = $this->parent->getValue();
-		return $this->converter->toString($value, $this->parent->getConfiguration());
+		return $this->propertyMapper->convert($value, "string");
 	}
 
 	public function getValue() {
