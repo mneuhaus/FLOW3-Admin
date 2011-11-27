@@ -22,7 +22,7 @@ class DateTimeConverter extends \TYPO3\FLOW3\Property\TypeConverter\DateTimeConv
 	/**
 	 * @var array<string>
 	 */
-	protected $sourceTypes = array("DateTime");
+	protected $sourceTypes = array("object");
 	
 	/**
 	 * @var string

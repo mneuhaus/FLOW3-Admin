@@ -42,21 +42,26 @@ class Value{
 	 */
 	protected $propertyMapper;
 
-	protected $parent;
-	protected $adapter;
+	protected $parentProperty;
 
-	public function  __construct($parent, $adapter) {
-		$this->parent = $parent;
-		$this->adapter = $adapter;
+	public function  __construct($parentProperty) {
+		$this->parentProperty = $parentProperty;
 	}
 
 	public function  __toString() {
-		$value = $this->parent->getValue();
-		return $this->propertyMapper->convert($value, "string");
+		$value = $this->parentProperty->getValue();
+		$options = array(
+		    array(
+			'TYPO3\FLOW3\Property\TypeConverter\DateTimeConverter',
+			\TYPO3\FLOW3\Property\TypeConverter\DateTimeConverter::CONFIGURATION_DATE_FORMAT,
+			$this->parentProperty->representation->datetimeFormat
+		    )
+		);
+		return $this->propertyMapper->convert($value, "string", \Admin\Core\PropertyMappingConfiguration::getConfiguration('\Admin\Core\PropertyMappingConfiguration', $options));
 	}
 
 	public function getValue() {
-		return $this->parent->getValue();
+		return $this->parentProperty->getValue();
 	}
 
 	public function getIds(){
@@ -64,10 +69,10 @@ class Value{
 		$ids = array();
 		if( \Admin\Core\Helper::isIteratable($value) ){
 			foreach($value as $object){
-				$ids[] = $this->adapter->getId($object);
+				$ids[] = $this->parentProperty->adapter->getId($object);
 			}
 		}else if (is_object($value)){
-			$ids[] = $this->adapter->getId($value);
+			$ids[] = $this->parentProperty->adapter->getId($value);
 		}
 		return $ids;
 	}

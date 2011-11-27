@@ -29,7 +29,7 @@ class PropertyMappingConfiguration extends \TYPO3\FLOW3\Property\PropertyMapping
 		return $this;
 	}
 	
-	static public function getConfiguration($type = '\Admin\Core\PropertyMappingConfiguration'){
+	static public function getConfiguration($type = '\Admin\Core\PropertyMappingConfiguration', $options = array()){
 		$configuration = new $type();
 
 		$configuration->setTypeConverterOptions('TYPO3\FLOW3\Property\TypeConverter\PersistentObjectConverter', array(
@@ -37,7 +37,9 @@ class PropertyMappingConfiguration extends \TYPO3\FLOW3\Property\PropertyMapping
 			\TYPO3\FLOW3\Property\TypeConverter\PersistentObjectConverter::CONFIGURATION_MODIFICATION_ALLOWED => TRUE
 		));
 		
-		$configuration->setTypeConverterOption('TYPO3\FLOW3\Property\TypeConverter\DateTimeConverter', \TYPO3\FLOW3\Property\TypeConverter\DateTimeConverter::CONFIGURATION_DATE_FORMAT, 'Y-m-d');
+		foreach($options as $option){
+		    $configuration->setTypeConverterOption($option[0], $option[1], $option[2]);
+		}
 
 		return $configuration;
 	}

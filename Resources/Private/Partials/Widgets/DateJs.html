@@ -11,9 +11,10 @@
 </a:widgetResources>
 
 <input type="text" 
-		name="{property.inputName}" 
+		name="{property.inputName}[date]" 
 		id="item-{property.name}" 
 		value="{property.string}" 
 		class="{property.class}" 
 		data-widget="DateJs" 
-		data-format="{property.representation.dateJsFormat}" />
+		data-format="{property.representation.datetimeFormatJs}" />
+<input type="hidden " name="{property.inputName}[dateFormat]"  value="{property.representation.datetimeFormat}" />

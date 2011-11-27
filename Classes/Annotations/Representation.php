@@ -23,6 +23,20 @@ final class Representation {
 			$this->$key = $value;
 		}
 	}
+	
+	public function getDatetimeFormatJs(){
+	    $mapping = array(
+		    "Y" => "yyyy",
+		    "m" => "MM",
+		    "d" => "dd",
+		    "\T"=> "T",
+		    "H" => "HH",
+		    "i" => "mm",
+		    "s" => "ss",
+		    "P" => "TZD"
+	    );
+	    return str_replace(array_keys($mapping), array_values($mapping), $this->datetimeFormat);
+	}
 }
 
 ?>

@@ -50,9 +50,7 @@ Admin:
     properties:
       OptionsProvider: Admin\OptionsProvider\RelationOptionsProvider
       Representation:
-        DateFormat: Y-m-d
-        DateJsFormat: yyyy-MM-dd
-        DateTimeFormat: Y-m-d
+        DatetimeFormat: Y-m-d\TH:i:s
   Adapters:
     Admin\Adapters\DoctrineAdapter: active
   ConfigurationProvider:
