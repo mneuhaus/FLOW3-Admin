@@ -120,6 +120,7 @@ class LoginController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
 	 */
 	public function logoutAction() {
+		$this->authenticationManager->getSecurityContext()->clearContext();
 		$this->authenticationManager->logout();
 		$message = new \TYPO3\FLOW3\Error\Message('Successfully logged out.');
 		$this->flashMessageContainer->addMessage($message);
