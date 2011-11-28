@@ -59,6 +59,12 @@ form .clearfix:after {
 	width:auto;
 }
 
+ul.whitespace{
+	margin-top:20px;
+	margin-left:40px;
+	margin-bottom:10px;
+}
+
 .scrollable { overflow: visible; width: 100%; }
 
 
