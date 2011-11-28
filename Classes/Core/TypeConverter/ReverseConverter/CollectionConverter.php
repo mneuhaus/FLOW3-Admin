@@ -53,7 +53,9 @@ class CollectionConverter extends \TYPO3\FLOW3\Property\TypeConverter\AbstractTy
 	 * @api
 	 */
 	public function canConvertFrom($source, $targetType) {
-		return in_array($this->determineSourceType($source), $this->sourceTypes);
+		if(is_array($source))
+			return TRUE;
+		return in_array(get_class($source), $this->sourceTypes);
 	}
 	
 	/**
@@ -69,30 +71,6 @@ class CollectionConverter extends \TYPO3\FLOW3\Property\TypeConverter\AbstractTy
 	 */
 	public function convertFrom($sources, $targetType, array $convertedChildProperties = array(), \TYPO3\FLOW3\Property\PropertyMappingConfigurationInterface $configuration = NULL) {
 		return implode(", ",$convertedChildProperties);
-	}
-	
-	/**
-	 * Determine the type of the source data, or throw an exception if source was an unsupported format.
-	 *
-	 * @param mixed $source
-	 * @return string the type of $source
-	 */
-	protected function determineSourceType($source) {
-		if (is_string($source)) {
-			return 'string';
-		} elseif (is_array($source)) {
-			return 'array';
-		} elseif (is_float($source)) {
-			return 'float';
-		} elseif (is_integer($source)) {
-			return 'integer';
-		} elseif (is_bool($source)) {
-			return 'boolean';
-		} elseif (is_object($source)) {
-			return get_class($source);
-		} else {
-			throw new \TYPO3\FLOW3\Property\Exception\InvalidSourceException('The source is not of type string, array, float, integer or boolean, but of type "' . gettype($source) . '"', 1297773150);
-		}
 	}
 	
 	/**
