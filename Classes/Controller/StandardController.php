@@ -214,31 +214,25 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		$this->settings = $this->helper->getSettings();
 		
 		\Admin\Core\API::set("classShortNames", $this->compileShortNames());
-		
-		\Admin\Core\API::set("objectManager",$this->objectManager);
-		
-		\Admin\Core\API::set("settings",$this->settings);
-		\Admin\Core\API::set("session",$this->session);
-		\Admin\Core\API::set("action",$action);
+		\Admin\Core\API::set("action", $action);
 		
 		if($this->request->hasArgument("being")){
 			$this->being = $this->request->getArgument("being");
 			if(!stristr($this->being, "\\"))
 				$this->being = \Admin\Core\API::get("classShortNames", $this->being);
-			\Admin\Core\API::set("being",$this->being);
+			\Admin\Core\API::set("being", $this->being);
 			
 			$this->adapter = $this->helper->getAdapterByBeing($this->being);
-			\Admin\Core\API::set("adapter",$this->adapter);
+			\Admin\Core\API::set("adapter", $this->adapter);
 
 			$this->group = $this->helper->getGroupByBeing($this->being);
-			\Admin\Core\API::set("group",$this->group);
+			\Admin\Core\API::set("group", $this->group);
 		}
 
 		if($this->request->hasArgument("id")){
 			$this->id = $this->request->getArgument("id");
 			if(is_array($this->id))
 				$this->id = implode(",", $this->id);
-			\Admin\Core\API::set("being_id",$this->id);
 		}
 
 		$user = $this->helper->getUser();
