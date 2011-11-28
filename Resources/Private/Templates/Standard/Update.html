@@ -1,5 +1,6 @@
 <f:layout name="bootstrap" />
 {namespace a=Admin\ViewHelpers}
+
 <f:section name="actionbar-left"></f:section>
 
 <f:section name="actionbar-right">
@@ -18,16 +19,14 @@
 		</f:link.action>
 	</f:for>
 </f:section>
+
 <f:section name="content">
 	<div class="box centered">
 		<h3 class="box-header">Edit this {bein.shortName}</h3>
 		<div>
-			<f:form method="post" action="update" name="item" object="{being}" enctype="multipart/form-data" class="form-horizontal">
-				<f:form.hidden name="adapter" id="adapter" value="{being.adapter.class}"/>
-				<f:form.hidden name="being" id="being" value="{being.class}"/>
-				<f:form.hidden name="id" value="{being.id}"/>
+			<f:form method="post" action="update" name="item" object="{being.object}" enctype="multipart/form-data" class="form-horizontal">
 				
-				<a:render partial="Form" fallbacks="Partials"/>
+				<a:form being="{being}" />
 				
 				<div class="actions pull-left">
 					<f:link.action action="list" arguments="{being: being.class}" class="btn">

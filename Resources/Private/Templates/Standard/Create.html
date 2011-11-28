@@ -4,31 +4,29 @@
 <f:section name="actionbar-left"></f:section>
 
 <f:section name="actionbar-right">
-    <f:for each="{topBarActions}" as="action">
-        <f:link.action
-            class=" {action.class}"
-            action="{action.action}"
-            controller="{action.controller}"
-            package="{action.package}"
-            target="{action.target}"
-            arguments="{
-                being : being.class,
-                adapter : being.adapter.class
-            }">
-            {action}
-        </f:link.action>
-    </f:for>
+	<f:for each="{topBarActions}" as="action">
+		<f:link.action
+			class=" {action.class}"
+			action="{action.action}"
+			controller="{action.controller}"
+			package="{action.package}"
+			target="{action.target}"
+			arguments="{
+				being : being.class,
+				adapter : being.adapter.class
+			}">
+			{action}
+		</f:link.action>
+	</f:for>
 </f:section>
 
 <f:section name="content">
 	<div class="box centered">
 		<h3 class="box-header">Create a new {being.shortName}</h3>
 		<div>
-			<f:form method="post" action="create" name="item" object="{object}" enctype="multipart/form-data" class="form-horizontal">
-				<f:form.hidden name="adapter" id="adapter" value="{being.adapter.class}"/>
-				<f:form.hidden name="being" id="being" value="{being.class}"/>
-			
-				<a:render partial="Form" fallbacks="Partials"/>
+			<f:form method="post" action="create" fieldNamePrefix="item" object="{being.object}" enctype="multipart/form-data" class="form-horizontal">
+				
+				<a:form being="{being}" />
 			
 				<div class="actions pull-left">
 					<f:link.action action="list" arguments="{being: being.class}" class="btn">
