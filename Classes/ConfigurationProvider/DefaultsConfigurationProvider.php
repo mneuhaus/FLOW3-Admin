@@ -53,11 +53,13 @@ class DefaultsConfigurationProvider extends \Admin\ConfigurationProvider\YamlCon
 				$schema = $this->reflectionService->getClassSchema($being);
 				if(is_object($schema)){
 					$properties = $schema->getProperties();
+				}else{
+					$properties = array_flip($this->reflectionService->getClassPropertyNames($being));
+				}
 					foreach($properties as $property => $meta){
 						if($property == "FLOW3_Persistence_Identifier") continue;
 						$c["properties"][$property] = $propertyDefaults;
 					}
-				}
 			}
 		}
 
