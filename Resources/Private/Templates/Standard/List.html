@@ -21,32 +21,34 @@
 </f:section>
 
 <f:section name="content">
-	<a:query.filter objects="{results}">
-		<a:query.paginate objects="{filteredObjects}">
-			
-			<f:if condition="{filters}">
-			<f:then>
-				<div class="pull-right filter-sidebar">
-					<a:render partial="Filters/Right" fallbacks="Partials"/>
-				</div>
-				<div class="has-sidebar">
-					<a:render partial="Table" fallbacks="Partials" vars="{objects: paginatedObjects}"/>
-				</div>
-			</f:then>
-			<f:else>
-				<a:render partial="Table" fallbacks="Partials" vars="{objects: paginatedObjects}"/>
-			</f:else>
-			</f:if>
-		
-			<div class="pagination pull-left">
-				<a:render partial="Limits" fallbacks="Partials"/>
-				<a:render partial="VariantsSelector" fallbacks="Partials" vars="{variant: objects.0.variant, current: 'List'}"/>
+	<a:query.sort objects="{results}">
+	<a:query.filter objects="{sortedObjects}">
+	<a:query.paginate objects="{filteredObjects}">
+		<f:if condition="{filters}">
+		<f:then>
+			<div class="pull-right filter-sidebar">
+				<a:render partial="Filters/Right" fallbacks="Partials"/>
 			</div>
-			<div class="pagination pull-right">
-				<a:render partial="Pagination" fallbacks="Partials"/>
+			<div class="has-sidebar">
+		</f:then>
+		<f:else>
+		</f:else>
+			<div>
+		</f:if>
+				<a:render partial="Table" fallbacks="Partials" vars="{objects: paginatedObjects, sorting: sorting}"/>
+				
+				<div class="pagination pull-left">
+					<a:render partial="Limits" fallbacks="Partials"/>
+					<a:render partial="VariantsSelector" fallbacks="Partials" vars="{variant: objects.0.variant, current: 'List'}"/>
+				</div>
+				<div class="pagination pull-right">
+					<a:render partial="Pagination" fallbacks="Partials"/>
+				</div>
+				
 			</div>
-		</a:query.paginate>
+	</a:query.paginate>
 	</a:query.filter>
+	</a:query.sort>
 </f:section>
 
 <f:section name="post-container">

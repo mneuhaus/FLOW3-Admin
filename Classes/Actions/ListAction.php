@@ -58,12 +58,6 @@ class ListAction extends \Admin\Core\Actions\AbstractAction {
 		$this->handleBulkActions();
 		
 		$this->adapter->initQuery($being);
-		
-		$this->total = $this->adapter->getTotal($being);
-		$this->view->assign("total", $this->total);
-		
-		$this->handleSorting();
-
 		$results = $this->adapter->getQuery()->execute();
 		$this->view->assign("results", $results);
 		
@@ -93,23 +87,6 @@ class ListAction extends \Admin\Core\Actions\AbstractAction {
 				
 				$action->execute($this->being, $this->request->getArgument("bulkItems"));
 			}
-		}
-	}
-	
-	public function handleSorting(){
-		if( $this->request->hasArgument("sort") ){
-			$sortProperty = $this->request->getArgument("sort");
-			
-			if( $this->request->hasArgument("direction") )
-				$direction = $this->request->getArgument("direction");
-			else
-				$direction = "ASC";
-					
-			$this->adapter->applyOrderings($sortProperty, $direction);
-			
-			$this->view->assign("sorting", $sortProperty);
-			$this->view->assign("direction", $direction == "ASC" ? "DESC" : "ASC");
-			$this->view->assign("sortingClass", $direction == "ASC" ? "headerSortDown" : "headerSortUp");
 		}
 	}
 }

@@ -9,11 +9,11 @@
 				<a:being object="{object}">
 				<f:if condition="{loop.isFirst}">
 					<f:for each="{being.properties}" as="value" key="property">
-						<f:if condition="{sorting} == {property}">
-							<f:then><th class="{sortingClass}"></f:then>
+						<f:if condition="{sorting.property} == {property}">
+							<f:then><th class="sort-{sorting.direction}"></f:then>
 							<f:else><th></f:else>
 						</f:if>
-							<f:link.action action="list" addQueryString="true" arguments="{sort: property, direction: direction}">
+							<f:link.action action="list" addQueryString="true" arguments="{sort: property, direction: sorting.oppositeDirection}">
 								{value.label}
 							</f:link.action>
 						</th>
