@@ -83,9 +83,9 @@ class ConfigurationManager{
 	}
 	
 	public function getClassConfiguration($class){
-		$implementations = class_implements("\\" . $class);
+		$implementations = class_implements("\\" . ltrim($class, "\\"));
 		if(in_array("Doctrine\ORM\Proxy\Proxy", $implementations))
-			$class = get_parent_class("\\" . $class);
+			$class = get_parent_class("\\" . ltrim($class, "\\"));
 		
 		$this->class = $class;
 			

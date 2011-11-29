@@ -59,7 +59,7 @@ class ListAction extends \Admin\Core\Actions\AbstractAction {
 		
 		$this->adapter->initQuery($being);
 		$results = $this->adapter->getQuery()->execute();
-		$this->view->assign("results", $results);
+		$this->view->assign("objects", $results);
 		
 		// Redirect to creating a new Object if there aren't any (Clean Slate)
 		if( $results->count() < 1 ) {

@@ -21,7 +21,7 @@
 </f:section>
 
 <f:section name="content">
-	<a:query.sort objects="{results}">
+	<a:query.sort objects="{objects}">
 	<a:query.filter objects="{sortedObjects}">
 	<a:query.paginate objects="{filteredObjects}">
 		<f:if condition="{filters}">
@@ -39,7 +39,9 @@
 				
 				<div class="pagination pull-left">
 					<a:render partial="Limits" fallbacks="Partials"/>
-					<a:render partial="VariantsSelector" fallbacks="Partials" vars="{variant: objects.0.variant, current: 'List'}"/>
+					<a:being className="{className}">
+						<a:render partial="VariantsSelector" fallbacks="Partials" vars="{variant: being.variant, current: 'List'}"/>
+					</a:being>
 				</div>
 				<div class="pagination pull-right">
 					<a:render partial="Pagination" fallbacks="Partials"/>
