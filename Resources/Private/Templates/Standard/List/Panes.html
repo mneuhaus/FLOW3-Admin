@@ -10,7 +10,7 @@
 			controller="{action.controller}"
 			package="{action.package}"
 			target="{action.target}"
-			being="{objects.0.class}">
+			being="{className}">
 			{action}
 		</a:link>
 	</f:for>
@@ -18,7 +18,8 @@
 
 <f:section name="content">
 	<div class="left-pane" data-height="fixed">
-		<f:for each="{objects}" as="being" iteration="iterator">
+		<f:for each="{objects}" as="object" iteration="iterator">
+		<a:being object="{object}">
 		<div class="pane-item">
 			<img src="{being.variantMapping.image}" width="40px"/>
 			<h3><f:format.crop maxCharacters="26">{being.variantMapping.title}</f:format.crop></h3>
@@ -28,6 +29,7 @@
 				<a:render partial="PaneContent" fallbacks="Partials" vars="{being: being}"/>
 			</div>
 		</div>
+		</a:being>
 		</f:for>
 	</div>
 	<div class="right-pane">

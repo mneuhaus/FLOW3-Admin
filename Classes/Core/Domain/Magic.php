@@ -210,54 +210,57 @@ abstract class Magic {
 	}
 	
 	public function __toString(){
-		$myProperties = get_object_vars($this);
-		$strings = array();
-		foreach ($myProperties as $key => $value) {
-			if(is_string($value) && $key !== "FLOW3_Persistence_Identifier"){
-				$strings[] = $value;
-			}
-		}
-		if(!is_object($this->objectManager)){
-			return implode(", ", $strings);
-		}
+		if(is_object($this->objectManager)){
+			$reflectionService = $this->objectManager->get("TYPO3\FLOW3\Reflection\ReflectionService");
+			$class = get_class($this);
+			if($this instanceof \Doctrine\ORM\Proxy\Proxy)
+				$class = get_parent_class($this);
 		
-		$reflectionService = $this->objectManager->get("TYPO3\FLOW3\Reflection\ReflectionService");
-		$class = get_class($this);
-		if($this instanceof \Doctrine\ORM\Proxy\Proxy)
-			$class = get_parent_class($this);
-		
-		$properties = $reflectionService->getClassPropertyNames($class);
-		$identity = array();
-		$title = array();
-		$goodGuess = null;
-		$usualSuspects = array("title","name");
-		foreach($properties as $property){
-			$tags = $reflectionService->getPropertyTagsValues($class,$property);
-			if(in_array("title",array_keys($tags))){
-				$title[] = \TYPO3\FLOW3\Reflection\ObjectAccess::getProperty($this,$property);
-			}
+			$properties = $reflectionService->getClassPropertyNames($class);
+			$identity = array();
+			$title = array();
+			$goodGuess = null;
+			$usualSuspects = array("title","name");
+			foreach($properties as $property){
+				$tags = $reflectionService->getPropertyTagsValues($class,$property);
+				if(in_array("title",array_keys($tags))){
+					$title[] = \TYPO3\FLOW3\Reflection\ObjectAccess::getProperty($this,$property);
+				}
 			
-			if(in_array("identity",array_keys($tags))){
-				$value = \TYPO3\FLOW3\Reflection\ObjectAccess::getProperty($this,$property);
-				if(!is_object($value))
-					$identity[] = $value;
+				if(in_array("identity",array_keys($tags))){
+					$value = \TYPO3\FLOW3\Reflection\ObjectAccess::getProperty($this,$property);
+					if(!is_object($value))
+						$identity[] = $value;
+				}
+		
+				if(in_array($property,$usualSuspects) && $goodGuess === null){
+					$value = \TYPO3\FLOW3\Reflection\ObjectAccess::getProperty($this,$property);
+					if(!is_object($value))
+						$goodGuess[] = $value;
+				}
 			}
 		
-			if(in_array($property,$usualSuspects) && $goodGuess === null){
-				$value = \TYPO3\FLOW3\Reflection\ObjectAccess::getProperty($this,$property);
-				if(!is_object($value))
-					$goodGuess[] = $value;
+			if(count($title)>0)
+				$string = implode(", ",$title);
+			if(count($identity)>0 && empty($string))
+				$string = implode(", ",$identity);
+			if($goodGuess !== null && empty($string))
+				$string = implode(",", $goodGuess);
+		}else{
+			$myProperties = get_object_vars($this);
+			$strings = array();
+			foreach ($myProperties as $key => $value) {
+				if(is_string($value) && $key !== "FLOW3_Persistence_Identifier"){
+					$strings[] = $value;
+				}
 			}
+			$string = implode(", ", $strings);
 		}
-		
-		if(count($title)>0)
-			return implode(", ",$title);
-		if(count($identity)>0)
-			return implode(", ",$identity);
-		if($goodGuess !== null)
-			return implode(",", $goodGuess);
-		
-		return "please implement __toString()!";
+			
+		if(empty($string))
+			return sprintf("Object (%s)", \Admin\Core\Helper::getShortName(get_class($this)));
+		else
+			return $string;
 	}
 
 	public function getPropertyName($property = null){

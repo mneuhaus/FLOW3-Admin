@@ -144,9 +144,19 @@ class Helper {
 		return $adapters;
 	}
 	
-	public function getBeing($class){
+	public function getBeing($mixed){
+		if(is_object($mixed)){
+			$object = $mixed;
+			$class = get_class($mixed);
+		}else{
+			$class = $mixed;
+		}
 		$being = new \Admin\Core\Being($this->getAdapterByBeing($class));
 		$being->setClass($class);
+		
+		if(isset($object))
+			$being->setObject($object);
+			
 		return $being;
 	}
 	

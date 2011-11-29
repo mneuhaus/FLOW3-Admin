@@ -83,7 +83,12 @@ class ConfigurationManager{
 	}
 	
 	public function getClassConfiguration($class){
+		$implementations = class_implements("\\" . ltrim($class, "\\"));
+		if(in_array("Doctrine\ORM\Proxy\Proxy", $implementations))
+			$class = get_parent_class("\\" . ltrim($class, "\\"));
+		
 		$this->class = $class;
+			
 		if(isset($this->settings["ConfigurationProvider"]) && !isset($this->runtimeCache[$class])){
 			$configuration = array();
 			$configurationProviders = $this->settings["ConfigurationProvider"];

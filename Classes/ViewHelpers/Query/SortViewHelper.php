@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\Core;
+namespace Admin\ViewHelpers\Query;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the FLOW3 framework.                            *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License as published by the *
@@ -26,55 +26,67 @@ use Doctrine\ORM\Mapping as ORM;
 use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
- * represents a filter
- * 
  * @version $Id: ForViewHelper.php 3346 2009-10-22 17:26:10Z k-fish $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @FLOW3\Scope("prototype")
  */
-class Filter{
-    protected $properties = array();
+class SortViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	/**
-	 * @var boolean
+	 * @var \TYPO3\FLOW3\Configuration\ConfigurationManager
+	 * @FLOW3\Inject
 	 */
-	public $clear = true;
-
-    public function __toString(){
-        $property = current($this->properties);
-        if(is_object($property))
-            return $property->name;
-        
-        return "";
-    }
-
-    public function getInputName(){
-        $property = current($this->properties);
-        $parts = explode("[",$property->getInputName());
-        $parts[0] = "filters";
-        return implode("[",$parts);
-    }
-
-    public function getProperties() {
-        return $this->properties;
-    }
-
-    public function setProperties($properties) {
-        $this->properties = $properties;
-    }
-
-    public function addProperty($property) {
-        $this->properties[$property->getString()] = $property;
-		if($property->selected)
-			$this->clear = false;
-    }
-
-	public function getClearArguments(){
-		return array(
-			"filters" => array(
-				$this->__toString() => ""
-			)
-		);
+	protected $configurationManager;
+	
+	/**
+	 * @var \Admin\Core\Helper
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 * @FLOW3\Inject
+	 */
+	protected $helper;
+	
+	/**
+	 *
+	 * @param mixed $objects
+	 * @param string $as
+	 * @param string $sortingAs
+	 * @return string Rendered string
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 * @api
+	 */
+	public function render($objects = null, $as = "sortedObjects", $sortingAs = "sorting") {
+		$this->objects = $objects;
+		$this->query = $objects->getQuery();
+		
+		$this->request = $this->controllerContext->getRequest();
+		
+		$sorting = array();
+		if( $this->request->hasArgument("sort") ){
+			$property = $this->request->getArgument("sort");
+			
+			if( $this->request->hasArgument("direction") )
+				$direction = $this->request->getArgument("direction");
+			else
+				$direction = "DESC";
+			
+			$this->query->setOrderings(array(
+				$property => $direction
+			));
+			
+			$sorting = array(
+				"property" => $property,
+				"direction"=> $direction,
+				"oppositeDirection"=> $direction == "ASC" ? "DESC" : "ASC"
+			);
+		}
+		
+		$this->templateVariableContainer->add($sortingAs, $sorting);
+		$this->templateVariableContainer->add($as, $this->query->execute());
+		$content = $this->renderChildren();
+		$this->templateVariableContainer->remove($sortingAs);
+		$this->templateVariableContainer->remove($as);
+		
+		return $content;
 	}
 }
 

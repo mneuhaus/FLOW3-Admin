@@ -49,7 +49,7 @@ class CreateAction extends \Admin\Core\Actions\AbstractAction {
 	public function __toString(){
 		return "New";
 	}
-
+	
 	/**
 	 * Create objects
 	 *
@@ -67,8 +67,7 @@ class CreateAction extends \Admin\Core\Actions\AbstractAction {
 				$this->controller->addLog();
 				
 				$arguments = array(
-					"being" => $being,
-					"adapter" => get_class($this->adapter)
+					"being" => $being
 				);
 				$this->controller->redirect('list', NULL, NULL, $arguments);
 			}else {

@@ -16,7 +16,7 @@
 			controller="{action.controller}"
 			package="{action.package}"
 			target="{action.target}"
-			being="{objects.0.class}">
+			being="{className}">
 			{action}
 		</a:link>
 	</f:for>
@@ -48,7 +48,8 @@
 					},
 					editable: true,
 					events: [
-					    <f:for each="{objects}" as="being" iteration="iterator">
+					    <f:for each="{objects}" as="object" iteration="iterator">
+						<a:being object="{object}">
 					    {
 					    	title: '<f:format.raw value="{being.variantMapping.title}" />',
 					    	
@@ -70,6 +71,7 @@
 					    		<f:then>}</f:then>
 					    		<f:else>},</f:else>
 					    	</f:if>
+						</a:being>
 					    </f:for>
 					]
 				});
@@ -83,7 +85,9 @@
 	</a:widgetResources>
 	<div id='calendar'></div>
 	<div class="pagination pull-left">
-		<a:render partial="VariantsSelector" fallbacks="Partials" vars="{variant: objects.0.variant, current: 'Calendar'}"/>
+		<a:being className="{className}">
+			<a:render partial="VariantsSelector" fallbacks="Partials" vars="{variant: being.variant, current: 'Calendar'}"/>
+		</a:being>
 	</div>
 </f:section>
 

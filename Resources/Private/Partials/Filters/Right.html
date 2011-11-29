@@ -1,0 +1,21 @@
+{namespace a=Admin\ViewHelpers}
+
+<f:for each="{filters}" as="options" key="filter">
+<h3>{filter}</h3>
+<ul>
+		<f:if condition="{options.clear}">
+		<f:then><li class="active"></f:then>
+		<f:else><li></f:else>
+		</f:if>
+			<f:link.action action="list" addQueryString="true" arguments="{options.clearArguments}">All</f:link.action>
+		</li>
+	<f:for each="{options.properties}" as="property" key="name">
+		<f:if condition="{property.selected}">
+		<f:then><li class="active"></f:then>
+		<f:else><li></f:else>
+		</f:if>
+			<f:link.action action="list" addQueryString="true" arguments="{property.filterArguments}">{name}</f:link.action>
+		</li>
+	</f:for>
+</ul>
+</f:for>

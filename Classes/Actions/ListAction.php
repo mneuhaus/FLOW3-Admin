@@ -51,28 +51,19 @@ class ListAction extends \Admin\Core\Actions\AbstractAction {
 	 * */
 	public function execute($being, $ids = null) {
 		$this->being = $being;
-		
+		$this->view->assign('className', $being);
+
 		$this->settings = $this->getSettings();
 		
 		$this->handleBulkActions();
 		
 		$this->adapter->initQuery($being);
-		
-		$this->total = $this->adapter->getTotal($being);
-		$this->view->assign("total", $this->total);
-		
-		$this->handleSorting();
-		$this->handleLimits();
-		$this->handlePagination();
-		$this->handleFilters();
-		
-		$beings = $this->adapter->getBeings($this->being);
-		
-		$this->view->assign("objects", $beings);
+		$results = $this->adapter->getQuery()->execute();
+		$this->view->assign("objects", $results);
 		
 		// Redirect to creating a new Object if there aren't any (Clean Slate)
-		if( count($beings) < 1 ) {
-			$arguments = array("being" => \Admin\Core\API::get("classShortNames", $being), "adapter" => get_class($this->adapter));
+		if( $results->count() < 1 ) {
+			$arguments = array("being" => \Admin\Core\API::get("classShortNames", $being));
 			$this->controller->redirect("create", NULL, NULL, $arguments);
 		}
 		
@@ -96,105 +87,6 @@ class ListAction extends \Admin\Core\Actions\AbstractAction {
 				
 				$action->execute($this->being, $this->request->getArgument("bulkItems"));
 			}
-		}
-	}
-
-	public function handleLimits(){
-		
-		$limits = array();
-		foreach ($this->settings["Limits"] as $limit) {
-			$limits[$limit] = false;
-		}
-		
-		if($this->request->hasArgument("limit"))
-			$this->limit = $this->request->getArgument("limit");
-		else
-			$this->limit = $this->settings["Default"];
-		
-		$unset = false;
-		foreach ($limits as $key => $value) {
-			$limits[$key] = ($this->limit == $key);
-			
-			if(!$unset && intval($key) >= intval($this->total)){
-				$unset = true;
-				continue;
-			}
-			if($unset)
-				unset($limits[$key]);
-		}
-		
-		if(count($limits) == 1)
-			$limits = array();
-		
-		$this->view->assign("limits", $limits);
-		$this->adapter->applyLimit($this->limit);
-	}
-	
-	public function handlePagination(){
-		$currentPage = 1;
-		
-		if( $this->request->hasArgument("page") )
-			$currentPage = $this->request->getArgument("page");
-		
-		$pages = array();
-		for($i=0; $i < ($this->total / $this->limit); $i++) { 
-			$pages[] = $i + 1;
-		}
-		
-		if($currentPage > count($pages))
-			$currentPage = count($pages);
-		
-		$offset = ($currentPage - 1) * $this->limit;
-		$offset = $offset < 0 ? 0 : $offset;
-		$this->adapter->applyOffset($offset);
-		$this->view->assign("offset", $offset);
-		
-		if(count($pages) > 1){
-			$this->view->assign("currentpage", $currentPage);
-		
-			if($currentPage < count($pages))
-				$this->view->assign("nextpage", $currentPage + 1);
-			
-			if($currentPage > 1)
-				$this->view->assign("prevpage", $currentPage - 1);
-			
-			if(count($pages) > $this->settings["MaxPages"]){
-				$max = $this->settings["MaxPages"];
-				$start = $currentPage - ( ($max + ($max % 2) ) / 2);
-				$start = $start > 0 ? $start : 0;
-				$start = $start > 0 ? $start : 0;
-				$start = $start + $max > count($pages) ? count($pages) - $max : $start;
-				$pages = array_slice($pages, $start, $max);
-			}
-			
-			$this->view->assign("pages", $pages);
-		}
-	}
-	
-	public function handleSorting(){
-		if( $this->request->hasArgument("sort") ){
-			$sortProperty = $this->request->getArgument("sort");
-			
-			if( $this->request->hasArgument("direction") )
-				$direction = $this->request->getArgument("direction");
-			else
-				$direction = "ASC";
-					
-			$this->adapter->applyOrderings($sortProperty, $direction);
-			
-			$this->view->assign("sorting", $sortProperty);
-			$this->view->assign("direction", $direction == "ASC" ? "DESC" : "ASC");
-			$this->view->assign("sortingClass", $direction == "ASC" ? "headerSortDown" : "headerSortUp");
-		}
-	}
-	
-	public function handleFilters(){
-		if( $this->request->hasArgument("filter") ) {
-			$filters = $this->request->getArgument("filters");
-			$this->adapter->applyFilters($filters);
-			$this->view->assign("filters", $this->adapter->getFilter($this->being, $filters));
-		}else {
-			$this->view->assign("filters", $this->adapter->getFilter($this->being));
 		}
 	}
 }

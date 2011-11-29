@@ -57,38 +57,40 @@ class AnnotationConfigurationProvider extends \Admin\Core\ConfigurationProvider\
 			if(is_object($schema)){
 				if(!isset($c["repository"]))
 					$c["repository"] = array(new \Admin\Annotations\Repository(array("class" => $schema->getRepositoryClassName())));
-				
-				foreach($schema->getProperties() as $property => $meta){
-					if($property == "FLOW3_Persistence_Identifier") continue;
-					$c["properties"][$property] = array();
-					
-						
-					// Load legacy Annotations like @var,...
-					foreach ($this->reflectionService->getPropertyTagsValues($class, $property) as $shortName => $tags) {
-						if(!isset($c["properties"][$property])) $c["properties"][$property] = array();
-						
-						$c["properties"][$property][$shortName] = $tags;
-					}
-					
-					
-					// $c["properties"][$property]["type"] = array(
-					// 	new \Admin\Annotations\Type(array(
-					// 		"name" => $meta["type"],
-					// 		"subtype" => $meta["elementType"],
-					// 	))
-					// );
-					
-					
-					// Load Annotations and override legacy Annotations
-					$annotations = $this->reflectionService->getPropertyAnnotations($class, $property);
-					foreach ($annotations as $key => $objects) {
-						$shortName = $this->convertAnnotationName($key);
-						if(!isset($c["properties"][$property])) $c["properties"][$property] = array();
-					
-						$c["properties"][$property][$shortName] = $objects;
-					}
-				};
+				$properties = $schema->getProperties();
+			}else{
+				$properties = array_flip($this->reflectionService->getClassPropertyNames($class));
 			}
+			foreach($properties as $property => $meta){
+				if($property == "FLOW3_Persistence_Identifier") continue;
+				$c["properties"][$property] = array();
+				
+					
+				// Load legacy Annotations like @var,...
+				foreach ($this->reflectionService->getPropertyTagsValues($class, $property) as $shortName => $tags) {
+					if(!isset($c["properties"][$property])) $c["properties"][$property] = array();
+					
+					$c["properties"][$property][$shortName] = $tags;
+				}
+				
+				
+				// $c["properties"][$property]["type"] = array(
+				// 	new \Admin\Annotations\Type(array(
+				// 		"name" => $meta["type"],
+				// 		"subtype" => $meta["elementType"],
+				// 	))
+				// );
+				
+				
+				// Load Annotations and override legacy Annotations
+				$annotations = $this->reflectionService->getPropertyAnnotations($class, $property);
+				foreach ($annotations as $key => $objects) {
+					$shortName = $this->convertAnnotationName($key);
+					if(!isset($c["properties"][$property])) $c["properties"][$property] = array();
+				
+					$c["properties"][$property][$shortName] = $objects;
+				}
+			};
 		}
 		
 		return $c;
