@@ -32,29 +32,30 @@ There are 2 Ways to Configure the Admin Interface:
 
 **Settings.yaml**::
 
-	Doctrine:
-		Beings: 
-			\TYPO3\Blog\Domain\Model\Post:
-				autoadmin: true 
-				properties:
-					content:
-						widget: TextArea
+    Admin:
+        Beings: 
+            \TYPO3\Blog\Domain\Model\Post:
+                Active: true 
+                Properties:
+                    content:
+                        Widget: TextArea
 
 This Example Activates the Post model of the Blog Example (autoadmin:true) and Changes the Widget for the Content Property from a simple Textfield to a Textarea
 
 **Class Reflections**::
 
-	/**
-	 * A blog post
-	 * ...
-	 * @Admin\Annotations\Active 
-	 */
-	class Post { 
-		/**
-		 * @var string
-		 * @Admin\Annotations\Widget("TextArea")
-		 */
-		protected $content; 
-	}
+    use Admin\Annotations as Admin;
+    /**
+     * A blog post
+     * ...
+     * @Admin\Active 
+     */
+    class Post { 
+        /**
+         * @var string
+         * @Admin\Widget("TextArea")
+         */
+        protected $content;
+    }
 
-This Example Does the exact same thing as the Settings.yaml Example but this time inside the Post.php file with the Tag @Admin\Annotations\Active and @Admin\Annotations\Widget TextArea
+This Example Does the exact same thing as the Settings.yaml Example but this time inside the Post.php file with the Tag @Admin\Active and @Admin\Widget("TextArea")

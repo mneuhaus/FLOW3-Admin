@@ -18,11 +18,16 @@
   <ul>
 <li><a class="reference internal" href="#">ViewHelpers</a><ul>
 <li><a class="reference internal" href="#apiviewhelper">ApiViewHelper</a></li>
+<li><a class="reference internal" href="#beingviewhelper">BeingViewHelper</a></li>
 <li><a class="reference internal" href="#dashboardwidgets">DashboardWidgets</a></li>
+<li><a class="reference internal" href="#formviewhelper">FormViewHelper</a></li>
+<li><a class="reference internal" href="#filterviewhelper">FilterViewHelper</a></li>
 <li><a class="reference internal" href="#layoutviewhelper">LayoutViewHelper</a></li>
 <li><a class="reference internal" href="#navigationviewhelper">NavigationViewHelper</a></li>
+<li><a class="reference internal" href="#paginationviewhelper">PaginationViewHelper</a></li>
 <li><a class="reference internal" href="#renderviewhelper">RenderViewHelper</a></li>
 <li><a class="reference internal" href="#settingsviewhelper">SettingsViewHelper</a></li>
+<li><a class="reference internal" href="#sortviewhelper">SortViewHelper</a></li>
 <li><a class="reference internal" href="#userviewhelper">UserViewHelper</a></li>
 </ul>
 </li>
@@ -50,9 +55,54 @@
 <dd>specifies the variable which will contain the result</dd>
 </dl>
 </div>
+<div class="section" id="beingviewhelper">
+<h2>BeingViewHelper<a class="headerlink" href="#beingviewhelper" title="Permalink to this headline">¶</a></h2>
+<p>This ViewHelper converts an regular Object to a so called Being with all Annotations, properties etc</p>
+<dl class="docutils">
+<dt>class</dt>
+<dd>class to construct a being from</dd>
+<dt>object</dt>
+<dd>object to construct a being from</dd>
+</dl>
+</div>
 <div class="section" id="dashboardwidgets">
 <h2>DashboardWidgets<a class="headerlink" href="#dashboardwidgets" title="Permalink to this headline">¶</a></h2>
-<p>This ViewHelper renders the currently active Widgets</p>
+<p>This ViewHelper renders the currently active Widgets.</p>
+</div>
+<div class="section" id="formviewhelper">
+<h2>FormViewHelper<a class="headerlink" href="#formviewhelper" title="Permalink to this headline">¶</a></h2>
+<p>This ViewHelper renders a form for a being. This ViewHelper doesn&#8217;t render the form tag itself!</p>
+<dl class="docutils">
+<dt>being</dt>
+<dd>being to render the form for</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-python"><pre>&lt;f:form method="post" action="form" fieldNamePrefix="form"&gt;
+    &lt;a:being className="AdminDemo\Domain\Model\Address" as="being"&gt;
+        &lt;a:form being="{ being}" /&gt;
+    &lt;/a:being&gt;
+&lt;/f:form&gt;</pre>
+</div>
+</div>
+<div class="section" id="filterviewhelper">
+<h2>FilterViewHelper<a class="headerlink" href="#filterviewhelper" title="Permalink to this headline">¶</a></h2>
+<p>This ViewHelper can be used to filter objects</p>
+<dl class="docutils">
+<dt>objects</dt>
+<dd>the objects that should be sorted</dd>
+<dt>as</dt>
+<dd>variable for the filtered objects. By Default: filteredObjects</dd>
+<dt>filtersAs</dt>
+<dd>variable for the filters. By Default: filters</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-python"><pre>&lt;a:query.filter objects="{ objects}"&gt;
+    &lt;f:for each="{ filteredObjects}" as="object"&gt;
+        ...
+    &lt;/f:for&gt;
+    &lt;a:render partial="Filters/Right" fallbacks="Partials"/&gt;
+&lt;/a:query.paginate&gt;</pre>
+</div>
 </div>
 <div class="section" id="layoutviewhelper">
 <h2>LayoutViewHelper<a class="headerlink" href="#layoutviewhelper" title="Permalink to this headline">¶</a></h2>
@@ -63,6 +113,9 @@
 <dt>package</dt>
 <dd>name of the package to look for the layout</dd>
 </dl>
+<p>Example:</p>
+<div class="highlight-python"><pre>&lt;a:layout name="Bootstrap" package="Admin"/&gt;</pre>
+</div>
 </div>
 <div class="section" id="navigationviewhelper">
 <h2>NavigationViewHelper<a class="headerlink" href="#navigationviewhelper" title="Permalink to this headline">¶</a></h2>
@@ -73,6 +126,42 @@
 <dt>as</dt>
 <dd>specifies the variable which will contain the navigation items</dd>
 </dl>
+<p>Example:</p>
+<div class="highlight-python"><pre>&lt;ul&gt;
+&lt;a:navigation position="top" as="navItem"&gt;
+    &lt;li&gt;&lt;a href="{ navItem.link}"&gt;{ navItem.name}&lt;/a&gt;&lt;/li&gt;
+&lt;/a:navigation&gt;
+&lt;/ul&gt;</pre>
+</div>
+</div>
+<div class="section" id="paginationviewhelper">
+<h2>PaginationViewHelper<a class="headerlink" href="#paginationviewhelper" title="Permalink to this headline">¶</a></h2>
+<p>This is a simple pagination ViewHelper to limit and paginate objects</p>
+<dl class="docutils">
+<dt>objects</dt>
+<dd>the objects that should be paginated</dd>
+<dt>as</dt>
+<dd>variable for the paginated objects. By Default: paginatedObjects</dd>
+<dt>limitsAs</dt>
+<dd>variable for the limits. By Default: limits</dd>
+<dt>paginationAs</dt>
+<dd>variable for the pagination. By Default: pagination</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-python"><pre>&lt;a:query.paginate objects="{ objects}"&gt;
+    &lt;f:for each="{ paginatedObjects}" as="object"&gt;
+        ...
+    &lt;/f:for&gt;
+
+    &lt;div class="pagination pull-left"&gt;
+        &lt;a:render partial="Limits" fallbacks="Partials"/&gt;
+    &lt;/div&gt;
+
+    &lt;div class="pagination pull-right"&gt;
+        &lt;a:render partial="Pagination" fallbacks="Partials"/&gt;
+    &lt;/div&gt;
+&lt;/a:query.paginate&gt;</pre>
+</div>
 </div>
 <div class="section" id="renderviewhelper">
 <h2>RenderViewHelper<a class="headerlink" href="#renderviewhelper" title="Permalink to this headline">¶</a></h2>
@@ -83,6 +172,14 @@
 <dt>fallbacks</dt>
 <dd>with this function you can specify an fallback path from the settings to search for the partial in conjunction with the vars parameter</dd>
 </dl>
+<p>Examples(Partial):</p>
+<div class="highlight-python"><pre>&lt;a:render partial="Pagination" fallbacks="Partials"/&gt;</pre>
+</div>
+<p>Examples(Section):</p>
+<div class="highlight-python"><pre>&lt;a:render section='container' optional="true"&gt;
+    Content to be rendered when this section isn't overidden
+&lt;/a:render&gt;</pre>
+</div>
 </div>
 <div class="section" id="settingsviewhelper">
 <h2>SettingsViewHelper<a class="headerlink" href="#settingsviewhelper" title="Permalink to this headline">¶</a></h2>
@@ -91,6 +188,28 @@
 <dt>path</dt>
 <dd>specifies the path to the setting</dd>
 </dl>
+</div>
+<div class="section" id="sortviewhelper">
+<h2>SortViewHelper<a class="headerlink" href="#sortviewhelper" title="Permalink to this headline">¶</a></h2>
+<p>This ViewHelper can be used to sort objects</p>
+<dl class="docutils">
+<dt>objects</dt>
+<dd>the objects that should be sorted</dd>
+<dt>as</dt>
+<dd>variable for the sorted objects. By Default: sortedObjects</dd>
+<dt>sortingAs</dt>
+<dd>variable for the sorting. By Default: sorting</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-python"><pre>&lt;a:query.sort objects="{ objects}"&gt;
+    &lt;f:link.action addQueryString="true" arguments="{sort: 'title', direction: sorting.oppositeDirection"&gt;
+        Sort by title
+    &lt;/f:link.action&gt;
+    &lt;f:for each="{ sortedObjects}" as="object"&gt;
+        ...
+    &lt;/f:for&gt;
+&lt;/a:query.paginate&gt;</pre>
+</div>
 </div>
 <div class="section" id="userviewhelper">
 <h2>UserViewHelper<a class="headerlink" href="#userviewhelper" title="Permalink to this headline">¶</a></h2>

@@ -2,44 +2,43 @@ Property Configurations
 #######################
 
 
+Filter
+******
+By Tagging a Property with this Tag the Admin Interface will try to provide a Selectbox to Filter the List View by the Possible Values of this Property
+
+**Class Reflection**::
+
+    /**
+     * @var string 
+     * @Admin\Annotations\Filter
+     */
+    protected $author;
+
+**YAML**::
+
+    TYPO3\Blog\Domain\Model\Blog: 
+        Properties:
+            Author: 
+                Filter: true
+
 Label
 *****
 With this Tag you can set the Label for a Property which is by Default a CamelCased version of the propertyname
 
 **Class Reflection**::
 
-	/**
-	 * @var string
-	 * @Admin\Annotations\Label("Post Title")
-	 */
-	 protected $title;
+    /**
+     * @var string
+     * @Admin\Annotations\Label("Post Title")
+     */
+     protected $title;
 
 **YAML**::
 
-	TYPO3\Blog\Domain\Model\Post: 
-		Properties:
-			Title:
-				Label: Post Title
-
-
-Widget
-******
-Instead of the automatically Assigned Widget you can use this Tag to specify a specific Widget.
-
-**Class Reflection**::
-
-	/**
-	 * @var string
-	 * @Admin\Annotations\Widget("TextArea")
-	 */
-	 protected $content;
-
-**YAML**::
-
-	TYPO3\Blog\Domain\Model\Post: 
-		Properties:
-			Content:
-				Widget: TextArea
+    TYPO3\Blog\Domain\Model\Post: 
+        Properties:
+            Title:
+                Label: Post Title
 
 Ignore
 ******
@@ -49,54 +48,54 @@ Ignore the Property Completly
 =============================
 **Class Reflection**::
 
-	/**
-	 * @var string
-	 * @Admin\Annotations\Ignore 
-	 */
-	protected $id;
-	
+    /**
+     * @var string
+     * @Admin\Annotations\Ignore 
+     */
+    protected $id;
+    
 **YAML**::
 
-	TYPO3\Blog\Domain\Model\Post: 
-		Properties:
-			Id:
-				Ignore: true
+    TYPO3\Blog\Domain\Model\Post: 
+        Properties:
+            Id:
+                Ignore: true
 
 Ignore the Property in specific Views
 =====================================
 **Class Reflection**::
 
-	/**
-	 * @var string
-	 * @Admin\Annotations\Ignore list,view */
-	protected $content;
+    /**
+     * @var string
+     * @Admin\Annotations\Ignore list,view */
+    protected $content;
 
 
 **YAML**::
 
-	TYPO3\Blog\Domain\Model\Post: 
-		Properties:
-			Content:
-				Ignore: list,view
-				
+    TYPO3\Blog\Domain\Model\Post: 
+        Properties:
+            Content:
+                Ignore: list,view
+                
 Infotext
 ********
 For more Information about a Property aside from the Title you can provide an Infotext that will be shown beside/below the Input Widgets in the Create and Update Views
 
 **Class Reflection**::
 
-	/**
-	 * @var string
-	 * @Admin\Annotations\InfoText("Please tell us who you are")
-	 */
-	protexted $author;
+    /**
+     * @var string
+     * @Admin\Annotations\InfoText("Please tell us who you are")
+     */
+    protexted $author;
 
 **YAML**::
 
-	TYPO3\Blog\Domain\Model\Post: 
-		Properties:
-			Author:
-				Infotext: Please tell us who you are
+    TYPO3\Blog\Domain\Model\Post: 
+        Properties:
+            Author:
+                Infotext: Please tell us who you are
 
 Inline
 ********
@@ -106,72 +105,61 @@ Make sure to add "cascade={"all"}" to your ORM relation, because otherwise you'l
 
 **Class Reflection**::
 
-	/**
-	 * @var \AdminDemo\Domain\Model\Address
-	 * @ORM\ManyToOne(cascade={"all"})
-	 * @Admin\Inline()
-	 */
-	protected $address;
+    /**
+     * @var \AdminDemo\Domain\Model\Address
+     * @ORM\ManyToOne(cascade={"all"})
+     * @Admin\Inline()
+     */
+    protected $address;
 
 **YAML**::
 
-	TYPO3\Blog\Domain\Model\Post: 
-		Properties:
-			Address:
-				Inline: True
+    TYPO3\Blog\Domain\Model\Post: 
+        Properties:
+            Address:
+                Inline: True
 
-Class
-*****
-Adds one or more Classes to the Input Widget
+
+OptionsProvider
+***************
 
 **Class Reflection**::
 
-	/**
-	 * @string
-	 * @Admin\Annotations\Class("content")
-	 */
-	protected $content;
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection<\Admin\Security\Policy>
+     * @Admin\Annotations\OptionsProvider("\Admin\OptionsProvider\PolicyOptionsProvider")
+     */
+    protected $grant;
 
 **YAML**::
 
-	TYPO3\Blog\Domain\Modle\Post: 
-		Properties:
-			Content:
-				Class: content
+    TYPO3\Blog\Domain\Model\Blog: 
+        Properties:
+            Grant: 
+                OptionsProvider: \Admin\OptionsProvider\PolicyOptionsProvider 
 
-Validate
-********
-Please Check the FLOW3 Documentation for the Validation rule: 
-http://flow3.typo3.org/documentation/guide/partii/validation.html
 
-Variant
-********
-Variants are different Variations for a similar use-case.
-Included are Variants for the InlineEditing:
-
-Default
-	The default Stacked Form-View
-
-Tabular
-	In this variant the inputs are aligned in a table to take up less space.
+Representation
+**************
+Through this option you can set options for the Representation of an property.
+Currently it is only used for the datetimeFormat
 
 **Class Reflection**::
 
-	/**
-	 * @var \AdminDemo\Domain\Model\Address
-	 * @ORM\ManyToOne(cascade={"all"})
-	 * @Admin\Inline()
-	 * @Admin\Variant("Tabular")
-	 */
-	protected $address;
+    /**
+     * @var \Datetime
+      * @Admin\Representation(datetimeFormat="Y-m-d")
+     */
+    protected $date;
 
 **YAML**::
 
-	TYPO3\Blog\Domain\Model\Post: 
-		Properties:
-			Address:
-				Inline: True
-				Variant: Tabular
+    Admin\Domain\Model\Widgets: 
+        Properties:
+            date: 
+                Repesentation: 
+                    datetimeFormat: Y-m-d
+
 
 Title
 *****
@@ -187,55 +175,72 @@ The MagicModel will try the following things to determine a title:
 
 **Class Reflection**::
 
-	/**
-	 * @var string 
-	 * @Admin\Annotations\Title
-	 */
-	protected $title;
+    /**
+     * @var string 
+     * @Admin\Annotations\Title
+     */
+    protected $title;
 
 **YAML**::
 
-	TYPO3\Blog\Domain\Model\Post: 
-		Properties:
-			Title: 
-				Title: true
+    TYPO3\Blog\Domain\Model\Post: 
+        Properties:
+            Title: 
+                Title: true
 
 First thing that matches will be used in the Order specified
 
 
-Filter
+Validate
+********
+Please Check the FLOW3 Documentation for the Validation rule: 
+http://flow3.typo3.org/documentation/guide/partii/validation.html
+
+Variant
+********
+Variants are different Variations for a similar use-case.
+Included are Variants for the InlineEditing:
+
+Default
+    The default Stacked Form-View
+
+Tabular
+    In this variant the inputs are aligned in a table to take up less space.
+
+**Class Reflection**::
+
+    /**
+     * @var \AdminDemo\Domain\Model\Address
+     * @ORM\ManyToOne(cascade={"all"})
+     * @Admin\Inline()
+     * @Admin\Variant("Tabular")
+     */
+    protected $address;
+
+**YAML**::
+
+    TYPO3\Blog\Domain\Model\Post: 
+        Properties:
+            Address:
+                Inline: True
+                Variant: Tabular
+
+
+Widget
 ******
-By Tagging a Property with this Tag the Admin Interface will try to provide a Selectbox to Filter the List View by the Possible Values of this Property
+Instead of the automatically Assigned Widget you can use this Tag to specify a specific Widget.
 
 **Class Reflection**::
 
-	/**
-	 * @var string 
-	 * @Admin\Annotations\Filter
-	 */
-	protected $author;
+    /**
+     * @var string
+     * @Admin\Annotations\Widget("TextArea")
+     */
+     protected $content;
 
 **YAML**::
 
-	TYPO3\Blog\Domain\Model\Blog: 
-		Properties:
-			Author: 
-				Filter: true
-
-OptionsProvider
-***************
-
-**Class Reflection**::
-
-	/**
-	 * @var \Doctrine\Common\Collections\ArrayCollection<\Admin\Security\Policy>
-	 * @Admin\Annotations\OptionsProvider("\Admin\OptionsProvider\PolicyOptionsProvider")
-	 */
-	protected $grant;
-
-**YAML**::
-
-	TYPO3\Blog\Domain\Model\Blog: 
-		Properties:
-			Grant: 
-				OptionsProvider: \Admin\OptionsProvider\PolicyOptionsProvider 
+    TYPO3\Blog\Domain\Model\Post: 
+        Properties:
+            Content:
+                Widget: TextArea

@@ -18,6 +18,7 @@
   <ul>
 <li><a class="reference internal" href="#">OptionsProviders</a><ul>
 <li><a class="reference internal" href="#relationoptionsprovider">RelationOptionsProvider</a></li>
+<li><a class="reference internal" href="#arrayoptionsprovider">ArrayOptionsProvider</a></li>
 <li><a class="reference internal" href="#policyoptionsprovider">PolicyOptionsProvider</a></li>
 </ul>
 </li>
@@ -38,10 +39,46 @@
 				
   <div class="section" id="optionsproviders">
 <h1>OptionsProviders<a class="headerlink" href="#optionsproviders" title="Permalink to this headline">¶</a></h1>
-<p>An Options Provider creates the List of Options for the SingleRelation and MultipleRelation Widgets. Currently there is just the Default implementation which creates the Options Using the ID and String Representation of the Object. But for Example the PolicyOptionsProvider ensures that there are all needed Options as Policy available when the Roles Object is loaded</p>
+<p>An Options Provider creates the List of Options for the SingleRelation and MultipleRelation Widgets.
+Currently there is the Default implementation which creates the Options Using the ID and String Representation of the Object and one that load Options from an simple source.
+But for Example the PolicyOptionsProvider ensures that there are all needed Options as Policy available when the Roles Object is loaded</p>
 <div class="section" id="relationoptionsprovider">
 <h2>RelationOptionsProvider<a class="headerlink" href="#relationoptionsprovider" title="Permalink to this headline">¶</a></h2>
 <p>This Optionsprovider gives available options based on the entity&#8217;s relation</p>
+</div>
+<div class="section" id="arrayoptionsprovider">
+<h2>ArrayOptionsProvider<a class="headerlink" href="#arrayoptionsprovider" title="Permalink to this headline">¶</a></h2>
+<p>This Optionsprovider gives available options based on the entity&#8217;s relation</p>
+<p><strong>Reflection</strong>:</p>
+<div class="highlight-python"><pre>/**
+ * @var string
+ * @Admin\Widget("Dropdown")
+ * @Admin\OptionsProvider(name="Array", property="options")
+ */
+protected $optionsProvider;
+public $options = array(
+    "Hello" =&gt; "World",
+    "Hell" =&gt; "Yea"
+);</pre>
+</div>
+<p><strong>YAML</strong>:</p>
+<div class="highlight-python"><pre>TYPO3\Party\Domain\Model\ElectronicAddress:
+  Properties:
+    type:
+      OptionsProvider:
+        name: Array
+        options:
+          aim: Aim
+          email: Email
+          gizmo: Gizmo
+          icq: Icq
+          jabber: Jabber
+          msn: Msn
+          sip: Sip
+          skype: Skype
+          url: Url
+          yahoo: Yahoo</pre>
+</div>
 </div>
 <div class="section" id="policyoptionsprovider">
 <h2>PolicyOptionsProvider<a class="headerlink" href="#policyoptionsprovider" title="Permalink to this headline">¶</a></h2>

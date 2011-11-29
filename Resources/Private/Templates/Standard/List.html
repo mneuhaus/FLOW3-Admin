@@ -35,7 +35,7 @@
 		</f:else>
 			<div>
 		</f:if>
-				<a:render partial="Table" fallbacks="Partials" vars="{objects: paginatedObjects, sorting: sorting}"/>
+				<a:render partial="Table" fallbacks="Partials" vars="{objects: paginatedObjects, sorting: sorting, listActions: listActions}"/>
 				
 				<div class="pagination pull-left">
 					<a:render partial="Limits" fallbacks="Partials"/>

@@ -19,7 +19,13 @@
 <li><a class="reference internal" href="#">Model Configuration</a><ul>
 <li><a class="reference internal" href="#active">Active</a></li>
 <li><a class="reference internal" href="#group">Group</a></li>
+<li><a class="reference internal" href="#label">Label</a></li>
 <li><a class="reference internal" href="#set">Set</a></li>
+<li><a class="reference internal" href="#variant">Variant</a><ul>
+<li><a class="reference internal" href="#options">Options</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#variantmappings">VariantMappings</a></li>
 </ul>
 </li>
 </ul>
@@ -73,6 +79,24 @@ class Post {...</pre>
     Group: MyBlog</pre>
 </div>
 </div>
+<div class="section" id="label">
+<h2>Label<a class="headerlink" href="#label" title="Permalink to this headline">¶</a></h2>
+<p>Specifiy a Label for the Model to be used in the Menu.</p>
+<p><strong>Class Reflection</strong>:</p>
+<div class="highlight-python"><pre>use Admin\Annotations as Admin;
+/** A Blog post
+  * ...
+  * @Admin\Active
+  * @Admin\Label("Blog Posts")
+  */
+class Post {...</pre>
+</div>
+<p><strong>YAML</strong>:</p>
+<div class="highlight-python"><pre>TYPO3\Blog\Domain\Model\Post:
+    Active: true
+    Label: Blog Posts</pre>
+</div>
+</div>
 <div class="section" id="set">
 <h2>Set<a class="headerlink" href="#set" title="Permalink to this headline">¶</a></h2>
 <p>By Default all [Properties](property) will be in a General Fieldset called General in the Order in which they are listed in the Models class. You can override this by specifiying specific Sets of fields.</p>
@@ -96,6 +120,74 @@ class Post {...</pre>
         -
             Title: Extended Informations
             Properties: linkTitle, date, author, image</pre>
+</div>
+</div>
+<div class="section" id="variant">
+<h2>Variant<a class="headerlink" href="#variant" title="Permalink to this headline">¶</a></h2>
+<p>Variants are different Templates for actions. There are 3 Variants for the List Action included:</p>
+<dl class="docutils">
+<dt>List</dt>
+<dd>The regular Pagniated Table</dd>
+<dt>Panes</dt>
+<dd>Variant with 2 Panes like a E-Mail View</dd>
+<dt>Calendar</dt>
+<dd>Very basic implementation for a calendar view</dd>
+</dl>
+<p><strong>Class Reflection</strong>:</p>
+<div class="highlight-python"><pre>use Admin\Annotations as Admin;
+/** A Blog post
+  * ...
+  * @Admin\Active
+  * @Admin\Variant(variant="Calendar", options="Calendar, List")
+  */
+class Event {...</pre>
+</div>
+<p><strong>YAML</strong>:</p>
+<div class="highlight-python"><pre>Admin\Domain\Model\Event:
+    Active: true
+    Variant:
+        variant: Calendar
+        options: Calendar, List</pre>
+</div>
+<div class="section" id="options">
+<h3>Options<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>variant</dt>
+<dd>Name of the Variant</dd>
+<dt>options</dt>
+<dd>List of Variants that should be selectable</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="variantmappings">
+<h2>VariantMappings<a class="headerlink" href="#variantmappings" title="Permalink to this headline">¶</a></h2>
+<p>VariantMappings are used in conjunction with Variants to tell the specific variant which property of the entity can be used for what</p>
+<dl class="docutils">
+<dt>Panes</dt>
+<dd>image, title, subtitle, content</dd>
+<dt>Calendar</dt>
+<dd>title, start, end</dd>
+</dl>
+<p><strong>Class Reflection</strong>:</p>
+<div class="highlight-python"><pre>use Admin\Annotations as Admin;
+/** A Blog post
+  * ...
+  * @Admin\Active
+  * @Admin\Variant(variant="Calendar", options="Calendar, List")
+  * @Admin\VariantMapping(title="title", start="startdate", end="enddate")
+  */
+class Event {...</pre>
+</div>
+<p><strong>YAML</strong>:</p>
+<div class="highlight-python"><pre>Admin\Domain\Model\Event:
+    Active: true
+    Variant:
+        variant: Calendar
+        options: Calendar, List
+    VariantMapping:
+        title: title
+        start: startdate
+        end: enddate</pre>
 </div>
 </div>
 </div>

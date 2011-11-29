@@ -86,6 +86,7 @@ class DocController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		$content = $this->view->render();
 		$content = preg_replace('/internal" href="([A-Za-z0-9])/', 'internal" href="/admin/doc/' . $lang . '/\\1', $content);
 		$content = str_replace('href="#', 'href="/admin/doc/' . $lang . '/' . $page . '#', $content);
+		$content = str_replace('{ ', '{', $content);
 		
 		return $content;
 	}

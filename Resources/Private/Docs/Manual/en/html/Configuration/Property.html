@@ -17,8 +17,8 @@
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Property Configurations</a><ul>
+<li><a class="reference internal" href="#filter">Filter</a></li>
 <li><a class="reference internal" href="#label">Label</a></li>
-<li><a class="reference internal" href="#widget">Widget</a></li>
 <li><a class="reference internal" href="#ignore">Ignore</a><ul>
 <li><a class="reference internal" href="#ignore-the-property-completly">Ignore the Property Completly</a></li>
 <li><a class="reference internal" href="#ignore-the-property-in-specific-views">Ignore the Property in specific Views</a></li>
@@ -26,12 +26,12 @@
 </li>
 <li><a class="reference internal" href="#infotext">Infotext</a></li>
 <li><a class="reference internal" href="#inline">Inline</a></li>
-<li><a class="reference internal" href="#class">Class</a></li>
+<li><a class="reference internal" href="#optionsprovider">OptionsProvider</a></li>
+<li><a class="reference internal" href="#representation">Representation</a></li>
+<li><a class="reference internal" href="#title">Title</a></li>
 <li><a class="reference internal" href="#validate">Validate</a></li>
 <li><a class="reference internal" href="#variant">Variant</a></li>
-<li><a class="reference internal" href="#title">Title</a></li>
-<li><a class="reference internal" href="#filter">Filter</a></li>
-<li><a class="reference internal" href="#optionsprovider">OptionsProvider</a></li>
+<li><a class="reference internal" href="#widget">Widget</a></li>
 </ul>
 </li>
 </ul>
@@ -51,6 +51,23 @@
 				
   <div class="section" id="property-configurations">
 <h1>Property Configurations<a class="headerlink" href="#property-configurations" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="filter">
+<h2>Filter<a class="headerlink" href="#filter" title="Permalink to this headline">¶</a></h2>
+<p>By Tagging a Property with this Tag the Admin Interface will try to provide a Selectbox to Filter the List View by the Possible Values of this Property</p>
+<p><strong>Class Reflection</strong>:</p>
+<div class="highlight-python"><pre>/**
+ * @var string
+ * @Admin\Annotations\Filter
+ */
+protected $author;</pre>
+</div>
+<p><strong>YAML</strong>:</p>
+<div class="highlight-python"><pre>TYPO3\Blog\Domain\Model\Blog:
+    Properties:
+        Author:
+            Filter: true</pre>
+</div>
+</div>
 <div class="section" id="label">
 <h2>Label<a class="headerlink" href="#label" title="Permalink to this headline">¶</a></h2>
 <p>With this Tag you can set the Label for a Property which is by Default a CamelCased version of the propertyname</p>
@@ -63,26 +80,9 @@
 </div>
 <p><strong>YAML</strong>:</p>
 <div class="highlight-python"><pre>TYPO3\Blog\Domain\Model\Post:
-        Properties:
-                Title:
-                        Label: Post Title</pre>
-</div>
-</div>
-<div class="section" id="widget">
-<h2>Widget<a class="headerlink" href="#widget" title="Permalink to this headline">¶</a></h2>
-<p>Instead of the automatically Assigned Widget you can use this Tag to specify a specific Widget.</p>
-<p><strong>Class Reflection</strong>:</p>
-<div class="highlight-python"><pre>/**
- * @var string
- * @Admin\Annotations\Widget("TextArea")
- */
- protected $content;</pre>
-</div>
-<p><strong>YAML</strong>:</p>
-<div class="highlight-python"><pre>TYPO3\Blog\Domain\Model\Post:
-        Properties:
-                Content:
-                        Widget: TextArea</pre>
+    Properties:
+        Title:
+            Label: Post Title</pre>
 </div>
 </div>
 <div class="section" id="ignore">
@@ -99,9 +99,9 @@ protected $id;</pre>
 </div>
 <p><strong>YAML</strong>:</p>
 <div class="highlight-python"><pre>TYPO3\Blog\Domain\Model\Post:
-        Properties:
-                Id:
-                        Ignore: true</pre>
+    Properties:
+        Id:
+            Ignore: true</pre>
 </div>
 </div>
 <div class="section" id="ignore-the-property-in-specific-views">
@@ -114,9 +114,9 @@ protected $content;</pre>
 </div>
 <p><strong>YAML</strong>:</p>
 <div class="highlight-python"><pre>TYPO3\Blog\Domain\Model\Post:
-        Properties:
-                Content:
-                        Ignore: list,view</pre>
+    Properties:
+        Content:
+            Ignore: list,view</pre>
 </div>
 </div>
 </div>
@@ -132,9 +132,9 @@ protexted $author;</pre>
 </div>
 <p><strong>YAML</strong>:</p>
 <div class="highlight-python"><pre>TYPO3\Blog\Domain\Model\Post:
-        Properties:
-                Author:
-                        Infotext: Please tell us who you are</pre>
+    Properties:
+        Author:
+            Infotext: Please tell us who you are</pre>
 </div>
 </div>
 <div class="section" id="inline">
@@ -152,27 +152,71 @@ protected $address;</pre>
 </div>
 <p><strong>YAML</strong>:</p>
 <div class="highlight-python"><pre>TYPO3\Blog\Domain\Model\Post:
-        Properties:
-                Address:
-                        Inline: True</pre>
+    Properties:
+        Address:
+            Inline: True</pre>
 </div>
 </div>
-<div class="section" id="class">
-<h2>Class<a class="headerlink" href="#class" title="Permalink to this headline">¶</a></h2>
-<p>Adds one or more Classes to the Input Widget</p>
+<div class="section" id="optionsprovider">
+<h2>OptionsProvider<a class="headerlink" href="#optionsprovider" title="Permalink to this headline">¶</a></h2>
 <p><strong>Class Reflection</strong>:</p>
 <div class="highlight-python"><pre>/**
- * @string
- * @Admin\Annotations\Class("content")
+ * @var \Doctrine\Common\Collections\ArrayCollection&lt;\Admin\Security\Policy&gt;
+ * @Admin\Annotations\OptionsProvider("\Admin\OptionsProvider\PolicyOptionsProvider")
  */
-protected $content;</pre>
+protected $grant;</pre>
 </div>
 <p><strong>YAML</strong>:</p>
-<div class="highlight-python"><pre>TYPO3\Blog\Domain\Modle\Post:
-        Properties:
-                Content:
-                        Class: content</pre>
+<div class="highlight-python"><pre>TYPO3\Blog\Domain\Model\Blog:
+    Properties:
+        Grant:
+            OptionsProvider: \Admin\OptionsProvider\PolicyOptionsProvider</pre>
 </div>
+</div>
+<div class="section" id="representation">
+<h2>Representation<a class="headerlink" href="#representation" title="Permalink to this headline">¶</a></h2>
+<p>Through this option you can set options for the Representation of an property.
+Currently it is only used for the datetimeFormat</p>
+<p><strong>Class Reflection</strong>:</p>
+<div class="highlight-python"><pre>/**
+ * @var \Datetime
+  * @Admin\Representation(datetimeFormat="Y-m-d")
+ */
+protected $date;</pre>
+</div>
+<p><strong>YAML</strong>:</p>
+<div class="highlight-python"><pre>Admin\Domain\Model\Widgets:
+    Properties:
+        date:
+            Repesentation:
+                datetimeFormat: Y-m-d</pre>
+</div>
+</div>
+<div class="section" id="title">
+<h2>Title<a class="headerlink" href="#title" title="Permalink to this headline">¶</a></h2>
+<p>This option only works if you use the MagicModel!
+You can Specify any Property that can be Converted to a String as a Title to be used as a simple String Repesentation which is for example used in the Single and Multiple Relation Widget to Identify an Model Item</p>
+<p>The MagicModel will try the following things to determine a title:</p>
+<ol class="arabic simple">
+<li>Does the Model Provide a __toString() Method</li>
+<li>Does one or more &#64;title Tags exist</li>
+<li>Are there Properties Tagged as &#64;identity which can be converted to String</li>
+<li>Is there a Property with the name &#8220;title&#8221; or &#8220;name&#8221;</li>
+</ol>
+<p><strong>Class Reflection</strong>:</p>
+<div class="highlight-python"><pre>/**
+ * @var string
+ * @Admin\Annotations\Title
+ */
+protected $title;</pre>
+</div>
+<p><strong>YAML</strong>:</p>
+<div class="highlight-python"><pre>TYPO3\Blog\Domain\Model\Post:
+    Properties:
+        Title:
+            Title: true</pre>
+</div>
+<p>First thing that matches will be used in the Order specified</p>
 </div>
 <div class="section" id="validate">
 <h2>Validate<a class="headerlink" href="#validate" title="Permalink to this headline">¶</a></h2>
@@ -200,69 +244,27 @@ protected $address;</pre>
 </div>
 <p><strong>YAML</strong>:</p>
 <div class="highlight-python"><pre>TYPO3\Blog\Domain\Model\Post:
-        Properties:
-                Address:
-                        Inline: True
-                        Variant: Tabular</pre>
+    Properties:
+        Address:
+            Inline: True
+            Variant: Tabular</pre>
 </div>
 </div>
-<div class="section" id="title">
-<h2>Title<a class="headerlink" href="#title" title="Permalink to this headline">¶</a></h2>
-<p>This option only works if you use the MagicModel!
-You can Specify any Property that can be Converted to a String as a Title to be used as a simple String Repesentation which is for example used in the Single and Multiple Relation Widget to Identify an Model Item</p>
-<p>The MagicModel will try the following things to determine a title:</p>
-<ol class="arabic simple">
-<li>Does the Model Provide a __toString() Method</li>
-<li>Does one or more &#64;title Tags exist</li>
-<li>Are there Properties Tagged as &#64;identity which can be converted to String</li>
-<li>Is there a Property with the name &#8220;title&#8221; or &#8220;name&#8221;</li>
-</ol>
+<div class="section" id="widget">
+<h2>Widget<a class="headerlink" href="#widget" title="Permalink to this headline">¶</a></h2>
+<p>Instead of the automatically Assigned Widget you can use this Tag to specify a specific Widget.</p>
 <p><strong>Class Reflection</strong>:</p>
 <div class="highlight-python"><pre>/**
  * @var string
- * @Admin\Annotations\Title
+ * @Admin\Annotations\Widget("TextArea")
  */
-protected $title;</pre>
+ protected $content;</pre>
 </div>
 <p><strong>YAML</strong>:</p>
 <div class="highlight-python"><pre>TYPO3\Blog\Domain\Model\Post:
-        Properties:
-                Title:
-                        Title: true</pre>
-</div>
-<p>First thing that matches will be used in the Order specified</p>
-</div>
-<div class="section" id="filter">
-<h2>Filter<a class="headerlink" href="#filter" title="Permalink to this headline">¶</a></h2>
-<p>By Tagging a Property with this Tag the Admin Interface will try to provide a Selectbox to Filter the List View by the Possible Values of this Property</p>
-<p><strong>Class Reflection</strong>:</p>
-<div class="highlight-python"><pre>/**
- * @var string
- * @Admin\Annotations\Filter
- */
-protected $author;</pre>
-</div>
-<p><strong>YAML</strong>:</p>
-<div class="highlight-python"><pre>TYPO3\Blog\Domain\Model\Blog:
-        Properties:
-                Author:
-                        Filter: true</pre>
-</div>
-</div>
-<div class="section" id="optionsprovider">
-<h2>OptionsProvider<a class="headerlink" href="#optionsprovider" title="Permalink to this headline">¶</a></h2>
-<p><strong>Class Reflection</strong>:</p>
-<div class="highlight-python"><pre>/**
- * @var \Doctrine\Common\Collections\ArrayCollection&lt;\Admin\Security\Policy&gt;
- * @Admin\Annotations\OptionsProvider("\Admin\OptionsProvider\PolicyOptionsProvider")
- */
-protected $grant;</pre>
-</div>
-<p><strong>YAML</strong>:</p>
-<div class="highlight-python"><pre>TYPO3\Blog\Domain\Model\Blog:
-        Properties:
-                Grant:
-                        OptionsProvider: \Admin\OptionsProvider\PolicyOptionsProvider</pre>
+    Properties:
+        Content:
+            Widget: TextArea</pre>
 </div>
 </div>
 </div>

@@ -68,30 +68,31 @@ git clone git@github.com:mneuhaus/FLOW3-AdminDemo.git Packages/Application/Admin
 </li>
 </ol>
 <p><strong>Settings.yaml</strong>:</p>
-<div class="highlight-python"><pre>Doctrine:
-        Beings:
-                \TYPO3\Blog\Domain\Model\Post:
-                        autoadmin: true
-                        properties:
-                                content:
-                                        widget: TextArea</pre>
+<div class="highlight-python"><pre>Admin:
+    Beings:
+        \TYPO3\Blog\Domain\Model\Post:
+            Active: true
+            Properties:
+                content:
+                    Widget: TextArea</pre>
 </div>
 <p>This Example Activates the Post model of the Blog Example (autoadmin:true) and Changes the Widget for the Content Property from a simple Textfield to a Textarea</p>
 <p><strong>Class Reflections</strong>:</p>
-<div class="highlight-python"><pre>/**
+<div class="highlight-python"><pre>use Admin\Annotations as Admin;
+/**
  * A blog post
  * ...
- * @Admin\Annotations\Active
+ * @Admin\Active
  */
 class Post {
-        /**
-         * @var string
-         * @Admin\Annotations\Widget("TextArea")
-         */
-        protected $content;
+    /**
+     * @var string
+     * @Admin\Widget("TextArea")
+     */
+    protected $content;
 }</pre>
 </div>
-<p>This Example Does the exact same thing as the Settings.yaml Example but this time inside the Post.php file with the Tag &#64;AdminAnnotationsActive and &#64;AdminAnnotationsWidget TextArea</p>
+<p>This Example Does the exact same thing as the Settings.yaml Example but this time inside the Post.php file with the Tag &#64;AdminActive and &#64;AdminWidget(&#8220;TextArea&#8221;)</p>
 </div>
 </div>
 
