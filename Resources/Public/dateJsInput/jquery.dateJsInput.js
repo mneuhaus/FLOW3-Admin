@@ -24,6 +24,7 @@
 		this.element.after(hidden);
 		this.element.after(this.options.date_result);
 		this.element.data("options", this.options).attr("autocomplete", "off");
+		hidden.val(this.element.val());
 		
 		this.element.keyup(function(e){
 			input = jQuery(e.currentTarget);
