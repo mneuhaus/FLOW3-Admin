@@ -72,7 +72,7 @@ class Property{
 	protected $counter = 0;
 	public $value = null;
 	protected $filter = false;
-	protected $selected = false;
+	public $selected = false;
 
 	public function  __construct($name, $being) {
 		$this->name = $name;
@@ -81,6 +81,14 @@ class Property{
 	
 	public function __toString(){
 		return $this->getString();
+	}
+
+	public function getFilterArguments(){
+		return array(
+			"filters" => array(
+				$this->name => $this->__toString()
+			)
+		);
 	}
 	
 	public function getInputName(){
@@ -191,6 +199,8 @@ class Property{
 					
 				default:
 					if(is_array($values) && count($values) == 1){
+						$this->$key = current($values);
+						$key = "_" . $key;
 						$this->$key = current($values);
 					}else{
 						$this->$key = $values;

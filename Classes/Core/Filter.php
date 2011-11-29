@@ -35,11 +35,15 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  */
 class Filter{
     protected $properties = array();
+	/**
+	 * @var boolean
+	 */
+	public $clear = true;
 
     public function __toString(){
         $property = current($this->properties);
         if(is_object($property))
-            return $property->getLabel();
+            return $property->name;
         
         return "";
     }
@@ -61,7 +65,17 @@ class Filter{
 
     public function addProperty($property) {
         $this->properties[$property->getString()] = $property;
+		if($property->selected)
+			$this->clear = false;
     }
+
+	public function getClearArguments(){
+		return array(
+			"filters" => array(
+				$this->__toString() => ""
+			)
+		);
+	}
 }
 
 ?>

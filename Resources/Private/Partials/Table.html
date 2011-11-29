@@ -6,8 +6,9 @@
 				<input type="checkbox" class="select-all" />
 			</th>
 			<f:for each="{objects}" as="object" key="id" iteration="loop">
+				<a:being object="{object}">
 				<f:if condition="{loop.isFirst}">
-					<f:for each="{object.properties}" as="value" key="property">
+					<f:for each="{being.properties}" as="value" key="property">
 						<f:if condition="{sorting} == {property}">
 							<f:then><th class="{sortingClass}"></f:then>
 							<f:else><th></f:else>
@@ -18,6 +19,7 @@
 						</th>
 					</f:for>
 				</f:if>
+				</a:being>
 			</f:for>
 			<th>
 			</th>
@@ -25,11 +27,12 @@
 	</thead>
 	<tbody>
 		<f:for each="{objects}" as="object">
+		<a:being object="{object}">
 		<tr>
 			<td class="tiny">
-				<input type="checkbox" name="bulkItems[]" value="{object.id}" class="select-row"/>
+				<input type="checkbox" name="bulkItems[]" value="{being.id}" class="select-row"/>
 			</td>
-			<f:for each="{object.properties}" as="value" key="property">
+			<f:for each="{being.properties}" as="value" key="property">
 				<td>{value.string}</td>
 			</f:for>
 			<td class="table-actions">
@@ -40,13 +43,14 @@
 						controller="{action.controller}"
 						package="{action.package}"
 						target="{action.target}"
-						being="{object.class}"
-						arguments="{id: object.id}">
+						being="{being.class}"
+						arguments="{id: being.id}">
 						{action}
 					</a:link>
 				</f:for>
 			</td>
 		</tr>
-	</f:for>
-</tbody>
+		</a:being>
+		</f:for>
+	</tbody>
 </table>

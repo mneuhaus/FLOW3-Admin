@@ -1,10 +1,6 @@
 <f:layout name="bootstrap" />
 {namespace a=Admin\ViewHelpers}
 
-<f:section name="pre-container">
-	<form method="post">
-</f:section>
-
 <f:section name="actionbar-left">
 	<form method="post">
 	<a:render partial="Toolbar" fallbacks="Partials"/>
@@ -18,39 +14,39 @@
 			controller="{action.controller}"
 			package="{action.package}"
 			target="{action.target}"
-			being="{objects.0.class}">
+			being="{className}">
 			{action}
 		</a:link>
 	</f:for>
 </f:section>
 
 <f:section name="content">
-		<a:render partial="Table" fallbacks="Partials"/>
-		<div class="pagination pull-left">
-			<ul>
-			<f:for each="{limits}" as="active" key="value">
-				<f:if condition="{active}" ><f:then><li class="active"></f:then><f:else><li></f:else></f:if>	
-					<f:link.action action="list" addQueryString="true" arguments="{limit: value}">{value}</f:link.action>
-				</li>
-			</f:for>
-			</ul>
-			<a:render partial="VariantsSelector" fallbacks="Partials" vars="{variant: objects.0.variant, current: 'List'}"/>
-		</div>
-		<div class="pagination pull-right">
-			<ul>
-			<f:if condition="{prevpage}">
-				<li class="prev"><f:link.action action="list" addQueryString="true" arguments="{page: prevpage}">prev</f:link.action></li>
+	<a:query.filter objects="{results}">
+		<a:query.paginate objects="{filteredObjects}">
+			
+			<f:if condition="{filters}">
+			<f:then>
+				<div class="pull-right filter-sidebar">
+					<a:render partial="Filters/Right" fallbacks="Partials"/>
+				</div>
+				<div class="has-sidebar">
+					<a:render partial="Table" fallbacks="Partials" vars="{objects: paginatedObjects}"/>
+				</div>
+			</f:then>
+			<f:else>
+				<a:render partial="Table" fallbacks="Partials" vars="{objects: paginatedObjects}"/>
+			</f:else>
 			</f:if>
-			<f:for each="{pages}" as="page">
-				<f:if condition="{currentpage} == {page}" ><f:then><li class="active"></f:then><f:else><li></f:else></f:if>
-					<f:link.action action="list" addQueryString="true" arguments="{page: page}">{page}</f:link.action>
-				</li>
-			</f:for>
-			<f:if condition="{nextpage}">
-				<li class="next"><f:link.action action="list" addQueryString="true" arguments="{page: nextpage}">next</f:link.action></li>
-			</f:if>
-			</ul>
-		</div>
+		
+			<div class="pagination pull-left">
+				<a:render partial="Limits" fallbacks="Partials"/>
+				<a:render partial="VariantsSelector" fallbacks="Partials" vars="{variant: objects.0.variant, current: 'List'}"/>
+			</div>
+			<div class="pagination pull-right">
+				<a:render partial="Pagination" fallbacks="Partials"/>
+			</div>
+		</a:query.paginate>
+	</a:query.filter>
 </f:section>
 
 <f:section name="post-container">

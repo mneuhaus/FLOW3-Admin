@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\ViewHelpers;
+namespace Admin\ViewHelpers\Query;
 
 /*                                                                        *
  * This script belongs to the FLOW3 framework.                            *
@@ -31,7 +31,12 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * @api
  * @FLOW3\Scope("prototype")
  */
-class BeingViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class FilterViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
+	/**
+	 * @var \TYPO3\FLOW3\Configuration\ConfigurationManager
+	 * @FLOW3\Inject
+	 */
+	protected $configurationManager;
 	
 	/**
 	 * @var \Admin\Core\Helper
@@ -42,28 +47,63 @@ class BeingViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	
 	/**
 	 *
-	 * @param object $object
-	 * @param string $className
+	 * @param mixed $objects
 	 * @param string $as
+	 * @param string $filtersAs
 	 * @return string Rendered string
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 * @api
 	 */
-	public function render($object = null, $className = null, $as = "being") {
-		if(is_null($object) && !is_null($className))
-			$object = new $className;
+	public function render($objects = null, $as = "filteredObjects", $filtersAs = "filters") {
+		$this->objects = $objects;
+		$this->query = $objects->getQuery();
 		
-		$being = new \Admin\Core\Being($this->helper->getAdapterByBeing(get_class($object)));
-		$being->setClass(get_class($object));
-		$being->setObject($object);
+		$this->request = $this->controllerContext->getRequest();
 		
-		if($this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix'))
-			$being->prefix = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix');
+		$filters = $this->handleFilters();
 		
-		$this->templateVariableContainer->add($as, $being);
+		$this->templateVariableContainer->add($filtersAs, $filters);
+		$this->templateVariableContainer->add($as, $this->query->execute());
 		$content = $this->renderChildren();
+		$this->templateVariableContainer->remove($filtersAs);
 		$this->templateVariableContainer->remove($as);
+		
 		return $content;
+	}
+	
+	public function handleFilters(){
+		if( $this->request->hasArgument("filters") ) {
+			$filters = $this->request->getArgument("filters");
+			foreach ($filters as $key => $value)
+				if(!empty($value))
+					$this->query->matching($this->query->equals($key, $value));
+			
+			return $this->getFilter($filters);
+		}else {
+			return $this->getFilter();
+		}
+	}
+	
+	public function getFilter($selected = array()){
+		$filters = array();
+		foreach ($this->objects as $object) {
+			$being = $this->helper->getBeing($object);
+			
+			foreach($being->properties as $property){
+				if(isset($property->_filter)){
+					if(!isset($filters[$property->name]))
+						$filters[$property->name] = new \Admin\Core\Filter();
+
+					if(isset($selected[$property->name]) && $selected[$property->name] == $property->__toString())
+						$property->selected = true;
+					
+					#$string = $property->getString();
+					#if(!empty($string))
+						$filters[$property->name]->addProperty($property);
+				}
+			}
+		}
+		return $filters;
 	}
 }
 

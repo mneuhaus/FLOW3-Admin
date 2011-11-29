@@ -28,16 +28,15 @@ Admin:
       - index
       - list
       - view
-  ViewSettings:
-    List:
-      Limits:
-        - 10
-        - 20
-        - 100
-        - 1000
-        - 10000
-      Default: 20
-      MaxPages: 9
+  Pagination:
+    Limits:
+      - 10
+      - 20
+      - 100
+      - 1000
+      - 10000
+    Default: 20
+    MaxPages: 9
   Navigation:
     Top:
       Documentation:
