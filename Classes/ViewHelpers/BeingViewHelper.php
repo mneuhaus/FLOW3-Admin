@@ -45,15 +45,17 @@ class BeingViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @param object $object
 	 * @param string $className
 	 * @param string $as
+	 * @param string $ignore
 	 * @return string Rendered string
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 * @api
 	 */
-	public function render($object = null, $className = null, $as = "being") {
+	public function render($object = null, $className = null, $as = "being", $ignore = null) {
 		if(is_null($object) && !is_null($className))
 			$object = new $className;
 		
 		$being = new \Admin\Core\Being($this->helper->getAdapterByBeing(get_class($object)));
+		$being->ignoredProperties = $ignore;
 		$being->setClass(get_class($object));
 		$being->setObject($object);
 		

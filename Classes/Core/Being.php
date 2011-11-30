@@ -117,6 +117,11 @@ class Being{
 	 * @var string
 	 */
 	public $prefix = "item";
+	
+	/**
+	 * @var string
+	 */
+	public $ignoredProperties = null;
 
 	public function __construct($adapter){
 		if(!is_object($adapter)){
@@ -212,7 +217,7 @@ class Being{
 			switch ($key) {
 				case 'properties':
 					foreach ($values as $property => $value) {
-						if($this->shouldBeIgnored($value)) continue;
+						if($this->shouldBeIgnored($value, $property)) continue;
 						$p = new \Admin\Core\Property($property, $this);
 						$p->setParent($this);
 						$p->setConfiguration($value);
@@ -244,7 +249,10 @@ class Being{
 	 * @return void
 	 * @author Marc Neuhaus
 	 */
-	public function shouldBeIgnored($annotations){
+	public function shouldBeIgnored($annotations, $property){
+		if(in_array($property, explode(",", $this->ignoredProperties)))
+			return true;
+		
 		if(isset($annotations["inject"])) return true;
 		
 		if(!isset($annotations["ignore"])){
