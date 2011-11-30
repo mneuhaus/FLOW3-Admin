@@ -33,6 +33,7 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	/**
 	 *
 	 * @param object $being
+	 * @param string $variant
 	 * @return string rendered form
 	 * @api
 	 */
