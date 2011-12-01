@@ -36,7 +36,29 @@
 				</f:then>
 				<f:else>
 				
-					<a:form.field property="{property}" />
+					<f:if condition="{property.error}">
+						<f:then><div class="control-group has-error"></f:then>
+						<f:else><div class="control-group"></f:else>
+					</f:if>
+						<label class="control-label">{property.label}: </label>
+
+						<div class="controls">
+
+							<a:render partial="{property.widget}" fallbacks="Widgets" vars="{property:property}"/>
+
+							<f:if condition="{property.infotext}">
+								<span class="help-block help-text">{property.infotext}</span>
+							</f:if>
+							<f:if condition="{property.error}">
+								<span class="help-block help-text">
+									<f:for each="{property.error}" as="error">
+										<a:render value="{error}" /><br />
+									</f:for>
+								</span>
+							</f:if>
+
+						</div>
+					</div>
 					
 				</f:else>
 			</f:if>
