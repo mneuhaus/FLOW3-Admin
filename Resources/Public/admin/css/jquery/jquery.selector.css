@@ -1,14 +1,14 @@
 .selectbox { overflow:hidden; }
 	.selectbox a { text-decoration:none; }
-	.selectbox-available { width:300px; float:left; }
+	.selectbox-available { width:260px; float:left; }
 		.selectbox-search { height:30px; }
-		.selectbox-available input { width:290px; border:1px solid #ccc; }
-		.selectbox-available select { width:300px; border:1px solid #ccc; }
+		.selectbox-available input { width:250px; border:1px solid #ccc; }
+		.selectbox-available select { width:260px; border:1px solid #ccc; }
 		.selectbox-all { text-align:center; }
-	.selectbox-selected { width:300px; float:left;}
+	.selectbox-selected { width:260px; float:left;}
 		.selectbox-header { font-weight:bold; line-height:2; }
 		.selectbox-info { font-size:12px; height:22px; padding:4px; }
-		.selectbox-selected select { width:302px; border:1px solid #ccc; }
+		.selectbox-selected select { width:262px; border:1px solid #ccc; }
 		.selectbox-clear { text-align:center; }
 	.selectbox-toolbar { float:left; width:30px; margin-top:110px; text-align:center; }
 		.selectbox-toolbar a { display:block; font-weight:bold; }

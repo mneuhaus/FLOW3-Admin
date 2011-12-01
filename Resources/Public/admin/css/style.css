@@ -80,9 +80,9 @@ body {
 
 
 /*---------------------------Docs-----------------------------*/
-h1, h2, h3, h4, h5 {position:relative; }
-h1 a, h2 a, h3 a, h4 a, h5 a, .headerlink { visibility:hidden; color:#bbb; margin-left:5px; font-size:90%; bottom:0px; position:absolute; padding-top:40px;}
-h1:hover a, h2:hover a, h3:hover a, h4:hover a, h5:hover a, dt:hover .headerlink { visibility:visible; text-decoration:none; }
+.documentwrapper h1, .documentwrapper h2, .documentwrapper h3, .documentwrapper h4, .documentwrapper h5 {position:relative; }
+.documentwrapper h1 a, .documentwrapper h2 a, .documentwrapper h3 a, .documentwrapper h4 a, .documentwrapper h5 a, .documentwrapper .headerlink { visibility:hidden; color:#bbb; margin-left:5px; font-size:90%; bottom:0px; position:absolute; padding-top:40px;}
+.documentwrapper h1:hover a, .documentwrapper h2:hover a, .documentwrapper h3:hover a, .documentwrapper h4:hover a, .documentwrapper h5:hover a, .documentwrapper dt:hover .headerlink { visibility:visible; text-decoration:none; }
 .documentwrapper blockquote p { font-size:14px; }
 .documentwrapper .function dt[id] { font-weight:normal; }
 .documentwrapper .function dt[id] tt { font-weight:bold; color: #000; }

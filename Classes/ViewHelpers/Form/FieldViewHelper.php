@@ -1,5 +1,5 @@
 <?php
-namespace Admin\ViewHelpers;
+namespace Admin\ViewHelpers\Form;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -16,7 +16,7 @@ use TYPO3\FLOW3\Annotations as FLOW3;
 /**
  * @api
  */
-class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
+class FieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 	/**
 	 * @var TYPO3\FLOW3\Cache\CacheManager
 	 * @FLOW3\Inject
@@ -32,33 +32,37 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	
 	/**
 	 *
-	 * @param object $being
+	 * @param object $property
 	 * @param string $variant
 	 * @return string rendered form
 	 * @api
 	 */
-	public function render($being = null, $variant = "Default") {
-		$content = "";
-		$content.= $this->renderHiddenClassField($being->class);
-		$content.= $this->renderFormPartial($being->class, $variant);
+	public function render($property = null, $variant="Default"){
+		if($this->templateVariableContainer->exists("property")){
+			$tmp = $this->templateVariableContainer->get("property");
+			$this->templateVariableContainer->remove("property");
+		}
+		$this->templateVariableContainer->add("property", $property);
+ 		$content = $this->renderPartial($variant);
+		$this->templateVariableContainer->remove("property");
+		if(isset($tmp)){
+			$this->templateVariableContainer->add("property", $tmp);
+		}
 		return $content;
 	}
 	
-	public function renderHiddenClassField($class){
-		return '<input type="hidden" name="being" value="' . $class . '" />' . chr(10);
-	}
-	
-	public function renderFormPartial($class, $variant = "Default"){
+	public function renderPartial($variant = "Default"){
 		$replacements = array(
-			"@partial" => "Form",
+			"@partial" => "Field",
 			"@package" => \Admin\Core\API::get("package"),
-			"@being" => \Admin\Core\Helper::getShortName($class),
-			"@action" => "Form",
+			"@being" => \Admin\Core\Helper::getShortName(\Admin\Core\API::get("being")),
+			"@action" => "Field",
 			"@variant" => $variant
 		);
 		
 		$cache = $this->cacheManager->getCache('Admin_TemplateCache');
 		$identifier = str_replace("\\","_",implode("-", $replacements));
+		$identifier = str_replace(".","_", $identifier);
 		if(!$cache->has($identifier)){
 			$template = $this->helper->getPathByPatternFallbacks("Partials", $replacements);
 			$cache->set($identifier, $template);

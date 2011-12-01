@@ -64,6 +64,10 @@ class Helper {
 	 */
 	protected $securityContext;
 	
+	public function isDemoMode(){
+		return $this->getSettings("Admin.DemoMode");
+	}
+	
 	/**
 	 * Checks if the Variable is iteratable
 	 *
@@ -92,6 +96,15 @@ class Helper {
 			if($mixed instanceof \Doctrine\ODM\MongoDB\MongoCursor)
 				return true;
 		}
+		
+		return false;
+	}
+	
+	public function isUserSuperAdmin(){
+		$superAdminUserName = $this->getSettings("Admin.SuperAdmin");
+		$user = $this->getUser();
+		if(is_object($user))
+			return $user->__toString() == $superAdminUserName;
 		
 		return false;
 	}

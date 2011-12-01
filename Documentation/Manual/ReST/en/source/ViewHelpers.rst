@@ -28,20 +28,6 @@ DashboardWidgets
 ****************
 This ViewHelper renders the currently active Widgets.
 
-FormViewHelper
-********************
-This ViewHelper renders a form for a being. This ViewHelper doesn't render the form tag itself!
-
-being
-	being to render the form for
-	
-Example::
-
-    <f:form method="post" action="form" fieldNamePrefix="form">
-        <a:being className="AdminDemo\Domain\Model\Address" as="being">
-            <a:form being="{ being}" />
-        </a:being>
-    </f:form>
 
 FilterViewHelper
 ********************
@@ -64,6 +50,41 @@ Example::
         </f:for>
         <a:render partial="Filters/Right" fallbacks="Partials"/>
     </a:query.paginate>
+
+
+Form.FieldViewHelper
+********************
+This ViewHelper renders a form field with error handling, label infotext, etc
+
+property
+	the beings property to render
+
+Example::
+
+    <f:form method="post" action="form" fieldNamePrefix="form">
+        <a:being className="AdminDemo\Domain\Model\Address" as="being">
+            <a:form.field being="{ being.street}" />
+            <a:form.field being="{ being.housenumber}" />
+            <a:form.field being="{ being.city}" />
+        </a:being>
+    </f:form>
+
+
+Form.FieldsViewHelper
+********************
+This ViewHelper renders a form for a being. This ViewHelper doesn't render the form tag itself!
+
+being
+	being to render the form for
+
+Example::
+
+    <f:form method="post" action="form" fieldNamePrefix="form">
+        <a:being className="AdminDemo\Domain\Model\Address" as="being">
+            <a:form.fields being="{ being}" />
+        </a:being>
+    </f:form>
+
 
 LayoutViewHelper
 ****************

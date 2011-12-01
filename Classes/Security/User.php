@@ -60,8 +60,8 @@ class User extends \Admin\Core\Domain\Magic{
 
 	/**
 	 * @var string
-     * @Admin\Annotations\Widget Password
-     * @Admin\Annotations\Label Password
+     * @Admin\Annotations\Widget("Password")
+     * @Admin\Annotations\Label("Password")
      * @Admin\Annotations\Ignore("list,view")
 	 */
 	protected $credentialsSource;

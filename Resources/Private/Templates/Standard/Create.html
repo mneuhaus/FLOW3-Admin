@@ -26,7 +26,7 @@
 		<div>
 			<f:form method="post" action="create" fieldNamePrefix="item" object="{being.object}" enctype="multipart/form-data" class="form-horizontal">
 				
-				<a:form being="{being}" />
+				<a:form.fields being="{being}" />
 			
 				<div class="actions pull-left">
 					<f:link.action action="list" arguments="{being: being.class}" class="btn">

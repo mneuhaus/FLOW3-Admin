@@ -44,7 +44,7 @@ class Role extends \Admin\Core\Domain\Magic{
 	/**
 	 * @var \Doctrine\Common\Collections\ArrayCollection<\Admin\Security\Policy>
 	 * @ORM\ManyToMany(inversedBy="roles")
-	 * @Admin\Annotations\OptionsProvider \Admin\OptionsProvider\PolicyOptionsProvider
+	 * @Admin\Annotations\OptionsProvider("\Admin\OptionsProvider\PolicyOptionsProvider")
 	 * @Admin\Annotations\Ignore("list")
 	 * @Admin\Annotations\Label("Actions to Grant")
 	 *

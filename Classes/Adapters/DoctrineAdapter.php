@@ -190,12 +190,12 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 
     public function updateObject($being, $id, $data) {
         $configuration = $this->configurationManager->getClassConfiguration($being);
-        $data["__identity"] = $id;
+#        $data["__identity"] = $id;
         $result = $this->transform($data, $being);
 
         if (is_a($result, $being)) {
             $repository = $this->objectManager->get($this->getRepositoryForModel($being));
-            $repository->add($result);
+            $repository->update($result);
             $this->persistenceManager->persistAll();
         }
         return $result;
