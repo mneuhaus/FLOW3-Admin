@@ -11,7 +11,7 @@ TYPO3:
             providerClass: Admin\Security\AdminProvider
             entryPoint:
               WebRedirect:
-                uri: admin/login/index
+                uri: admin/authentication
       authorization:
         # An array of access decision voters that should vote when access decisions are made
         accessDecisionVoters:

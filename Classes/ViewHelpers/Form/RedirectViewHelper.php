@@ -1,9 +1,9 @@
 <?php
- 
-namespace Admin\ViewHelpers;
+
+namespace Admin\ViewHelpers\Form;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the FLOW3 framework.                            *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License as published by the *
@@ -31,17 +31,21 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * @api
  * @FLOW3\Scope("prototype")
  */
-class VarDumpViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class RedirectViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
+	
 	/**
 	 *
-	 * @param mixed $mixed
 	 * @return string Rendered string
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 * @api
 	 */
-	public function render($mixed = null) {
-		return var_dump($mixed);
+	public function render() {
+		$request = $this->controllerContext->getRequest();
+		if($request->hasArgument("_redirect")){
+			return '<input type="hidden" name="_redirect' . '" value="' . $request->getArgument("_redirect") . '" />' . chr(10);
+		}
 	}
+	
 }
 
 ?>

@@ -4,15 +4,14 @@
 
 # $Id: Routes.yaml 3886 2010-02-28 17:03:50Z robert $
 
-# -
-#   name: 'Login'
-#   uriPattern: 'login'
-#   defaults:
-#     '@action':    'index'
-#     '@package':    'Admin'
-#     '@controller': 'Login'
-#     '@format':     'html'
-    
+-
+  name: 'Authentication Actions'
+  uriPattern: 'authentication(/{@action})'
+  appendExceedingArguments: true
+  defaults:
+    '@controller': 'Login'
+    '@action':     'index'
+
 -
   name: 'Logout'
   uriPattern: 'logout'

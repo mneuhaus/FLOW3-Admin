@@ -66,10 +66,10 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 	protected $objectManager;
 
 	/**
-	 * @var TYPO3\FLOW3\Security\Context
+	 * @var Admin\Security\SecurityManager
 	 * @FLOW3\Inject
 	 */
-	protected $securityContext;
+	protected $securityManager;
 
 	protected $model = "";
 	protected $being = null;
@@ -235,11 +235,10 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 				$this->id = implode(",", $this->id);
 		}
 
-		$user = $this->helper->getUser();
+		$user = $this->securityManager->getUser();
 		
 		if(!isset($user) || !is_object($user)){
-			parent::redirect('index', 'Login');
-			throw new \TYPO3\FLOW3\MVC\Exception\StopActionException();
+			$this->securityManager->redirectToLogin();
 		}else{
 			$allowedBeings = array("view"=>array());
 			try{
@@ -250,8 +249,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 				}
 			} catch (\Doctrine\ORM\EntityNotFoundException $e){
 				unset($user);
-				parent::redirect('index', 'Login');
-				throw new \TYPO3\FLOW3\MVC\Exception\StopActionException();
+				$this->securityManager->redirectToLogin();
 			}
 			$this->user = $user;
 		}
@@ -379,7 +377,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 				#$a = $this->objectManager->create($actionClassName, $this->getAdapter(), $this->request, $this->view, $this);
 				$a = new $actionClassName($this->getAdapter(), $this->request, $this->view, $this);
 				if($a->canHandle($being, $action, $id)){
-					if($this->isAllowed($being,$a->getAction())){
+					if($this->securityManager->isAllowed($being,$a->getAction())){
 						$actionName = \Admin\Core\Helper::getShortName($actionClassName);
 						$actionName = str_replace("Action","",$actionName);
 						$actions[$actionName] = $a;
@@ -448,30 +446,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 	}
 
 
-	/**
-	 * this function checks if the user is allowed to see this page
-	 *
-	 * @param string $being 
-	 * @param string $action 
-	 * @return void
-	 * @author Marc Neuhaus
-	 */
-	public function isAllowed($being,$action){
-		foreach ($this->securityContext->getAuthenticationTokens() as $token){
-			if(is_callable(array($token,"getUser"))){
-				$user = $token->getUser();
-				if($user->isAdmin())
-					return true;
 
-				foreach ($user->getRoles() as $role) {
-					foreach ($role->getGrant() as $policy) {
-						if($this->comparePolicy(array("action"=>$action,"being"=>$being), $policy)) return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
 	
 	/**
 	 * compares a security policy
@@ -481,7 +456,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 	 * @return void
 	 * @author Marc Neuhaus
 	 */
-	public function comparePolicy($arguments,$policy){
+	public function comparePolicy($arguments, $policy){
 		$being = $policy->getBeing();
 		$action = $policy->getAction();
 

@@ -38,6 +38,13 @@ class UserRepository extends \TYPO3\FLOW3\Persistence\Repository {
 	protected $helper;
 	
 	/**
+	 * @var \Admin\Security\SecurityManager
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 * @FLOW3\Inject
+	 */
+	protected $securityManager;
+	
+	/**
 	 * Constructs the Account Repository
 	 *
 	 * @author Robert Lemke <robert@typo3.org>
@@ -103,7 +110,7 @@ class UserRepository extends \TYPO3\FLOW3\Persistence\Repository {
 	public function createQuery() {
 		$query = parent::createQuery();
 		if($this->helper->isDemoMode()){
-			if($this->helper->getUser()){
+			if($this->securityManager->getUser()){
 				$query->matching(
 					$query->logicalNot(
 						$query->equals("accountIdentifier", $this->helper->getSettings("Admin.SuperAdmin"))

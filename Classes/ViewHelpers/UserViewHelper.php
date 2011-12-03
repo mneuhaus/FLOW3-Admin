@@ -34,10 +34,11 @@ use TYPO3\FLOW3\Annotations as FLOW3;
 class UserViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	
 	/**
-	 * @var \Admin\Core\Helper
+	 * @var \Admin\Security\SecurityManager
+	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 * @FLOW3\Inject
 	 */
-	protected $helper;
+	protected $securityManager;
 	
 	/**
 	 * Iterates through elements of $each and renders child nodes
@@ -51,7 +52,7 @@ class UserViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 		if($as == null)
 			$as = $get;
 			
-		$this->templateVariableContainer->add($as, $this->helper->getUser());
+		$this->templateVariableContainer->add($as, $this->securityManager->getUser());
 		$output = $this->renderChildren();
 		$this->templateVariableContainer->remove($as);
 		

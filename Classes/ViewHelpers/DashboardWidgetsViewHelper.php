@@ -54,7 +54,7 @@ class DashboardWidgetsViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractVi
 		
 		$output = "";
 		foreach($this->reflectionService->getAllImplementationClassNamesForInterface('\Admin\Core\DashboardWidgets\DashboardWidgetInterface') as $className) {
-			$widget = $this->objectManager->create($className, $this->viewHelperVariableContainer->getView());
+			$widget = new $className($this->viewHelperVariableContainer->getView());
 			$this->templateVariableContainer->add($as, $widget);
 			$output.= $this->renderChildren();
 			$this->templateVariableContainer->remove($as, $widget);
