@@ -26,25 +26,25 @@ use Doctrine\ORM\Mapping as ORM;
 use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
- * 
+ *
  * @version $Id: ForViewHelper.php 3346 2009-10-22 17:26:10Z k-fish $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @FLOW3\Scope("singleton")
  */
 class ConfigurationManager{
-	
+
 	/**
 	 * @var TYPO3\FLOW3\Cache\CacheManager
 	 * @FLOW3\Inject
 	 */
 	protected $cacheManager;
-	
+
 	/**
 	 * @var array
 	 */
 	protected $configurationProviders;
-	
+
 	/**
 	 * @var \TYPO3\FLOW3\Object\ObjectManagerInterface
 	 * @api
@@ -52,14 +52,14 @@ class ConfigurationManager{
 	 * @FLOW3\Inject
 	 */
 	protected $objectManager;
-	
+
 	/**
 	 * @var \TYPO3\FLOW3\Package\PackageManagerInterface
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 * @FLOW3\Inject
 	 */
 	protected $packageManager;
-	
+
 	/**
 	 * @var \TYPO3\FLOW3\Reflection\ReflectionService
 	 * @api
@@ -67,28 +67,28 @@ class ConfigurationManager{
 	 * @FLOW3\Inject
 	 */
 	protected $reflectionService;
-	
+
 	/**
 	 * @var array
 	 */
 	protected $settings;
-	
+
 	/**
 	 * @var array
 	 */
 	protected $runtimeCache = array();
-	
+
 	public function __construct(\Admin\Core\Helper $helper){
 		$this->settings = $helper->getSettings();
 	}
-	
+
 	public function getClassConfiguration($class){
 		$implementations = class_implements("\\" . ltrim($class, "\\"));
 		if(in_array("Doctrine\ORM\Proxy\Proxy", $implementations))
 			$class = get_parent_class("\\" . ltrim($class, "\\"));
-		
+
 		$this->class = $class;
-			
+
 		if(isset($this->settings["ConfigurationProvider"]) && !isset($this->runtimeCache[$class])){
 			$configuration = array();
 			$configurationProviders = $this->settings["ConfigurationProvider"];
@@ -96,24 +96,24 @@ class ConfigurationManager{
 				$configurationProvider = $this->objectManager->get($configurationProviderClass);
 				$configurationProvider->setSettings($this->settings);
 				$configuration = $this->merge($configuration, $configurationProvider->get($class));
-				
+
 			}
 			$this->runtimeCache[$class] = $configuration;
 		}
-		
+
 		return $this->runtimeCache[$class];
 	}
-	
+
 	public function merge($configuration, $override){
 		foreach ($override as $annotation => $objects) {
 			if($annotation == "properties"){
-				
+
 				if(!isset($configuration[$annotation]))
 					$configuration[$annotation] = array();
 				$configuration[$annotation] = $this->merge($configuration[$annotation], $objects);
-				
+
 			}else{
-				
+
 				foreach ($objects as $key => $object) {
 					try{if(isset($object->multiple) && $object->multiple){
 							$configuration[$annotation][] = $object;
@@ -122,42 +122,42 @@ class ConfigurationManager{
 						}
 					}catch(\TYPO3\FLOW3\Error\Exception $e){}
 				}
-				
+
 			}
 		}
 		return $configuration;
 	}
-	
+
 	/**
 	 * returns classes that are taged with all of the specified tags
 	 *
-	 * @param string $tags 
+	 * @param string $tags
 	 * @return void
 	 * @author Marc Neuhaus
 	 */
 	public function getClassesAnnotatedWith($tags){
 		$cache = $this->cacheManager->getCache('Admin_ImplementationCache');
 		$identifier = "ClassesTaggedWith-".implode("_",$tags);
-		
+
 		if(!$cache->has($identifier)){
 			$classes = array();
-			
+
 			$activePackages = $this->packageManager->getActivePackages();
 			foreach($activePackages as $packageName => $package) {
-				if($packageName == "Doctrine") continue;
+				if(substr($packageName, 0, 8) === "Doctrine") continue;
 				foreach($package->getClassFiles() as $class => $file) {
 					$annotations = $this->getClassConfiguration($class);
-					
+
 					$tagged = true;
 					foreach($tags as $tag){
 						if(!isset($annotations[$tag])) $tagged = false;
 					}
-					
+
 					if($tagged)
 						$classes[$class] = $packageName;
 				}
 			}
-			
+
 			$cache->set($identifier,$classes);
 		}elseif(isset($this->runtimeCache[$identifier])){
 			$classes = $this->runtimeCache[$identifier];
@@ -166,11 +166,11 @@ class ConfigurationManager{
 		}
 		return $classes;
 	}
-	
+
 	public function setConfigurationProviders($configurationProviders){
 		$this->configurationProviders = $configurationProviders;
 	}
-	
+
 	public function setSettings($settings){
 		$this->settings = $settings;
 	}
