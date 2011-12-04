@@ -182,6 +182,9 @@ class Property{
 						$this->being = current($values);
 					}
 					
+					if($this->type == "array")
+						$this->mode = self::INLINE_MULTIPLE_MODE;
+						
 					break;
 					
 				case 'onetomany':

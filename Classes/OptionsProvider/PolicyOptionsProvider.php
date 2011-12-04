@@ -32,19 +32,26 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @author Marc Neuhaus <marc@mneuhaus.com>
  */
-class PolicyOptionsProvider extends \Admin\Core\OptionsProvider\AbstractOptionsProvider {
-    /**
-     * @var \Admin\Security\PolicyRepository
-     * @FLOW3\Inject
-     * 
-     * @author Marc Neuhaus <mneuhaus@famelo.com>
-     * */
-    protected $policyRepository;
-    
+class PolicyOptionsProvider extends \Admin\OptionsProvider\RelationOptionsProvider {
+	
+	/**
+	 * @var \TYPO3\FLOW3\Configuration\ConfigurationManager
+	 * @FLOW3\Inject
+	 */
+	protected $configurationManager;
+	
+	/**
+	 * @var \Admin\Security\PolicyRepository
+	 * @FLOW3\Inject
+	 * 
+	 * @author Marc Neuhaus <mneuhaus@famelo.com>
+	 * */
+	protected $policyRepository;
+
 	/**
 	 * @var \TYPO3\FLOW3\Persistence\PersistenceManagerInterface
 	 * @FLOW3\Inject
-     * 
+	 * 
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 */
 	protected $persistenceManager;
@@ -56,54 +63,58 @@ class PolicyOptionsProvider extends \Admin\Core\OptionsProvider\AbstractOptionsP
 	 * @FLOW3\Inject
 	 */
 	protected $reflectionService;
-    
-    public function getOptions(){
-        $options = array();
-        $groups = $this->helper->getGroups();
-        $actions = $this->getActions();
-        foreach($groups as $group => $beings){
-            foreach($beings["beings"] as $being => $conf){
-                foreach($actions as $action => $label){
-                    $label = str_replace("@being",$conf["name"],$label);
-                    $name = $group . " | " . $conf["name"] . " | " . $label;
-                    $this->createOrUpdate($name, $action, $being);
-                }
-            }
-        }
-        $this->persistenceManager->persistAll();
-        
-        $options = $this->property->getAdapter()->getOptions($this->property->getBeing(), $this->property->getIds());
-        
-        return $options;
-    }
 
-    protected function createOrUpdate($name,$action,$being){
-        $policy = $this->policyRepository->findOneByName($name);
-        if(!is_object($policy)){
-            $policy = $this->objectManager->get("Admin\Security\Policy");
-            $policy->setName($name);
-            $policy->setAction($action);
-            $policy->setBeing($being);
-            $this->policyRepository->add($policy);
-        }else{
-            #$policy->setName($name);
-            #$policy->setAction($action);
-            #$policy->setBeing($being);
-            #$this->policyRepository->update($policy);
-        }
-    }
+	public function getOptions(){
+		$being = $this->property->being;
+		
+		if($being == "array"){
+			$selected = $this->property->getValue();
+			$policy = $this->configurationManager->getConfiguration(\TYPO3\FLOW3\Configuration\ConfigurationManager::CONFIGURATION_TYPE_POLICY);
+			$options = array();
+			foreach ($policy["roles"] as $key => $value) {
+				$options[] = new \Admin\Core\Option($key, $key, $this->isSelected($key));
+			}
+			return $options;
+		}else{
+			$groups = $this->helper->getGroups();
+			$actions = $this->getActions();
+			foreach($groups as $group => $beings){
+				foreach($beings["beings"] as $being => $conf){
+					foreach($actions as $action => $label){
+						$label = str_replace("@being",$conf["name"],$label);
+						$name = $group . " | " . $conf["name"] . " | " . $label;
+						$this->createOrUpdate($name, $action, $being);
+					}
+				}
+			}
+			$this->persistenceManager->persistAll();
 
-    public function getActions(){
-        $actions = array();
-        $blacklist = explode(",","index,list");
-        foreach($this->reflectionService->getAllImplementationClassNamesForInterface('\Admin\Core\Actions\ActionInterface') as $actionClassName) {
-            $a = new $actionClassName();
-            if(!in_array($a->getAction(),$blacklist))
-                $actions[$a->getAction()] = $a->__toString();
+			return parent::getOptions();
 		}
-        ksort($actions);
-        return $actions;
-    }
+	}
+
+	protected function createOrUpdate($name,$action,$being){
+		$policy = $this->policyRepository->findOneByName($name);
+		if(!is_object($policy)){
+			$policy = $this->objectManager->get("Admin\Security\Policy");
+			$policy->setName($name);
+			$policy->setAction($action);
+			$policy->setBeing($being);
+			$this->policyRepository->add($policy);
+		}
+	}
+
+	public function getActions(){
+		$actions = array();
+		$blacklist = explode(",","index,list");
+		foreach($this->reflectionService->getAllImplementationClassNamesForInterface('\Admin\Core\Actions\ActionInterface') as $actionClassName) {
+			$a = new $actionClassName();
+			if(!in_array($a->getAction(),$blacklist))
+				$actions[$a->getAction()] = $a->__toString();
+		}
+		ksort($actions);
+		return $actions;
+	}
 }
 
 ?>

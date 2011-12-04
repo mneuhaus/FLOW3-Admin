@@ -49,7 +49,7 @@ class ArrayOptionsProvider extends \Admin\Core\OptionsProvider\AbstractOptionsPr
 		
 		if(is_array($rawOptions)){
 			foreach($rawOptions as $key => $value) {
-				$options[] = new \Admin\Core\Option($key, $value, $key == $this->property->getValue());
+				$options[] = new \Admin\Core\Option($key, $value, $this->isSelected($key));
 			}
 		}
 		

@@ -32,7 +32,7 @@ class DateTimeConverter extends \TYPO3\FLOW3\Property\TypeConverter\DateTimeConv
 	/**
 	 * @var integer
 	 */
-	protected $priority = 1;
+	protected $priority = 30;
 	
 	/**
 	 * Empty strings can't be converted

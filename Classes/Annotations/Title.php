@@ -14,29 +14,9 @@ namespace Admin\Annotations;
 /**
  * @Annotation
  */
-final class Type {
-	
-	/**
-	 * @var string
-	 */
-	public $name = "string";
-	
-	/**
-	 * @var array
-	 */
- 	public $subtype = null;
-	
-	/**
-	 * @param string $value
-	 */
-	public function __construct(array $values = array()) {
-		$this->name = isset($values['value']) ? $values['value'] : $this->name;
-		$this->name = isset($values['name']) ? $values['name'] : $this->name;
-		$this->subtype = isset($values['subtype']) ? $values['subtype'] : $this->subtype;
-	}
-	
+final class Title {
 	public function __toString(){
-		return $this->name;
+		return "Title";
 	}
 }
 

@@ -47,7 +47,20 @@ abstract class AbstractOptionsProvider implements OptionsProviderInterface {
 	protected $helper;
     
 	protected $property;
-
+	
+	public function isSelected($value){
+		$mixed = $this->property->getValue();
+		if(is_array($mixed)){
+			foreach ($mixed as $item) {
+				if(strval($value) == $item)
+					return true;
+			}
+		}elseif(is_string($mixed)){
+			return $mixed == $value;
+		}
+		return false;
+	}
+	
 	public function setProperty($property) {
 		$this->property = $property;
 	}
