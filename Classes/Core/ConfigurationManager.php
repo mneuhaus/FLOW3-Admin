@@ -144,7 +144,7 @@ class ConfigurationManager{
 
 			$activePackages = $this->packageManager->getActivePackages();
 			foreach($activePackages as $packageName => $package) {
-				if($packageName == "Doctrine") continue;
+				if(substr($packageName, 0, 8) === "Doctrine") continue;
 				foreach($package->getClassFiles() as $class => $file) {
 					$annotations = $this->getClassConfiguration($class);
 
