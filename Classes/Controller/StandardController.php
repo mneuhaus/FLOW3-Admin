@@ -170,7 +170,10 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		$actionName = str_replace("Action","",$name);
 		$this->prepare($actionName);
 		$action = $this->getActionByShortName($name);
-		
+
+		if(!is_object($action))
+			parent::redirect("index");
+			
 		\Admin\Core\API::addTitleSegment("Admin");
 		\Admin\Core\API::addTitleSegment($action->__toString());
 		if(isset($this->being))
@@ -193,8 +196,9 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 				foreach ($adapters[$adapter]->getGroups() as $group => $beings) {
 					foreach ($beings as $conf) {
 						$being = $conf["being"];
-						$shortNames[$being] = strtolower(str_replace("\\", "_", $being));
-						$shortNames[strtolower(str_replace("\\", "_", $being))] = $being;
+						$shortName = str_replace("domain_model_", "", strtolower(str_replace("\\", "_", $being)));
+						$shortNames[$being] = $shortName;
+						$shortNames[$shortName] = $being;
 					}
 				}
 			}
