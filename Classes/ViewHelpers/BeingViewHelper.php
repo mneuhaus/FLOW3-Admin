@@ -62,6 +62,9 @@ class BeingViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 		if($this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix'))
 			$being->prefix = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix');
 		
+		$validationResults = $this->controllerContext->getRequest()->getOriginalRequestMappingResults();
+		$being->setErrors($validationResults->forProperty($being->prefix));
+		
 		$this->templateVariableContainer->add($as, $being);
 		$content = $this->renderChildren();
 		$this->templateVariableContainer->remove($as);

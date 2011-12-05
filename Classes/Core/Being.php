@@ -157,7 +157,10 @@ class Being{
 	}
 	
 	public function setErrors($errors) {
-		$this->errors = $errors;
+		if(is_object($errors))
+			$this->errors = $errors->getFlattenedErrors();
+		else
+			$this->errors = $errors;
 	}
 	
 	public function getSets(){
