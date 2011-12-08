@@ -5,18 +5,15 @@
 
 <f:section name="actionbar-right">
 	<f:for each="{topBarActions}" as="action">
-		<f:link.action
-			class=" {action.class}"
+		<a:link
+			class="{action.class}"
 			action="{action.action}"
 			controller="{action.controller}"
 			package="{action.package}"
 			target="{action.target}"
-			arguments="{
-				being : being.class,
-				adapter : being.adapter.class
-			}">
+			being="{being.class}">
 			{action}
-		</f:link.action>
+		</a:link>
 	</f:for>
 </f:section>
 
