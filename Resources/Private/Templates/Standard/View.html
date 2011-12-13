@@ -19,18 +19,16 @@
     </f:for>
 </f:section>
 <f:section name="content">
-	<div class="fluid ui-container">
-		<h3 class="ui-header mb">{meta.being.name}</h3>
-		<div class="mr ml">
+	<div class="box centered">
+		<h3 class="box-header">{being}</h3>
+		<div class="whitespace">
+			<br />
+			<dl>
 			<f:for each="{being.properties}" as="value" key="property">
-				<div class="fluid">
-					<b class="dl15">
-						{a:f.cuf(value: property, funcs: "ucfirst")}: 
-					</b>
-					{value.string}
-				</div>
+				<dt>{property}</dt>
+				<dd>{value.string}</dd>
 			</f:for>
-			<div class="clear mb">&nbsp;</div>
+			</dl>
 		</div>
 	</div>
 </f:section>

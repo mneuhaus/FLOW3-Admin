@@ -97,7 +97,10 @@ class ObjectConverter extends \TYPO3\FLOW3\Property\TypeConverter\AbstractTypeCo
 	}
 	
 	public function getProperties($source){
-		$class = get_class($source);
+		if($source instanceof \Doctrine\ORM\Proxy\Proxy) 
+			$class = get_parent_class($source);
+		else
+			$class = get_class($source);
 		$schema = $this->reflectionService->getClassSchema($class);
 		if(is_object($schema)){
 			$properties = $schema->getProperties();
