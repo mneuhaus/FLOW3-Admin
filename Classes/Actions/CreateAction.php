@@ -50,6 +50,10 @@ class CreateAction extends \Admin\Core\Actions\AbstractAction {
 		return "New";
 	}
 	
+	public function getShortcut(){
+		return "n";
+	}
+	
 	/**
 	 * Create objects
 	 *
@@ -65,10 +69,7 @@ class CreateAction extends \Admin\Core\Actions\AbstractAction {
 			
 			if( is_a($result, $being) ) {
 				$this->controller->addLog();
-				
-				$arguments = array(
-					"being" => $being
-				);
+				$arguments = array("being" => \Admin\Core\API::get("classShortNames", $being));
 				$this->controller->redirect('list', NULL, NULL, $arguments);
 			}else {
 				$object->setErrors($result);

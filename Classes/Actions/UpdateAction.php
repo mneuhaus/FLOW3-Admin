@@ -57,7 +57,11 @@ class UpdateAction extends \Admin\Core\Actions\AbstractAction {
 	public function __toString() {
 		return "Edit";
 	}
-
+	
+	public function getShortcut(){
+		return "e";
+	}
+	
 	/**
 	 * Edit objects
 	 *
@@ -70,7 +74,7 @@ class UpdateAction extends \Admin\Core\Actions\AbstractAction {
 			$result = $this->adapter->updateObject($being, current($ids), $this->request->getArgument("item"));
 			
 			if( is_a($result, $being) ) {
-				$arguments = array("being" => $being, "adapter" => get_class($this->adapter));
+				$arguments = array("being" => \Admin\Core\API::get("classShortNames", $being));
 				$this->controller->addLog();
 				$this->controller->redirect('list', NULL, NULL, $arguments);
 			}else {

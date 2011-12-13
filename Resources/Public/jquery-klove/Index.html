@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Bootstrap, from Twitter</title>
+	
+	<link href="../bootstrap/bootstrap.css" rel="stylesheet">
+	<style type="text/css">
+		html, body { background-color: #eee; }
+		body { padding-top: 40px; }
+		.content { background-color: #fff; padding: 20px; margin: 0 -20px; -webkit-border-radius: 0 0 6px 6px; -moz-border-radius: 0 0 6px 6px; border-radius: 0 0 6px 6px; -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15); -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15); box-shadow: 0 1px 2px rgba(0,0,0,.15); }
+		.page-header { background-color: #f5f5f5; padding: 20px 20px 10px; margin: -20px -20px 20px; }
+		.content .span4 { margin-left: 0; padding-left: 19px; border-left: 1px solid #eee; }
+		.topbar .btn { border: 0; }
+		.active { background: whitesmoke; }
+		
+		
+		.klove-help{
+			position: absolute;
+			right: 0;
+			top: 0;
+			
+			min-width: 18px;
+			height: 18px;
+			padding: 2px;
+			text-align: center;
+			font: 14px/18px sans-serif;
+			color: #777;
+			background: #EFF0F2;
+			border-top: 1px solid whiteSmoke;
+			text-shadow: 0px 1px 0px whiteSmoke;
+			-webkit-box-shadow: inset 0 0 25px #eee, 0 1px 0 #c3c3c3, 0 2px 0 #c9c9c9, 0 2px 3px #333;
+			-moz-box-shadow: inset 0 0 25px #eee, 0 1px 0 #c3c3c3, 0 2px 0 #c9c9c9, 0 2px 3px #333;
+			box-shadow: inset 0 0 25px #eee, 0 1px 0 #c3c3c3, 0 2px 0 #c9c9c9, 0 2px 3px #333;
+			display: inline-block;
+			-moz-border-radius: 1px;
+			border-radius: 1px;
+		}
+	</style>
+	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript">
+	</script><script src="jwerty.js" type="text/javascript" charset="utf-8">
+	</script><script src="jquery.klove.js" type="text/javascript" charset="utf-8">
+	</script><script type="text/javascript" charset="utf-8">
+			jQuery(document).ready(function(){
+				jQuery("[data-klove=container]").klove({type: "table"});
+				jQuery("[data-shortcut]").klove({type: "shortcut", source: "data-shortcut"})
+			});
+	</script>
+</head>
+
+<body>
+
+	<div class="container">
+
+		<div class="content">
+			<div class="page-header">
+				<h1>jQuery KLove</h1>
+			</div>
+			<div class="row">
+				<div class="span12">
+					<label for="shouldn't_interfere_with_inputs!">Shouldn't interfere with inputs!</label><input type="text/submit/hidden/button" name="shouldn't_interfere_with_inputs!" value="" id="shouldn't_interfere_with_inputs!">
+					
+					<table class="zebra-striped condensed-table" data-klove="container">
+						<thead>
+							<tr>
+								<th class="tiny">
+									<input type="checkbox" class="select-all">
+								</th>
+								<th>
+									<a href="#">Street</a>
+								</th>
+								<th>
+									<a href="#">City</a>
+								</th>
+								<th>
+									<a href="#">Country</a>
+								</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr data-klove="row">
+								<td class="tiny">
+									<input type="checkbox" name="bulkItems[]" value="1579af80-4e05-45b5-9f9f-d827611862bb" class="select-row" data-klove-row-shortcut="x" >
+								</td>
+								<td>
+									Quitzon Point
+								</td>
+								<td>
+									Ellenside
+								</td>
+								<td>
+									Northern Ireland
+								</td>
+								<td class="table-actions">
+									<a class=" tiny btn danger" target="_self" href="#delete" data-klove-row-shortcut="d">Delete</a> <a class=" tiny btn" target="_self" href="#edit" data-klove="focus" data-klove-row-shortcut="e">Edit</a> <a class=" tiny btn" target="_self" href="#view" data-klove-row-shortcut="v">View</a>
+								</td>
+							</tr>
+							<tr data-klove="row">
+								<td class="tiny">
+									<input type="checkbox" name="bulkItems[]" value="18fa2a1e-4086-44b1-975a-33e1cf184f4a" class="select-row" data-klove-row-shortcut="x" >
+								</td>
+								<td>
+									Dameon Crescent
+								</td>
+								<td>
+									Judgefurt
+								</td>
+								<td>
+									Scotland
+								</td>
+								<td class="table-actions">
+									<a class=" tiny btn danger" target="_self" href="#delete" data-klove-row-shortcut="d">Delete</a> <a class=" tiny btn" target="_self" href="#edit" data-klove="focus" data-klove-row-shortcut="e">Edit</a> <a class=" tiny btn" target="_self" href="#view" data-klove-row-shortcut="v">View</a>
+								</td>
+							</tr>
+							<tr data-klove="row">
+								<td class="tiny">
+									<input type="checkbox" name="bulkItems[]" value="1e1a0412-0361-44c2-805e-8dc7a980bc7c" class="select-row" data-klove-row-shortcut="x" >
+								</td>
+								<td>
+									Winona Square
+								</td>
+								<td>
+									Terryton
+								</td>
+								<td>
+									Northern Ireland
+								</td>
+								<td class="table-actions">
+									<a class=" tiny btn danger" target="_self" href="#delete" data-klove-row-shortcut="d">Delete</a> <a class=" tiny btn" target="_self" href="#edit" data-klove="focus" data-klove-row-shortcut="e">Edit</a> <a class=" tiny btn" target="_self" href="#view" data-klove-row-shortcut="v">View</a>
+								</td>
+							</tr>
+							<tr data-klove="row">
+								<td class="tiny">
+									<input type="checkbox" name="bulkItems[]" value="5957c799-b66c-4076-a61c-4b287140ffd4" class="select-row" data-klove-row-shortcut="x" >
+								</td>
+								<td>
+									Hoppe Inlet
+								</td>
+								<td>
+									Jaimeshire
+								</td>
+								<td>
+									Scotland
+								</td>
+								<td class="table-actions">
+									<a class=" tiny btn danger" target="_self" href="#delete" data-klove-row-shortcut="d">Delete</a> <a class=" tiny btn" target="_self" href="#edit" data-klove="focus" data-klove-row-shortcut="e">Edit</a> <a class=" tiny btn" target="_self" href="#view" data-klove-row-shortcut="v">View</a>
+								</td>
+							</tr>
+							<tr data-klove="row">
+								<td class="tiny">
+									<input type="checkbox" name="bulkItems[]" value="6b93b7b6-5af8-4a99-afed-2ba5365ee3c4" class="select-row" data-klove-row-shortcut="x" >
+								</td>
+								<td>
+									Noemi Trafficway
+								</td>
+								<td>
+									Schillerchester
+								</td>
+								<td>
+									Wales
+								</td>
+								<td class="table-actions">
+									<a class=" tiny btn danger" target="_self" href="#delete" data-klove-row-shortcut="d">Delete</a> <a class=" tiny btn" target="_self" href="#edit" data-klove="focus" data-klove-row-shortcut="e">Edit</a> <a class=" tiny btn" target="_self" href="#view" data-klove-row-shortcut="v">View</a>
+								</td>
+							</tr>
+							<tr data-klove="row">
+								<td class="tiny">
+									<input type="checkbox" name="bulkItems[]" value="6ed37441-24aa-447b-8602-a3135672f181" class="select-row" data-klove-row-shortcut="x" >
+								</td>
+								<td>
+									Mills Brook
+								</td>
+								<td>
+									Madysonshire
+								</td>
+								<td>
+									Scotland
+								</td>
+								<td class="table-actions">
+									<a class=" tiny btn danger" target="_self" href="#delete" data-klove-row-shortcut="d">Delete</a> <a class=" tiny btn" target="_self" href="#edit" data-klove="focus" data-klove-row-shortcut="e">Edit</a> <a class=" tiny btn" target="_self" href="#view" data-klove-row-shortcut="v">View</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="pagination pull-left">
+						<ul>
+							<li>
+								<a href="#">10</a>
+							</li>
+							<li class="active">
+								<a href="#">20</a>
+							</li>
+							<li>
+								<a href="#">100</a>
+							</li>
+						</ul>
+					</div>
+					<div class="pagination pull-right">
+						<ul>
+							<li class="prev">
+								<a href="#prev" data-klove-row-shortcut="←">prev</a>
+							</li>
+							<li>
+								<a href="#">1</a>
+							</li>
+							<li class="active">
+								<a href="#">2</a>
+							</li>
+							<li class="next">
+								<a href="#next" data-klove-row-shortcut="→">next</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			
+			<footer>
+				<p>&copy; Famelo 2011</p>
+			</footer>
+			
+		</div> <!-- /container -->
+
+	</body>
+	</html>

@@ -57,7 +57,11 @@ class DeleteAction extends \Admin\Core\Actions\AbstractAction {
 	public function getAction() {
 		return "confirm";
 	}
-
+	
+	public function getShortcut(){
+		return "d";
+	}
+	
 	/**
 	 * Delete objects
 	 *
@@ -73,7 +77,7 @@ class DeleteAction extends \Admin\Core\Actions\AbstractAction {
 				}
 				$this->controller->addLog();
 				
-				$arguments = array("adapter" => get_class($this->adapter), "being" => $being);
+				$arguments = array("being" => \Admin\Core\API::get("classShortNames", $being));
 				$this->controller->redirect('list', NULL, NULL, $arguments);
 			}else {
 				$arguments = $this->request->getArguments();

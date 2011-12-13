@@ -61,6 +61,9 @@ class LinkViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHe
 	 *
 	 * @param string $action Target action
 	 * @param array $arguments Arguments
+	 * @param string $being
+	 * @param string $shortcut
+	 * @param string $selectionShortcut
 	 * @param string $controller Target controller. If NULL current controllerName is used
 	 * @param string $package Target package. if NULL current package is used
 	 * @param string $subpackage Target subpackage. if NULL current subpackage is used
@@ -72,7 +75,7 @@ class LinkViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHe
 	 * @return string The rendered link
 	 * @api
 	 */
-	public function render($action = NULL, $arguments = array(), $being = NULL, $controller = NULL, $package = NULL, $subpackage = NULL, $section = '', $format = '',  array $additionalParams = array(), $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array(), $overrule = array()) {
+	public function render($action = NULL, $arguments = array(), $being = NULL, $selectionShortcut = false, $shortcut = false, $controller = NULL, $package = NULL, $subpackage = NULL, $section = '', $format = '',  array $additionalParams = array(), $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array(), $overrule = array()) {
 		$uriBuilder = $this->controllerContext->getUriBuilder();
 		if($being !== NULL)
 			$arguments["being"] = \Admin\Core\API::get("classShortNames", $being);
@@ -87,6 +90,12 @@ class LinkViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHe
 				->setFormat($format)
 				->uriFor($action, $arguments, $controller, $package, $subpackage);
 			$this->tag->addAttribute('href', $uri);
+			
+			if($shortcut)
+				$this->tag->addAttribute("data-klove-shortcut", $shortcut);
+				
+			if($selectionShortcut)
+				$this->tag->addAttribute("data-klove-row-shortcut", $selectionShortcut);
 		} catch (\TYPO3\FLOW3\Exception $exception) {
 			throw new \TYPO3\Fluid\Core\ViewHelper\Exception($exception->getMessage(), $exception->getCode(), $exception);
 		}

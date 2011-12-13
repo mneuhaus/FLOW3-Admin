@@ -1,10 +1,6 @@
-<select name="bulkAction">
-	<option value="">Bulk Actions</option>
-	<f:for each="{actions}" as="action" key="class">
-		<option value="{class}">{action}</option>
-	</f:for>
-</select>
-<button name="bulk" value="execute" class="btn">Apply</button>
+<f:for each="{actions}" as="action" key="class">
+	<button name="bulkAction" value="{class}" class="btn" data-klove-shortcut="alt+{action.shortcut}" data-klove-info="Bulk {action}">{action}</button>
+</f:for>
 
 <f:if condition="{filters}">
 	<f:for each="{filters}" as="filter">

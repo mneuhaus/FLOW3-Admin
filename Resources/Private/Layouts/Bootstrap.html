@@ -134,6 +134,14 @@
 			</div>
 			
 			<a:flashMessages />
+			<div id="shortcuts-modal" class="modal hide ">
+				<div class="modal-header">
+					<a href="#" class="close" data-modal-dismiss="true">×</a>
+					<h3>Keyboard Shortcuts</h3>
+				</div>
+				<div class="modal-body clearfix">
+				</div>
+			</div>
 			
 			<f:render section='content' />
 			
@@ -145,11 +153,21 @@
 	</f:render>
 	
 	
-	<script src="{f:uri.resource(path: 'admin/js/jquery.1.6.4.min.js', package: 'Admin')}"></script>
+	<script src="{f:uri.resource(path: 'admin/js/jquery.1.7.1.min.js', package: 'Admin')}"></script>
+	
+	<script src="{f:uri.resource(path: 'jquery-klove/jwerty.js', package: 'Admin')}" type="text/javascript" charset="utf-8"></script>
+	<script src="{f:uri.resource(path: 'jquery-klove/jquery.klove.js', package: 'Admin')}" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" charset="utf-8">
+			jQuery(document).ready(function(){
+				jQuery("[data-klove=container]").klove("table");
+				jQuery("[data-klove-shortcut]").klove();
+			});
+	</script>
 	
 	<script src="{f:uri.resource(path: 'bootstrap/js/bootstrap-alerts.js', package: 'Admin')}"></script>
 	<script src="{f:uri.resource(path: 'bootstrap/js/bootstrap-dropdown.js', package: 'Admin')}"></script>
 	<script src="{f:uri.resource(path: 'bootstrap/js/bootstrap-twipsy.js', package: 'Admin')}"></script>
+	<script src="{f:uri.resource(path: 'bootstrap/js/bootstrap-modal.js', package: 'Admin')}"></script>
 	
 	<script src="{f:uri.resource(path: 'admin/js/jquery.inlineHelper.js', package: 'Admin')}"></script>
 	

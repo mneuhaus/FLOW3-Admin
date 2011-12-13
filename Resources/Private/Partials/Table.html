@@ -1,9 +1,9 @@
 {namespace a=Admin\ViewHelpers}
-<table class="zebra-striped condensed-table">
+<table class="zebra-striped condensed-table" data-klove="container" >
 	<thead>
 		<tr>
 			<th class="tiny">
-				<input type="checkbox" class="select-all" />
+				<input type="checkbox" class="select-all" data-klove-shortcut="a" data-klove-info="toggle all"/>
 			</th>
 			<f:for each="{objects}" as="object" key="id" iteration="loop">
 				<a:being object="{object}">
@@ -28,9 +28,9 @@
 	<tbody>
 		<f:for each="{objects}" as="object">
 		<a:being object="{object}">
-		<tr>
+		<tr data-klove="row">
 			<td class="tiny">
-				<input type="checkbox" name="bulkItems[]" value="{being.id}" class="select-row"/>
+				<input type="checkbox" name="bulkItems[]" value="{being.id}" class="select-row" data-klove-row-shortcut="x"/>
 			</td>
 			<f:for each="{being.properties}" as="value" key="property">
 				<td>{value.string}</td>
@@ -41,6 +41,7 @@
 						class=" tiny {action.class}"
 						action="{action.action}"
 						controller="{action.controller}"
+						selectionShortcut="{action.shortcut}"
 						package="{action.package}"
 						target="{action.target}"
 						being="{being.class}"

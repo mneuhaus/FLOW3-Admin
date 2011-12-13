@@ -37,6 +37,10 @@ class ConfirmAction extends \Admin\Core\Actions\AbstractAction {
 	public function canHandle($being, $action = null, $id = false) {
 		return false;
 	}
+	
+	public function getShortcut(){
+		return "c";
+	}
 
 	/**
 	 *
@@ -49,7 +53,7 @@ class ConfirmAction extends \Admin\Core\Actions\AbstractAction {
 		foreach ($ids as $id) {
 			$objects[] = $this->adapter->getBeing($being, $id);
 		}
-		$this->view->assign("objects", $objects);
+		$this->view->assign("confirmObjects", $objects);
 		$this->view->assign("ids", implode(",", $ids));
 		$this->view->assign("being", $being);
 	}

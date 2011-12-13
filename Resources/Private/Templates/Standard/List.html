@@ -9,7 +9,8 @@
 <f:section name="actionbar-right">
 	<f:for each="{topBarActions}" as="action">
 		<a:link
-			class=" {action.class}"
+			class="{action.class}"
+			shortcut="{action.shortcut}"
 			action="{action.action}"
 			controller="{action.controller}"
 			package="{action.package}"

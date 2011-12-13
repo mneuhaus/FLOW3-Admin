@@ -84,6 +84,10 @@ abstract class AbstractAction implements ActionInterface {
 	public function getAction() {
 		return lcfirst(self::__toString());
 	}
+	
+	public function getShortcut(){
+		return false;
+	}
 
 	public function override($class, $being){
 		return false;

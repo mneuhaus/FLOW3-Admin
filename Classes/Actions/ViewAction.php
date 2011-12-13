@@ -50,7 +50,11 @@ class ViewAction extends \Admin\Core\Actions\AbstractAction {
 				return $id;
 		}
 	}
-
+	
+	public function getShortcut(){
+		return "v";
+	}
+	
 	/**
 	 * View objects
 	 *
