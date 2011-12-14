@@ -24,7 +24,8 @@
 <f:section name="content">
 	<a:query.sort objects="{objects}">
 	<a:query.filter objects="{sortedObjects}">
-	<a:query.paginate objects="{filteredObjects}">
+	<a:query.search objects="{filteredObjects}">
+	<a:query.paginate objects="{matchingObjects}">
 		<f:if condition="{filters}">
 		<f:then>
 			<div class="pull-right filter-sidebar">
@@ -36,6 +37,10 @@
 		</f:else>
 			<div>
 		</f:if>
+				<div class="form-search">
+					<input type="text" class="" name="search" value="{search}" />
+				    <button type="submit" class="btn">Search</button>
+		        </div>
 				<a:render partial="Table" fallbacks="Partials" vars="{objects: paginatedObjects, sorting: sorting, listActions: listActions}"/>
 				
 				<div class="pagination pull-left">
@@ -50,6 +55,7 @@
 				
 			</div>
 	</a:query.paginate>
+	</a:query.search>
 	</a:query.filter>
 	</a:query.sort>
 </f:section>

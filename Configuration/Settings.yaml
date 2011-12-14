@@ -46,8 +46,9 @@ Admin:
           package: admin
   Defaults:
     Variant: Default
+    SearchProvider: \Admin\SearchProvider\SimpleSearchProvider
     properties:
-      OptionsProvider: Admin\OptionsProvider\RelationOptionsProvider
+      OptionsProvider: \Admin\OptionsProvider\RelationOptionsProvider
       Representation:
         DatetimeFormat: Y-m-d\TH:i:s
   Adapters:
