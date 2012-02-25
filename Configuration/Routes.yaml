@@ -6,7 +6,7 @@
 
 -
   name: 'Authentication Actions'
-  uriPattern: 'authentication(/{@action})'
+  uriPattern: 'login(/{@action})'
   appendExceedingArguments: true
   defaults:
     '@controller': 'Login'

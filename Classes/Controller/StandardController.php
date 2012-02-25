@@ -349,9 +349,9 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		if(isset($this->adapter)){
 			$adapter =  $this->objectManager->get($this->adapter);
 			if(!empty($this->being) && class_exists($this->being, false)){
-				$tags = $this->reflectionService->getClassTagsValues($this->being);
-				if(array_key_exists("adapter",$tags) && class_exists("\\".$tags["adapter"][0], false)){
-					$adapter = $this->objectManager->get($tags["adapter"][0]);
+				$value = $this->reflectionService->getClassAnnotation($this->being, 'adapter');
+                                if($value !== NULL && class_exists("\\".$value[0], false)){
+					$adapter = $this->objectManager->get($value[0]);
 				}
 			}
 			$adapter->init();
