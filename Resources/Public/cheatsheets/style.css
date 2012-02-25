@@ -1,0 +1,36 @@
+	p, blockquote, pre, a, abbr, acronym, address, cite, code, del, dfn, em, img, q, s, samp, small, strike, strong, sub, sup, tt, var, dd, dl, dt, li, ol, ul, fieldset, form, label, legend, button, table, caption, tbody, tfoot, thead, tr, th, td {
+		font-size: 11px;
+		line-height: 13px;
+	}
+	html, body { font-size:10px; padding:0; }
+	.container > footer p { text-align: center; }
+	.wrapper { 
+		width: 1020px; height:750px;
+		margin:0px auto 0;
+/*		border-bottom: 1px solid #DDD; */
+		padding: 20px;
+		overflow:hidden;
+	}
+	.content { }
+	h1 { margin-bottom:10px; }
+	table.striped-table { border-bottom: 1px solid #DDD; }
+	table.striped-table th { 
+		color: #ffffff; 
+		background: #99011E; 
+		background: #0064CD;
+	}
+	table.striped-table tbody tr:nth-child(odd) td, table.red tbody tr:nth-child(odd) th {
+		background: #E2BAC2;
+		background: #C8DDF3;
+		color:#333;
+	}
+	.condensed-table th, .condensed-table td { padding: 3px 7px 5px; line-height:16px; }
+	.striped-table tbody tr:nth-child(odd) td, .striped-table tbody tr:nth-child(odd) th { 
+		padding:3px 7px 2px; 
+	}
+	
+	.syntaxhighlighter .container { width:auto; height:auto; }
+	.syntaxhighlighter code { background:none; padding: 0; font-size:10px; }
+	.syntaxhighlighter td { border:none; padding:0px !important; background:none !important; }
+	.syntaxhighlighter table { margin-bottom:0px; }
+	.syntaxhighlighter { background-color: whiteSmoke; display: block; padding: 2px 7px; margin: 5px -7px 2px; line-height: 18px; font-size: 12px; border: 1px solid #CCC; border: 1px solid rgba(0, 0, 0, 0.15); -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; white-space: pre; white-space: pre-wrap; word-break: break-all; }
