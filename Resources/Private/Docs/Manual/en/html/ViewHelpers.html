@@ -20,15 +20,16 @@
 <li><a class="reference internal" href="#apiviewhelper">ApiViewHelper</a></li>
 <li><a class="reference internal" href="#beingviewhelper">BeingViewHelper</a></li>
 <li><a class="reference internal" href="#dashboardwidgets">DashboardWidgets</a></li>
-<li><a class="reference internal" href="#filterviewhelper">FilterViewHelper</a></li>
 <li><a class="reference internal" href="#form-fieldviewhelper">Form.FieldViewHelper</a></li>
 <li><a class="reference internal" href="#form-fieldsviewhelper">Form.FieldsViewHelper</a></li>
 <li><a class="reference internal" href="#layoutviewhelper">LayoutViewHelper</a></li>
 <li><a class="reference internal" href="#navigationviewhelper">NavigationViewHelper</a></li>
-<li><a class="reference internal" href="#paginationviewhelper">PaginationViewHelper</a></li>
+<li><a class="reference internal" href="#query-filterviewhelper">Query.FilterViewHelper</a></li>
+<li><a class="reference internal" href="#query-paginationviewhelper">Query.PaginationViewHelper</a></li>
+<li><a class="reference internal" href="#query-searchviewhelper">Query.SearchViewHelper</a></li>
+<li><a class="reference internal" href="#query-sortviewhelper">Query.SortViewHelper</a></li>
 <li><a class="reference internal" href="#renderviewhelper">RenderViewHelper</a></li>
 <li><a class="reference internal" href="#settingsviewhelper">SettingsViewHelper</a></li>
-<li><a class="reference internal" href="#sortviewhelper">SortViewHelper</a></li>
 <li><a class="reference internal" href="#userviewhelper">UserViewHelper</a></li>
 </ul>
 </li>
@@ -69,26 +70,6 @@
 <div class="section" id="dashboardwidgets">
 <h2>DashboardWidgets<a class="headerlink" href="#dashboardwidgets" title="Permalink to this headline">¶</a></h2>
 <p>This ViewHelper renders the currently active Widgets.</p>
-</div>
-<div class="section" id="filterviewhelper">
-<h2>FilterViewHelper<a class="headerlink" href="#filterviewhelper" title="Permalink to this headline">¶</a></h2>
-<p>This ViewHelper can be used to filter objects</p>
-<dl class="docutils">
-<dt>objects</dt>
-<dd>the objects that should be sorted</dd>
-<dt>as</dt>
-<dd>variable for the filtered objects. By Default: filteredObjects</dd>
-<dt>filtersAs</dt>
-<dd>variable for the filters. By Default: filters</dd>
-</dl>
-<p>Example:</p>
-<div class="highlight-python"><pre>&lt;a:query.filter objects="{ objects}"&gt;
-    &lt;f:for each="{ filteredObjects}" as="object"&gt;
-        ...
-    &lt;/f:for&gt;
-    &lt;a:render partial="Filters/Right" fallbacks="Partials"/&gt;
-&lt;/a:query.paginate&gt;</pre>
-</div>
 </div>
 <div class="section" id="form-fieldviewhelper">
 <h2>Form.FieldViewHelper<a class="headerlink" href="#form-fieldviewhelper" title="Permalink to this headline">¶</a></h2>
@@ -152,8 +133,28 @@
 &lt;/ul&gt;</pre>
 </div>
 </div>
-<div class="section" id="paginationviewhelper">
-<h2>PaginationViewHelper<a class="headerlink" href="#paginationviewhelper" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="query-filterviewhelper">
+<h2>Query.FilterViewHelper<a class="headerlink" href="#query-filterviewhelper" title="Permalink to this headline">¶</a></h2>
+<p>This ViewHelper can be used to filter objects</p>
+<dl class="docutils">
+<dt>objects</dt>
+<dd>the objects that should be sorted</dd>
+<dt>as</dt>
+<dd>variable for the filtered objects. By Default: filteredObjects</dd>
+<dt>filtersAs</dt>
+<dd>variable for the filters. By Default: filters</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-python"><pre>&lt;a:query.filter objects="{ objects}"&gt;
+    &lt;f:for each="{ filteredObjects}" as="object"&gt;
+        ...
+    &lt;/f:for&gt;
+    &lt;a:render partial="Filters/Right" fallbacks="Partials"/&gt;
+&lt;/a:query.paginate&gt;</pre>
+</div>
+</div>
+<div class="section" id="query-paginationviewhelper">
+<h2>Query.PaginationViewHelper<a class="headerlink" href="#query-paginationviewhelper" title="Permalink to this headline">¶</a></h2>
 <p>This is a simple pagination ViewHelper to limit and paginate objects</p>
 <dl class="docutils">
 <dt>objects</dt>
@@ -181,6 +182,50 @@
 &lt;/a:query.paginate&gt;</pre>
 </div>
 </div>
+<div class="section" id="query-searchviewhelper">
+<h2>Query.SearchViewHelper<a class="headerlink" href="#query-searchviewhelper" title="Permalink to this headline">¶</a></h2>
+<p>This ViewHelper can be used to filter Objects by searching</p>
+<dl class="docutils">
+<dt>objects</dt>
+<dd>the objects that should be filtered</dd>
+<dt>as</dt>
+<dd>variable for the matching objects. By Default: matchingObjects</dd>
+<dt>searchAs</dt>
+<dd>variable for the searchWord. By Default: search</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-python"><pre>&lt;a:query.search objects="{ objects}"&gt;
+            &lt;input type="text" class="" name="search" value="{search}" /&gt;
+        &lt;button type="submit" class="btn"&gt;Search&lt;/button&gt;
+
+    &lt;f:for each="{ matchingObjects}" as="object"&gt;
+        ...
+    &lt;/f:for&gt;
+&lt;/a:query.paginate&gt;</pre>
+</div>
+</div>
+<div class="section" id="query-sortviewhelper">
+<h2>Query.SortViewHelper<a class="headerlink" href="#query-sortviewhelper" title="Permalink to this headline">¶</a></h2>
+<p>This ViewHelper can be used to sort objects</p>
+<dl class="docutils">
+<dt>objects</dt>
+<dd>the objects that should be sorted</dd>
+<dt>as</dt>
+<dd>variable for the sorted objects. By Default: sortedObjects</dd>
+<dt>sortingAs</dt>
+<dd>variable for the sorting. By Default: sorting</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-python"><pre>&lt;a:query.sort objects="{ objects}"&gt;
+    &lt;f:link.action addQueryString="true" arguments="{sort: 'title', direction: sorting.oppositeDirection"&gt;
+        Sort by title
+    &lt;/f:link.action&gt;
+    &lt;f:for each="{ sortedObjects}" as="object"&gt;
+        ...
+    &lt;/f:for&gt;
+&lt;/a:query.paginate&gt;</pre>
+</div>
+</div>
 <div class="section" id="renderviewhelper">
 <h2>RenderViewHelper<a class="headerlink" href="#renderviewhelper" title="Permalink to this headline">¶</a></h2>
 <p>This ViewHelper extends the regular RenderViewHelper with these features:</p>
@@ -205,29 +250,9 @@
 <dl class="docutils">
 <dt>path</dt>
 <dd>specifies the path to the setting</dd>
-</dl>
-</div>
-<div class="section" id="sortviewhelper">
-<h2>SortViewHelper<a class="headerlink" href="#sortviewhelper" title="Permalink to this headline">¶</a></h2>
-<p>This ViewHelper can be used to sort objects</p>
-<dl class="docutils">
-<dt>objects</dt>
-<dd>the objects that should be sorted</dd>
 <dt>as</dt>
-<dd>variable for the sorted objects. By Default: sortedObjects</dd>
-<dt>sortingAs</dt>
-<dd>variable for the sorting. By Default: sorting</dd>
+<dd>if you specify this argument the content of that setting will be available as this variable inside the settings tag</dd>
 </dl>
-<p>Example:</p>
-<div class="highlight-python"><pre>&lt;a:query.sort objects="{ objects}"&gt;
-    &lt;f:link.action addQueryString="true" arguments="{sort: 'title', direction: sorting.oppositeDirection"&gt;
-        Sort by title
-    &lt;/f:link.action&gt;
-    &lt;f:for each="{ sortedObjects}" as="object"&gt;
-        ...
-    &lt;/f:for&gt;
-&lt;/a:query.paginate&gt;</pre>
-</div>
 </div>
 <div class="section" id="userviewhelper">
 <h2>UserViewHelper<a class="headerlink" href="#userviewhelper" title="Permalink to this headline">¶</a></h2>

@@ -29,29 +29,6 @@ DashboardWidgets
 This ViewHelper renders the currently active Widgets.
 
 
-FilterViewHelper
-********************
-This ViewHelper can be used to filter objects
-
-objects
-    the objects that should be sorted
-
-as
-    variable for the filtered objects. By Default: filteredObjects
-
-filtersAs
-    variable for the filters. By Default: filters
-
-Example::
-
-    <a:query.filter objects="{ objects}">
-        <f:for each="{ filteredObjects}" as="object">
-            ...
-        </f:for>
-        <a:render partial="Filters/Right" fallbacks="Partials"/>
-    </a:query.paginate>
-
-
 Form.FieldViewHelper
 ********************
 This ViewHelper renders a form field with error handling, label infotext, etc
@@ -119,7 +96,31 @@ Example::
     </a:navigation>
     </ul>
 
-PaginationViewHelper
+
+Query.FilterViewHelper
+********************
+This ViewHelper can be used to filter objects
+
+objects
+    the objects that should be sorted
+
+as
+    variable for the filtered objects. By Default: filteredObjects
+
+filtersAs
+    variable for the filters. By Default: filters
+
+Example::
+
+    <a:query.filter objects="{ objects}">
+        <f:for each="{ filteredObjects}" as="object">
+            ...
+        </f:for>
+        <a:render partial="Filters/Right" fallbacks="Partials"/>
+    </a:query.paginate>
+
+
+Query.PaginationViewHelper
 ********************
 This is a simple pagination ViewHelper to limit and paginate objects
 
@@ -152,6 +153,56 @@ Example::
     </a:query.paginate>
 
 
+Query.SearchViewHelper
+**********************
+This ViewHelper can be used to filter Objects by searching
+
+objects
+    the objects that should be filtered
+
+as
+    variable for the matching objects. By Default: matchingObjects
+
+searchAs
+    variable for the searchWord. By Default: search
+
+Example::
+
+    <a:query.search objects="{ objects}">
+		<input type="text" class="" name="search" value="{search}" />
+	    <button type="submit" class="btn">Search</button>
+
+        <f:for each="{ matchingObjects}" as="object">
+            ...
+        </f:for>
+    </a:query.paginate>
+
+
+Query.SortViewHelper
+********************
+This ViewHelper can be used to sort objects
+
+objects
+    the objects that should be sorted
+
+as
+    variable for the sorted objects. By Default: sortedObjects
+
+sortingAs
+    variable for the sorting. By Default: sorting
+
+Example::
+
+    <a:query.sort objects="{ objects}">
+        <f:link.action addQueryString="true" arguments="{sort: 'title', direction: sorting.oppositeDirection">
+            Sort by title
+        </f:link.action>
+        <f:for each="{ sortedObjects}" as="object">
+            ...
+        </f:for>
+    </a:query.paginate>
+
+
 RenderViewHelper
 ****************
 This ViewHelper extends the regular RenderViewHelper with these features:
@@ -179,30 +230,10 @@ This ViewHelper gives you access to global Settings from the view
 
 path
 	specifies the path to the setting
-
-SortViewHelper
-********************
-This ViewHelper can be used to sort objects
-
-objects
-    the objects that should be sorted
-
+	
 as
-    variable for the sorted objects. By Default: sortedObjects
-
-sortingAs
-    variable for the sorting. By Default: sorting
-
-Example::
-
-    <a:query.sort objects="{ objects}">
-        <f:link.action addQueryString="true" arguments="{sort: 'title', direction: sorting.oppositeDirection">
-            Sort by title
-        </f:link.action>
-        <f:for each="{ sortedObjects}" as="object">
-            ...
-        </f:for>
-    </a:query.paginate>
+	if you specify this argument the content of that setting will be available as this variable inside the settings tag
+	
 
 UserViewHelper
 **************
