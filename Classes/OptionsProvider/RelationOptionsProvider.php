@@ -46,7 +46,7 @@ class RelationOptionsProvider extends \Admin\Core\OptionsProvider\AbstractOption
 	* @author Marc Neuhaus <apocalip@gmail.com>
 	* @FLOW3\Inject
 	*/
-	private $reflectionService;
+	protected $reflectionService;
 	
 	public function getOptions(){
 		$being = $this->property->being;
