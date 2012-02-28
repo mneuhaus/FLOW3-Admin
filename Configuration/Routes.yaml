@@ -13,6 +13,14 @@
     '@action':     'index'
 
 -
+  name: 'Authentication Actions'
+  uriPattern: 'authentication(/{@action})'
+  appendExceedingArguments: true
+  defaults:
+    '@controller': 'Login'
+    '@action':     'index'
+
+-
   name: 'Logout'
   uriPattern: 'logout'
   defaults:
