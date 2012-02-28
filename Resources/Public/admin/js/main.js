@@ -25,6 +25,8 @@ jQuery(document).ready(function(){
 	jQuery("#shortcuts-modal").modal({show: false, background: true, keyboard: true});
 	jQuery("#shortcuts-modal .modal-body").append("<dl class='hotkeys'><dt>h</dt><dd>toggle this help dialog</dd></dl>");
 	jwerty.key("h", function () {
+		var tag = document.activeElement.tagName;
+		if(tag == "INPUT" || tag == "SELECT" || tag == "TEXTAREA") return;
 		jQuery("#shortcuts-modal").toggle();
 	});
 	jQuery("#shortcuts-modal .close").click(function(){
