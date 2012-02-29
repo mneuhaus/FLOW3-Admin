@@ -144,7 +144,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 			$debugInfo[] = "exectime: " . number_format(microtime(true) - $start, 4) . "s";
 		}
 		$debugInfo[] = "";
-		$this->view->assign("admin-debug-info", implode(" | ", $debugInfo));
+		$this->view->assign("admin-debug-info", implode(" ", $debugInfo));
 		
 		if ($actionResult === NULL && $this->view instanceof \TYPO3\FLOW3\MVC\View\ViewInterface) {
 			$this->response->appendContent($this->view->render());
