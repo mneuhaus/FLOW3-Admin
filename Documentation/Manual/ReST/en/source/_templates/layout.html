@@ -25,9 +25,9 @@
 	{%- block sidebar2 %}
 	<f:section name="sidebar">
 		<div class="documentation-sidebar">
-		<h3>Documentation</h3>
-		<ul>
-		<li><a href="{{ pathto(master_doc) }}">Overview</a></li>
+		<ul class="nav nav-list">
+			<li class="nav-header">Documentation</li>
+			<li><a href="{{ pathto(master_doc) }}">Overview</a></li>
 		</ul>
 		<h3>Sections</h3>
 		{{ sidebar() }}

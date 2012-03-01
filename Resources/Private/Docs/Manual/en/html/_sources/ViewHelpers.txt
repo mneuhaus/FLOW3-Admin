@@ -154,7 +154,7 @@ Example::
 
 
 Query.SearchViewHelper
-********************
+**********************
 This ViewHelper can be used to filter Objects by searching
 
 objects

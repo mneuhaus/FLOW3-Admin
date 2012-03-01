@@ -27,7 +27,7 @@
 {%- macro relbar() %}
     <div class="related">
       <h3>{{ _('Navigation') }}</h3>
-      <ul>
+      <ul class="nav nav-list">
         {%- for rellink in rellinks %}
         <li class="right" {% if loop.first %}style="margin-right: 10px"{% endif %}>
           <a href="{{ pathto(rellink[0]) }}" title="{{ rellink[1]|striptags|e }}"
