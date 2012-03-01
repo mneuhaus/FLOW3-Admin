@@ -144,7 +144,10 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
                 current($configuration["class"]["admin\annotations\orderby"]) => 'ASC'
             ));
         }
-        $objects = $this->query->execute();
+    
+        if(isset($this->query) && is_object($this->query))
+            $objects = $this->query->execute();
+
         return $objects;
     }
 

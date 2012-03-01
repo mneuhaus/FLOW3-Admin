@@ -89,7 +89,7 @@ class FilterViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 		foreach ($this->objects as $object) {
 			$being = $this->helper->getBeing($object);
 			
-			foreach($being->properties as $property){
+			foreach($being->__properties as $property){
 				if(isset($property->_filter)){
 					if(!isset($filters[$property->name]))
 						$filters[$property->name] = new \Admin\Core\Filter();

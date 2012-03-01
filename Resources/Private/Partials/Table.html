@@ -8,7 +8,7 @@
 			<f:for each="{objects}" as="object" key="id" iteration="loop">
 				<a:being object="{object}">
 				<f:if condition="{loop.isFirst}">
-					<f:for each="{being.properties}" as="value" key="property">
+					<f:for each="{being.__properties}" as="value" key="property">
 						<f:if condition="{sorting.property} == {property}">
 							<f:then><th class="sort-{sorting.direction}"></f:then>
 							<f:else><th></f:else>
@@ -32,7 +32,7 @@
 			<td class="tiny">
 				<input type="checkbox" name="bulkItems[]" value="{being.id}" class="select-row" data-klove-row-shortcut="x"/>
 			</td>
-			<f:for each="{being.properties}" as="value" key="property">
+			<f:for each="{being.__properties}" as="value" key="property">
 				<td>{value.string}</td>
 			</f:for>
 			<td class="table-actions">

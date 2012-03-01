@@ -88,7 +88,7 @@ class Being{
 	 *
 	 * @var array()
 	 */
-	public $properties = array();
+	public $__properties = array();
 	
 	/**
 	 * Errors of this Being
@@ -169,12 +169,12 @@ class Being{
 			foreach($this->set as $set){
 				$properties = explode(",", str_replace(", ",  ",", $set->properties));
 				foreach($properties as $property){
-					if(!isset($this->properties[$property])) continue;
-					$sets[$set->title][$property] = $this->properties[$property];
+					if(!isset($this->__properties[$property])) continue;
+					$sets[$set->title][$property] = $this->__properties[$property];
 				}
 			}
 		}else{
-			foreach ($this->properties as $key => $value) {
+			foreach ($this->__properties as $key => $value) {
 				$sets[""][$key] = $value;
 			}
 		}
@@ -215,7 +215,7 @@ class Being{
 		$this->class = $class;
 		
 		$configuration = $this->configurationManager->getClassConfiguration($class);
-		
+
 		foreach ($configuration as $key => $values) {
 			switch ($key) {
 				case 'properties':
@@ -224,7 +224,7 @@ class Being{
 						$p = new \Admin\Core\Property($property, $this);
 						$p->setParent($this);
 						$p->setConfiguration($value);
-						$this->properties[$property] = $p;
+						$this->__properties[$property] = $p;
 						$this->$property = $p;
 					}
 					break;

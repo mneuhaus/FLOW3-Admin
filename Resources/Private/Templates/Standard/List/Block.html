@@ -27,7 +27,7 @@
                                 <a:render partial="Table" fallbacks="Actions" vars="{being:object}" />
                             </div>
                         </h3>
-                    <f:for each="{object.properties}" as="value" key="property">
+                    <f:for each="{object.__properties}" as="value" key="property">
                         <f:if condition="{value.value}">
                         <div class="mr ml row">
                             <label>{value.label}:</label> {value.string}<br />

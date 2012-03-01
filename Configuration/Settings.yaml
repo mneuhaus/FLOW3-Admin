@@ -100,3 +100,4 @@ Admin:
       ^\\[A-Za-z0-9\\]+\\Security\\[A-Za-z]+$: Chosen
       ^\\Doctrine\\Common\\Collections\\Collection\<\\[A-Za-z0-9\\]+\\Domain\\Model\\[A-za-z]+>$: MultipleRelation
       ^\\Doctrine\\Common\\Collections\\Collection\<\\[A-Za-z0-9\\]+\\Security\\[A-za-z]+>$: MultipleRelation
+      ^\\ArrayObject\<\\[A-Za-z0-9\\]+>$: MultipleRelation

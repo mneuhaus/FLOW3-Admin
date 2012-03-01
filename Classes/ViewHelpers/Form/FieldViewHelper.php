@@ -34,10 +34,12 @@ class FieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelp
 	 *
 	 * @param object $property
 	 * @param string $variant
+	 * @param string $name
+	 * @param mixed $value
 	 * @return string rendered form
 	 * @api
 	 */
-	public function render($property = null, $variant="Default"){
+	public function render($property = null, $variant="Default", $name = null, $value = null){
 		if($this->templateVariableContainer->exists("property")){
 			$tmp = $this->templateVariableContainer->get("property");
 			$this->templateVariableContainer->remove("property");

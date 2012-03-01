@@ -74,7 +74,7 @@ class RenderViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 		if($value !== '')
 			return $value;
 
-		if ($partial !== '') {
+		if ($partial !== '' && !is_null($partial)) {
 			if($fallbacks !== ''){
 				$replacements = array(
 					"@partial" => $partial,

@@ -135,7 +135,7 @@ abstract class AbstractAdapter implements \Admin\Core\Adapters\AdapterInterface 
 		$beings = $this->getBeings($being);
 		$filters = array();
 		foreach($beings as $being){
-			$properties = $being->properties;
+			$properties = $being->__properties;
 			foreach($properties as $property){
 				if($property->isFilter()){
 					if(!isset($filters[$property->getName()]))
