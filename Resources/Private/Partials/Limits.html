@@ -1,7 +1,0 @@
-<ul>
-<f:for each="{limits}" as="active" key="value">
-	<f:if condition="{active}" ><f:then><li class="active"></f:then><f:else><li></f:else></f:if>	
-		<f:link.action action="list" addQueryString="true" arguments="{limit: value}">{value}</f:link.action>
-	</li>
-</f:for>
-</ul>

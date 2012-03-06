@@ -1,9 +1,0 @@
-<f:if condition="{variant.options}">
-<ul>
-	<f:for each="{variant.options}" as="option">
-	<f:if condition="{option} == {current}" ><f:then><li class="active"></f:then><f:else><li></f:else></f:if>
-		<f:link.action action="list" addQueryString="true" arguments="{variant: option}" >{option}</f:link.action>
-	</li>
-	</f:for>
-</ul>
-</f:if>

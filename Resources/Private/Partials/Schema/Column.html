@@ -1,9 +1,0 @@
-<!-- <dl>
-<f:for each="{columns}" as="column" key="name">
-	<dt>{name}</dt>
-	<dd>{column.type}</dd>
-</f:for>
-</dl> -->
-<f:for each="{columns}" as="column" key="name" iteration="loop">
-	<b>{name}</b> ({column.type})<f:if condition="!{loop.isLast}">, </f:if>
-</f:for>
