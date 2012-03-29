@@ -124,7 +124,7 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
     public function getObject($being, $id = null) {
         if (class_exists($being)) {
             if ($id == null) {
-                return $this->objectManager->create($being);
+                return $this->objectManager->get($being);
             } else {
                 return $this->persistenceManager->getObjectByIdentifier($id, $being);
             }

@@ -104,7 +104,7 @@ class RenderViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 					}
 				}else{
 					$partial = $this->parseTemplate($template);
-					$variableContainer = $this->objectManager->create('TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer', $vars);
+					$variableContainer = $this->objectManager->get('TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer', $vars);
 					$renderingContext = $this->buildRenderingContext($variableContainer);
 					return $partial->render($renderingContext);
 				}
@@ -136,16 +136,16 @@ class RenderViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 */
 	protected function buildRenderingContext(\TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer = NULL) {
 		if ($variableContainer === NULL) {
-			$variableContainer = $this->objectManager->create('TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer', $this->variables);
+			$variableContainer = $this->objectManager->get('TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer', $this->variables);
 		}
 
-		$renderingContext = $this->objectManager->create('TYPO3\Fluid\Core\Rendering\RenderingContext');
+		$renderingContext = $this->objectManager->get('TYPO3\Fluid\Core\Rendering\RenderingContext');
 		$renderingContext->injectTemplateVariableContainer($variableContainer);
 		if ($this->controllerContext !== NULL) {
 			$renderingContext->setControllerContext($this->controllerContext);
 		}
 
-		$viewHelperVariableContainer = $this->objectManager->create('TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
+		$viewHelperVariableContainer = $this->objectManager->get('TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
 		$viewHelperVariableContainer->setView($this->viewHelperVariableContainer->getView());
 		$renderingContext->injectViewHelperVariableContainer($viewHelperVariableContainer);
 

@@ -32,6 +32,12 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  */
 class LoginController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 	/**
+	 * @var \TYPO3\FLOW3\Security\Cryptography\HashService
+	 * @FLOW3\Inject
+	 */
+	protected $hashService;
+
+	/**
 	 * @var \Admin\Core\Helper
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 * @FLOW3\Inject
@@ -75,7 +81,7 @@ class LoginController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 			if($users->count() > 0)
 				$username.= ($users->count() + 1);
 			$user->setAccountIdentifier($username);
-			$user->setCredentialsSource("password");
+			$user->setCredentialsSource($this->hashService->hashPassword("password"));
 			$user->setAdmin(true);
 			$this->userRepository->add($user);
 			$message = new \TYPO3\FLOW3\Error\Message('A User has been Created: '.$username.'/password');

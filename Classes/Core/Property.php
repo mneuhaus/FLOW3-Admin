@@ -243,6 +243,10 @@ class Property{
 					if(is_object($value)){
 						$id = $this->adapter->getId($value);
 						$being = $this->createBeing($this->being, $id);
+						if(is_null($id)){
+							$being->setObject($value);
+						}
+						
 						$beings[] = $being;
 					}
 					$this->counter++;

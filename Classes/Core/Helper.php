@@ -84,6 +84,9 @@ class Helper {
 			if($mixed instanceof \ArrayAccess)
 				return true;
 
+			if($mixed instanceof \ArrayObject)
+				return true;
+
 			if($mixed instanceof \SplObjectStorage)
 				return true;
 

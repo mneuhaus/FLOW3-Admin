@@ -125,7 +125,7 @@ class AdminProvider implements \TYPO3\FLOW3\Security\Authentication\Authenticati
 		}
 
 		if (is_object($user)) {
-			if ($this->hashService->validateSaltedMd5($credentials['password'], $user->getCredentialsSource())) {
+			if ($this->hashService->validatePassword($credentials['password'], $user->getCredentialsSource())) {
 				$authenticationToken->setAuthenticationStatus(\TYPO3\FLOW3\Security\Authentication\TokenInterface::AUTHENTICATION_SUCCESSFUL);
 				$authenticationToken->setUser($user);
 			} else {

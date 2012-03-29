@@ -378,7 +378,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 					unset($inheritedObject);
 				}
 				
-				#$a = $this->objectManager->create($actionClassName, $this->getAdapter(), $this->request, $this->view, $this);
+				#$a = $this->objectManager->get($actionClassName, $this->getAdapter(), $this->request, $this->view, $this);
 				$a = new $actionClassName($this->getAdapter(), $this->request, $this->view, $this);
 				if($a->canHandle($being, $action, $id)){
 					if($this->securityManager->isAllowed($being,$a->getAction())){
@@ -402,7 +402,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		foreach($this->reflectionService->getAllImplementationClassNamesForInterface('Admin\Core\Actions\ActionInterface') as $actionClassName) {
 			$actionName = \Admin\Core\Helper::getShortName($actionClassName);
 			if(strtolower($actionName) == strtolower($action)){
-				return $this->objectManager->create($actionClassName, $this->getAdapter(), $this->request, $this->view, $this);
+				return $this->objectManager->get($actionClassName, $this->getAdapter(), $this->request, $this->view, $this);
 			}
 		}
 		return null;

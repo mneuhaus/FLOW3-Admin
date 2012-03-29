@@ -98,16 +98,6 @@ class User extends \Admin\Core\Domain\Magic{
 		);
 	}
 
-    /**
-	 *
-	 * @param string $credentialsSource
-	 * @return void
-	 */
-	public function setCredentialsSource($credentialsSource) {
-        $salt = sha1(rand(0,4).time());
-        $this->credentialsSource = md5(md5($credentialsSource) . $salt) . ',' . $salt;
-	}
-
     public function isAdmin(){
         return $this->admin;
     }
