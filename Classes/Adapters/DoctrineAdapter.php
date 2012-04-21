@@ -193,7 +193,6 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 
     public function updateObject($being, $id, $data) {
         $configuration = $this->configurationManager->getClassConfiguration($being);
-#        $data["__identity"] = $id;
         $result = $this->transform($data, $being);
 
         if (is_a($result, $being)) {
@@ -233,14 +232,20 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
             return $errors;
     }
 
-    public function cleanUpBlanks($data, $removeEmptyArrays = false) {
+    public function cleanUpBlanks($data, $removeEmptyArrays = false, $removeUnchangedDefaults = true) {
+        $defaults = array();
         foreach ($data as $key => $value) {
+            if($key === "{counter}"){
+                $defaults = $value;
+            }
+
             if (is_array($value)) {
                 $data[$key] = $this->cleanUpBlanks($value, true);
             }
             if (is_object($value) && !empty($value->FLOW3_Persistence_Entity_UUID)) {
                 $data[$key] = $value->FLOW3_Persistence_Entity_UUID;
             }
+
             if (empty($data[$key]) && $data[$key] !== false && $data[$key] !== 0) {
                 if (is_array($data[$key])) {
                     if ($removeEmptyArrays)
@@ -249,6 +254,9 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
                     unset($data[$key]);
                 }
             }
+
+            if(serialize($value) == serialize($defaults) && $removeUnchangedDefaults)
+                unset($data[$key]);
         }
         return $data;
     }
