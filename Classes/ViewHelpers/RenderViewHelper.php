@@ -88,6 +88,7 @@ class RenderViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 				$identifier = str_replace("\\","_",implode("-",$replacements));
 				$identifier = str_replace(".","_",$identifier);
 				$identifier = str_replace("/","_",$identifier);
+				$identifier = str_replace(" ","_",$identifier);
 				if(!$cache->has($identifier)){
 					$template = $this->helper->getPathByPatternFallbacks($fallbacks,$replacements);
 					$cache->set($identifier,$template);
