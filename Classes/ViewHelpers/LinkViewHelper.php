@@ -11,6 +11,7 @@ namespace Admin\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
  * A view helper for creating links to actions.
@@ -36,6 +37,12 @@ namespace Admin\ViewHelpers;
  * @api
  */
 class LinkViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
+	/**
+	 * @var \TYPO3\FLOW3\Object\ObjectManagerInterface
+	 * @author Marc Neuhaus <apocalip@gmail.com>
+	 * @FLOW3\Inject
+	 */
+	protected $objectManager;
 
 	/**
 	 * @var string
@@ -62,6 +69,7 @@ class LinkViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHe
 	 * @param string $action Target action
 	 * @param array $arguments Arguments
 	 * @param string $being
+	 * @param object $object
 	 * @param string $shortcut
 	 * @param string $selectionShortcut
 	 * @param string $controller Target controller. If NULL current controllerName is used
@@ -75,10 +83,18 @@ class LinkViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHe
 	 * @return string The rendered link
 	 * @api
 	 */
-	public function render($action = NULL, $arguments = array(), $being = NULL, $selectionShortcut = false, $shortcut = false, $controller = NULL, $package = NULL, $subpackage = NULL, $section = '', $format = '',  array $additionalParams = array(), $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array(), $overrule = array()) {
+	public function render($action = NULL, $arguments = array(), $being = NULL, $object = NULL, $selectionShortcut = false, $shortcut = false, $controller = NULL, $package = NULL, $subpackage = NULL, $section = '', $format = '',  array $additionalParams = array(), $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array(), $overrule = array()) {
 		$uriBuilder = $this->controllerContext->getUriBuilder();
+		
+		if($object !== NULL){
+			$arguments["being"] = \Admin\Core\API::get("classShortNames", get_class($object));
+			$adapter = $this->objectManager->get(\Admin\Core\API::get("adapter"));
+			$arguments["id"] = $adapter->getId($object);
+		}
+
 		if($being !== NULL)
 			$arguments["being"] = \Admin\Core\API::get("classShortNames", $being);
+
 		try {
 			$uri = $uriBuilder
 				->reset()
