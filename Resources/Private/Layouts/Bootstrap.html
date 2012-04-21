@@ -52,6 +52,11 @@
 					<li>
 						<span>{admin-debug-info}</span>
 					</li>
+					<f:if condition="{devmode}">
+					<li>
+						<f:link.action addQueryString="true" arguments="{flush_cache: 1}">Flush Cache</f:link.action>
+					</li>
+					</f:if>
 					<li>
 						<f:link.action action="update" controller="Standard" package="Admin" arguments="{user.arguments}">
 							Logged in as {user}

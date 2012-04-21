@@ -21,7 +21,7 @@ Admin:
   Beings: []
   PageTitle: Admin
   DemoMode: False
-  FlushCacheInDevelopment: true
+  FlushCacheInDevelopment: false
   Logging:
     Active: true
     Ignore: 

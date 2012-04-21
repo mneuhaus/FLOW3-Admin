@@ -127,7 +127,8 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 	protected function callActionMethod() {
 		$start = microtime(true);
 		
-		if($this->objectManager->getContext() == "Development" && $this->helper->getSettings("Admin.FlushCacheInDevelopment")){
+		if( $this->objectManager->getContext() == "Development" 
+			&& ( $this->helper->getSettings("Admin.FlushCacheInDevelopment") || $this->request->hasArgument("flush_cache") ) ){
 			$this->cacheManager->flushAdminCaches();
 		}
 		
@@ -142,6 +143,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		$debugInfo = array();
 		if($this->objectManager->getContext() == "Development"){
 			$debugInfo[] = "exectime: " . number_format(microtime(true) - $start, 4) . "s";
+			$this->view->assign("devmode", "true");
 		}
 		$debugInfo[] = "";
 		$this->view->assign("admin-debug-info", implode(" ", $debugInfo));

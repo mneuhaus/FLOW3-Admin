@@ -60,6 +60,10 @@ class CacheManager{
 	public function getCache($cache){
 		return $this->cacheManager->getCache($cache);
 	}
+
+	public function createIdentifier($string) {
+		return preg_replace("/[\/\/:\.\\\\]+/", "_", $string);
+	}
 }
 
 ?>
