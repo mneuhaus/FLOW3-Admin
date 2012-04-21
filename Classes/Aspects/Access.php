@@ -36,7 +36,7 @@ class Access {
 	protected $objectManager;
 	
 	/**
-	 * @var \TYPO3\FLOW3\MVC\FlashMessageContainer
+	 * @var \TYPO3\FLOW3\Mvc\FlashMessageContainer
 	 * @FLOW3\Inject
 	 */
 	protected $flashMessageContainer;
@@ -56,7 +56,7 @@ class Access {
 	 * Advices the dispatch method so that illegal requests are blocked before invoking
 	 * any controller.
 	 *
-	 * @FLOW3\Around("method(TYPO3\FLOW3\MVC\Dispatcher->dispatch())")
+	 * @FLOW3\Around("method(TYPO3\FLOW3\Mvc\Dispatcher->dispatch())")
 	 * @param \TYPO3\FLOW3\AOP\JoinPointInterface $joinPoint The current joinpoint
 	 * @return mixed Result of the advice chain
 	 */
@@ -65,7 +65,7 @@ class Access {
 		$this->securityManager->setResponse($joinPoint->getMethodArgument('response'));
 		
 		$request = $joinPoint->getMethodArgument('request');
-		if(is_a($request, "\TYPO3\FLOW3\MVC\Web\Request")){
+		if(is_a($request, "\TYPO3\FLOW3\Mvc\Web\Request")){
 		
 			$className = $request->getControllerObjectName();
 			$methodName = $request->getControllerActionName()  . 'Action';

@@ -30,7 +30,7 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * @version $Id: $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class DocController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
+class DocController extends \TYPO3\FLOW3\Mvc\Controller\ActionController {
 	
 	/**
 	 * @var \TYPO3\FLOW3\Package\PackageManagerInterface

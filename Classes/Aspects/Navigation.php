@@ -40,7 +40,7 @@ class Navigation {
 	public function addNavigationitem(\TYPO3\FLOW3\AOP\JoinPointInterface $joinPoint) {
 		$currentClassName = $joinPoint->getClassName();
 		$currentMethodName = $joinPoint->getMethodName();
-		$controllers = $this->reflectionService->getAllSubClassNamesForClass("\TYPO3\FLOW3\MVC\Controller\ActionController");
+		$controllers = $this->reflectionService->getAllSubClassNamesForClass("\TYPO3\FLOW3\Mvc\Controller\ActionController");
 		foreach ($controllers as $className) {
 			$methods = get_class_methods($className);
 			if(is_array($methods)){

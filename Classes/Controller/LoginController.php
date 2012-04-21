@@ -30,7 +30,7 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * @version $Id: LoginController.php 2817 2009-07-16 14:32:53Z k-fish $
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class LoginController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
+class LoginController extends \TYPO3\FLOW3\Mvc\Controller\ActionController {
 	/**
 	 * @var \TYPO3\FLOW3\Security\Cryptography\HashService
 	 * @FLOW3\Inject

@@ -31,16 +31,16 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @FLOW3\Scope("singleton")
  */
-class SecurityManager extends \TYPO3\FLOW3\MVC\Controller\ActionController {
+class SecurityManager extends \TYPO3\FLOW3\Mvc\Controller\ActionController {
 	/**
 	 * The current request
-	 * @var \TYPO3\FLOW3\MVC\RequestInterface
+	 * @var \TYPO3\FLOW3\Mvc\RequestInterface
 	 */
 	protected $request;
 
 	/**
 	 * The response which will be returned by this action controller
-	 * @var \TYPO3\FLOW3\MVC\ResponseInterface
+	 * @var \TYPO3\FLOW3\Mvc\ResponseInterface
 	 */
 	protected $response;
 	
@@ -56,11 +56,11 @@ class SecurityManager extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 	 */
 	protected $securityLogger;
 	
-	public function setRequest(\TYPO3\FLOW3\MVC\RequestInterface $request){
+	public function setRequest(\TYPO3\FLOW3\Mvc\RequestInterface $request){
 		$this->request = $request;
 	}
 	
-	public function setResponse(\TYPO3\FLOW3\MVC\ResponseInterface $response){
+	public function setResponse(\TYPO3\FLOW3\Mvc\ResponseInterface $response){
 		$this->response = $response;
 	}
 	
@@ -106,22 +106,22 @@ class SecurityManager extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 			if(!is_object($token)) continue;
 			
 			$entryPoint = $token->getAuthenticationEntryPoint();
-			if ($entryPoint !== NULL && $entryPoint->canForward($this->request)) {
+			if ($entryPoint !== NULL) {
 				$entryPointFound = TRUE;
 				if ($entryPoint instanceof \TYPO3\FLOW3\Security\Authentication\EntryPoint\WebRedirect) {
 					$options = $entryPoint->getOptions();
-					$options['uri'] = $options['uri'] . "?_redirect=" . urlencode($this->request->getRequestUri());
+					$options['uri'] = $options['uri'] . "?_redirect=" . urlencode($this->request->getHttpRequest()->getURI());
 					$entryPoint->setOptions($options);
 					$this->securityLogger->log('Redirecting to authentication entry point with URI ' . (isset($options['uri']) ? $options['uri'] : '- undefined -'), LOG_INFO);
 				} else {
 					$this->securityLogger->log('Starting authentication with entry point of type ' . get_class($entryPoint), LOG_INFO);
 				}
 				$rootRequest = $this->request;
-				if ($this->request instanceof \TYPO3\FLOW3\MVC\Web\SubRequest) $rootRequest = $this->request->getRootRequest();
+				if ($this->request instanceof \TYPO3\FLOW3\Mvc\Web\SubRequest) $rootRequest = $this->request->getRootRequest();
 				$this->securityContext->setInterceptedRequest($rootRequest);
-				$entryPoint->startAuthentication($rootRequest, $this->response);
+				$entryPoint->startAuthentication($rootRequest->getHttpRequest(), $this->response);
 				
-				throw new \TYPO3\FLOW3\MVC\Exception\StopActionException();
+				throw new \TYPO3\FLOW3\Mvc\Exception\StopActionException();
 			}
 		}
 		if ($entryPointFound === FALSE) {

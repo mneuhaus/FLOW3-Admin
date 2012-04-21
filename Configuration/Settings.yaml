@@ -8,10 +8,10 @@ TYPO3:
       authentication:
         providers:
           AdminProvider:
-            providerClass: Admin\Security\AdminProvider
-            entryPoint:
-              WebRedirect:
-                uri: admin/login
+            provider: Admin\Security\AdminProvider
+            entryPoint: 'WebRedirect'
+            entryPointOptions:
+              uri: 'admin/login'
       authorization:
         # An array of access decision voters that should vote when access decisions are made
         accessDecisionVoters:

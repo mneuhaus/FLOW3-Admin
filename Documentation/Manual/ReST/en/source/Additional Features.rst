@@ -55,7 +55,7 @@ priority
 **Example**::
 
     use Admin\Annotations as Admin;
-    class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
+    class StandardController extends \TYPO3\FLOW3\Mvc\Controller\ActionController {
         /**
          * @return void
          * @Admin\Navigation(title="Overview", position="top", priority="10000")

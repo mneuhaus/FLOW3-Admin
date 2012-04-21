@@ -190,7 +190,7 @@ class UsernamePassword implements \TYPO3\FLOW3\Security\Authentication\TokenInte
 	 * @return void
 	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
 	 */
-	public function updateCredentials(\TYPO3\FLOW3\MVC\RequestInterface $request) {
+	public function updateCredentials(\TYPO3\FLOW3\Http\Request $request) {
 		$postArguments = $this->environment->getRawPostArguments();
 		if (isset($postArguments['TYPO3\FLOW3\Security\Authentication\Token\UsernamePassword::username'])
 			&& isset($postArguments['TYPO3\FLOW3\Security\Authentication\Token\UsernamePassword::password'])) {

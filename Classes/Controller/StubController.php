@@ -28,7 +28,7 @@ namespace Admin\Controller;
  * @version $Id: $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class StubController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
+class StubController extends \TYPO3\FLOW3\Mvc\Controller\ActionController {
     public function indexAction(){
 		$being = "\Admin\Domain\Model\Widgets";
 		$classAnnotations = $this->reflectionService->getClassAnnotations($being);

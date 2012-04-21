@@ -31,7 +31,7 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * @version $Id: $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
+class StandardController extends \TYPO3\FLOW3\Mvc\Controller\ActionController {
 	/**
 	 * @var \Admin\Core\CacheManager
 	 * @FLOW3\Inject
@@ -108,7 +108,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		$actionMethodName = $this->request->getControllerActionName() . 'Action';
 		$action = $this->getActionByShortName($actionMethodName);
 		if (!method_exists($this, $actionMethodName) && $action !== null) {
-			#throw new \TYPO3\FLOW3\MVC\Exception\NoSuchActionException('An action "' . $actionMethodName . '" does not exist in controller "' . get_class($this) . '".', 1186669086);
+			#throw new \TYPO3\FLOW3\Mvc\Exception\NoSuchActionException('An action "' . $actionMethodName . '" does not exist in controller "' . get_class($this) . '".', 1186669086);
 		}
 		return $actionMethodName;
 	}
@@ -148,7 +148,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 		$debugInfo[] = "";
 		$this->view->assign("admin-debug-info", implode(" ", $debugInfo));
 		
-		if ($actionResult === NULL && $this->view instanceof \TYPO3\FLOW3\MVC\View\ViewInterface) {
+		if ($actionResult === NULL && $this->view instanceof \TYPO3\FLOW3\Mvc\View\ViewInterface) {
 			$this->response->appendContent($this->view->render());
 		} elseif (is_string($actionResult) && strlen($actionResult) > 0) {
 			$this->response->appendContent($actionResult);
@@ -435,20 +435,20 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 	 * @param mixed $uri Either a string representation of a URI or a \TYPO3\FLOW3\Property\DataType\Uri object
 	 * @param integer $delay (optional) The delay in seconds. Default is no delay.
 	 * @param integer $statusCode (optional) The HTTP status code for the redirect. Default is "303 See Other"
-	 * @throws \TYPO3\FLOW3\MVC\Exception\UnsupportedRequestTypeException If the request is not a web request
-	 * @throws \TYPO3\FLOW3\MVC\Exception\StopActionException
+	 * @throws \TYPO3\FLOW3\Mvc\Exception\UnsupportedRequestTypeException If the request is not a web request
+	 * @throws \TYPO3\FLOW3\Mvc\Exception\StopActionException
 	 * @author Robert Lemke <robert@typo3.org>
 	 * @api
 	 */
 	protected function redirectToUri($uri, $delay = 0, $statusCode = 303) {
-		if (!$this->request instanceof \TYPO3\FLOW3\MVC\Web\Request) throw new \TYPO3\FLOW3\MVC\Exception\UnsupportedRequestTypeException('redirect() only supports web requests.', 1220539734);
+		if (!$this->request instanceof \TYPO3\FLOW3\Mvc\Web\Request) throw new \TYPO3\FLOW3\Mvc\Exception\UnsupportedRequestTypeException('redirect() only supports web requests.', 1220539734);
 
 #		$uri = $this->request->getBaseUri() . (string)$uri;
 		$escapedUri = htmlentities($uri, ENT_QUOTES, 'utf-8');
 		$this->response->setContent('<html><head><meta http-equiv="refresh" content="' . intval($delay) . ';url=' . $escapedUri . '"/></head></html>');
 		$this->response->setStatus($statusCode);
 		$this->response->setHeader('Location', (string)$uri);
-		throw new \TYPO3\FLOW3\MVC\Exception\StopActionException();
+		throw new \TYPO3\FLOW3\Mvc\Exception\StopActionException();
 	}
 
 
