@@ -56,7 +56,7 @@ body {
 	
 .box .actions { margin:0; padding:8px 20px 20px 20px; }
 .box form legend, .box form .control-group { margin: 20px 20px 0; }
-.box form .properties { margin-bottom:20px; }
+.box form .properties { margin-bottom:20px; margin-top:20px; }
 .box .alert-message { margin:0 0px 10px; }
 
 .dump {
@@ -129,6 +129,8 @@ body {
 /*--------------------------Forms-----------------------------*/
 input, textarea, select, .uneditable-input { width:340px; }
 table input, table textarea, table select, table .uneditable-input { width:100%; }
+.box form legend, .box form .control-group { margin: 10px 20px 0; }
+.proper
 
 /*--------------------------Panes-----------------------------*/
 .left-pane { height: 100%; background:#F9F9F9; position:fixed; left:220px; top:40px; width:300px; margin-left:-20px; border-right: 1px solid #CECECE; border-top: 1px solid #CCCCCC; overflow-y: scroll; }
@@ -169,4 +171,11 @@ table input, table textarea, table select, table .uneditable-input { width:100%;
 
 .table-striped tbody tr.active td{
 	background: #ecf8ff;
+}
+
+.df-horizontal {
+	margin-bottom: 10px;
+	.group { .clearfix(); }
+	label { font-weight: bold; float: left; width: 120px; padding-top: 5px; text-align: right; }
+	.value { margin-left: 140px; padding-top: 5px; }
 }
