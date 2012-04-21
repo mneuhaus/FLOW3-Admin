@@ -74,6 +74,7 @@ Admin:
       - resource://@package/Private/Partials/@action/@partial.html
       - resource://@package/Private/Partials/@partial/@variant.html
       - resource://@package/Private/Partials/@partial.html
+      - resource://@package/Private/Partials/@partial/Default.html
       - resource://Admin/Private/Partials/@action/@partial.html
       - resource://Admin/Private/Partials/@action/@partial/@variant.html
       - resource://Admin/Private/Partials/@partial/@variant.html
