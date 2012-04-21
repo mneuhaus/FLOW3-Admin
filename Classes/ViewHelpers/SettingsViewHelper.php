@@ -41,16 +41,21 @@ class SettingsViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 	/**
 	 *
 	 * @param string $path
+	 * @param string $key
 	 * @param string $as
 	 * @return string Rendered string
 	 * @author Marc Neuhaus <apocalip@gmail.com>
 	 * @api
 	 */
-	public function render($path, $as = null) {
+	public function render($path, $key = null, $as = null) {
 		if(is_null($as)){
 			return $this->helper->getSettings($path);
 		}else{
-			$this->templateVariableContainer->add($as, $this->helper->getSettings($path));
+			$settings = $this->helper->getSettings($path);
+			if(!is_null($key)){
+				$settings = $settings[$key];
+			}
+			$this->templateVariableContainer->add($as, $settings);
 			$content = $this->renderChildren();
 			$this->templateVariableContainer->remove($as);
 			return $content;
