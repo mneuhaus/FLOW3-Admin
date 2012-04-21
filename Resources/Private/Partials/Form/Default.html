@@ -37,8 +37,8 @@
 				<f:else>
 				
 					<f:if condition="{property.error}">
-						<f:then><div class="control-group has-error"></f:then>
-						<f:else><div class="control-group"></f:else>
+						<f:then><div class="control-group has-error" data-property="{property.name}" ></f:then>
+						<f:else><div class="control-group" data-property="{property.name}" ></f:else>
 					</f:if>
 						<label class="control-label">{property.label}: </label>
 
