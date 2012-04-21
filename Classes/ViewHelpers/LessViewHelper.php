@@ -11,12 +11,19 @@ namespace Admin\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
  *
  * @api
  */
 class LessViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
+	/**
+	 * @var \Admin\Core\CacheManager
+	 * @FLOW3\Inject
+	 */
+	protected $cacheManager;
+
 	/**
 	 * @var \TYPO3\Fluid\ViewHelpers\Uri\ResourceViewHelper
 	 */
@@ -55,8 +62,22 @@ class LessViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHe
 	 */
 	public function render($src) {
 		$target = str_replace(".less", ".css", $src);
-		
-		\lessc::ccompile($src, $target, 1);
+
+		$cache = $this->cacheManager->getCache('Admin_Cache');
+		$identifier = $this->cacheManager->createIdentifier($src);
+		if(!$cache->has($identifier)){
+			$compilationCache = \lessc::cexecute($src, true);
+			file_put_contents($target, $compilationCache['compiled']);
+			$cache->set($identifier, $compilationCache);
+		}else{
+			$compilationCache = $cache->get($identifier);
+			// the next time we run, write only if it has updated
+			$last_updated = $compilationCache['updated'];
+			$cache = \lessc::cexecute($compilationCache);
+			if ($compilationCache['updated'] > $last_updated) {
+				file_put_contents($css_file, $compilationCache['compiled']);
+			}
+		}
 		
 		$uri = $this->resourceViewHelper->render(null, null, null, $target);
 		

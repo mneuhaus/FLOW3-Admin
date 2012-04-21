@@ -24,7 +24,7 @@
 		<div class="whitespace">
 			<br />
 			<dl>
-			<f:for each="{being.properties}" as="value" key="property">
+			<f:for each="{being.__properties}" as="value" key="property">
 				<dt>{property}</dt>
 				<dd>{value.string}</dd>
 			</f:for>
