@@ -441,8 +441,6 @@ class StandardController extends \TYPO3\FLOW3\Mvc\Controller\ActionController {
 	 * @api
 	 */
 	protected function redirectToUri($uri, $delay = 0, $statusCode = 303) {
-		if (!$this->request instanceof \TYPO3\FLOW3\Mvc\Web\Request) throw new \TYPO3\FLOW3\Mvc\Exception\UnsupportedRequestTypeException('redirect() only supports web requests.', 1220539734);
-
 #		$uri = $this->request->getBaseUri() . (string)$uri;
 		$escapedUri = htmlentities($uri, ENT_QUOTES, 'utf-8');
 		$this->response->setContent('<html><head><meta http-equiv="refresh" content="' . intval($delay) . ';url=' . $escapedUri . '"/></head></html>');
