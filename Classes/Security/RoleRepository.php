@@ -21,11 +21,14 @@ namespace Admin\Security;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * The repository for roles
  *
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
+ * @FLOW3\Scope("singleton")
  */
 class RoleRepository extends \TYPO3\FLOW3\Persistence\Repository {
 	/**

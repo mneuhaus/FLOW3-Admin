@@ -26,7 +26,15 @@ class PropertyMappingConfiguration extends \TYPO3\FLOW3\Property\PropertyMapping
 	 * @api
 	 */
 	public function getConfigurationFor($propertyName) {
-		return $this;
+		if (isset($this->subConfigurationForProperty[$propertyName])) {
+			return $this->subConfigurationForProperty[$propertyName];
+		}
+
+		$subConfigurationForProperty = new PropertyMappingConfiguration();
+		$subConfigurationForProperty->allowAllProperties();
+		$subConfigurationForProperty->setTypeConverterOption('TYPO3\FLOW3\Property\TypeConverter\PersistentObjectConverter', \TYPO3\FLOW3\Property\TypeConverter\PersistentObjectConverter::CONFIGURATION_CREATION_ALLOWED, TRUE);
+        $subConfigurationForProperty->setTypeConverterOption('TYPO3\FLOW3\Property\TypeConverter\PersistentObjectConverter', \TYPO3\FLOW3\Property\TypeConverter\PersistentObjectConverter::CONFIGURATION_MODIFICATION_ALLOWED, TRUE);
+		return $subConfigurationForProperty;
 	}
 	
 	static public function getConfiguration($type = '\Admin\Core\PropertyMappingConfiguration', $options = array()){
@@ -36,7 +44,11 @@ class PropertyMappingConfiguration extends \TYPO3\FLOW3\Property\PropertyMapping
 			\TYPO3\FLOW3\Property\TypeConverter\PersistentObjectConverter::CONFIGURATION_CREATION_ALLOWED => TRUE,
 			\TYPO3\FLOW3\Property\TypeConverter\PersistentObjectConverter::CONFIGURATION_MODIFICATION_ALLOWED => TRUE
 		));
-		
+
+		$configuration->setTypeConverterOption('TYPO3\FLOW3\Property\TypeConverter\PersistentObjectConverter', \TYPO3\FLOW3\Property\TypeConverter\PersistentObjectConverter::CONFIGURATION_CREATION_ALLOWED, TRUE);
+        $configuration->setTypeConverterOption('TYPO3\FLOW3\Property\TypeConverter\PersistentObjectConverter', \TYPO3\FLOW3\Property\TypeConverter\PersistentObjectConverter::CONFIGURATION_MODIFICATION_ALLOWED, TRUE);
+        $configuration->allowAllProperties();
+
 		foreach($options as $option){
 		    $configuration->setTypeConverterOption($option[0], $option[1], $option[2]);
 		}

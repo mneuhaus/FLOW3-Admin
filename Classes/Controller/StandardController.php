@@ -93,7 +93,7 @@ class StandardController extends \TYPO3\FLOW3\Mvc\Controller\ActionController {
 					$log->setIdentity($this->id);
 					
 				$this->objectManager->get("\Admin\Domain\Repository\LogRepository")->add($log);
-				$this->persistenceManager->persistAll();
+				#$this->persistenceManager->persistAll();
 			}
 		}
 	}
@@ -242,11 +242,12 @@ class StandardController extends \TYPO3\FLOW3\Mvc\Controller\ActionController {
 		}
 
 		$user = $this->securityManager->getUser();
-		
+
+		$allowedBeings = array("view" => array());
 		if(!isset($user) || !is_object($user)){
 			$this->securityManager->redirectToLogin();
+		}elseif($user->getAdmin()){
 		}else{
-			$allowedBeings = array("view"=>array());
 			try{
 				foreach ($user->getRoles() as $role) {
 					foreach ($role->getGrant() as $policy) {
@@ -257,8 +258,8 @@ class StandardController extends \TYPO3\FLOW3\Mvc\Controller\ActionController {
 				unset($user);
 				$this->securityManager->redirectToLogin();
 			}
-			$this->user = $user;
 		}
+		$this->user = $user;
 
 		$groups = $this->helper->getGroups();
 		ksort($groups);

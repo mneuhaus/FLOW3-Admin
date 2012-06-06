@@ -216,8 +216,11 @@ class DoctrineAdapter extends \Admin\Core\Adapters\AbstractAdapter {
 
     public function transform($data, $target) {
         $data = $this->cleanUpBlanks($data);
+        unset($data["__trustedProperties"]);
+        
+        $configuration = \Admin\Core\PropertyMappingConfiguration::getConfiguration();
 
-        $value = $this->propertyMapper->convert($data, $target, \Admin\Core\PropertyMappingConfiguration::getConfiguration());
+        $value = $this->propertyMapper->convert($data, $target, $configuration);
 
         $this->validationResults = $this->propertyMapper->getMessages();
 

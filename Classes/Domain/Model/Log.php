@@ -33,40 +33,34 @@ use TYPO3\FLOW3\Annotations as FLOW3;
 class Log extends \Admin\Core\Domain\Magic{
 	/**
 	 * @var string
-	 * @FLOW3\Identity
 	 * @Admin\Annotations\Ignore
 	 */
-	protected $description;
+	protected $description = "";
 	
 	/**
 	 * @var string
-	 * @FLOW3\Identity
 	 * @ORM\Column(length=20)
 	 */
 	protected $datetime;
 	
 	/**
 	 * @var string
-	 * @FLOW3\Identity
 	 * @Admin\Annotations\Ignore list
 	 */
 	protected $identity;
 	
 	/**
 	 * @var string
-	 * @FLOW3\Identity
 	 */
 	protected $being;
 	
 	/**
 	 * @var string
-	 * @FLOW3\Identity
 	 */
 	protected $action;
 	
 	/**
 	 * @var string
-	 * @FLOW3\Identity
 	 */
 	protected $adapter;
 	

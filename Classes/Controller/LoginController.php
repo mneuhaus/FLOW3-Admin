@@ -112,9 +112,9 @@ class LoginController extends \TYPO3\FLOW3\Mvc\Controller\ActionController {
 			$message = new \TYPO3\FLOW3\Error\Message('Successfully logged in');
 			$this->flashMessageContainer->addMessage($message);
 
-			if($this->request->hasArgument("_redirect"))
-				$this->redirectToUri($this->request->getArgument("_redirect"));
-			else
+			#if($this->request->hasArgument("_redirect"))
+			#	$this->redirectToUri($this->request->getArgument("_redirect"));
+			#else
 				$this->redirect('index', 'Standard');
 		} catch (\TYPO3\FLOW3\Security\Exception\AuthenticationRequiredException $exception) {	
 			$message = new \TYPO3\FLOW3\Error\Error('Wrong username or password.');
